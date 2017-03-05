@@ -33,7 +33,7 @@ from ocelot.optimizer.mint.xfel_interface import *
 
 from ocelot.optimizer.mint.opt_objects import Device
 from ocelot.optimizer.mint.xfel_interface import *
-
+import copy
 #GUI layout file
 
 
@@ -90,8 +90,10 @@ class ManulInterfaceWindow(QFrame):
         self.dev_mode = True
 
         self.ui = MainWindow(self)
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.cell_back_track = copy.deepcopy(cell_i1_copy)
+        self.online_calc = True
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         #QFrame.__init__(self)
         #self.ui = Ui_Form()
         #self.ui.setupUi(self)
@@ -117,6 +119,13 @@ class ManulInterfaceWindow(QFrame):
         self.ui.pb_read.clicked.connect(self.read_quads)
         self.ui.pb_reset.clicked.connect(self.reset_quads)
 
+        #self.ui.cb_select_alg.addItem(self.name_gauss)
+        self.ui.cb_lattice.addItem("Injector")
+        self.ui.cb_lattice.addItem("I1 + L1")
+        self.ui.cb_lattice.addItem("I1 + L1 + L2")
+        self.ui.cb_lattice.addItem("L1")
+        self.ui.cb_lattice.addItem("L2")
+        self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
 
     def update_table(self):
         for quad in self.quads:
@@ -126,11 +135,12 @@ class ManulInterfaceWindow(QFrame):
 
     def reset_quads(self):
         for quad in self.quads:
-            print(quad.i_kick)
+            #print(quad.i_kick)
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
     def read_quads(self):
+        self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
             k1 = elem.kick_mrad/elem.l*1e-3
@@ -139,24 +149,42 @@ class ManulInterfaceWindow(QFrame):
             print(elem.i_kick)
             elem.ui.set_init_value(elem.kick_mrad)
             elem.ui.set_value(elem.kick_mrad)
+        self.online_calc = True
         self.lat.update_transfer_maps()
         tws0 = self.read_twiss()
         lat_tmp = MagneticLattice(self.lat.sequence, stop=otrc_55_i1)
         lat_tmp = MagneticLattice(lat_tmp.sequence[::-1])
+        for elem in lat_tmp.sequence:
+            if elem.__class__  == Cavity:
+                elem.phi -= 180
+                #print(elem.v, elem.phi)
+        lat_tmp.update_transfer_maps()
+
         tws0.alpha_x = -tws0.alpha_x
         tws0.alpha_y = -tws0.alpha_y
+        #print("start", tws0)
         tws = twiss(lat_tmp, tws0)
-        print(tws[-1])
-        self.tws0 = tws[-1]
-        self.tws0.alpha_x = -tws0.alpha_x
-        self.tws0.alpha_y = -tws0.alpha_y
+        #plot_opt_func(lat_tmp, tws)
+        #plt.show()
+        self.tws0 = Twiss()
+        self.tws0.beta_x = tws[-1].beta_x
+        self.tws0.beta_y = tws[-1].beta_y
+        self.tws0.alpha_x = -tws[-1].alpha_x
+        self.tws0.alpha_y = -tws[-1].alpha_y
         self.tws0.s = 0
+        self.tws0.E = tws[-1].E
+        for elem in lat_tmp.sequence:
+            if elem.__class__  == Cavity:
+                elem.phi += 180
+        lat_tmp.update_transfer_maps()
+        #print("back_tracking = ", self.tws0)
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
         dx = [tw.Dx for tw in tws]
         dy = [tw.Dy for tw in tws]
         s = [tw.s for tw in tws]
+
         self.update_plot(s, beta_x, beta_y, dx, dy)
         #self.update_table()
 
@@ -171,12 +199,31 @@ class ManulInterfaceWindow(QFrame):
         tws.beta_y = self.mi.get_value(ch_beta_y)
         tws.alpha_x = self.mi.get_value(ch_alpha_x)
         tws.alpha_y = self.mi.get_value(ch_alpha_y)
-        tws.E = self.mi.get_value(ch_energy)
+        tws.E = 0.130 #self.mi.get_value(ch_energy)*0.001
+        print(tws)
         return tws
 
 
     def return_lat(self):
-        self.lat = MagneticLattice(cell_i1)
+        #self.lat = MagneticLattice(cell_i1+cell_l1)
+        current_lat = self.ui.cb_lattice.currentText()
+
+        if current_lat == "I1 + L1":
+            self.lat = MagneticLattice(cell_i1 + cell_l1)
+            self.tws0 = tws_i1
+            print(len(self.lat.sequence))
+        elif current_lat == "L1":
+            self.lat = MagneticLattice(cell_l1)
+            self.tws0 = tws_l1
+        elif current_lat == "I1 + L1 + L2":
+            self.lat = MagneticLattice(cell_l1 + cell_l1 + cell_l2)
+            self.tws0 = tws_l1
+        else:
+            self.lat = MagneticLattice(cell_i1)
+            self.tws0 = tws_i1
+            print(len(self.lat.sequence))
+        self.load_lattice()
+        self.calc()
         return self.lat
 
     def return_tws(self):
@@ -191,6 +238,9 @@ class ManulInterfaceWindow(QFrame):
     def load_lattice(self):
         self.quads = []
         mi_devs = {}
+        #cell_i1_copy = copy.deepcopy(cell_i1_copy)
+        #lat_tmp = MagneticLattice(cell_i1_copy)
+
         L = 0
         for elem in self.lat.sequence:
             L += elem.l
@@ -213,11 +263,22 @@ class ManulInterfaceWindow(QFrame):
         self.add_devs2table(self.quads)
         #self.init_kick_mrad = np.array([q.kick_mrad for q in self.quads])
         self.quad_ampl = np.max(np.abs(np.array([q.kick_mrad for q in self.quads])))
+        tws = twiss(self.lat, self.tws0)
+        #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
+        #plt.show()
+        beta_x_des = [tw.beta_x for tw in tws]
+        beta_y_des = [tw.beta_y for tw in tws]
+        dx_des = [tw.Dx for tw in tws]
+        dy_des = [tw.Dy for tw in tws]
+        s = [tw.s for tw in tws]
+        self.beta_x_des.setData(x=s, y=beta_x_des)
+        self.beta_y_des.setData(x=s, y=beta_y_des)
         self.plot_lat()
 
-    def calc(self):
+    def calc(self, calc=True):
         #lat = MagneticLattice(cell)
-
+        if self.online_calc== False:
+            return
 
         # L = 0
         for elem in self.lat.sequence:
@@ -238,9 +299,10 @@ class ManulInterfaceWindow(QFrame):
                 r.setRect(sizes[0], sizes[1], sizes[2], sizes[3])
 
         self.lat.update_transfer_maps()
-        print("test")
+        #print("test")
         # exit(0)
         tws = twiss(self.lat, self.tws0)
+        #print(tws[-1], self.tws0)
         #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
         #plt.show()
         beta_x = [tw.beta_x for tw in tws]
@@ -248,6 +310,7 @@ class ManulInterfaceWindow(QFrame):
         dx = [tw.Dx for tw in tws]
         dy = [tw.Dy for tw in tws]
         s = [tw.s for tw in tws]
+
         self.update_plot(s, beta_x, beta_y, dx, dy)
 
     def add_devs2table(self, devs):
@@ -414,10 +477,19 @@ class ManulInterfaceWindow(QFrame):
         self.beta_x = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_x', antialias=True)
         self.plot1.addItem(self.beta_x)
 
+        pen = pg.mkPen(color, width=1)
+        self.beta_x_des = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_x', antialias=True)
+        self.plot1.addItem(self.beta_x_des)
+
         color = QtGui.QColor(255, 0, 0)
         pen = pg.mkPen(color, width=3)
         self.beta_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_y', antialias=True)
         self.plot1.addItem(self.beta_y)
+
+        color = QtGui.QColor(255, 0, 0)
+        pen = pg.mkPen(color, width=1)
+        self.beta_y_des = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_y', antialias=True)
+        self.plot1.addItem(self.beta_y_des)
 
         self.plot2 = win.addPlot(row=2, col=0)
         win.ci.layout.setRowMaximumHeight(2, 150)

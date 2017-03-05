@@ -217,6 +217,26 @@ d_78, bpma_59_i1, d_79, otrc_59_i1, d_80, qi_60_i1, d_81, tora_60_i1,
 d_82, bpmatest_60_i1, d_5, bpmatest_61_i1, d_84, qi_61_i1, d_85, ensub_62_i1)
 # power supplies 
 
+cell_i1_copy = (stsec_23_i1, stsub_23_i1, gun_23_i1, d_1, solb_23_i1, d_2, ckx_23_i1,
+cky_23_i1, d_3, ckx_24_i1, cky_24_i1, d_4, bpmg_24_i1, d_5, scrn_24_i1,
+fcup_24_i1, d_6, ensub_24_i1, stsub_24i_i1, d_7, tora_25_i1, d_8, scrn_25i_i1,
+fcup_25i_i1, d_9, bpmg_25i_i1, d_10, dcm_25_i1, d_11, ckx_25_i1, cky_25_i1,
+d_12, stac_26_i1, d_13, c_a1_1_1_i1, d_14, c_a1_1_2_i1, d_14, c_a1_1_3_i1,
+d_14, c_a1_1_4_i1, d_17, c_a1_1_5_i1, d_14, c_a1_1_6_i1, d_14, c_a1_1_7_i1,
+d_14, c_a1_1_8_i1, d_21, match_37_i1, d_22, q_37_i1, d_22, cx_37_i1,
+cy_37_i1, d_24, bpmc_38i_i1, d_25, enac_38_i1, stac_38_i1, d_26, bpmr_38ii_i1,
+d_27, q_38_i1, d_22, cx_39_i1, cy_39_i1, d_29, c3_ah1_1_1_i1, d_30,
+c3_ah1_1_2_i1, d_30, c3_ah1_1_3_i1, d_30, c3_ah1_1_4_i1, d_30, c3_ah1_1_5_i1, d_30,
+c3_ah1_1_6_i1, d_30, c3_ah1_1_7_i1, d_30, c3_ah1_1_8_i1, d_37, enac_44_i1, d_38,
+tora_46_i1, d_39, qi_46_i1, d_40, bam_47_i1, d_41, bpmf_47_i1, d_42,
+mpbpmf_47_i1, d_43, dcm_47_i1, d_44, qi_47_i1, d_45, stlat_47_i1, d_46,
+bl_48i_i1, d_47, bl_48ii_i1, d_48, mpbpmf_48_i1, d_42, bpmf_48_i1, d_50,
+otrl_48_i1, d_51, undu_49_i1, d_51, otrl_50_i1, d_53, bl_50i_i1, d_54,
+bl_50ii_i1, d_46, enlat_50_i1, d_45, qi_50_i1, d_57, eod_51_i1, d_58,
+ciy_51_i1, d_59, cix_51_i1, d_60, bpmf_52_i1, d_42, mpbpmf_52_i1, d_62,
+qi_52_i1, d_63, tdsa_52_i1, d_63, qi_53_i1, d_65, qi_54_i1, d_66,
+stlat_55_i1, d_67, match_55_i1, otrc_55_i1)
+
 #  
 q_37_i1.ps_id = 'Q.A1.1.I1'
 q_38_i1.ps_id = 'Q.AH1.1.I1'
