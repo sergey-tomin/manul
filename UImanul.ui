@@ -44,7 +44,7 @@
       <bool>true</bool>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -285,7 +285,7 @@
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_14">
               <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="cb_coupler_kick">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
@@ -303,50 +303,56 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_10">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>140</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <pointsize>10</pointsize>
             </font>
            </property>
            <property name="title">
-            <string>Matching</string>
+            <string>BackTracking</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <widget class="QCheckBox" name="checkBox_2">
+               <widget class="QCheckBox" name="cb_otr55">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
                  </font>
                 </property>
                 <property name="text">
-                 <string>OTRC55</string>
+                 <string>OTRC 55</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_3">
+               <widget class="QCheckBox" name="cb_otr218">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
                  </font>
                 </property>
                 <property name="text">
-                 <string>OTRC200</string>
+                 <string>OTRB 218</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_4">
+               <widget class="QCheckBox" name="cb_otr450">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
                  </font>
                 </property>
                 <property name="text">
-                 <string>OTRC400</string>
+                 <string>OTRB 450</string>
                 </property>
                </widget>
               </item>
