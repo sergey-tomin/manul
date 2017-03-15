@@ -23,6 +23,7 @@ sys.path.append(path[:indx])
 import time
 import pyqtgraph as pg
 from gui_main import *
+from orbit import OrbitInterface
 from lattices.xfel_i1_890 import *
 from lattices.xfel_l1_890 import *
 from lattices.xfel_l2_890 import *
@@ -34,6 +35,7 @@ from ocelot.optimizer.mint.xfel_interface import *
 from ocelot.optimizer.mint.opt_objects import Device
 from ocelot.optimizer.mint.xfel_interface import *
 import copy
+from scipy import optimize
 #GUI layout file
 
 
@@ -55,6 +57,18 @@ class DeviceUI:
     def set_init_value(self, val):
         self.tableWidget.item(self.row, 1).setText(str(val))
 
+    def uncheck(self):
+        item = self.tableWidget.item(self.row, 3)
+        item.setCheckState(False)
+
+    def check(self):
+        item = self.tableWidget.item(self.row, 3)
+        item.setCheckState(True)
+
+    def state(self):
+        item = self.tableWidget.item(self.row, 3)
+        state = item.checkState()
+        return state
 
 class MDevice(Device):
     def __init__(self, eid=None):
@@ -90,7 +104,10 @@ class ManulInterfaceWindow(QFrame):
         self.dev_mode = True
 
         self.ui = MainWindow(self)
-        self.cell_back_track = copy.deepcopy(cell_i1_copy)
+        self.orbit = OrbitInterface(parent=self)
+
+        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2)
+        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2))
         self.online_calc = True
         self.mi = XFELMachineInterface()
         #self.mi = TestMachineInterface()
@@ -107,15 +124,16 @@ class ManulInterfaceWindow(QFrame):
         #self.multiPvTimer.timeout.connect(self.getPlotData)
         self.pvs = ["sdf","asdf"]
         #self.initTable()
+        #print("quads", self.quads)
         self.add_plot()
 
         self.lat = self.return_lat()
-        self.tws0 = self.return_tws()
-        self.load_lattice()
+        #self.tws0 = self.return_tws()
+        #self.load_lattice()
         #taperThread.Taper(initPVs = True, mi=self.mi) #update taper PVs with initial taper parameters
 
 
-        self.ui.pb_write.clicked.connect(self.calc)
+        self.ui.pb_write.clicked.connect(self.calc_twiss)
         self.ui.pb_read.clicked.connect(self.read_quads)
         self.ui.pb_reset.clicked.connect(self.reset_quads)
 
@@ -126,6 +144,12 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("L1")
         self.ui.cb_lattice.addItem("L2")
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
+        self.ui.cb_otr55.setChecked(True)
+        self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
+        self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
+        #self.ui.pb_write.clicked.connect(self.match)
+
+
 
     def update_table(self):
         for quad in self.quads:
@@ -139,6 +163,9 @@ class ManulInterfaceWindow(QFrame):
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
+    def read_cavs(self):
+        "XFEL.RF/LLRF.ENERGYGAIN.ML/M2.A4.L2/ENERGYGAIN.SA1"
+
     def read_quads(self):
         self.online_calc = False
         for elem in self.quads:
@@ -146,13 +173,38 @@ class ManulInterfaceWindow(QFrame):
             k1 = elem.kick_mrad/elem.l*1e-3
             elem.k1 = k1
             elem.i_kick = elem.kick_mrad
-            print(elem.i_kick)
+            #print(elem.i_kick)
             elem.ui.set_init_value(elem.kick_mrad)
             elem.ui.set_value(elem.kick_mrad)
         self.online_calc = True
         self.lat.update_transfer_maps()
+
+        self.tws0 = self.back_tracking()
+        #print("back_tracking = ", self.tws0)
+        tws = twiss(self.lat, self.tws0)
+        beta_x = [tw.beta_x for tw in tws]
+        beta_y = [tw.beta_y for tw in tws]
+        dx = [tw.Dx for tw in tws]
+        dy = [tw.Dy for tw in tws]
+        s = [tw.s for tw in tws]
+
+        self.update_plot(s, beta_x, beta_y, dx, dy)
+
+        #self.update_table()
+
+    def back_tracking(self):
         tws0 = self.read_twiss()
-        lat_tmp = MagneticLattice(self.lat.sequence, stop=otrc_55_i1)
+        if self.ui.cb_otr218.isChecked():
+            stop = otrb_218_b1
+
+        elif self.ui.cb_otr450.isChecked():
+            stop = otrb_450_b2
+
+        else:
+            stop = otrc_55_i1
+
+
+        lat_tmp = MagneticLattice(self.cell_back_track, stop=stop)
         lat_tmp = MagneticLattice(lat_tmp.sequence[::-1])
         for elem in lat_tmp.sequence:
             if elem.__class__  == Cavity:
@@ -177,53 +229,161 @@ class ManulInterfaceWindow(QFrame):
             if elem.__class__  == Cavity:
                 elem.phi += 180
         lat_tmp.update_transfer_maps()
-        #print("back_tracking = ", self.tws0)
-        tws = twiss(self.lat, self.tws0)
-        beta_x = [tw.beta_x for tw in tws]
-        beta_y = [tw.beta_y for tw in tws]
-        dx = [tw.Dx for tw in tws]
-        dy = [tw.Dy for tw in tws]
-        s = [tw.s for tw in tws]
+        return self.tws0
 
-        self.update_plot(s, beta_x, beta_y, dx, dy)
-        #self.update_table()
 
     def read_twiss(self):
-        ch_beta_x = "XFEL.UTIL/BEAM_PARAMETER/I1/PROJECTED_X.BETA.SA1"
-        ch_alpha_x = "XFEL.UTIL/BEAM_PARAMETER/I1/PROJECTED_X.ALPHA.SA1"
-        ch_beta_y = "XFEL.UTIL/BEAM_PARAMETER/I1/PROJECTED_Y.BETA.SA1"
-        ch_alpha_y = "XFEL.UTIL/BEAM_PARAMETER/I1/PROJECTED_Y.ALPHA.SA1"
-        ch_energy = "XFEL.UTIL/BEAM_PARAMETER/I1/PROJECTED_X.ENERGY.SA1"
         tws = Twiss()
+        if self.ui.cb_otr218.isChecked():
+            section = "B1"
+            tws.E = 0.7
+        elif self.ui.cb_otr450.isChecked():
+            section = "B2"
+            tws.E = 2.4
+        else:
+            self.ui.cb_otr55.setChecked(True)
+            section = "I1"
+            tws.E = 0.130
+
+        ch_beta_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.BETA.SA1"
+        ch_alpha_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ALPHA.SA1"
+        ch_beta_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.BETA.SA1"
+        ch_alpha_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.ALPHA.SA1"
+        ch_energy = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ENERGY.SA1"
+
         tws.beta_x = self.mi.get_value(ch_beta_x)
         tws.beta_y = self.mi.get_value(ch_beta_y)
         tws.alpha_x = self.mi.get_value(ch_alpha_x)
         tws.alpha_y = self.mi.get_value(ch_alpha_y)
-        tws.E = 0.130 #self.mi.get_value(ch_energy)*0.001
+        #tws.E = self.mi.get_value(ch_energy)*0.001
         print(tws)
         return tws
 
+    def match(self):
+        quads = [qi_46_i1, qi_47_i1, qi_50_i1, qi_52_i1, qi_53_i1, qi_54_i1]
+        x = np.array([q.kick_mrad for q in quads])
+        def error_func(x):
+            #print(x)
+            for i, quad in enumerate(quads):
+                quad.kick_mrad = x[i]
+                quad.k1 = x[i]/quad.l/1000.
+            self.lat.update_transfer_maps()
+            tws = twiss(self.lat, self.tws0)
+            err = np.sqrt((tws[-1].beta_x - self.tws_end.beta_x)**2 +
+            (tws[-1].beta_y - self.tws_end.beta_y)**2 +
+            (tws[-1].alpha_x - self.tws_end.alpha_x)**2 +
+            (tws[-1].alpha_y - self.tws_end.alpha_y)**2 )
+            print(err)
+            return err
+
+
+        res = optimize.fmin(error_func, x, xtol=0.1)
+        print(res)
+        for i, quad in enumerate(quads):
+            quad.kick_mrad = res[i]
+            quad.k1 = res[i]/quad.l/1000.
+            quad.ui.set_value(quad.kick_mrad)
+
+
+
+    def apply_coupler_kick(self):
+        print(self.ui.cb_coupler_kick.isChecked())
+        if self.ui.cb_coupler_kick.isChecked():
+            for elem in self.lat.sequence:
+                if elem.__class__ == Cavity and not(".AH1." in elem.id):# and not(".A1." in elem.id):
+                    elem.coupler_kick = True
+                    elem.vx_up = -56.813 + 10.751j
+                    elem.vy_up = -41.091 + 0.5739j
+                    elem.vxx_up = 0.99943 - 0.81401j
+                    elem.vxy_up = 3.4065 - 0.4146j
+                    elem.vx_down = -24.014 + 12.492j
+                    elem.vy_down = 36.481 +  7.9888j
+                    elem.vxx_down = -4.057 - 0.1369j
+                    elem.vxy_down = 2.9243 - 0.012891j
+        else:
+            for elem in self.lat.sequence:
+                if elem.__class__ == Cavity and not(".AH1." in elem.id):# and not(".A1." in elem.id):
+                    elem.coupler_kick = False
+        self.lat.update_transfer_maps()
+        self.calc_twiss()
+
+        # calc orbit
+        self.orbit.calc_orbit()
+
+    def apply_second_order(self):
+        print(self.ui.cb_sec_order.isChecked())
+        method = MethodTM()
+        if self.ui.cb_sec_order.isChecked():
+            method.global_method = SecondTM
+        else:
+            method.global_method = TransferMap
+        self.lat = MagneticLattice(self.lat.sequence, method=method)
+        #self.lat.update_transfer_maps()
+        #self.calc_twiss()
+        #print("second")
+        # calc orbit
+        self.orbit.calc_orbit()
 
     def return_lat(self):
         #self.lat = MagneticLattice(cell_i1+cell_l1)
         current_lat = self.ui.cb_lattice.currentText()
-
+        method = MethodTM()
+        method.global_method = TransferMap
         if current_lat == "I1 + L1":
-            self.lat = MagneticLattice(cell_i1 + cell_l1)
-            self.tws0 = tws_i1
+            self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)
+            self.tws_des = tws_i1
+
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] )
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
             print(len(self.lat.sequence))
         elif current_lat == "L1":
-            self.lat = MagneticLattice(cell_l1)
-            self.tws0 = tws_l1
+            self.lat = MagneticLattice(cell_l1, method=method)
+            self.tws_des = tws_l1
+
+            tmp_lat = MagneticLattice(self.copy_cells[1] )
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+
         elif current_lat == "I1 + L1 + L2":
-            self.lat = MagneticLattice(cell_l1 + cell_l1 + cell_l2)
-            self.tws0 = tws_l1
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2, method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]  + self.copy_cells[2])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+
+        elif current_lat == "L2":
+            self.lat = MagneticLattice(cell_l2 , method=method)
+            self.tws_des = tws_l2
+            tmp_lat = MagneticLattice( self.copy_cells[2])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+
         else:
-            self.lat = MagneticLattice(cell_i1)
-            self.tws0 = tws_i1
+            self.lat = MagneticLattice(cell_i1 , method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
             print(len(self.lat.sequence))
+        self.tws0 = copy.deepcopy(self.tws_des)
         self.load_lattice()
-        self.calc()
+
+        self.calc_twiss()
+
+        # for orbit
+        #self.orbit.load_orbit_devs()
+        self.orbit.calc_orbit()
         return self.lat
 
     def return_tws(self):
@@ -235,8 +395,8 @@ class ManulInterfaceWindow(QFrame):
         tws0.alpha_y = 18.185436973
         return tws0
 
-    def load_lattice(self):
-        self.quads = []
+    def load_devices(self, types):
+        devices = []
         mi_devs = {}
         #cell_i1_copy = copy.deepcopy(cell_i1_copy)
         #lat_tmp = MagneticLattice(cell_i1_copy)
@@ -244,40 +404,52 @@ class ManulInterfaceWindow(QFrame):
         L = 0
         for elem in self.lat.sequence:
             L += elem.l
-            if elem.__class__ in [Quadrupole]:
+            if elem.__class__ in types:
                 elem.s_pos = L - elem.l/2.
                 elem.k1_th = elem.k1
                 elem.kick_mrad = elem.k1 * elem.l * 1000.
                 elem.i_kick = elem.kick_mrad
-                self.quads.append(elem)
+                devices.append(elem)
                 #elem.mi = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                if elem.ps_id not in mi_devs.keys():
-
+                if "ps_id" in elem.__dict__:
+                    if elem.ps_id not in mi_devs.keys():
+                        mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                        mi_dev.mi = self.mi
+                        elem.mi = mi_dev
+                        mi_devs[elem.ps_id] = mi_dev
+                    else:
+                        elem.mi = mi_devs[elem.ps_id]
+                else:
                     mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                     mi_dev.mi = self.mi
                     elem.mi = mi_dev
-                    mi_devs[elem.ps_id] = mi_dev
-                else:
-                    elem.mi = mi_devs[elem.ps_id]
+        return devices
 
-        self.add_devs2table(self.quads)
+
+    def load_lattice(self):
+        self.quads = self.load_devices(types=[Quadrupole])
+        self.add_devs2table(self.quads, w_table=self.ui.tableWidget, calc_obj=self.calc_twiss)
+
         #self.init_kick_mrad = np.array([q.kick_mrad for q in self.quads])
         self.quad_ampl = np.max(np.abs(np.array([q.kick_mrad for q in self.quads])))
-        tws = twiss(self.lat, self.tws0)
+        # for orbit
+        self.orbit.load_orbit_devs()
+
+        tws = twiss(self.lat, self.tws_des)
         #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
         #plt.show()
-        beta_x_des = [tw.beta_x for tw in tws]
-        beta_y_des = [tw.beta_y for tw in tws]
-        dx_des = [tw.Dx for tw in tws]
-        dy_des = [tw.Dy for tw in tws]
+        #beta_x_des = [tw.beta_x for tw in tws]
+        #beta_y_des = [tw.beta_y for tw in tws]
+        #dx_des = [tw.Dx for tw in tws]
+        #dy_des = [tw.Dy for tw in tws]
         s = [tw.s for tw in tws]
-        self.beta_x_des.setData(x=s, y=beta_x_des)
-        self.beta_y_des.setData(x=s, y=beta_y_des)
-        self.plot_lat()
+        self.beta_x_des.setData(x=s, y=self.b_x_des)
+        self.beta_y_des.setData(x=s, y=self.b_y_des)
+        self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
 
-    def calc(self, calc=True):
+    def calc_twiss(self, calc=True):
         #lat = MagneticLattice(cell)
-        if self.online_calc== False:
+        if self.online_calc == False:
             return
 
         # L = 0
@@ -313,38 +485,50 @@ class ManulInterfaceWindow(QFrame):
 
         self.update_plot(s, beta_x, beta_y, dx, dy)
 
-    def add_devs2table(self, devs):
+    def add_devs2table(self, devs, w_table, calc_obj, spin_params=[-5000, 5000, 5], check_box=False):
         """ Initialize the UI table object """
         #spin_boxes = [QtGui.QDoubleSpinBox()]*
         self.spin_boxes = []
+        w_table.setRowCount(0)
         for row in range(len(devs)):
             eng = QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates)
-            self.ui.tableWidget.setRowCount(row + 1)
+            w_table.setRowCount(row + 1)
             pv = devs[row].id
             # put PV in the table
-            self.ui.tableWidget.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
+            w_table.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
             # put start val in
-            self.ui.tableWidget.setItem(row, 1, QtGui.QTableWidgetItem(str(devs[row].kick_mrad)))
+            w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(devs[row].kick_mrad)))
             spin_box = QtGui.QDoubleSpinBox()
             spin_box.setStyleSheet("color: rgb(153,204,255); font-size: 16px; background-color:#595959;")
             spin_box.setLocale(eng)
             spin_box.setDecimals(4)
-            spin_box.setMaximum(5000)
-            spin_box.setMinimum(-5000)
-            spin_box.setSingleStep(5)
+            spin_box.setMaximum(spin_params[1])
+            spin_box.setMinimum(spin_params[0])
+            spin_box.setSingleStep(spin_params[2])
             spin_box.setValue(devs[row].kick_mrad)
 
             #dev.k1 = spin_box.value()
             spin_box.setAccelerated(True)
-            spin_box.valueChanged.connect(self.calc)
+            spin_box.valueChanged.connect(calc_obj)
             # spin_box.setFixedWidth(50)
-            self.ui.tableWidget.setCellWidget(row, 2, spin_box)
-            self.ui.tableWidget.resizeColumnsToContents()
+            w_table.setCellWidget(row, 2, spin_box)
+            w_table.resizeColumnsToContents()
             self.spin_boxes.append(spin_box)
+
+            if check_box:
+                checkBoxItem = QtGui.QTableWidgetItem()
+                # checkBoxItem.setBackgroundColor(QtGui.QColor(100,100,150))
+                checkBoxItem.setCheckState(QtCore.Qt.Checked)
+                flags = checkBoxItem.flags()
+                # print("FLAG", flags)
+                # flags != flags
+                checkBoxItem.setFlags(flags)
+                w_table.setItem(row, 3, checkBoxItem)
+
             devs[row].row = row
 
             ui = DeviceUI()
-            ui.tableWidget = self.ui.tableWidget
+            ui.tableWidget = w_table
             ui.row = row
             ui.col = 2
             devs[row].ui = ui
@@ -380,24 +564,26 @@ class ManulInterfaceWindow(QFrame):
         layout.addWidget(self.toolbar)
         self.ui.widget_2.setLayout(layout)
 
-    def plot_lat(self):
-        self.r_items = []
+    def plot_lat(self, plot_wdg, types):
+        self.plot2.clear()
+        r_items = []
         L = 0.
         for elem in self.lat.sequence:
             a = 1
             L += elem.l
-            if elem.__class__ == Quadrupole:
+            if elem.__class__ in types:
                 s = L - elem.l
-                r1 = pg.QtGui.QGraphicsRectItem(s, -10, elem.l, 10*elem.k1/self.quad_ampl)
+                r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l, 1)#10*elem.k1/self.quad_ampl)
                 #print()
                 #color = QtGui.QColor(164, 230, 10)
                 #pen = pg.mkPen(color, width=1)
                 r1.setPen(pg.mkPen(None))
                 r1.setBrush(pg.mkBrush("g"))
-                r1.init_params = [s, 0, elem.l, 1*elem.k1/self.quad_ampl]
-                self.r_items.append(r1)
-                self.plot2.addItem(r1)
-
+                r1.init_params = [s, 0, elem.l, 1] #*elem.k1/self.quad_ampl]
+                r_items.append(r1)
+                plot_wdg.addItem(r1)
+        plot_wdg.update()
+        return r_items
         #print(self.plot2.items())
 
     def zoom_signal(self):
@@ -510,46 +696,9 @@ class ManulInterfaceWindow(QFrame):
         self.Dy = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Dy', antialias=True)
         self.plot3.addItem(self.Dy)
         self.plot2.sigRangeChanged.connect(self.zoom_signal)
-        #win2 = pg.GraphicsWindow()
-        #self.beta = pg.PlotCurveItem(x=[], y=[], pen=pen, name='test', antialias=True)
-        #self.plot2 = win2.addPlot()
-        #self.plot2.showAxis('bottom', False)
-        #self.plot2.showAxis('left', False)
-        #self.plot2.addItem(self.beta)
-
-        #layout2 = QtGui.QGridLayout()
-
-        #layout2.addWidget(win2, 0, 0)
-        #self.ui.widget_3.setLayout(layout2)
 
 
-        #layout.setContentsMargins(-1, -1, -1, 0)
-        #layout2.setContentsMargins(-1, 0, -1, -1)
 
-        #def update():
-        #    region.setZValue(10)
-        #    minX, maxX = region.getRegion()
-        #    self.plot1.setXRange(minX, maxX, padding=0)
-        #
-        #region.sigRegionChanged.connect(update)
-        #
-        #def updateRegion(window, viewRange):
-        #    rgn = viewRange[0]
-        #    region.setRegion(rgn)
-        #
-        #self.plot1.sigRangeChanged.connect(updateRegion)
-        #
-        #region.setRegion([0, 100])
-
-        #vb = win.addViewBox(col=0, row=1)
-        #r1 = pg.QtGui.QGraphicsRectItem(0, 0, 0.4, 1)
-        #r1.setPen(pg.mkPen(None))
-        #r1.setBrush(pg.mkBrush('r'))
-        #self.plot2.addItem(r1)
-        #r2 = pg.QtGui.QGraphicsRectItem(0.2, -5, 0.1, 10)
-        #r2.setPen(pg.mkPen((0, 0, 0, 100)))
-        #r2.setBrush(pg.mkBrush((50, 50, 200)))
-        #self.plot2.addItem(r2)
 
     def update_plot(self, s, bx, by, dx, dy):
         # Line
@@ -584,8 +733,7 @@ def main():
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_X11InitThreads)
     #create the application
     app    = QApplication(sys.argv)
-    path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'ocelot.png')
-    app.setWindowIcon(QtGui.QIcon(path))
+
 
     window = ManulInterfaceWindow()
 

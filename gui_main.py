@@ -115,7 +115,9 @@ class MainWindow(Ui_Form):
         #self.read_alarm = QtCore.QTimer()
         #self.read_alarm.timeout.connect(self.alarm_value)
         #self.read_alarm.start(1000)
-        self.add_table()
+        self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
+        self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
+        #self.add_cor_table()
         # self.horizontalLayout_2.setStyleSheet("color: red")
 
         # font = self.pb_hyper_file.font()
@@ -126,28 +128,50 @@ class MainWindow(Ui_Form):
 
         # self.window = window
 
-    def add_table(self):
+    def add_table(self, widget, headers):
 
-        self.tableWidget = QtGui.QTableWidget(self.Form)
-        self.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
-        self.tableWidget.setColumnCount(0)
-        self.tableWidget.setRowCount(0)
+        tableWidget = QtGui.QTableWidget(self.Form)
+        tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        tableWidget.setObjectName(_fromUtf8("tableWidget"))
+        tableWidget.setColumnCount(0)
+        tableWidget.setRowCount(0)
         layout = QtGui.QGridLayout()
-        self.widget.setLayout(layout)
-        layout.addWidget(self.tableWidget, 0, 0)
+        widget.setLayout(layout)
+        layout.addWidget(tableWidget, 0, 0)
 
-        headers = ["Quadrupole", "Init. Val.", "Cur. Val."]
-        self.tableWidget.setColumnCount(len(headers))
-        self.tableWidget.setHorizontalHeaderLabels(headers)
-        header = self.tableWidget.horizontalHeader()
+        #headers = ["Quadrupole", "Init. Val.", "Cur. Val."]
+        tableWidget.setColumnCount(len(headers))
+        tableWidget.setHorizontalHeaderLabels(headers)
+        header = tableWidget.horizontalHeader()
         header.setResizeMode(0, QtGui.QHeaderView.Stretch)
         header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
         header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
-        self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
-        self.tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        if len(headers) == 4:
+            header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
+        tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
+        tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        return tableWidget
 
+    def add_cor_table(self):
 
+        self.table_cor = QtGui.QTableWidget(self.Form)
+        self.table_cor.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.table_cor.setObjectName(_fromUtf8("tableWidget"))
+        self.table_cor.setColumnCount(0)
+        self.table_cor.setRowCount(0)
+        layout = QtGui.QGridLayout()
+        self.w_orbit.setLayout(layout)
+        layout.addWidget(self.table_cor, 0, 0)
+
+        headers = ["Correctors", "Init. Val.", "Cur. Val."]
+        self.table_cor.setColumnCount(len(headers))
+        self.table_cor.setHorizontalHeaderLabels(headers)
+        header = self.table_cor.horizontalHeader()
+        header.setResizeMode(0, QtGui.QHeaderView.Stretch)
+        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        self.table_cor.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
+        self.table_cor.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
     def alarm_value(self):
         """
