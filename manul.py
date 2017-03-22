@@ -1,5 +1,5 @@
 """
-
+Sergey Tomin. XFEL/DESY, 2017.
 """
 #QT imports
 from PyQt4.QtGui import QApplication, QFrame, QPixmap, QMessageBox
@@ -19,7 +19,10 @@ path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH", os.path.realpath(__file__), path[:indx])
 sys.path.append(path[:indx])
-
+if sys.version_info[0] == 2:
+    from imp import reload
+else:
+    from importlib import reload
 import time
 import pyqtgraph as pg
 from gui_main import *
@@ -56,6 +59,9 @@ class DeviceUI:
 
     def set_init_value(self, val):
         self.tableWidget.item(self.row, 1).setText(str(val))
+
+    def get_init_value(self):
+        return float(self.tableWidget.item(self.row, 1).text())
 
     def uncheck(self):
         item = self.tableWidget.item(self.row, 3)
@@ -148,6 +154,16 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
+        self.ui.pb_reload.clicked.connect(self.reload_lat)
+
+    def reload_lat(self):
+        cell_i1 = copy.deepcopy(self.copy_cells[0])
+        cell_l1 = copy.deepcopy(self.copy_cells[1])
+        cell_l2 = copy.deepcopy(self.copy_cells[2])
+        try:
+            pass
+        except:
+            print("ERROR in RELOAD")
 
 
 
@@ -384,6 +400,9 @@ class ManulInterfaceWindow(QFrame):
         # for orbit
         #self.orbit.load_orbit_devs()
         self.orbit.calc_orbit()
+        #self.ui.tableWidget.repaint()
+        #self.ui.tableWidget.resizeColumnsToContents()
+        #self.repaint()
         return self.lat
 
     def return_tws(self):
@@ -499,20 +518,18 @@ class ManulInterfaceWindow(QFrame):
             # put start val in
             w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(devs[row].kick_mrad)))
             spin_box = QtGui.QDoubleSpinBox()
-            spin_box.setStyleSheet("color: rgb(153,204,255); font-size: 16px; background-color:#595959;")
+            spin_box.setStyleSheet("color: #b1b1b1; font-size: 16px; background-color:#595959; border: 2px solid #b1b1b1")
             spin_box.setLocale(eng)
             spin_box.setDecimals(4)
             spin_box.setMaximum(spin_params[1])
             spin_box.setMinimum(spin_params[0])
             spin_box.setSingleStep(spin_params[2])
             spin_box.setValue(devs[row].kick_mrad)
-
-            #dev.k1 = spin_box.value()
             spin_box.setAccelerated(True)
             spin_box.valueChanged.connect(calc_obj)
             # spin_box.setFixedWidth(50)
             w_table.setCellWidget(row, 2, spin_box)
-            w_table.resizeColumnsToContents()
+            #w_table.resizeColumnsToContents()
             self.spin_boxes.append(spin_box)
 
             if check_box:
@@ -532,7 +549,7 @@ class ManulInterfaceWindow(QFrame):
             ui.row = row
             ui.col = 2
             devs[row].ui = ui
-
+        #w_table.repaint()
 
     def add_plot_matplotlib(self):
 
@@ -738,11 +755,8 @@ def main():
     window = ManulInterfaceWindow()
 
 
-
-
-
     #show app
-    #window.setWindowIcon(QtGui.QIcon('ocelot.png'))
+    window.setWindowIcon(QtGui.QIcon('manul.png'))
     window.show()
 
     #Build documentaiton if source files have changed

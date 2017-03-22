@@ -155,8 +155,8 @@ bpmf_52_i1 = Monitor(eid='BPMF.52.I1')
 bpma_55_i1 = Monitor(eid='BPMA.55.I1')
 bpma_57_i1 = Monitor(eid='BPMA.57.I1')
 bpma_59_i1 = Monitor(eid='BPMA.59.I1')
-bpmatest_60_i1 = Monitor(eid='BPMATEST.60.I1')
-bpmatest_61_i1 = Monitor(eid='BPMATEST.61.I1')
+bpmatest_60_i1 = Drift() # Monitor(eid='BPMATEST.60.I1')
+bpmatest_61_i1 = Drift() # Monitor(eid='BPMATEST.61.I1')
 
 # sextupoles 
 

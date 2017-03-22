@@ -459,3 +459,13 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
 {
     border: 1px solid #ffaa00;
 }
+
+
+QAbstractSpinBox {
+    border: 2px solid #b1b1b1;
+    background-color:#595959;
+    color:  #232629;
+}
+
+
+
