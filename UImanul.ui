@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1159</width>
-    <height>1022</height>
+    <height>1026</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -387,7 +387,7 @@
        <item row="6" column="0" colspan="2">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QPushButton" name="pb_write_corrs">
+          <widget class="QPushButton" name="pb_apply_kicks">
            <property name="minimumSize">
             <size>
              <width>150</width>
@@ -405,7 +405,7 @@
             <string notr="true">color: rgb(85, 255, 127);</string>
            </property>
            <property name="text">
-            <string>Write to Quads</string>
+            <string>Apply Kicks</string>
            </property>
           </widget>
          </item>
@@ -595,7 +595,6 @@
                <height>16777215</height>
               </size>
              </property>
-             <zorder>horizontalLayoutWidget</zorder>
             </widget>
            </item>
           </layout>

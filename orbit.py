@@ -89,6 +89,9 @@ class OrbitInterface:
         self.ui.pb_check.clicked.connect(lambda: self.getRows(2))
         self.ui.pb_uncheck.clicked.connect(lambda: self.getRows(0))
         self.ui.pb_read_orbit.clicked.connect(self.read_orbit)
+
+        self.ui.pb_apply_kicks.clicked.connect(self.apply_kicks)
+
         self.ui.pb_calc_misal.clicked.connect(self.calc_misalignment_rm)
         self.ui.pb_calc_RM.clicked.connect(self.response_matrix)
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
@@ -108,6 +111,15 @@ class OrbitInterface:
     #def return_lattice(self):
     #    self.load_lattice()
     #    self.calc_twiss()
+
+    def apply_kicks(self):
+        corrs = self.get_dev_from_cb_state(self.corrs)
+        for cor in corrs:
+
+            kick_mrad = cor.ui.get_value()
+            print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            if -2.5 <= kick_mrad <=2.5:
+                cor.mi.set_value(kick_mrad)
 
     def intro_misal(self):
         #lat = MagneticLattice(cell)

@@ -58,6 +58,7 @@ class DeviceUI:
         self.tableWidget.cellWidget(self.row, self.col).setValue(val)
 
     def set_init_value(self, val):
+        val = "{:1.4e}".format(val)
         self.tableWidget.item(self.row, 1).setText(str(val))
 
     def get_init_value(self):
