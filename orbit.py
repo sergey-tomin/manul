@@ -30,7 +30,7 @@ class BPMUI:
         self.check_values(val)
 
     def check_values(self, val):
-        if np.max(np.abs(val)) > 0.4:
+        if np.max(np.abs(val)) > 15.:
             self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.tableWidget.item(self.row, 2).setBackground(QtGui.QColor(255, 0, 0))  # red
 
