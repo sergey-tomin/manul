@@ -2,7 +2,8 @@
 
 # Form implementation generated from reading ui file 'UImanul.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created: Mon Mar 27 16:40:54 2017
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,7 +26,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(1159, 1026)
+        Form.resize(1159, 1049)
         Form.setMinimumSize(QtCore.QSize(1000, 0))
         Form.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         Form.setStyleSheet(_fromUtf8("background-color: white"))
@@ -268,6 +269,16 @@ class Ui_Form(object):
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.pb_reset_all = QtGui.QPushButton(self.tab)
+        self.pb_reset_all.setMinimumSize(QtCore.QSize(0, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pb_reset_all.setFont(font)
+        self.pb_reset_all.setStyleSheet(_fromUtf8("color: rgb(255, 0, 0);"))
+        self.pb_reset_all.setObjectName(_fromUtf8("pb_reset_all"))
+        self.horizontalLayout.addWidget(self.pb_reset_all)
         self.pb_check = QtGui.QPushButton(self.tab)
         self.pb_check.setMinimumSize(QtCore.QSize(0, 20))
         font = QtGui.QFont()
@@ -286,7 +297,7 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pb_uncheck.setFont(font)
-        self.pb_uncheck.setStyleSheet(_fromUtf8("color: rgb(255, 0, 0);"))
+        self.pb_uncheck.setStyleSheet(_fromUtf8(""))
         self.pb_uncheck.setObjectName(_fromUtf8("pb_uncheck"))
         self.horizontalLayout.addWidget(self.pb_uncheck)
         self.gridLayout_2.addLayout(self.horizontalLayout, 3, 0, 1, 1)
@@ -393,6 +404,7 @@ class Ui_Form(object):
         self.pb_read_orbit.setText(_translate("Form", "Read Orbit", None))
         self.pb_update_3.setText(_translate("Form", "Update Reference", None))
         self.pb_reset_3.setText(_translate("Form", "Reset All", None))
+        self.pb_reset_all.setText(_translate("Form", "Reset All", None))
         self.pb_check.setText(_translate("Form", "Check", None))
         self.pb_uncheck.setText(_translate("Form", "Uncheck", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Correctors", None))

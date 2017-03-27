@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1159</width>
-    <height>1026</height>
+    <height>1049</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -522,6 +522,29 @@
            <item row="3" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
+              <widget class="QPushButton" name="pb_reset_all">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 0, 0);</string>
+               </property>
+               <property name="text">
+                <string>Reset All</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pb_check">
                <property name="minimumSize">
                 <size>
@@ -566,7 +589,7 @@
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(255, 0, 0);</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Uncheck</string>

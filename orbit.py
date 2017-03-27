@@ -95,6 +95,7 @@ class OrbitInterface:
         self.ui.pb_calc_misal.clicked.connect(self.calc_misalignment_rm)
         self.ui.pb_calc_RM.clicked.connect(self.response_matrix)
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
+        self.ui.pb_reset_all.clicked.connect(self.reset_all)
         #self.ui.table_bpm.itemChanged.connect(self.update_plot)
 
         #self.ui.cb_coupler_kick.stateChanged.connect(self.calc_orbit)
@@ -111,6 +112,11 @@ class OrbitInterface:
     #def return_lattice(self):
     #    self.load_lattice()
     #    self.calc_twiss()
+    def reset_all(self):
+        corrs = self.get_dev_from_cb_state(self.corrs)
+        for cor in corrs:
+            kick_mrad = cor.ui.get_init_value()
+            cor.ui.set_value(kick_mrad)
 
     def apply_kicks(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
