@@ -14,8 +14,8 @@ from ocelot.cpbd.orbit_correction import *
 class Corrector(Device):
 
     def set_value(self, val):
-        self.values.append(val)
-        self.times.append(time.time())
+        #self.values.append(val)
+        #self.times.append(time.time())
         ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         self.mi.set_value(ch, val)
 
@@ -130,12 +130,12 @@ class OrbitInterface:
         x_plane = self.ui.cb_x_cors.isChecked()
         y_plane = self.ui.cb_y_cors.isChecked()
 
-        if y_plane:
+        if y_plane and not x_plane:
             for cor in self.hcors:
                 cor.ui.set_hide(True)
             for cor in self.vcors:
                 cor.ui.set_hide(False)
-        elif x_plane:
+        elif x_plane and not y_plane:
             for cor in self.hcors:
                 cor.ui.set_hide(False)
             for cor in self.vcors:

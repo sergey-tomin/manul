@@ -70,7 +70,7 @@ class DeviceUI:
 
     def check(self):
         item = self.tableWidget.item(self.row, 3)
-        item.setCheckState(True)
+        item.setCheckState(QtCore.Qt.Checked)
 
     def state(self):
         item = self.tableWidget.item(self.row, 3)
@@ -84,7 +84,10 @@ class DeviceUI:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
 
     def set_hide(self, hide):
-        self.uncheck()
+        if hide:
+            self.uncheck()
+        else:
+            self.check()
         self.tableWidget.setRowHidden(self.row, hide)
 
 class MDevice(Device):
