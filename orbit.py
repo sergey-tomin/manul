@@ -120,11 +120,23 @@ class OrbitInterface:
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
-
+        self.ui.sb_kick_weight.setValue(1)
+        #self.ui.sb_kick_weight.valueChanged.connect(self.scale)
         #self.ui.table_bpm.itemChanged.connect(self.update_plot)
 
         #self.ui.cb_coupler_kick.stateChanged.connect(self.calc_orbit)
         #self.loadStyleSheet()
+    def scale(self):
+        corrs = self.get_dev_from_cb_state(self.corrs)
+        self.online_calc = False
+        for cor in corrs:
+
+            kick_mrad = cor.ui.get_value()
+            cor.ui.set_value(kick_mrad*self.ui.sb_kick_weight.value())
+            #print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            #if -2.5 <= kick_mrad <=2.5:
+            #    cor.mi.set_value(kick_mrad)
+        self.online_calc = True
 
     def choose_plane(self):
         x_plane = self.ui.cb_x_cors.isChecked()
@@ -160,10 +172,10 @@ class OrbitInterface:
         corrs = self.get_dev_from_cb_state(self.corrs)
         for cor in corrs:
 
-            kick_mrad = cor.ui.get_value()
+            kick_mrad = cor.ui.get_value() * self.ui.sb_kick_weight.value()
             print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
-            if -2.5 <= kick_mrad <=2.5:
-                cor.mi.set_value(kick_mrad)
+            #if -2.5 <= kick_mrad <=2.5:
+            cor.mi.set_value(kick_mrad)
 
     def intro_misal(self):
         #lat = MagneticLattice(cell)
