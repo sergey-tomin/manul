@@ -118,22 +118,36 @@ class OrbitInterface:
         self.ui.pb_calc_RM.clicked.connect(self.response_matrix)
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
+        self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
+        self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
+
         #self.ui.table_bpm.itemChanged.connect(self.update_plot)
 
         #self.ui.cb_coupler_kick.stateChanged.connect(self.calc_orbit)
         #self.loadStyleSheet()
 
-    #def loadStyleSheet(self):
-    #    """ Load in the dark theme style sheet. """
-    #    try:
-    #        self.cssfile = "style.css"
-    #        with open(self.cssfile, "r") as f:
-    #            self.setStyleSheet(f.read())
-    #    except IOError:
-    #        print('No style sheet found!')
-    #def return_lattice(self):
-    #    self.load_lattice()
-    #    self.calc_twiss()
+    def choose_plane(self):
+        x_plane = self.ui.cb_x_cors.isChecked()
+        y_plane = self.ui.cb_y_cors.isChecked()
+
+        if y_plane:
+            for cor in self.hcors:
+                cor.ui.set_hide(True)
+            for cor in self.vcors:
+                cor.ui.set_hide(False)
+        elif x_plane:
+            for cor in self.hcors:
+                cor.ui.set_hide(False)
+            for cor in self.vcors:
+                cor.ui.set_hide(True)
+
+        else:
+            for cor in self.hcors:
+                cor.ui.set_hide(False)
+            for cor in self.vcors:
+                cor.ui.set_hide(False)
+
+
     def reset_all(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
         self.online_calc = False

@@ -58,7 +58,7 @@ class DeviceUI:
         self.tableWidget.cellWidget(self.row, self.col).setValue(val)
 
     def set_init_value(self, val):
-        val = "{:1.4e}".format(val)
+        val = np.round(val, 4) # "{:1.4e}".format(val)
         self.tableWidget.item(self.row, 1).setText(str(val))
 
     def get_init_value(self):
@@ -83,6 +83,9 @@ class DeviceUI:
         else:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
 
+    def set_hide(self, hide):
+        self.uncheck()
+        self.tableWidget.setRowHidden(self.row, hide)
 
 class MDevice(Device):
     def __init__(self, eid=None):
