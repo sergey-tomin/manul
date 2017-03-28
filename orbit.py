@@ -8,8 +8,30 @@ import numpy as np
 from ocelot import *
 from ocelot.optimizer.mint.opt_objects import Device
 from ocelot.cpbd.track import *
-
+import time
 from ocelot.cpbd.orbit_correction import *
+
+class Corrector(Device):
+
+    def set_value(self, val):
+        self.values.append(val)
+        self.times.append(time.time())
+        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        self.mi.set_value(ch, val)
+
+    def get_value(self):
+        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        val = self.mi.get_value(ch)
+        return val
+
+    def get_limits(self):
+        ch_min = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
+        min_kick = self.mi.get_value(ch_min)
+        ch_max = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
+        max_kick = self.mi.get_value(ch_max)
+        return [min_kick*1000, max_kick*1000]
+
+
 
 class BPMUI:
     def __init__(self, ui=None):
@@ -114,9 +136,11 @@ class OrbitInterface:
     #    self.calc_twiss()
     def reset_all(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
+        self.online_calc = False
         for cor in corrs:
             kick_mrad = cor.ui.get_init_value()
             cor.ui.set_value(kick_mrad)
+        self.online_calc = True
 
     def apply_kicks(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
@@ -216,6 +240,7 @@ class OrbitInterface:
             if elem.__class__ in [Hcor, Vcor]:
                 #print(elem.id, elem.row)
                 elem.kick_mrad = elem.ui.get_value()
+                elem.ui.check_values(elem.kick_mrad, elem.lims)
                 kick_mrad_i = elem.ui.get_init_value()
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
                 elem.angle = angle # elem.kick_mrad/1000.
@@ -230,10 +255,10 @@ class OrbitInterface:
                 #sizes = list(r.boundingRect().getRect())
                 sizes[3] = elem.kick_mrad/self.cor_ampl
                 r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
-        print("1 = ", start - time())
-        start = time()
+        #print("1 = ", start - time())
+        #start = time()
         self.parent.lat.update_transfer_maps()
-        print("2 = ", start - time())
+        #print("2 = ", start - time())
         #print("test")
         # exit(0)
         #if self.p_init == None:
@@ -252,12 +277,13 @@ class OrbitInterface:
         self.orbit.correction(p_init=p0)
         self.online_calc = False
         for cor in self.corrs:
-           print("fin = ",  cor.angle, cor.id, cor)
-           kick_mrad_old = cor.ui.get_value()
-           delta_kick_mrad = cor.angle*1000
-           new_kick_mrad = kick_mrad_old + delta_kick_mrad
-           cor.kick_mrad =  new_kick_mrad # cor.angle*1000
-           cor.ui.set_value(cor.kick_mrad)
+            print("fin = ",  cor.angle, cor.id, cor)
+            kick_mrad_old = cor.ui.get_value()
+            delta_kick_mrad = cor.angle*1000
+            new_kick_mrad = kick_mrad_old + delta_kick_mrad
+            cor.kick_mrad =  new_kick_mrad # cor.angle*1000
+            cor.ui.set_value(cor.kick_mrad)
+            cor.ui.check_values(cor.kick_mrad, cor.lims)
         self.online_calc = True
 
         self.calc_orbit()
@@ -438,16 +464,18 @@ class OrbitInterface:
                 #elem.mi = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                 if "ps_id" in elem.__dict__:
                     if elem.ps_id not in mi_devs.keys():
-                        mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                        mi_dev = Corrector(eid=elem.id) # Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                         mi_dev.mi = self.parent.mi
                         elem.mi = mi_dev
                         mi_devs[elem.ps_id] = mi_dev
                     else:
                         elem.mi = mi_devs[elem.ps_id]
                 else:
-                    mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                    mi_dev = Corrector(eid=elem.id) # Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                     mi_dev.mi = self.parent.mi
                     elem.mi = mi_dev
+
+                elem.lims = elem.mi.get_limits()
                 #print("load ", elem.id)
                 if elem.__class__ == Hcor:
                     self.hcors.append(elem)

@@ -1,10 +1,10 @@
 from ocelot import * 
-tws_dl = Twiss()
-tws_dl.beta_x  = 3.09986112826
-tws_dl.beta_y  = 4.58926819905
-tws_dl.alpha_x = 0.303712073019
-tws_dl.alpha_y = -1.80453054653
-tws_dl.E       = 0.1299999892
+tws_l1 = Twiss()
+tws_l1.beta_x  = 3.09986112826
+tws_l1.beta_y  = 4.58926819905
+tws_l1.alpha_x = 0.303712073019
+tws_l1.alpha_y = -1.80453054653
+tws_l1.E       = 0.1299999892
 # drifts 
 d_1 = Drift(l=0, eid='D_1')
 d_2 = Drift(l=1.24, eid='D_2')
@@ -227,14 +227,14 @@ bl_88_i1 = SBend(l = 0.2, angle=0.1109740393, e1=0.05548702, e2=0.05548702, gap=
 bl_90_i1 = SBend(l = 0.2, angle=-0.0426524581, e1=-0.021326229, e2=-0.021326229, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BL.90.I1')
 bl_91_i1 = SBend(l = 0.2, angle=-0.0426524581, e1=-0.021326229, e2=-0.021326229, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BL.91.I1')
 bl_92_i1 = SBend(l = 0.2, angle=0.1109740393, e1=0.05548702, e2=0.05548702, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BL.92.I1')
-bb_96_i1 = SBend(l = 0.5, angle=0.1429424657, e1=0.0, e2=0.1429424657, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.96.I1')
-bb_98_i1 = SBend(l = 0.5, angle=-0.1429424657, e1=-0.1429424657, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.98.I1')
-bb_100_i1 = SBend(l = 0.5, angle=-0.1429424657, e1=0.0, e2=-0.1429424657, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.100.I1')
-bb_101_i1 = SBend(l = 0.5, angle=0.1429424657, e1=0.1429424657, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.101.I1')
-bb_182_b1 = SBend(l = 0.5, angle=0.0539306739, e1=0.0, e2=0.0539306739, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.182.B1')
-bb_191_b1 = SBend(l = 0.5, angle=-0.0539306739, e1=-0.0539306739, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.191.B1')
-bb_193_b1 = SBend(l = 0.5, angle=-0.0539306739, e1=0.0, e2=-0.049964939, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.193.B1')
-bb_202_b1 = SBend(l = 0.5, angle=0.0539306739, e1=0.0539306739, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.202.B1')
+bb_96_i1 = SBend(l = 0.5, angle=0.11957038, e1=0.0, e2=0.11957038, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.96.I1')
+bb_98_i1 = SBend(l = 0.5, angle=-0.11957038, e1=-0.11957038, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.98.I1')
+bb_100_i1 = SBend(l = 0.5, angle=-0.11957038, e1=0.0, e2=-0.11957038, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.100.I1')
+bb_101_i1 = SBend(l = 0.5, angle=0.11957038, e1=0.11957038, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.101.I1')
+bb_182_b1 = SBend(l = 0.5, angle=0.04996493936, e1=0.0, e2=0.049964939, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.182.B1')
+bb_191_b1 = SBend(l = 0.5, angle=-0.04996493936, e1=-0.049964939, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.191.B1')
+bb_193_b1 = SBend(l = 0.5, angle=-0.04996493936, e1=0.0, e2=-0.049964939, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.193.B1')
+bb_202_b1 = SBend(l = 0.5, angle=0.04996493936, e1=0.049964939, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.202.B1')
 
 # correctors 
 ciy_63_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.63.I1')
@@ -485,12 +485,12 @@ tdsb_208_b1 = Cavity(l=1.5, v=0.0, freq=2800000.0, phi=0.0, eid='TDSB.208.B1')
 # Matrices 
 
 # Solenoids 
-dog_leg_start = Marker()
+
 # lattice 
 cell_l1 = (d_1, ensub_62_i1, stsub_62_i1, d_2, ciy_63_i1, d_3, qi_63_i1,
 d_4, bpma_63_i1, d_5, cix_65_i1, d_6, qi_66_i1, d_7, qi_69_i1, 
 d_8, qi_71_i1, d_9, bpma_72_i1, d_10, qi_72_i1, d_10, ciy_72_i1, 
-d_12, cix_73i_i1, d_3, stlat_73_i1, match_73_i1, qi_73_i1, dog_leg_start,  d_14, bl_73_i1,
+d_12, cix_73i_i1, d_3, stlat_73_i1, match_73_i1, qi_73_i1, d_14, bl_73_i1, 
 d_15, cbl_73_i1, d_16, cix_73ii_i1, d_17, sc_74i_i1, d_18, qi_74_i1, 
 d_18, sc_74ii_i1, d_20, bl_75_i1, d_21, bpma_75_i1, d_22, ciy_75_i1, 
 d_23, qi_75_i1, d_24, cix_76_i1, d_25, bl_76_i1, d_20, sc_76_i1, 

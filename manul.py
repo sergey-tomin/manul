@@ -77,6 +77,13 @@ class DeviceUI:
         state = item.checkState()
         return state
 
+    def check_values(self, val, lims):
+        if lims[0]<= val <=lims[1]:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
+        else:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
+
+
 class MDevice(Device):
     def __init__(self, eid=None):
         super(MDevice, self).__init__(eid=eid)
@@ -116,8 +123,8 @@ class ManulInterfaceWindow(QFrame):
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2)
         self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2))
         self.online_calc = True
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         #QFrame.__init__(self)
         #self.ui = Ui_Form()
         #self.ui.setupUi(self)
