@@ -229,7 +229,7 @@ bb_100_i1 = SBend(l = 0.5, angle=-0.1429424657, e1=0.0, e2=-0.1429424657, gap=0,
 bb_101_i1 = SBend(l = 0.5, angle=0.1429424657, e1=0.1429424657, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.101.I1')
 bb_182_b1 = SBend(l = 0.5, angle=0.0539306739, e1=0.0, e2=0.0539306739, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.182.B1')
 bb_191_b1 = SBend(l = 0.5, angle=-0.0539306739, e1=-0.0539306739, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.191.B1')
-bb_193_b1 = SBend(l = 0.5, angle=-0.0539306739, e1=0.0, e2=-0.049964939, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.193.B1')
+bb_193_b1 = SBend(l = 0.5, angle=-0.0539306739, e1=0.0, e2=-0.0539306739, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.193.B1')
 bb_202_b1 = SBend(l = 0.5, angle=0.0539306739, e1=0.0539306739, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.202.B1')
 
 # correctors 
