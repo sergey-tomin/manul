@@ -16,11 +16,11 @@ class Corrector(Device):
     def set_value(self, val):
         #self.values.append(val)
         #self.times.append(time.time())
-        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         val = self.mi.get_value(ch)
         return val
 
@@ -108,8 +108,10 @@ class OrbitInterface:
         self.y_bpm = []
         self.p_init = None
         self.add_orbit_plot()
-        self.ui.pb_check.clicked.connect(lambda: self.getRows(2))
-        self.ui.pb_uncheck.clicked.connect(lambda: self.getRows(0))
+        self.ui.pb_check.clicked.connect(lambda: self.getRows(2, self.ui.table_cor))
+        self.ui.pb_uncheck.clicked.connect(lambda: self.getRows(0, self.ui.table_cor))
+        self.ui.pb_bpm_uncheck.clicked.connect(lambda: self.getRows(0, self.ui.table_bpm))
+        self.ui.pb_bpm_check.clicked.connect(lambda: self.getRows(2, self.ui.table_bpm))
         self.ui.pb_read_orbit.clicked.connect(self.read_orbit)
 
         self.ui.pb_apply_kicks.clicked.connect(self.apply_kicks)
@@ -143,21 +145,23 @@ class OrbitInterface:
         y_plane = self.ui.cb_y_cors.isChecked()
 
         if y_plane and not x_plane:
-            for cor in self.hcors:
-                cor.ui.set_hide(True)
-            for cor in self.vcors:
-                cor.ui.set_hide(False)
+            for cor in self.corrs:
+                if cor.__class__ == Hcor:
+                    cor.ui.set_hide(True)
+                else:
+                    cor.ui.set_hide(False)
+
         elif x_plane and not y_plane:
-            for cor in self.hcors:
-                cor.ui.set_hide(False)
-            for cor in self.vcors:
-                cor.ui.set_hide(True)
+            for cor in self.corrs:
+                if cor.__class__ == Hcor:
+                    cor.ui.set_hide(False)
+                else:
+                    cor.ui.set_hide(True)
 
         else:
-            for cor in self.hcors:
+            for cor in self.corrs:
                 cor.ui.set_hide(False)
-            for cor in self.vcors:
-                cor.ui.set_hide(False)
+
 
 
     def reset_all(self):
@@ -632,7 +636,7 @@ class OrbitInterface:
             # item = self.ui.tableWidget.cellWidget(row, 5)
             #item.setCheckState(False)
 
-    def getRows(self, state):
+    def getRows(self, state, widget):
         """
         Method to set the UI checkbox state from slected rows.
 
@@ -643,10 +647,12 @@ class OrbitInterface:
                 state (bool): Bool of whether the boxes should be checked or unchecked.
         """
         rows=[]
-        for idx in self.ui.table_cor.selectedIndexes():
+        for idx in widget.selectedIndexes():
             rows.append(idx.row())
-            item = self.ui.table_cor.item(idx.row(), 3)
+            item = widget.item(idx.row(), 3)
             if item.flags() == QtCore.Qt.NoItemFlags:
                 print("item disabled")
                 continue
             item.setCheckState(state)
+
+

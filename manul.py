@@ -27,10 +27,10 @@ import time
 import pyqtgraph as pg
 from gui_main import *
 from orbit import OrbitInterface
-from lattices.xfel_i1_890 import *
-from lattices.xfel_l1_890 import *
-from lattices.xfel_l2_890 import *
-from lattices.xfel_l3_890 import *
+from lattices.xfel_i1_mad import *
+from lattices.xfel_l1_mad import *
+from lattices.xfel_l2_mad import *
+from lattices.xfel_l3_mad import *
 from ocelot import *
 from ocelot.gui.accelerator import *
 from ocelot.optimizer.mint.xfel_interface import *
@@ -126,8 +126,8 @@ class ManulInterfaceWindow(QFrame):
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
 
-        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2)
-        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2))
+        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
+        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3))
         self.online_calc = True
         #self.mi = XFELMachineInterface()
         self.mi = TestMachineInterface()
@@ -161,8 +161,10 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("Injector")
         self.ui.cb_lattice.addItem("I1 + L1")
         self.ui.cb_lattice.addItem("I1 + L1 + L2")
+        self.ui.cb_lattice.addItem("I1 + L1 + L2 + L3")
         self.ui.cb_lattice.addItem("L1")
         self.ui.cb_lattice.addItem("L2")
+        self.ui.cb_lattice.addItem("L3")
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         self.ui.cb_otr55.setChecked(True)
         self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
@@ -178,7 +180,6 @@ class ManulInterfaceWindow(QFrame):
             pass
         except:
             print("ERROR in RELOAD")
-
 
 
     def update_table(self):
@@ -388,10 +389,28 @@ class ManulInterfaceWindow(QFrame):
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
 
+        elif current_lat == "I1 + L1 + L2 + L3":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3, method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]  + self.copy_cells[2] + self.copy_cells[3])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+
         elif current_lat == "L2":
             self.lat = MagneticLattice(cell_l2 , method=method)
             self.tws_des = tws_l2
             tmp_lat = MagneticLattice( self.copy_cells[2])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+
+        elif current_lat == "L3":
+            self.lat = MagneticLattice(cell_l3 , method=method)
+            self.tws_des = tws_l3
+            tmp_lat = MagneticLattice( self.copy_cells[3])
             tws = twiss(tmp_lat, self.tws_des)
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]

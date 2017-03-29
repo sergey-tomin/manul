@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul.ui'
 #
-# Created: Tue Mar 28 17:10:23 2017
+# Created: Wed Mar 29 21:51:26 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -103,7 +103,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget_2.sizePolicy().hasHeightForWidth())
         self.widget_2.setSizePolicy(sizePolicy)
-        self.widget_2.setMinimumSize(QtCore.QSize(700, 600))
+        self.widget_2.setMinimumSize(QtCore.QSize(700, 400))
         self.widget_2.setObjectName(_fromUtf8("widget_2"))
         self.gridLayout_6.addWidget(self.widget_2, 0, 0, 1, 2)
         self.widget = QtGui.QWidget(self.tab_2)
@@ -202,7 +202,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.w_orbit.sizePolicy().hasHeightForWidth())
         self.w_orbit.setSizePolicy(sizePolicy)
-        self.w_orbit.setMinimumSize(QtCore.QSize(700, 600))
+        self.w_orbit.setMinimumSize(QtCore.QSize(700, 400))
         self.w_orbit.setObjectName(_fromUtf8("w_orbit"))
         self.horizontalLayout_4.addWidget(self.w_orbit)
         self.gridLayout_8.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
@@ -336,7 +336,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.w_cor.sizePolicy().hasHeightForWidth())
         self.w_cor.setSizePolicy(sizePolicy)
-        self.w_cor.setMinimumSize(QtCore.QSize(400, 204))
+        self.w_cor.setMinimumSize(QtCore.QSize(400, 121))
         self.w_cor.setMaximumSize(QtCore.QSize(400, 16777215))
         self.w_cor.setObjectName(_fromUtf8("w_cor"))
         self.gridLayout_2.addWidget(self.w_cor, 1, 0, 1, 1)
@@ -395,7 +395,12 @@ class Ui_Form(object):
         self.gridLayout_7 = QtGui.QGridLayout(self.tab_4)
         self.gridLayout_7.setObjectName(_fromUtf8("gridLayout_7"))
         self.w_bpm = QtGui.QWidget(self.tab_4)
-        self.w_bpm.setMinimumSize(QtCore.QSize(400, 580))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.w_bpm.sizePolicy().hasHeightForWidth())
+        self.w_bpm.setSizePolicy(sizePolicy)
+        self.w_bpm.setMinimumSize(QtCore.QSize(400, 300))
         self.w_bpm.setObjectName(_fromUtf8("w_bpm"))
         self.gridLayout_7.addWidget(self.w_bpm, 0, 0, 1, 1)
         self.horizontalLayout_3 = QtGui.QHBoxLayout()
