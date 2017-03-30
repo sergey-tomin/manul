@@ -123,11 +123,25 @@ class OrbitInterface:
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
         self.ui.sb_kick_weight.setValue(1)
+        self.ui.pb_update_orbit.clicked.connect(self.update_orbit)
         #self.ui.sb_kick_weight.valueChanged.connect(self.scale)
         #self.ui.table_bpm.itemChanged.connect(self.update_plot)
 
         #self.ui.cb_coupler_kick.stateChanged.connect(self.calc_orbit)
         #self.loadStyleSheet()
+    def update_orbit(self):
+        for elem in self.bpms:
+            try:
+                x_mm, y_mm = elem.mi.get_pos()
+                elem.x = x_mm/1000.
+                elem.y = y_mm/1000.
+                elem.ui.set_value((x_mm, y_mm))
+            except:
+                print("deleted BPM", elem.id)
+                self.bpms.remove(elem)
+
+        self.update_plot()
+
     def scale(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
         self.online_calc = False
@@ -524,7 +538,7 @@ class OrbitInterface:
         win = pg.GraphicsLayoutWidget()
         self.plot_x = win.addPlot(row=0, col=0)
 
-        win.ci.layout.setRowMaximumHeight(0, 200)
+        #win.ci.layout.setRowMaximumHeight(0, 200)
 
         self.plot_x.showGrid(1, 1, 1)
         self.plot_y = win.addPlot(row=1, col=0)
@@ -540,14 +554,7 @@ class OrbitInterface:
         self.plot_y.setAutoVisible(y=True)
 
         self.plot_y.addLegend()
-        #color = QtGui.QColor(0, 255, 255)
-        #pen = pg.mkPen(color, width=3)
-        #self.orb_x = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_x', antialias=True)
-        #self.plot_y.addItem(self.orb_x)
 
-        #pen = pg.mkPen(color, width=1)
-        #self.orb_x_ref = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_x', antialias=True)
-        #self.plot_y.addItem(self.orb_x_ref)
 
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)

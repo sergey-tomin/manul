@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1159</width>
+    <width>1200</width>
     <height>1049</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1000</width>
+    <width>1150</width>
     <height>0</height>
    </size>
   </property>
@@ -376,7 +376,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>700</width>
+             <width>650</width>
              <height>400</height>
             </size>
            </property>
@@ -403,7 +403,7 @@
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: rgb(85, 255, 127);</string>
+            <string notr="true">color: rgb(255, 0, 0);</string>
            </property>
            <property name="text">
             <string>Apply Kicks</string>
@@ -429,7 +429,30 @@
             <string notr="true">color: rgb(85, 255, 255);</string>
            </property>
            <property name="text">
-            <string>Read Orbit</string>
+            <string>Read BPMs/Correctors</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_update_orbit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(85, 255, 127);</string>
+           </property>
+           <property name="text">
+            <string>Update Orbit</string>
            </property>
           </widget>
          </item>
@@ -463,20 +486,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pb_reset_3">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
+             <widget class="QPushButton" name="pb_update_4">
               <property name="minimumSize">
                <size>
                 <width>0</width>
                 <height>20</height>
-               </size>
-              </property>
-              <property name="sizeIncrement">
-               <size>
-                <width>0</width>
-                <height>0</height>
                </size>
               </property>
               <property name="font">
@@ -486,11 +500,8 @@
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(255, 0, 0);</string>
-              </property>
               <property name="text">
-               <string>Reset All</string>
+               <string>Save Orbit as Ref</string>
               </property>
              </widget>
             </item>
@@ -623,6 +634,9 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="locale">
+                 <locale language="English" country="UnitedStates"/>
+                </property>
                 <property name="minimum">
                  <double>0.000000000000000</double>
                 </property>
@@ -672,7 +686,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>400</width>
+               <width>450</width>
                <height>121</height>
               </size>
              </property>

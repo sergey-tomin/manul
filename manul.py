@@ -129,8 +129,8 @@ class ManulInterfaceWindow(QFrame):
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
         self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3))
         self.online_calc = True
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         #QFrame.__init__(self)
         #self.ui = Ui_Form()
         #self.ui.setupUi(self)
