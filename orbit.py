@@ -240,10 +240,6 @@ class OrbitInterface:
             except:
                 print("deleted BPM", elem.id)
                 self.bpms.remove(elem)
-        #self.update_plot(self.s_bpm = np.array([bpm.s for bpm in self.bpms])
-        #self.x_bpm = np.array([bpm.x_mm for bpm in self.bpms])
-        #self.y_bpm = np.array([bpm.y_mm for bpm in self.bpms])
-        #self.update_plot(s=[], x=[], y=[], s_bpm=self.s_bpm, x_ref=self.x_bpm, y_ref=self.y_bpm)
 
         self.update_plot()
 
@@ -328,6 +324,8 @@ class OrbitInterface:
             cor.kick_mrad =  new_kick_mrad # cor.angle*1000
             cor.ui.set_value(cor.kick_mrad)
             cor.ui.check_values(cor.kick_mrad, cor.lims)
+
+            cor.ui.warning(np.abs(delta_kick_mrad) > 0.5)
         self.online_calc = True
 
         self.calc_orbit()
@@ -618,11 +616,11 @@ class OrbitInterface:
         #plt.show()
         x = np.array([p.x for p in p_list])*1000
         y = np.array([p.y for p in p_list])*1000
-        s = [p.s for p in p_list]
+        s = np.array([p.s for p in p_list]) + self.parent.lat_zi
 
         bpms = self.get_dev_from_cb_state(self.bpms)
 
-        s_bpm = np.array([bpm.s for bpm in bpms])
+        s_bpm = np.array([bpm.s for bpm in bpms]) + self.parent.lat_zi
         x_bpm = np.array([bpm.x for bpm in bpms])*1000
         y_bpm = np.array([bpm.y for bpm in bpms])*1000
 

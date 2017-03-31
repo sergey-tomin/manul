@@ -31,6 +31,7 @@ from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
 from lattices.xfel_l2_mad import *
 from lattices.xfel_l3_mad import *
+from lattices.xfel_tld_892 import *
 from ocelot import *
 from ocelot.gui.accelerator import *
 from ocelot.optimizer.mint.xfel_interface import *
@@ -83,6 +84,12 @@ class DeviceUI:
         else:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
 
+    def warning(self, state):
+        if not state:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
+        else:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 255, 0))  # yellow
+
     def set_hide(self, hide):
         if hide:
             self.uncheck()
@@ -127,12 +134,12 @@ class ManulInterfaceWindow(QFrame):
         self.orbit = OrbitInterface(parent=self)
 
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
-        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3))
+        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld))
         self.online_calc = True
         self.mi = XFELMachineInterface()
         #self.mi = TestMachineInterface()
         #QFrame.__init__(self)
-        #self.ui = Ui_Form()
+        #self.ui = UiS_Form()
         #self.ui.setupUi(self)
 
 
@@ -158,10 +165,11 @@ class ManulInterfaceWindow(QFrame):
         self.ui.pb_reset.clicked.connect(self.reset_quads)
 
         #self.ui.cb_select_alg.addItem(self.name_gauss)
-        self.ui.cb_lattice.addItem("Injector")
-        self.ui.cb_lattice.addItem("I1 + L1")
-        self.ui.cb_lattice.addItem("I1 + L1 + L2")
-        self.ui.cb_lattice.addItem("I1 + L1 + L2 + L3")
+        self.ui.cb_lattice.addItem("I1D")
+        self.ui.cb_lattice.addItem("B1D")
+        self.ui.cb_lattice.addItem("B2D")
+        self.ui.cb_lattice.addItem("TLD")
+        self.ui.cb_lattice.addItem("I1")
         self.ui.cb_lattice.addItem("L1")
         self.ui.cb_lattice.addItem("L2")
         self.ui.cb_lattice.addItem("L3")
@@ -360,16 +368,17 @@ class ManulInterfaceWindow(QFrame):
         current_lat = self.ui.cb_lattice.currentText()
         method = MethodTM()
         method.global_method = TransferMap
-        if current_lat == "I1 + L1":
-            self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)
+        if current_lat == "B1D":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_b1d, method=method)
             self.tws_des = tws_i1
 
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] )
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[5])
             tws = twiss(tmp_lat, self.tws_des)
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            print(len(self.lat.sequence))
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen + 23.2)
         elif current_lat == "L1":
             self.lat = MagneticLattice(cell_l1, method=method)
             self.tws_des = tws_l1
@@ -379,25 +388,29 @@ class ManulInterfaceWindow(QFrame):
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-
-        elif current_lat == "I1 + L1 + L2":
-            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2, method=method)
+            self.lat_zi = 62.08894499999998
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+        elif current_lat == "B2D":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_b2d, method=method)
             self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]  + self.copy_cells[2])
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2]  + self.copy_cells[6])
             tws = twiss(tmp_lat, self.tws_des)
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-
-        elif current_lat == "I1 + L1 + L2 + L3":
-            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3, method=method)
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+        elif current_lat == "TLD":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3 + cell_tld, method=method)
             self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]  + self.copy_cells[2] + self.copy_cells[3])
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
+                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[7])
             tws = twiss(tmp_lat, self.tws_des)
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
         elif current_lat == "L2":
             self.lat = MagneticLattice(cell_l2 , method=method)
             self.tws_des = tws_l2
@@ -406,7 +419,8 @@ class ManulInterfaceWindow(QFrame):
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-
+            self.lat_zi = 229.30069400000002
+            print("totlaLen=", self.lat.totalLen+ 23.2)
         elif current_lat == "L3":
             self.lat = MagneticLattice(cell_l3 , method=method)
             self.tws_des = tws_l3
@@ -415,16 +429,28 @@ class ManulInterfaceWindow(QFrame):
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-
+            self.lat_zi = 466.81916599999636
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+        elif current_lat == "I1D":
+            self.lat = MagneticLattice(cell_i1 + cell_i1d, method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[4])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
         else:
-            self.lat = MagneticLattice(cell_i1 , method=method)
+            self.lat = MagneticLattice(cell_i1, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0])
             tws = twiss(tmp_lat, self.tws_des)
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            print(len(self.lat.sequence))
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
         self.tws0 = copy.deepcopy(self.tws_des)
         self.load_lattice()
 
@@ -494,7 +520,7 @@ class ManulInterfaceWindow(QFrame):
         #beta_y_des = [tw.beta_y for tw in tws]
         #dx_des = [tw.Dx for tw in tws]
         #dy_des = [tw.Dy for tw in tws]
-        s = [tw.s for tw in tws]
+        s = np.array([tw.s for tw in tws]) + self.lat_zi
         self.beta_x_des.setData(x=s, y=self.b_x_des)
         self.beta_y_des.setData(x=s, y=self.b_y_des)
         self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
@@ -617,7 +643,7 @@ class ManulInterfaceWindow(QFrame):
     def plot_lat(self, plot_wdg, types):
         self.plot2.clear()
         r_items = []
-        L = 0.
+        L = self.lat_zi
         for elem in self.lat.sequence:
             a = 1
             L += elem.l
@@ -648,28 +674,9 @@ class ManulInterfaceWindow(QFrame):
 
 
     def add_plot(self):
-        #self.plot1 = pg.PlotWidget(title="Objective Function Monitor",
-        #                           labels={'left': str("adsfasf"), 'bottom': "Time (seconds)"})
-        #self.ui.verticalLayout_5.setSpacing(0)
-        #self.ui.verticalLayout_5.setMargin(0)
-        #self.ui.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        #self.ui.verticalLayout_5.setVerticalSpacing(0)
-        #self.ui.verticalLayout_5.insertStretch(-1, 1)
 
-
-        #win = pg.GraphicsWindow()
         win = pg.GraphicsLayoutWidget()
-        #win = pg.GraphicsView()
-        #gl = pg.GraphicsLayout(border=(100,100,100))
-        #w.ci.layout.setRowMaximumHeight(1, 200)
-        #gl.setLayout()
-        #win.setCentralItem(gl)
 
-        #win.setWindowTitle('pyqtgraph example: crosshair')
-        #print(win.size())
-        #label = pg.LabelItem(justify='right')
-        #win.addItem(label)
-        #l2 = gl.addLayout(rowspan=3, border=(50, 0, 0))
         self.plot3 = win.addPlot(row=0, col=0)
         win.ci.layout.setRowMaximumHeight(0, 200)
 
@@ -678,34 +685,15 @@ class ManulInterfaceWindow(QFrame):
 
         self.plot1 = win.addPlot(row=1, col=0)
         self.plot3.setXLink(self.plot1)
-        # gl.nextRow()
 
-        #l3 = gl.addLayout(rowspan=1, border=(10, 0, 0))
-        #self.plot2 = gl.addPlot(row=5, col=0, rowspan=1)
-        #print(self.plot1.resize(800, 400))
-        #self.plot2 = win.addPlot(row=2, col=0, rowspan=2)
         self.plot1.showGrid(1, 1, 1)
 
         self.plot1.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
         layout = QtGui.QGridLayout()
         self.ui.widget_2.setLayout(layout)
         layout.addWidget(win, 0, 0)
-        #layout.addWidget(win, 0, 0)
 
-        #region = pg.LinearRegionItem()
-        #region.setZValue(10)
-        # Add the LinearRegionItem to the ViewBox, but tell the ViewBox to exclude this
-        # item when doing auto-range calculations.
-        #self.plot2.addItem(region, ignoreBounds=True)
-
-        # pg.dbg()
         self.plot1.setAutoVisible(y=True)
-
-        #self.plot1.showGrid(1, 1, 1)
-        #self.plot1.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        #layout = QtGui.QGridLayout()
-        #self.ui.widget_2.setLayout(layout)
-        #layout.addWidget(self.plot1, 0, 0)
 
         self.plot1.addLegend()
         color = QtGui.QColor(0, 255, 255)
@@ -730,8 +718,6 @@ class ManulInterfaceWindow(QFrame):
         self.plot2 = win.addPlot(row=2, col=0)
         win.ci.layout.setRowMaximumHeight(2, 150)
 
-        #self.plot2.showAxis('left', False)
-        #self.plot2.showAxis('bottom', False)
         self.plot2.setXLink(self.plot1)
         self.plot2.showGrid(1, 1, 1)
 
@@ -752,9 +738,11 @@ class ManulInterfaceWindow(QFrame):
 
     def update_plot(self, s, bx, by, dx, dy):
         # Line
+        s = np.array(s) + self.lat_zi
         self.beta_x.setData(x=s, y=bx)
         self.beta_y.setData(x=s, y=by)
         self.plot1.update()
+        self.plot1.setYRange(-5, 200)
         self.plot2.update()
         self.Dx.setData(x=s, y=dx)
         self.Dy.setData(x=s, y=dy)
