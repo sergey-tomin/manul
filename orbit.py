@@ -124,6 +124,8 @@ class OrbitInterface:
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
         self.ui.sb_kick_weight.setValue(1)
         self.ui.pb_update_orbit.clicked.connect(self.update_orbit)
+        #self.ui.pb_update_4.cliked.connect(self.save_orbit)
+
         #self.ui.sb_kick_weight.valueChanged.connect(self.scale)
         #self.ui.table_bpm.itemChanged.connect(self.update_plot)
 
@@ -211,9 +213,7 @@ class OrbitInterface:
     def read_traj(self):
         self.orbit = Orbit(self.parent.lat)
         X0, Y0 = self.orbit.read_virtual_orbit(p_init=Particle(x=0.00, y=-0.00, px=0.000, E=self.parent.tws0.E))
-        #for elem in self.bpms:
-        #    elem.x_mm = elem.x * 1000
-        #    elem.y_mm = elem.y * 1000
+
 
     def read_orbit_sim(self):
         self.intro_misal()
@@ -280,8 +280,11 @@ class OrbitInterface:
             if elem.__class__ in [Hcor, Vcor]:
                 #print(elem.id, elem.row)
                 elem.kick_mrad = elem.ui.get_value()
-                elem.ui.check_values(elem.kick_mrad, elem.lims)
+
+
                 kick_mrad_i = elem.ui.get_init_value()
+                warn = np.abs(elem.kick_mrad - kick_mrad_i)>0.5
+                elem.ui.check_values(elem.kick_mrad, elem.lims, warn=warn)
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
                 elem.angle = angle # elem.kick_mrad/1000.
                 if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
@@ -295,10 +298,11 @@ class OrbitInterface:
                 #sizes = list(r.boundingRect().getRect())
                 sizes[3] = elem.kick_mrad/self.cor_ampl
                 r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
-        #print("1 = ", start - time())
-        #start = time()
-        self.parent.lat.update_transfer_maps()
-        #print("2 = ", start - time())
+                elem.transfer_map = self.parent.lat.method.create_tm(elem)
+        print("1 = ", start - time())
+        start = time()
+        #self.parent.lat.update_transfer_maps()
+        print("2 = ", start - time())
         #print("test")
         # exit(0)
         #if self.p_init == None:
@@ -317,15 +321,16 @@ class OrbitInterface:
         self.orbit.correction(p_init=p0)
         self.online_calc = False
         for cor in self.corrs:
-            print("fin = ",  cor.angle, cor.id, cor)
+            #print("fin = ",  cor.angle, cor.id, cor)
             kick_mrad_old = cor.ui.get_value()
             delta_kick_mrad = cor.angle*1000
             new_kick_mrad = kick_mrad_old + delta_kick_mrad
             cor.kick_mrad =  new_kick_mrad # cor.angle*1000
             cor.ui.set_value(cor.kick_mrad)
-            cor.ui.check_values(cor.kick_mrad, cor.lims)
+            warn = np.abs(kick_mrad_old) - np.abs(new_kick_mrad) > 0.5
+            #print(cor.id, warn)
+            cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
 
-            cor.ui.warning(np.abs(delta_kick_mrad) > 0.5)
         self.online_calc = True
 
         self.calc_orbit()
@@ -366,9 +371,9 @@ class OrbitInterface:
         corrs = self.get_dev_from_cb_state(self.corrs)
         print("correctors" , corrs)
         s_pos = np.min([cor.s for cor in corrs])
-        self.bpms = np.array(self.bpms)
-        print([bpm.id for bpm in self.bpms])
-        bpms = self.bpms[np.array([bpm.s for bpm in self.bpms])>=s_pos]
+        bpms = np.array(self.bpms)
+        #print([bpm.id for bpm in self.bpms])
+        bpms = bpms[np.array([bpm.s for bpm in self.bpms])>=s_pos]
         bpms = self.get_dev_from_cb_state(bpms)
         print([bpm.id for bpm in bpms])
         #self.orbit.bpms = copy.deepcopy(bpms)
@@ -384,11 +389,11 @@ class OrbitInterface:
 
         self.orbit.hcors = self.hcors
         self.orbit.vcors = self.vcors
-        #print(self.hcors, self.vcors)
-        #self.read_orbit()
-        print(self.parent.tws0)
-        self.rmatrix = self.orbit.linac_response_matrix(tw_init=self.parent.tws0)
-        #self.rmatrix = self.orbit.linac_response_matrix_meas(tw_init=self.parent.tws0)
+
+
+        #self.rmatrix = self.orbit.linac_response_matrix_r(tw_init=self.parent.tws0)
+        self.rmatrix = self.orbit.linac_response_matrix_meas(tw_init=self.parent.tws0)
+
         self.orbit.resp = self.rmatrix.matrix
         return self.rmatrix
 
@@ -399,9 +404,7 @@ class OrbitInterface:
 
         self.misal_resp_mat = self.orbit.misalignment_rm(p_init=Particle(E=self.parent.tws0.E),
                                    elem_types=[Quadrupole, Bend, SBend,RBend], remove_elem=[])
-        #for bpm in self.bpms:
-        #    bpm.x = bpm.x_mm/1000
-        #    bpm.y = bpm.y_mm/1000
+
         p = self.orbit.elem_correction(self.misal_resp_mat, elem_types=[Quadrupole, Bend, SBend, RBend], remove_elems=[])
         p.E=self.parent.tws0.E
         self.p_init = p
@@ -493,7 +496,7 @@ class OrbitInterface:
         mi_devs = {}
         #cell_i1_copy = copy.deepcopy(cell_i1_copy)
         #lat_tmp = MagneticLattice(cell_i1_copy)
-
+        print("load_devices", len(self.parent.lat.sequence))
         L = 0
         for i, elem in enumerate(self.parent.lat.sequence):
             L += elem.l
@@ -571,6 +574,65 @@ class OrbitInterface:
 
         self.plot_cor.setXLink(self.plot_y)
         self.plot_cor.showGrid(1, 1, 1)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =62.09,  angle=90, movable=False), ignoreBounds=True)
+        lh_t = pg.TextItem("I1", anchor=(0, 0))
+        lh_t.setPos(62.09, 0)
+        self.plot_cor.addItem(lh_t, ignoreBounds=True)
+
+        i1_pos = 62.09
+        dl_pos = 23.2 + 72
+        bc0_pos = 79 + 23.2
+        l1_pos = 150 + 23.2
+        bc1_pos = 180 + 23.2
+        l2_pos = 360 + 23.2
+        bc2_pos = 392 + 23.2
+        l3_pos = 1435 + 23.2
+        cl_pos = 1830 + 23.2
+        self.plot_cor.addItem(pg.InfiniteLine(pos =i1_pos,  angle=90, movable=False), ignoreBounds=True)
+        lh_t = pg.TextItem("I1", anchor=(0, 0))
+        lh_t.setPos(i1_pos, 0)
+        self.plot_cor.addItem(lh_t, ignoreBounds=True)
+
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =dl_pos,  angle=90, movable=False), ignoreBounds=True)
+        #dl_t = pg.TextItem("DL", anchor=(0, 0))
+        #dl_t.setPos(dl_pos, 0)
+        #self.plot_cor.addItem(dl_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =bc0_pos,  angle=90, movable=False), ignoreBounds=True)
+        bc0_t = pg.TextItem("BC0", anchor=(0, 0))
+        bc0_t.setPos(bc0_pos, 0)
+        self.plot_cor.addItem(bc0_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =l1_pos,  angle=90, movable=False), ignoreBounds=True)
+        l1_t = pg.TextItem("L1", anchor=(0, 0))
+        l1_t.setPos(l1_pos, 0)
+        self.plot_cor.addItem(l1_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =bc1_pos,  angle=90, movable=False), ignoreBounds=True)
+        bc1_t = pg.TextItem("BC1", anchor=(0, 0))
+        bc1_t.setPos(bc1_pos, 0)
+        self.plot_cor.addItem(bc1_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =l2_pos,  angle=90, movable=False), ignoreBounds=True)
+        l2_t = pg.TextItem("L2", anchor=(0, 0))
+        l2_t.setPos(l2_pos, 0)
+        self.plot_cor.addItem(l2_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =bc2_pos,  angle=90, movable=False), ignoreBounds=True)
+        bc2_t = pg.TextItem("BC2", anchor=(0, 0))
+        bc2_t.setPos(bc2_pos, 0)
+        self.plot_cor.addItem(bc2_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =l3_pos,  angle=90, movable=False), ignoreBounds=True)
+        l3_t = pg.TextItem("L3", anchor=(0, 0))
+        l3_t.setPos(l3_pos, 0)
+        self.plot_cor.addItem(l3_t, ignoreBounds=True)
+
+        self.plot_cor.addItem(pg.InfiniteLine(pos =cl_pos,  angle=90, movable=False), ignoreBounds=True)
+        cl_t = pg.TextItem("CL", anchor=(0, 0))
+        cl_t.setPos(cl_pos, 0)
+        self.plot_cor.addItem(cl_t, ignoreBounds=True)
 
         self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)

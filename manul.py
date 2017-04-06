@@ -34,6 +34,7 @@ from lattices.xfel_l3_mad import *
 from lattices.xfel_tld_892 import *
 from ocelot import *
 from ocelot.gui.accelerator import *
+from ocelot.cpbd.track import *
 from ocelot.optimizer.mint.xfel_interface import *
 
 from ocelot.optimizer.mint.opt_objects import Device
@@ -78,17 +79,14 @@ class DeviceUI:
         state = item.checkState()
         return state
 
-    def check_values(self, val, lims):
-        if lims[0]<= val <=lims[1]:
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
-        else:
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
-
-    def warning(self, state):
-        if not state:
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
-        else:
+    def check_values(self, val, lims, warn=False):
+        if warn:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 255, 0))  # yellow
+        else:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
+
+        if not(lims[0]<= val <=lims[1]):
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
 
     def set_hide(self, hide):
         if hide:
@@ -136,8 +134,8 @@ class ManulInterfaceWindow(QFrame):
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
         self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld))
         self.online_calc = True
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         #QFrame.__init__(self)
         #self.ui = UiS_Form()
         #self.ui.setupUi(self)
@@ -370,10 +368,12 @@ class ManulInterfaceWindow(QFrame):
         method.global_method = TransferMap
         if current_lat == "B1D":
             self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_b1d, method=method)
+
             self.tws_des = tws_i1
 
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[5])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -385,6 +385,7 @@ class ManulInterfaceWindow(QFrame):
 
             tmp_lat = MagneticLattice(self.copy_cells[1] )
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -395,6 +396,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2]  + self.copy_cells[6])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -406,6 +408,7 @@ class ManulInterfaceWindow(QFrame):
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
                                       + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[7])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -416,6 +419,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_des = tws_l2
             tmp_lat = MagneticLattice( self.copy_cells[2])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -426,6 +430,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_des = tws_l3
             tmp_lat = MagneticLattice( self.copy_cells[3])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -436,6 +441,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[4])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
@@ -446,14 +452,19 @@ class ManulInterfaceWindow(QFrame):
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0])
             tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
+        self.s_des = np.array(self.s_des)
         self.tws0 = copy.deepcopy(self.tws_des)
-        self.load_lattice()
 
+        self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
+                                                       Monitor, Bend, SBend, RBend, Sextupole, Octupole],
+                            init_energy=self.tws0.E)
+        self.load_lattice()
         self.calc_twiss()
 
         # for orbit
@@ -521,8 +532,8 @@ class ManulInterfaceWindow(QFrame):
         #dx_des = [tw.Dx for tw in tws]
         #dy_des = [tw.Dy for tw in tws]
         s = np.array([tw.s for tw in tws]) + self.lat_zi
-        self.beta_x_des.setData(x=s, y=self.b_x_des)
-        self.beta_y_des.setData(x=s, y=self.b_y_des)
+        self.beta_x_des.setData(x=self.s_des + self.lat_zi, y=self.b_x_des)
+        self.beta_y_des.setData(x=self.s_des + self.lat_zi, y=self.b_y_des)
         self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
 
     def calc_twiss(self, calc=True):
@@ -549,6 +560,7 @@ class ManulInterfaceWindow(QFrame):
                 r.setRect(sizes[0], sizes[1], sizes[2], sizes[3])
 
         self.lat.update_transfer_maps()
+
         #print("test")
         # exit(0)
         tws = twiss(self.lat, self.tws0)
@@ -742,7 +754,7 @@ class ManulInterfaceWindow(QFrame):
         self.beta_x.setData(x=s, y=bx)
         self.beta_y.setData(x=s, y=by)
         self.plot1.update()
-        self.plot1.setYRange(-5, 200)
+        #self.plot1.setYRange(-5, 200)
         self.plot2.update()
         self.Dx.setData(x=s, y=dx)
         self.Dy.setData(x=s, y=dy)
