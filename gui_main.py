@@ -144,7 +144,7 @@ class MainWindow(Ui_Form):
         tableWidget.setColumnCount(len(headers))
         tableWidget.setHorizontalHeaderLabels(headers)
         header = tableWidget.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.Stretch)
+        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
         #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
         header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
         header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
@@ -152,7 +152,7 @@ class MainWindow(Ui_Form):
             header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
         tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
         tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        #tableWidget.setColumnWidth(0, 100)
+        tableWidget.setColumnWidth(0, 200)
         #tableWidget.setColumnWidth(1, 100)
         return tableWidget
 

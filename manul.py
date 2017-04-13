@@ -52,6 +52,7 @@ class DeviceUI:
         self.tableWidget = None
         self.row = 0
         self.col = 0
+        self.alarm = False
 
     def get_value(self):
         return self.tableWidget.cellWidget(self.row, self.col).value()
@@ -83,16 +84,18 @@ class DeviceUI:
         if warn:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 255, 0))  # yellow
         else:
+            #print("grey")
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
-
+        self.alarm = False
         if not(lims[0]<= val <=lims[1]):
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
+            self.alarm = True
 
     def set_hide(self, hide):
-        if hide:
-            self.uncheck()
-        else:
-            self.check()
+        #if hide and uncheck:
+        #    self.uncheck()
+        #else:
+        #    self.check()
         self.tableWidget.setRowHidden(self.row, hide)
 
 class MDevice(Device):
@@ -128,14 +131,16 @@ class ManulInterfaceWindow(QFrame):
         self.logbook = "xfellog"
         self.dev_mode = True
 
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
+
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
 
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
         self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld))
         self.online_calc = True
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+
         #QFrame.__init__(self)
         #self.ui = UiS_Form()
         #self.ui.setupUi(self)
@@ -675,14 +680,28 @@ class ManulInterfaceWindow(QFrame):
         #print(self.plot2.items())
 
     def zoom_signal(self):
-        s = self.plot1.viewRange()[0][0]
-        s_pos = np.array([q.s_pos for q in self.quads])
-        indx = np.argwhere(s_pos>s)[0][0]
-        row = self.quads[indx].ui.row
-        #self.ui.tableWidget.scrollTo(row)
-        item = self.ui.tableWidget.item(row, 2)
-        self.ui.tableWidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtBottom)
-        self.ui.tableWidget.selectRow(row)
+        #s = self.plot1.viewRange()[0][0]
+        #s_pos = np.array([q.s_pos for q in self.quads])
+        s_pos = np.array([q.s_pos for q in self.quads]) + self.lat_zi
+        s_up = self.plot1.viewRange()[0][0]
+        s_down = self.plot1.viewRange()[0][1]
+        s_up = s_up if s_up <= s_pos[-1] else s_pos[-1]
+        s_down = s_down if s_down >= s_pos[0] else s_pos[0]
+
+        indexes = np.arange(np.argwhere(s_pos >= s_up)[0][0], np.argwhere(s_pos <= s_down)[-1][0] + 1)
+        mask = np.ones(len(self.quads), np.bool)
+        mask[indexes] = 0
+        self.quads = np.array(self.quads)
+        [q.ui.set_hide(hide=False) for q in self.quads[indexes]]
+        [q.ui.set_hide(hide=True) for q in self.quads[mask]]
+
+
+        #indx = np.argwhere(s_pos>s)[0][0]
+        #row = self.quads[indx].ui.row
+        ##self.ui.tableWidget.scrollTo(row)
+        #item = self.ui.tableWidget.item(row, 2)
+        #self.ui.tableWidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtBottom)
+        #self.ui.tableWidget.selectRow(row)
 
 
     def add_plot(self):
@@ -790,6 +809,11 @@ def main():
 
     #show app
     window.setWindowIcon(QtGui.QIcon('manul.png'))
+
+    timer_live = pg.QtCore.QTimer()
+    timer_live.timeout.connect(window.orbit.live_orbit)
+    timer_live.start(1000)
+
     window.show()
 
     #Build documentaiton if source files have changed
