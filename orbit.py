@@ -18,28 +18,28 @@ class Corrector(Device):
     def set_value(self, val):
         #self.values.append(val)
         #self.times.append(time.time())
-        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         val = self.mi.get_value(ch)
         return val
 
     def get_limits(self):
-        ch_min = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
+        ch_min = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
         min_kick = self.mi.get_value(ch_min)
-        ch_max = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
+        ch_max = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
         max_kick = self.mi.get_value(ch_max)
         return [min_kick*1000, max_kick*1000]
 
 class CavityA1(Device):
     def set_value(self, val):
-        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = "XFEL_SIM.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = "XFEL_SIM.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         val = self.mi.get_value(ch)
         return val
 
@@ -105,8 +105,8 @@ class BPMUI:
 class BPM(Device):
 
     def get_pos(self):
-        ch_x = "XFEL.DIAG/BPM/" + self.eid + "/X.SA1"
-        ch_y = "XFEL.DIAG/BPM/" + self.eid + "/Y.SA1"
+        ch_x = "XFEL_SIM.DIAG/BPM/" + self.eid + "/X.SA1"
+        ch_y = "XFEL_SIM.DIAG/BPM/" + self.eid + "/Y.SA1"
         #print(ch_x, ch_y)
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
@@ -147,6 +147,8 @@ class OrbitInterface:
         self.ui.sb_kick_weight.setValue(1)
         self.ui.pb_disp_meas.clicked.connect(self.dispersion_measurement)
         self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
+
+        self.ui.cb_online_orbit.stateChanged.connect(self.start_stop_live_orbit)
 
         self.response_matrix = ResponseMatrix()
         try:
@@ -191,7 +193,7 @@ class OrbitInterface:
 
         Dx0, Dy0 = disp_meas.read_virtual_dispersion(E0=self.parent.tws0.E)
 
-        print(Dx0)
+        #print(Dx0)
         n_meas = 5
         x = np.zeros(len(self.orbit.bpms))
         y = np.zeros(len(self.orbit.bpms))
@@ -227,6 +229,7 @@ class OrbitInterface:
             elem.Dy = dy[i]/1000
             elem.Dx_des = Dx0[i]
             elem.Dy_des = Dy0[i]
+
         s_bpm = np.array([bpm.s for bpm in self.orbit.bpms]) + self.parent.lat_zi
         #x_bpm = np.array([bpm.Dx for bpm in self.orbit.bpms])*1000
         self.orb_x_ref.setData(x=s_bpm, y=dx)
@@ -847,7 +850,18 @@ class OrbitInterface:
         #self.ui.tableWidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtBottom)
         #self.ui.tableWidget.selectRow(row)
 
+    def start_stop_live_orbit(self):
+        if self.ui.cb_online_orbit.isChecked():
+            self.parent.timer_live.start(1000)
+        else:
+            self.parent.timer_live.stop()
+            self.orb_x_live.setData(x=[], y=[])
+            self.orb_y_live.setData(x=[], y=[])
+            self.orb_y.update()
+            self.orb_x.update()
+
     def live_orbit(self):
+
         s_bpm = np.array([])
         x_bpm = np.array([])
         y_bpm = np.array([])

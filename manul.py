@@ -117,6 +117,9 @@ class ManulInterfaceWindow(QFrame):
         Make the timer object that updates GUI on clock cycle during a scan.
         """
         # PATHS
+
+        self.dev_mode = True
+
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
         self.path2ocelot = path[:indx]
@@ -131,8 +134,8 @@ class ManulInterfaceWindow(QFrame):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
@@ -148,6 +151,10 @@ class ManulInterfaceWindow(QFrame):
 
         #load in the dark theme style sheet
         self.loadStyleSheet()
+
+        self.timer_live = pg.QtCore.QTimer()
+        self.timer_live.timeout.connect(self.orbit.live_orbit)
+
 
         #timer for plots, starts when scan starts
         self.multiPvTimer = QtCore.QTimer()
@@ -182,6 +189,8 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
         self.ui.pb_reload.clicked.connect(self.reload_lat)
+
+
 
     def reload_lat(self):
         cell_i1 = copy.deepcopy(self.copy_cells[0])
@@ -466,9 +475,9 @@ class ManulInterfaceWindow(QFrame):
         self.s_des = np.array(self.s_des)
         self.tws0 = copy.deepcopy(self.tws_des)
 
-        self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
-                                                       Monitor, Bend, SBend, RBend, Sextupole, Octupole],
-                            init_energy=self.tws0.E)
+        #self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
+        #                                               Monitor, Bend, SBend, RBend, Sextupole, Octupole],
+        #                    init_energy=self.tws0.E)
         self.load_lattice()
         self.calc_twiss()
 
@@ -809,10 +818,6 @@ def main():
 
     #show app
     window.setWindowIcon(QtGui.QIcon('manul.png'))
-
-    timer_live = pg.QtCore.QTimer()
-    timer_live.timeout.connect(window.orbit.live_orbit)
-    timer_live.start(1000)
 
     window.show()
 

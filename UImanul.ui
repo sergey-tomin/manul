@@ -505,7 +505,7 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="2" column="2">
+            <item row="2" column="3">
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
                <widget class="QPushButton" name="pb_disp_meas">
@@ -534,6 +534,11 @@
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <item>
                  <widget class="QLabel" name="label_2">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>dV [MV]</string>
                   </property>
@@ -541,6 +546,11 @@
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="sb_dV">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="minimum">
                    <double>-5.000000000000000</double>
                   </property>
@@ -559,7 +569,7 @@
               </item>
              </layout>
             </item>
-            <item row="2" column="1">
+            <item row="2" column="2">
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
                <widget class="QPushButton" name="pb_read_orbit">
@@ -588,6 +598,11 @@
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
                  <widget class="QLabel" name="label_3">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>alpha (0-orbit. 1-disp)</string>
                   </property>
@@ -595,6 +610,11 @@
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="sb_alpha">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
                   <property name="minimum">
                    <double>0.000000000000000</double>
                   </property>
@@ -663,7 +683,7 @@
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 0, 0);</string>
+                 <string notr="true">color: rgb(85, 255, 255);</string>
                 </property>
                 <property name="text">
                  <string>Calculate Misalignment</string>
@@ -709,6 +729,22 @@
                  </widget>
                 </item>
                </layout>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QCheckBox" name="cb_online_orbit">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Online Orbit</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
