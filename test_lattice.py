@@ -16,7 +16,7 @@ tws0.beta_y  = 55.7887190242
 tws0.alpha_x = 18.185436973
 tws0.alpha_y = 18.185436973
 
-cell = cell_i1 #+ cell_l1 + cell_l2 + cell_l3
+cell = cell_i1 + cell_l1 + cell_l2 #+ cell_l3
 
 #lat = MagneticLattice(cell, start=d_12, stop = d_23)
 #for elem in lat.sequence:
@@ -25,7 +25,7 @@ cell = cell_i1 #+ cell_l1 + cell_l2 + cell_l3
 #print("test", R)
 lat = MagneticLattice(cell)
 tws2 = twiss(lat, tws0)
-plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"])
+plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"], font_size=13)
 plt.show()
 
 
