@@ -119,6 +119,9 @@ class MainWindow(Ui_Form):
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
         self.table_bpm = self.add_table(widget=self.w_bpm, headers=["BPM", "X", "Y", "Active"])
         #self.add_cor_table()
+
+        #self.pb_save_ref.connect(self.save_ref_as)
+        #self.pb_load_ref.connect(self.load_ref_from)
         # self.horizontalLayout_2.setStyleSheet("color: red")
 
         # font = self.pb_hyper_file.font()
@@ -340,10 +343,29 @@ class MainWindow(Ui_Form):
         except:
             print("RESTORE STATE: ERROR")
 
+    def save_golden_orbit(self, filename):
+        orbit = {}
+        for bpm in self.Form.orbit.bpms:
+            orbit[bpm.id] = [bpm.x, bpm.y]
+        with open(filename, 'w') as f:
+            json.dump(orbit, f)
+        # pickle.dump(table, filename)
+        print("SAVE Ref Orbit")
 
-    def save_state_as(self):
+    def restore_golden_orbit(self, filename):
+        with open(filename, 'r') as f:
+            # data_new = pickle.load(f)
+            orbit = json.load(f)
+        self.Form.orbit.golden_orbit = orbit
+        #for bpm in self.Form.orbit.bpms:
+        #    if bpm.id in orbit.keys():
+        #        bpm.x = orbit[bpm.id][0]
+        #        bpm.y = orbit[bpm.id][1]
 
-        filename = QtGui.QFileDialog.getSaveFileName(self.Form, 'Save State',
+
+    def save_golden_as(self):
+
+        filename = QtGui.QFileDialog.getSaveFileName(self.Form, 'Save Golden Orbit',
         self.Form.config_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             name = filename.split("/")[-1]
@@ -354,21 +376,21 @@ class MainWindow(Ui_Form):
             if len(parts)<2 or parts[1] !="json":
                 part = filename.split(".")[0]
                 filename = part + ".json"
-            copy(self.Form.obj_func_path, self.Form.obj_save_path + body_name +".py")
+            #copy(self.Form.obj_func_path, self.Form.obj_save_path + body_name +".py")
             #self.Form.set_file = filename
-            self.save_state(filename)
+            self.save_golden_orbit(filename)
 
 
-    def load_state_from(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load State',
+    def load_golden_from(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
         self.Form.config_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             #print(filename)
             (body_name, extension) = filename.split("/")[-1].split(".")
             #print(self.Form.obj_save_path + body_name + ".py", self.Form.obj_func_path )
-            copy(self.Form.obj_save_path + body_name + ".py", self.Form.obj_func_path )
+            #copy(self.Form.obj_save_path + body_name + ".py", self.Form.obj_func_path )
             #self.Form.set_file = filename
-            self.restore_state(filename)
+            self.restore_golden_orbit(filename)
 
 
     def get_hyper_file(self):

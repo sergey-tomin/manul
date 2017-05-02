@@ -128,6 +128,7 @@ class OrbitInterface:
         self.s_bpm = []
         self.x_bpm = []
         self.y_bpm = []
+        self.golden_orbit = {}
         self.p_init = None
         self.add_orbit_plot()
         self.ui.pb_check.clicked.connect(lambda: self.getRows(2, self.ui.table_cor))
@@ -149,6 +150,9 @@ class OrbitInterface:
         self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
 
         self.ui.cb_online_orbit.stateChanged.connect(self.start_stop_live_orbit)
+        self.ui.cb_golden_orbit.stateChanged.connect(self.start_stop_golden_orbit)
+        self.ui.pb_set_golden.clicked.connect(self.set_golden_orbit)
+        self.ui.pb_zero_gold.clicked.connect(self.set_zero_golden_orbit)
 
         self.response_matrix = ResponseMatrix()
         try:
@@ -377,6 +381,20 @@ class OrbitInterface:
 
         self.update_plot()
 
+    def set_golden_orbit(self):
+        self.golden_orbit = {}
+        for elem in self.bpms:
+            elem.x_ref = elem.x
+            elem.y_ref = elem.y
+            self.golden_orbit[elem.id] = [elem.x, elem.y]
+
+    def set_zero_golden_orbit(self):
+        self.golden_orbit = {}
+        for elem in self.bpms:
+            elem.x_ref = 0.
+            elem.y_ref = 0.
+            self.golden_orbit[elem.id] = [elem.x, elem.y]
+
     def calc_orbit(self):
         #lat = MagneticLattice(cell)
         if self.online_calc == False:
@@ -462,6 +480,16 @@ class OrbitInterface:
 
         return self.orbit
 
+    def dict2golden_orbit(self):
+        for elem in self.orbit.bpms:
+            if elem.id in self.golden_orbit.keys():
+                x_gold = self.golden_orbit[elem.id][0]
+                y_gold = self.golden_orbit[elem.id][1]
+                elem.x_ref = x_gold
+                elem.y_ref = y_gold
+            else:
+                elem.x_ref = 0.
+                elem.y_ref = 0.
 
     def correct(self):
         #for bpm in self.bpms:
@@ -469,7 +497,14 @@ class OrbitInterface:
         #    bpm.y = bpm.y_mm/1000
 
         self.orbit = self.create_Orbit_obj()
+        #if self.ui.cb_golden_correct.isChecked():
 
+        self.dict2golden_orbit()
+            #print("golden", elem.id, x_gold, y_gold)
+        #else:
+        #    for elem in self.orbit.bpms:
+        #        elem.x_ref = 0.
+        #        elem.y_ref = 0.
         #corr_list = np.append(np.array([c.id for c in self.hcors]), np.array([c.id for c in self.vcors]))
         #r_matrix = self.resp_matrix.extract(cor_list=corr_list,
         #                                           bpm_list=[bpm.id for bpm in self.orbit.bpms])
@@ -716,6 +751,10 @@ class OrbitInterface:
         self.orb_y_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y ref', antialias=True)
         self.plot_y.addItem(self.orb_y_ref)
 
+        color = QtGui.QColor(255, 255, 0)
+        pen = pg.mkPen(color, width=3)
+        self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
+        self.plot_y.addItem(self.orb_y_golden)
 
         color = QtGui.QColor(0, 255, 0)
         pen = pg.mkPen(color, width=2)
@@ -805,10 +844,16 @@ class OrbitInterface:
         self.orb_x_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X live', antialias=True)
         self.plot_x.addItem(self.orb_x_live)
 
+        color = QtGui.QColor(255, 255, 0)
+        pen = pg.mkPen(color, width=2)
+        self.orb_x_golden= pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
+        self.plot_x.addItem(self.orb_x_golden)
+
+
         self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
         self.plot_cor.setYRange(-3, 3)
-        self.plot_x.setYRange(-5, 5)
-        self.plot_y.setYRange(-5, 5)
+        self.plot_x.setYRange(-2, 2)
+        self.plot_y.setYRange(-2, 2)
 
     def zoom_signal(self):
         if len(self.corrs) == 0:
@@ -860,6 +905,42 @@ class OrbitInterface:
             self.orb_y.update()
             self.orb_x.update()
 
+    def start_stop_golden_orbit(self):
+        if self.ui.cb_golden_orbit.isChecked():
+            s_bpm = np.array([])
+            x_bpm = np.array([])
+            y_bpm = np.array([])
+            bpms = self.get_dev_from_cb_state(self.bpms)
+            for elem in bpms:
+                #print(elem.id)
+                try:
+                    #print(elem.id, elem.id in self.golden_orbit.keys(), self.golden_orbit.keys())
+                    if elem.id in self.golden_orbit.keys():
+
+                        x_gold = self.golden_orbit[elem.id][0]
+                        y_gold = self.golden_orbit[elem.id][1]
+                        elem.x_ref = x_gold
+                        elem.y_ref = y_gold
+                        s_bpm = np.append(s_bpm, elem.s)
+                        x_bpm = np.append(x_bpm, x_gold*1000)
+                        y_bpm = np.append(y_bpm, y_gold*1000)
+                except:
+                    print("could not read BPM golden", elem.id)
+
+            s_bpm += self.parent.lat_zi
+
+            print("Golden")
+            self.orb_x_golden.setData(x=s_bpm, y=x_bpm)
+            self.orb_y_golden.setData(x=s_bpm, y=y_bpm)
+            self.orb_y.update()
+            self.orb_x.update()
+        else:
+            self.orb_x_golden.setData(x=[], y=[])
+            self.orb_y_golden.setData(x=[], y=[])
+            self.orb_y.update()
+            self.orb_x.update()
+
+
     def live_orbit(self):
 
         s_bpm = np.array([])
@@ -870,8 +951,8 @@ class OrbitInterface:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 s_bpm = np.append(s_bpm, elem.s)
-                x_bpm = np.append(x_bpm, x_mm)
-                y_bpm = np.append(y_bpm, y_mm)
+                x_bpm = np.append(x_bpm, x_mm - elem.x_ref*1000)
+                y_bpm = np.append(y_bpm, y_mm - elem.y_ref*1000)
             except:
                 print("could not read BPM", elem.id)
 
@@ -901,8 +982,8 @@ class OrbitInterface:
         bpms = self.get_dev_from_cb_state(self.bpms)
 
         s_bpm = np.array([bpm.s for bpm in bpms]) + self.parent.lat_zi
-        x_bpm = np.array([bpm.x for bpm in bpms])*1000
-        y_bpm = np.array([bpm.y for bpm in bpms])*1000
+        x_bpm = np.array([bpm.x - bpm.x_ref for bpm in bpms])*1000
+        y_bpm = np.array([bpm.y - bpm.y_ref for bpm in bpms])*1000
 
         # Line
         self.orb_x_ref.setData(x=s_bpm, y=x_bpm)

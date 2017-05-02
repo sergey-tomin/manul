@@ -7,6 +7,14 @@ tws_sase1.alpha_x = -2.18143348313
 tws_sase1.alpha_y = 0.703868806111
 tws_sase1.E       = 17.4999999889
 #tws_sase1.s        = 1957.1856390000232
+tws_t4 = Twiss()
+tws_t4.beta_x  = 25.9318680453
+tws_t4.beta_y  = 38.3782827028
+tws_t4.alpha_x = -0.840495296807
+tws_t4.alpha_y = 1.22012853464
+tws_t4.E       = 2.39999998888
+#tws_t4.s        = 2438.5169790000195
+
 
 # drifts 
 d_1 = Drift(l=1.472401, eid='D_1')
@@ -356,6 +364,10 @@ cax_2456_sa1 = Hcor(l=0.0, angle=0.0, eid='CAX.2456.SA1')
 cay_2456_sa1 = Vcor(l=0.0, angle=0.0, eid='CAY.2456.SA1')
 cbx_2460_sa1 = Hcor(l=0.0, angle=0.0, eid='CBX.2460.SA1')
 cby_2460_sa1 = Vcor(l=0.0, angle=0.0, eid='CBY.2460.SA1')
+
+
+
+
 cex_2469_t4 = Hcor(l=0.1, angle=0.0, eid='CEX.2469.T4')
 cey_2481_t4 = Vcor(l=0.1, angle=0.0, eid='CEY.2481.T4')
 cex_2494_t4 = Hcor(l=0.1, angle=0.0, eid='CEX.2494.T4')
@@ -472,6 +484,9 @@ bpme_2442_sa1 = Monitor(eid='BPME.2442.SA1')
 bpme_2448_sa1 = Monitor(eid='BPME.2448.SA1')
 bpme_2454_sa1 = Monitor(eid='BPME.2454.SA1')
 bpme_2461_sa1 = Monitor(eid='BPME.2461.SA1')
+
+
+
 bpma_2468_t4 = Monitor(eid='BPMA.2468.T4')
 bpma_2481_t4 = Monitor(eid='BPMA.2481.T4')
 bpma_2493_t4 = Monitor(eid='BPMA.2493.T4')
@@ -626,7 +641,11 @@ d_86, cax_2443_sa1, cay_2443_sa1, d_82, u40_2445_sa1, d_83, cbx_2448_sa1, cby_24
 d_84, bpme_2448_sa1, d_72, qa_2449_sa1, d_86, cax_2450_sa1, cay_2450_sa1, d_82, 
 u40_2452_sa1, d_83, cbx_2454_sa1, cby_2454_sa1, d_84, bpme_2454_sa1, d_72, qa_2455_sa1, 
 d_86, cax_2456_sa1, cay_2456_sa1, d_82, u40_2458_sa1, d_83, cbx_2460_sa1, cby_2460_sa1, 
-d_84, bpme_2461_sa1, d_72, qa_2461_sa1, d_73, ensec_2461_sa1, stsec_2461_t4, stsub_2461_t4, 
+d_84, bpme_2461_sa1, d_72, qa_2461_sa1, d_73, ensec_2461_sa1)
+
+
+
+cell_t4 = (stsec_2461_t4, stsub_2461_t4,
 d_257, tora_2462_t4, d_258, bpma_2468_t4, d_259, qe_2468_t4, d_260, cex_2469_t4, 
 d_261, bpma_2481_t4, d_259, qe_2481_t4, d_260, cey_2481_t4, d_261, bpma_2493_t4, 
 d_259, qe_2493_t4, d_260, cex_2494_t4, d_261, bpma_2506_t4, d_259, qe_2506_t4, 

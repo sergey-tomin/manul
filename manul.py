@@ -136,14 +136,14 @@ class ManulInterfaceWindow(QFrame):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
 
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
-        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3))
+        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
         self.online_calc = True
 
         #QFrame.__init__(self)
@@ -186,6 +186,7 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("L2")
         self.ui.cb_lattice.addItem("L3")
         self.ui.cb_lattice.addItem("SASE1")
+        self.ui.cb_lattice.addItem("T4")
         self.ui.cb_lattice.addItem("SASE3")
 
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
@@ -194,6 +195,9 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
         self.ui.pb_reload.clicked.connect(self.reload_lat)
+
+        self.ui.pb_save_golden.clicked.connect(self.ui.save_golden_as)
+        self.ui.pb_load_golden.clicked.connect(self.ui.load_golden_from)
 
 
 
@@ -477,6 +481,19 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 1957.1856390000232
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
+        elif current_lat == "T4":
+            self.lat = MagneticLattice(cell_t4 , method=method)
+            self.tws_des = tws_t4
+            tmp_lat = MagneticLattice( self.copy_cells[10])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 2438.5169790000195
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "SASE3":
             self.lat = MagneticLattice(cell_sase3, method=method)
             self.tws_des = tws_sase3
