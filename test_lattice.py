@@ -5,6 +5,8 @@ from lattices.xfel_l3_mad import *
 from lattices.xfel_sase1_mad import *
 from lattices.xfel_sase3_mad import *
 from lattices.xfel_tld_892 import *
+from lattices.xfel_cl import *
+from lattices.xfel_l3_no_cl import *
 from ocelot import *
 from ocelot.cpbd.track import *
 from ocelot.gui.accelerator import *
@@ -18,17 +20,27 @@ tws0.beta_y  = 55.7887190242
 tws0.alpha_x = 18.185436973
 tws0.alpha_y = 18.185436973
 
-cell = cell_i1 + cell_l1 + cell_l2 + cell_l3 + cell_sase1
+tws_cl = Twiss()
+tws_cl.beta_x  = 31.8851635305
+tws_cl.beta_y  = 78.3979917762
+tws_cl.alpha_x = -2.39548649971
+tws_cl.alpha_y = 7.41217412706
+tws_cl.E       = 2.39999998888
+tws_cl.s        = 1629.7019660000299
+
+
+cell = cell_i1 + cell_l1 + cell_l2+ cell_l3_no_cl + cell_cl #+ cell_sase1
 
 #lat = MagneticLattice(cell, start=d_12, stop = d_23)
 #for elem in lat.sequence:
 #    print(elem.id)
 #R = lattice_transfer_map(lat, energy = 0.005)
 #print("test", R)
-lat = MagneticLattice(cell)
+lat = MagneticLattice(cell)# , start=stsec_1652_cl, stop=ensub_1980_tl)
+write_lattice(lat, file_name="xfel_cl.py", power_supply=True)
 tws2 = twiss(lat, tws0)
 print(tws2[-1])
-plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"], font_size=13)
+plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"], font_size=13, legend=False)
 plt.show()
 
 

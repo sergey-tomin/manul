@@ -30,7 +30,9 @@ from orbit import OrbitInterface
 from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
 from lattices.xfel_l2_mad import *
-from lattices.xfel_l3_mad import *
+#from lattices.xfel_l3_mad import *
+from lattices.xfel_l3_no_cl import *
+from lattices.xfel_cl import *
 from lattices.xfel_tld_892 import *
 from lattices.xfel_sase1_mad import *
 from lattices.xfel_sase3_mad import *
@@ -142,8 +144,9 @@ class ManulInterfaceWindow(QFrame):
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
 
-        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3)
-        self.copy_cells = copy.deepcopy((cell_i1 , cell_l1, cell_l2, cell_l3, cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
+        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
+        self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
+                                         cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
         self.online_calc = True
 
         #QFrame.__init__(self)
@@ -185,6 +188,7 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("L1")
         self.ui.cb_lattice.addItem("L2")
         self.ui.cb_lattice.addItem("L3")
+        self.ui.cb_lattice.addItem("CL")
         self.ui.cb_lattice.addItem("SASE1")
         self.ui.cb_lattice.addItem("T4")
         self.ui.cb_lattice.addItem("SASE3")
@@ -238,8 +242,8 @@ class ManulInterfaceWindow(QFrame):
             elem.ui.set_value(elem.kick_mrad)
         self.online_calc = True
         self.lat.update_transfer_maps()
-
-        self.tws0 = self.back_tracking()
+        #TODO: add in GUI option to return design twiss
+        self.tws0 = self.tws_des# self.back_tracking()
         #print("back_tracking = ", self.tws0)
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
@@ -426,10 +430,10 @@ class ManulInterfaceWindow(QFrame):
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
         elif current_lat == "TLD":
-            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3 + cell_tld, method=method)
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_tld, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
-                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[7])
+                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4]+ self.copy_cells[8])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
@@ -459,6 +463,18 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 466.81916599999636
             print("totlaLen=", self.lat.totalLen+ 23.2)
+        elif current_lat == "CL":
+            self.lat = MagneticLattice(cell_cl , method=method)
+            self.tws_des = tws_cl
+            tmp_lat = MagneticLattice( self.copy_cells[4])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 1629.7019660000299
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "I1D":
             self.lat = MagneticLattice(cell_i1 + cell_i1d, method=method)
             self.tws_des = tws_i1
@@ -485,7 +501,7 @@ class ManulInterfaceWindow(QFrame):
         elif current_lat == "T4":
             self.lat = MagneticLattice(cell_t4 , method=method)
             self.tws_des = tws_t4
-            tmp_lat = MagneticLattice( self.copy_cells[10])
+            tmp_lat = MagneticLattice( self.copy_cells[11])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
@@ -497,7 +513,7 @@ class ManulInterfaceWindow(QFrame):
         elif current_lat == "SASE3":
             self.lat = MagneticLattice(cell_sase3, method=method)
             self.tws_des = tws_sase3
-            tmp_lat = MagneticLattice( self.copy_cells[9])
+            tmp_lat = MagneticLattice( self.copy_cells[10])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]

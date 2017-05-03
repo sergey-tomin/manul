@@ -18,28 +18,28 @@ class Corrector(Device):
     def set_value(self, val):
         #self.values.append(val)
         #self.times.append(time.time())
-        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         val = self.mi.get_value(ch)
         return val
 
     def get_limits(self):
-        ch_min = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
+        ch_min = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
         min_kick = self.mi.get_value(ch_min)
-        ch_max = "XFEL_SIM.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
+        ch_max = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
         max_kick = self.mi.get_value(ch_max)
         return [min_kick*1000, max_kick*1000]
 
 class CavityA1(Device):
     def set_value(self, val):
-        ch = "XFEL_SIM.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL_SIM.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         val = self.mi.get_value(ch)
         return val
 
@@ -105,8 +105,8 @@ class BPMUI:
 class BPM(Device):
 
     def get_pos(self):
-        ch_x = "XFEL_SIM.DIAG/BPM/" + self.eid + "/X.SA1"
-        ch_y = "XFEL_SIM.DIAG/BPM/" + self.eid + "/Y.SA1"
+        ch_x = "XFEL.DIAG/BPM/" + self.eid + "/X.SA1"
+        ch_y = "XFEL.DIAG/BPM/" + self.eid + "/Y.SA1"
         #print(ch_x, ch_y)
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
@@ -365,7 +365,8 @@ class OrbitInterface:
             elem.ui.set_value(elem.kick_mrad)
         self.online_calc = True
         self.parent.lat.update_transfer_maps()
-        for elem in self.bpms:
+        bpms = self.get_dev_from_cb_state(self.bpms)
+        for elem in bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 elem.x = x_mm/1000.
@@ -377,7 +378,7 @@ class OrbitInterface:
                 elem.ui.set_value((x_mm, y_mm))
             except:
                 print("deleted BPM", elem.id)
-                self.bpms.remove(elem)
+                #self.bpms.remove(elem)
 
         self.update_plot()
 
