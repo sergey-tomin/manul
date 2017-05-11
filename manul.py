@@ -102,9 +102,19 @@ class DeviceUI:
         #    self.check()
         self.tableWidget.setRowHidden(self.row, hide)
 
-class MDevice(Device):
+class MICavity(Device):
     def __init__(self, eid=None):
-        super(MDevice, self).__init__(eid=eid)
+        super(MICavity, self).__init__(eid=eid)
+
+    def get_value(self):
+        #C.A3.1.1.L2
+        #M4.A4.L2
+        parts = self.eid.split(".")
+        eid = "M"+parts[2]+"."+parts[1]+"."+parts[4]
+        print(eid)
+        ch = "XFEL.RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN.SA1"
+        val = self.mi.get_value(ch)/8.
+        return val
 
 
 
@@ -160,6 +170,8 @@ class ManulInterfaceWindow(QFrame):
         self.timer_live = pg.QtCore.QTimer()
         self.timer_live.timeout.connect(self.orbit.live_orbit)
 
+        self.feedback_timer = pg.QtCore.QTimer()
+        self.feedback_timer.timeout.connect(self.orbit.auto_correction)
 
         #timer for plots, starts when scan starts
         self.multiPvTimer = QtCore.QTimer()
@@ -192,6 +204,12 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("SASE1")
         self.ui.cb_lattice.addItem("T4")
         self.ui.cb_lattice.addItem("SASE3")
+        self.ui.cb_lattice.addItem("up to B1")
+        self.ui.cb_lattice.addItem("up to B2")
+        self.ui.cb_lattice.addItem("up to TL")
+        self.ui.cb_lattice.addItem("up to SASE3")
+
+
 
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         self.ui.cb_otr55.setChecked(True)
@@ -227,23 +245,31 @@ class ManulInterfaceWindow(QFrame):
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
-    def read_cavs(self):
-        "XFEL.RF/LLRF.ENERGYGAIN.ML/M2.A4.L2/ENERGYGAIN.SA1"
 
     def read_quads(self):
         self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
+            #print(elem.id, elem.kick_mrad)
             k1 = elem.kick_mrad/elem.l*1e-3
             elem.k1 = k1
             elem.i_kick = elem.kick_mrad
             #print(elem.i_kick)
             elem.ui.set_init_value(elem.kick_mrad)
             elem.ui.set_value(elem.kick_mrad)
+
+        for cav in self.cavs:
+            try:
+                v = cav.mi.get_value()
+            except:
+                v = 0.
+            #print("Volt = ", v, cav.mi)
+            cav.v = v*0.001
+
         self.online_calc = True
         self.lat.update_transfer_maps()
         #TODO: add in GUI option to return design twiss
-        self.tws0 = self.tws_des# self.back_tracking()
+        self.tws0 = self.back_tracking()
         #print("back_tracking = ", self.tws0)
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
@@ -258,6 +284,8 @@ class ManulInterfaceWindow(QFrame):
 
     def back_tracking(self):
         tws0 = self.read_twiss()
+        if self.ui.cb_design_tws.isChecked():
+            return self.tws_des
         if self.ui.cb_otr218.isChecked():
             stop = otrb_218_b1
 
@@ -406,6 +434,21 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen + 23.2)
+
+        elif current_lat == "up to B1":
+            self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)
+
+            self.tws_des = tws_i1
+
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen + 23.2)
+
         elif current_lat == "L1":
             self.lat = MagneticLattice(cell_l1, method=method)
             self.tws_des = tws_l1
@@ -429,6 +472,19 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
+        elif current_lat == "up to B2":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 , method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2] )
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "TLD":
             self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_tld, method=method)
             self.tws_des = tws_i1
@@ -441,6 +497,33 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
+        elif current_lat == "up to TL":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl , method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
+                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+
+        elif current_lat == "up to SASE3":
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_sase1 + cell_t4 + cell_sase3, method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
+                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4] + self.copy_cells[9] + self.copy_cells[11] + self.copy_cells[10])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
+            print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "L2":
             self.lat = MagneticLattice(cell_l2 , method=method)
             self.tws_des = tws_l2
@@ -453,7 +536,7 @@ class ManulInterfaceWindow(QFrame):
             self.lat_zi = 229.30069400000002
             print("totlaLen=", self.lat.totalLen+ 23.2)
         elif current_lat == "L3":
-            self.lat = MagneticLattice(cell_l3 , method=method)
+            self.lat = MagneticLattice(cell_l3_no_cl , method=method)
             self.tws_des = tws_l3
             tmp_lat = MagneticLattice( self.copy_cells[3])
             tws = twiss(tmp_lat, self.tws_des)
@@ -478,7 +561,7 @@ class ManulInterfaceWindow(QFrame):
         elif current_lat == "I1D":
             self.lat = MagneticLattice(cell_i1 + cell_i1d, method=method)
             self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[4])
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[5])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
@@ -489,7 +572,7 @@ class ManulInterfaceWindow(QFrame):
         elif current_lat == "SASE1":
             self.lat = MagneticLattice(cell_sase1 , method=method)
             self.tws_des = tws_sase1
-            tmp_lat = MagneticLattice( self.copy_cells[8])
+            tmp_lat = MagneticLattice( self.copy_cells[9])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
@@ -574,23 +657,37 @@ class ManulInterfaceWindow(QFrame):
                 elem.i_kick = elem.kick_mrad
                 devices.append(elem)
                 #elem.mi = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                if "ps_id" in elem.__dict__:
-                    if elem.ps_id not in mi_devs.keys():
-                        mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                        mi_dev.mi = self.mi
-                        elem.mi = mi_dev
-                        mi_devs[elem.ps_id] = mi_dev
-                    else:
-                        elem.mi = mi_devs[elem.ps_id]
-                else:
-                    mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                    mi_dev.mi = self.mi
-                    elem.mi = mi_dev
+                #if "ps_id" in elem.__dict__:
+                #    if elem.ps_id not in mi_devs.keys():
+                #        mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                #        mi_dev.mi = self.mi
+                #        elem.mi = mi_dev
+                #        mi_devs[elem.ps_id] = mi_dev
+                #    else:
+                #        elem.mi = mi_devs[elem.ps_id]
+                #else:
+                mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                mi_dev.mi = self.mi
+                elem.mi = mi_dev
+        return devices
+
+    def load_cavs(self):
+        devices = []
+        for elem in self.lat.sequence:
+            if elem.__class__ == Cavity and ("L1" in elem.id or "L2" in elem.id or "L3" in elem.id):
+                mi_dev = MICavity(eid=elem.id)
+
+                mi_dev.mi = self.mi
+                elem.mi = mi_dev
+                #print(elem.mi)
+                devices.append(elem)
         return devices
 
 
     def load_lattice(self):
         self.quads = self.load_devices(types=[Quadrupole])
+        self.cavs = self.load_cavs()
+
         self.add_devs2table(self.quads, w_table=self.ui.tableWidget, calc_obj=self.calc_twiss)
 
         #self.init_kick_mrad = np.array([q.kick_mrad for q in self.quads])

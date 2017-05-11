@@ -1,16 +1,19 @@
 """
 S Tomin
 """
-import sys
-path = sys.path[0]
-indx = path.find("ocelot")
+import sys, os
+#path = sys.path[0]
+#indx = path.find("ocelot")
+#sys.path.append(path[:indx])
+path = os.path.realpath(__file__)
+indx = path.find("manul")
+print("PATH", os.path.realpath(__file__), path[:indx])
 sys.path.append(path[:indx])
-
 
 from ocelot import *
 from ocelot.gui.accelerator import *
-from ocelot.test.xfel_lat.lattices.I1B2 import *
-from ocelot.test.xfel_lat.lattices.I1B2_screen2 import *
+#from ocelot.test.xfel_lat.lattices.I1B2 import *
+#from ocelot.test.xfel_lat.lattices.I1B2_screen2 import *
 from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
 from lattices.xfel_l2_mad import *
@@ -33,12 +36,12 @@ cell = cell_i1 + cell_l1 + cell_l2 + cell_l3
 lat = MagneticLattice(cell)#,  start=bpmf_393_b2, stop=bpmf_414_b2)
 print(lat.totalLen+3.2)
 
-R = lattice_transfer_map(lat, energy=2.4)
-print(R)
-tws = twiss(lat, tws0)
+#R = lattice_transfer_map(lat, energy=2.4)
+#print(R)
+#tws = twiss(lat, tws0)
 
-plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
-plt.show()
+#plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
+#plt.show()
 
 
 
@@ -134,10 +137,10 @@ text_bc2 = pg.TextItem(text="test", border='w', fill = (255,0,255,150))
 pw_bc2.addItem(text_bc2)
 def update_bc2():
     global d_3, text_bc2
-    xa, ya = get_xy("BPMF.393.B1")
-    xb, yb = get_xy("BPMS.404.B1")
-    xc, yc = get_xy("BPMF.414.B1")
-    print(yb)
+    xa, ya = get_xy("BPMF.393.B2")
+    xb, yb = get_xy("BPMS.404.B2")
+    xc, yc = get_xy("BPMF.414.B2")
+    #print(yb)
     delta = delta_energy(ya, yb, yc, Rterms_bc2)
     d1 = np.delete(d_3, 0)
     d_3 = np.append(d1, delta)

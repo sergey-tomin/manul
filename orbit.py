@@ -113,6 +113,10 @@ class BPM(Device):
         #print(x, y)
         return x, y
 
+    def get_charge(self):
+        x = self.mi.get_value("XFEL.DIAG/BPM/" + self.eid + "/CHARGE.SA1")
+        return x
+
 
 class OrbitInterface:
     def __init__(self, parent):
@@ -146,7 +150,8 @@ class OrbitInterface:
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
         self.ui.sb_kick_weight.setValue(1)
-        self.ui.pb_disp_meas.clicked.connect(self.dispersion_measurement)
+        #self.ui.pb_disp_meas.clicked.connect(self.dispersion_measurement)
+
         self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
 
         self.ui.cb_online_orbit.stateChanged.connect(self.start_stop_live_orbit)
@@ -168,6 +173,7 @@ class OrbitInterface:
 
         self.cavity = CavityA1(eid="CTRL.A1.I1")
         self.cavity.mi = self.parent.mi
+        self.ui.pb_feedback.clicked.connect(self.start_stop_feedback)
         #print("r_matrix", self.resp_matrix.matrix)
         #self.ui.pb_update_4.cliked.connect(self.save_orbit)
 
@@ -366,9 +372,14 @@ class OrbitInterface:
         self.online_calc = True
         self.parent.lat.update_transfer_maps()
         bpms = self.get_dev_from_cb_state(self.bpms)
+
+        beam_on = True
         for elem in bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
+                charge = elem.mi.get_charge()
+                if charge < 0.005:
+                    beam_on = False
                 elem.x = x_mm/1000.
                 elem.y = y_mm/1000.
                 elem.Dx = 0.
@@ -381,6 +392,7 @@ class OrbitInterface:
                 #self.bpms.remove(elem)
 
         self.update_plot()
+        return beam_on
 
     def set_golden_orbit(self):
         self.golden_orbit = {}
@@ -394,7 +406,7 @@ class OrbitInterface:
         for elem in self.bpms:
             elem.x_ref = 0.
             elem.y_ref = 0.
-            self.golden_orbit[elem.id] = [elem.x, elem.y]
+            self.golden_orbit[elem.id] = [0., 0.]
 
     def calc_orbit(self):
         #lat = MagneticLattice(cell)
@@ -411,7 +423,7 @@ class OrbitInterface:
 
                 kick_mrad_i = elem.ui.get_init_value()
                 warn = (np.abs(elem.kick_mrad) - np.abs(elem.ui.get_init_value())) > 0.5
-                print(elem.id, warn)
+                #print(elem.id, warn)
                 elem.ui.check_values(elem.kick_mrad, elem.lims, warn=warn)
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
                 elem.angle = angle # elem.kick_mrad/1000.
@@ -532,6 +544,33 @@ class OrbitInterface:
         self.online_calc = True
 
         self.calc_orbit()
+
+    def start_stop_feedback(self):
+        delay = self.ui.sb_feedback_sec.value()*1000
+        if self.ui.pb_feedback.text() == "Feedback Off":
+            self.parent.feedback_timer.stop()
+            self.ui.pb_feedback.setStyleSheet("color: rgb(85, 255, 127);")
+            self.ui.pb_feedback.setText("Feedback On")
+        else:
+
+            self.parent.feedback_timer.start(delay)
+            self.ui.pb_feedback.setText("Feedback Off")
+            self.ui.pb_feedback.setStyleSheet("color: red")
+
+
+
+    def auto_correction(self):
+
+        beam_on = self.read_orbit()
+        time.sleep(0.01)
+        if beam_on:
+        	self.correct()
+        	time.sleep(0.01)
+        	self.apply_kicks()
+        	time.sleep(0.5)
+        else:
+            print("no beam")
+            time.sleep(1)
 
     #def get_correctors(self):
     #    pvs = self.getPvsFromCbState()
@@ -879,8 +918,8 @@ class OrbitInterface:
         [q.ui.set_hide(hide=False) for q in self.corrs[indexes]]
         [q.ui.set_hide(hide=True) for q in self.corrs[mask]]
 
-        [q.ui.check() for q in self.corrs[indexes]]
-        [q.ui.uncheck() for q in self.corrs[mask]]
+        #[q.ui.check() for q in self.corrs[indexes]]
+        #[q.ui.uncheck() for q in self.corrs[mask]]
 
         indexes_bpm = np.arange(np.argwhere(s_bpm_pos >= s_bpm_up)[0][0], np.argwhere(s_bpm_pos <= s_down)[-1][0] + 1)
         mask_bpm = np.ones(len(self.bpms), np.bool)
@@ -888,8 +927,8 @@ class OrbitInterface:
         self.bpms = np.array(self.bpms)
         [q.ui.set_hide(hide=False) for q in self.bpms[indexes_bpm]]
         [q.ui.set_hide(hide=True) for q in self.bpms[mask_bpm]]
-        [q.ui.check() for q in self.bpms[indexes_bpm]]
-        [q.ui.uncheck() for q in self.bpms[mask_bpm]]
+        #[q.ui.check() for q in self.bpms[indexes_bpm]]
+        #[q.ui.uncheck() for q in self.bpms[mask_bpm]]
         #row = self.corrs[indx_up].ui.row
         #self.ui.tableWidget.scrollTo(row)
         #item = self.ui.tableWidget.item(row, 2)
