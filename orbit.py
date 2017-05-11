@@ -153,13 +153,13 @@ class OrbitInterface:
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
-        self.ui.sb_kick_weight.setValue(1)
+        #self.ui.sb_kick_weight.setValue(1)
         #self.ui.pb_disp_meas.clicked.connect(self.dispersion_measurement)
 
         self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
 
-        self.ui.cb_online_orbit.stateChanged.connect(self.start_stop_live_orbit)
-        self.ui.cb_golden_orbit.stateChanged.connect(self.start_stop_golden_orbit)
+        self.ui.pb_online_orbit.clicked.connect(self.start_stop_live_orbit)
+        self.ui.pb_golden_orbit.clicked.connect(self.start_stop_golden_orbit)
         self.ui.pb_set_golden.clicked.connect(self.set_golden_orbit)
         self.ui.pb_zero_gold.clicked.connect(self.set_zero_golden_orbit)
 
@@ -200,17 +200,14 @@ class OrbitInterface:
 
 
 
-    def scale(self):
-        corrs = self.get_dev_from_cb_state(self.corrs)
-        self.online_calc = False
-        for cor in corrs:
-
-            kick_mrad = cor.ui.get_value()
-            cor.ui.set_value(kick_mrad*self.ui.sb_kick_weight.value())
-            #print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
-            #if -2.5 <= kick_mrad <=2.5:
-            #    cor.mi.set_value(kick_mrad)
-        self.online_calc = True
+    #def scale(self):
+    #    corrs = self.get_dev_from_cb_state(self.corrs)
+    #    self.online_calc = False
+    #    for cor in corrs:
+    #
+    #        kick_mrad = cor.ui.get_value()
+    #        cor.ui.set_value(kick_mrad*self.ui.sb_kick_weight.value())
+    #    self.online_calc = True
 
     def choose_plane(self):
         x_plane = self.ui.cb_x_cors.isChecked()
@@ -262,7 +259,7 @@ class OrbitInterface:
 
         for cor in corrs:
 
-            kick_mrad = cor.ui.get_value() * self.ui.sb_kick_weight.value()
+            kick_mrad = cor.ui.get_value() #* self.ui.sb_kick_weight.value()
             print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
             #if -2.5 <= kick_mrad <=2.5:
             cor.mi.set_value(kick_mrad)
@@ -305,6 +302,7 @@ class OrbitInterface:
         return beam_on
 
     def set_golden_orbit(self):
+        self.read_orbit()
         self.golden_orbit = {}
         for elem in self.bpms:
             elem.x_ref = elem.x
@@ -422,6 +420,8 @@ class OrbitInterface:
 
     def correct(self):
 
+        self.read_orbit()
+
         self.uncheck_red()
 
         self.orbit = self.create_Orbit_obj()
@@ -430,12 +430,12 @@ class OrbitInterface:
             self.parent.error_box("Calculate Response Matrix")
             return 0
         self.dict2golden_orbit()
-
+        # TODO: look into particle
         p0 = Particle(E=self.parent.tws0.E)
         for cor in self.corrs:
             cor.angle = 0.
         alpha = self.ui.sb_alpha.value()
-        self.orbit.correction(alpha=alpha, p_init=p0)
+        self.orbit.correction(alpha=alpha, p_init=None)
         self.online_calc = False
         for cor in self.corrs:
             kick_mrad_old = cor.ui.get_init_value()
@@ -651,23 +651,23 @@ class OrbitInterface:
 
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)
-        self.orb_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y', antialias=True)
+        self.orb_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y calc', antialias=True)
         self.plot_y.addItem(self.orb_y)
 
         color = QtGui.QColor(255, 0, 0)
-        pen = pg.mkPen(color, width=3)
-        self.orb_y_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y ref', antialias=True)
+        pen = pg.mkPen(color, width=4)
+        self.orb_y_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
         self.plot_y.addItem(self.orb_y_ref)
 
         color = QtGui.QColor(255, 255, 0)
         pen = pg.mkPen(color, width=3)
         self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
-        self.plot_y.addItem(self.orb_y_golden)
+        #self.plot_y.addItem(self.orb_y_golden)
 
         color = QtGui.QColor(0, 255, 0)
         pen = pg.mkPen(color, width=2)
         self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
-        self.plot_y.addItem(self.orb_y_live)
+        #self.plot_y.addItem(self.orb_y_live)
 
 
         self.plot_cor = win.addPlot(row=2, col=0)
@@ -738,24 +738,24 @@ class OrbitInterface:
         self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)
-        self.orb_x = pg.PlotCurveItem(x=[], y=[], pen=pen,  name='X', antialias=True)
+        self.orb_x = pg.PlotCurveItem(x=[], y=[], pen=pen,  name='X calc', antialias=True)
 
         self.plot_x.addItem(self.orb_x)
 
         color = QtGui.QColor(255, 0, 0)
-        pen = pg.mkPen(color, width=3, symbolPen='o')
-        self.orb_x_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X ref', antialias=True)
+        pen = pg.mkPen(color, width=4, symbolPen='o')
+        self.orb_x_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X', antialias=True)
         self.plot_x.addItem(self.orb_x_ref)
 
         color = QtGui.QColor(0, 255, 0)
         pen = pg.mkPen(color, width=2)
         self.orb_x_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X live', antialias=True)
-        self.plot_x.addItem(self.orb_x_live)
+        #self.plot_x.addItem(self.orb_x_live)
 
         color = QtGui.QColor(255, 255, 0)
         pen = pg.mkPen(color, width=2)
         self.orb_x_golden= pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
-        self.plot_x.addItem(self.orb_x_golden)
+        #self.plot_x.addItem(self.orb_x_golden)
 
 
         self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
@@ -803,18 +803,33 @@ class OrbitInterface:
         #self.ui.tableWidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtBottom)
         #self.ui.tableWidget.selectRow(row)
 
+
     def start_stop_live_orbit(self):
-        if self.ui.cb_online_orbit.isChecked():
-            self.parent.timer_live.start(1000)
-        else:
+        if self.ui.pb_online_orbit.text() == "Live Orbit Off":
             self.parent.timer_live.stop()
-            self.orb_x_live.setData(x=[], y=[])
-            self.orb_y_live.setData(x=[], y=[])
-            self.orb_y.update()
-            self.orb_x.update()
+            self.ui.pb_online_orbit.setStyleSheet("color: rgb(85, 255, 255);")
+            self.ui.pb_online_orbit.setText("Live Orbit On")
+
+            self.plot_x.removeItem(self.orb_x_live)
+            self.plot_y.removeItem(self.orb_y_live)
+            self.plot_x.legend.removeItem(self.orb_x_live.name())
+            self.plot_y.legend.removeItem(self.orb_y_live.name())
+
+        else:
+            self.parent.timer_live.start(1000)
+            self.ui.pb_online_orbit.setText("Live Orbit Off")
+            self.ui.pb_online_orbit.setStyleSheet("color: rgb(85, 255, 127);")
+            self.plot_x.addItem(self.orb_x_live)
+            self.plot_y.addItem(self.orb_y_live)
+
 
     def start_stop_golden_orbit(self):
-        if self.ui.cb_golden_orbit.isChecked():
+
+
+
+        if self.ui.pb_golden_orbit.text() == "Show Golden Orbit":
+            self.ui.pb_golden_orbit.setText("Hide Golden Orbit")
+            self.ui.pb_golden_orbit.setStyleSheet("color: rgb(255, 255, 0);")
             s_bpm = np.array([])
             x_bpm = np.array([])
             y_bpm = np.array([])
@@ -838,15 +853,24 @@ class OrbitInterface:
             s_bpm += self.parent.lat_zi
 
             print("Golden")
+
+            self.plot_x.addItem(self.orb_x_golden)
+            self.plot_y.addItem(self.orb_y_golden)
             self.orb_x_golden.setData(x=s_bpm, y=x_bpm)
             self.orb_y_golden.setData(x=s_bpm, y=y_bpm)
             self.orb_y.update()
             self.orb_x.update()
         else:
-            self.orb_x_golden.setData(x=[], y=[])
-            self.orb_y_golden.setData(x=[], y=[])
-            self.orb_y.update()
-            self.orb_x.update()
+            self.plot_x.removeItem(self.orb_x_golden)
+            self.plot_y.removeItem(self.orb_y_golden)
+            self.plot_x.legend.removeItem(self.orb_x_golden.name())
+            self.plot_y.legend.removeItem(self.orb_y_golden.name())
+            self.ui.pb_golden_orbit.setStyleSheet("color: rgb(85, 255, 255);")
+            self.ui.pb_golden_orbit.setText("Show Golden Orbit")
+            #self.orb_x_golden.setData(x=[], y=[])
+            #self.orb_y_golden.setData(x=[], y=[])
+            #self.orb_y.update()
+            #self.orb_x.update()
 
 
     def live_orbit(self):

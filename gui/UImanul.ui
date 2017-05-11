@@ -259,6 +259,9 @@
        </item>
        <item row="2" column="0" rowspan="2">
         <widget class="QPushButton" name="pb_write">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>150</width>
@@ -624,7 +627,7 @@
                    </font>
                   </property>
                   <property name="text">
-                   <string>repeat in sec</string>
+                   <string> Repeat in sec</string>
                   </property>
                  </widget>
                 </item>
@@ -656,19 +659,65 @@
               </item>
              </layout>
             </item>
-            <item row="2" column="2">
-             <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item row="2" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QPushButton" name="pb_online_orbit">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(85, 255, 255);</string>
+                </property>
+                <property name="text">
+                 <string>Live Orbit On</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_golden_orbit">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(85, 255, 255);</string>
+                </property>
+                <property name="text">
+                 <string>Show Golden Orbit</string>
+                </property>
+               </widget>
+              </item>
               <item>
                <widget class="QPushButton" name="pb_read_orbit">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>60</height>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>16</pointsize>
+                  <pointsize>12</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -681,75 +730,10 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
-                <item>
-                 <widget class="QLabel" name="label_3">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>alpha (0-orbit. 1-disp)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="sb_alpha">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
-                  <property name="minimum">
-                   <double>0.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>1.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item row="2" column="1">
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <widget class="QCheckBox" name="cb_online_orbit">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Online Orbit</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="cb_golden_orbit">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Show Golden Orbit</string>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item row="2" column="0">
-             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
                <widget class="QPushButton" name="pb_calc_RM">
                 <property name="minimumSize">
@@ -774,21 +758,21 @@
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="label_3">
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Kicks Weight </string>
+                   <string>alpha (0-orbit. 1-disp)</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="sb_kick_weight">
+                 <widget class="QDoubleSpinBox" name="sb_alpha">
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
@@ -804,10 +788,10 @@
                    <double>1.000000000000000</double>
                   </property>
                   <property name="singleStep">
-                   <double>0.050000000000000</double>
+                   <double>0.100000000000000</double>
                   </property>
                   <property name="value">
-                   <double>1.000000000000000</double>
+                   <double>0.000000000000000</double>
                   </property>
                  </widget>
                 </item>
