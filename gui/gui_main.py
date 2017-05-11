@@ -16,7 +16,7 @@ import sys
 import os
 import webbrowser
 from shutil import copy
-from UImanul import Ui_Form
+from gui.UImanul import Ui_Form
 from PyQt4 import QtGui, QtCore
 
 try:
@@ -364,9 +364,9 @@ class MainWindow(Ui_Form):
 
 
     def save_golden_as(self):
-
+        print(self.Form.gold_orbits_dir)
         filename = QtGui.QFileDialog.getSaveFileName(self.Form, 'Save Golden Orbit',
-        self.Form.config_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
+        self.Form.gold_orbits_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             name = filename.split("/")[-1]
             parts = name.split(".")
@@ -383,7 +383,7 @@ class MainWindow(Ui_Form):
 
     def load_golden_from(self):
         filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.config_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
+        self.Form.gold_orbits_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             #print(filename)
             (body_name, extension) = filename.split("/")[-1].split(".")
@@ -478,7 +478,7 @@ class MainWindow(Ui_Form):
         :return:
         """
         try:
-            self.cssfile = "style.css"
+            self.cssfile = "gui/style.css"
             with open(self.cssfile, "r") as f:
                 self.Form.setStyleSheet(f.read())
         except IOError:

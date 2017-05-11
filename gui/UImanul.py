@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul.ui'
 #
-# Created: Tue May 09 06:29:36 2017
+# Created: Thu May 11 10:21:52 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -388,27 +388,15 @@ class Ui_Form(object):
         self.verticalLayout_7 = QtGui.QVBoxLayout()
         self.verticalLayout_7.setObjectName(_fromUtf8("verticalLayout_7"))
         self.pb_calc_RM = QtGui.QPushButton(self.groupBox_2)
-        self.pb_calc_RM.setMinimumSize(QtCore.QSize(0, 20))
+        self.pb_calc_RM.setMinimumSize(QtCore.QSize(0, 60))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(16)
         font.setBold(True)
         font.setWeight(75)
         self.pb_calc_RM.setFont(font)
-        self.pb_calc_RM.setStyleSheet(_fromUtf8("color: rgb(255, 0, 0);"))
+        self.pb_calc_RM.setStyleSheet(_fromUtf8("color: rgb(85, 255, 255);"))
         self.pb_calc_RM.setObjectName(_fromUtf8("pb_calc_RM"))
         self.verticalLayout_7.addWidget(self.pb_calc_RM)
-        self.pb_calc_misal = QtGui.QPushButton(self.groupBox_2)
-        self.pb_calc_misal.setEnabled(False)
-        self.pb_calc_misal.setMinimumSize(QtCore.QSize(0, 20))
-        self.pb_calc_misal.setSizeIncrement(QtCore.QSize(0, 0))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.pb_calc_misal.setFont(font)
-        self.pb_calc_misal.setStyleSheet(_fromUtf8("color: rgb(85, 255, 255);"))
-        self.pb_calc_misal.setObjectName(_fromUtf8("pb_calc_misal"))
-        self.verticalLayout_7.addWidget(self.pb_calc_misal)
         self.horizontalLayout_11 = QtGui.QHBoxLayout()
         self.horizontalLayout_11.setObjectName(_fromUtf8("horizontalLayout_11"))
         self.label = QtGui.QLabel(self.groupBox_2)
@@ -577,7 +565,6 @@ class Ui_Form(object):
         self.cb_online_orbit.setText(_translate("Form", "Online Orbit", None))
         self.cb_golden_orbit.setText(_translate("Form", "Show Golden Orbit", None))
         self.pb_calc_RM.setText(_translate("Form", "Calculate RM", None))
-        self.pb_calc_misal.setText(_translate("Form", "Calculate Misalignment", None))
         self.label.setText(_translate("Form", "Kicks Weight ", None))
         self.pb_reset_all.setText(_translate("Form", "Reset All", None))
         self.pb_check.setText(_translate("Form", "Check", None))

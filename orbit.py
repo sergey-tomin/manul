@@ -65,8 +65,12 @@ class BPMUI:
         self.tableWidget.item(self.row, 2).setText(str(y))
         self.check_values(val)
 
-    def check_values(self, val):
-        if np.max(np.abs(val)) > 15.:
+    def check_values(self, vals):
+        if np.max(np.abs(vals)) > 15.:
+            self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 0, 0))  # red
+            self.tableWidget.item(self.row, 2).setBackground(QtGui.QColor(255, 0, 0))  # red
+            self.alarm = True
+        elif vals[0] == 0 and vals[1] == 0:
             self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.tableWidget.item(self.row, 2).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.alarm = True
@@ -143,7 +147,7 @@ class OrbitInterface:
 
         self.ui.pb_apply_kicks.clicked.connect(self.apply_kicks)
 
-        self.ui.pb_calc_misal.clicked.connect(self.calc_misalignment_rm)
+        #self.ui.pb_calc_misal.clicked.connect(self.calc_misalignment_rm)
         self.ui.pb_calc_RM.clicked.connect(self.response_matrix)
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
@@ -161,13 +165,13 @@ class OrbitInterface:
 
         self.response_matrix = ResponseMatrix()
         try:
-            self.response_matrix.load("tld_r.json")
+            self.response_matrix.load(self.parent.rm_files_dir + "tld_r.json")
         except:
             print("No Response Matrix")
 
         self.disp_response_matrix = ResponseMatrix()
         try:
-            self.disp_response_matrix.load("disp_tld.json")
+            self.disp_response_matrix.load(self.parent.rm_files_dir + "disp_tld.json")
         except:
             print("No Dispersion Response Matrix")
 
@@ -194,62 +198,7 @@ class OrbitInterface:
             if bpm.ui.alarm:
                 bpm.ui.uncheck()
 
-    def dispersion_measurement(self):
-        self.create_Orbit_obj()
-        disp_meas = LinacDisperseSimRM(lattice=copy.deepcopy(self.orbit.lat),
-                                       hcors=copy.deepcopy(self.orbit.hcors),
-                                    vcors=copy.deepcopy(self.orbit.vcors),
-                                       bpms=copy.deepcopy(self.orbit.bpms))
 
-        Dx0, Dy0 = disp_meas.read_virtual_dispersion(E0=self.parent.tws0.E)
-
-        #print(Dx0)
-        n_meas = 5
-        x = np.zeros(len(self.orbit.bpms))
-        y = np.zeros(len(self.orbit.bpms))
-        for i in range(n_meas):
-            for i, elem in enumerate(self.orbit.bpms):
-                x_mm, y_mm = elem.mi.get_pos()
-                x[i] += x_mm
-                y[i] += y_mm
-            time.sleep(0.2)
-        x = x/n_meas
-        y = y/n_meas
-
-        V0 = self.cavity.get_value()
-        dV = self.ui.sb_dV.value()
-        V = V0 + dV
-        self.cavity.set_value(V)
-        time.sleep(4)
-        x1 = np.zeros(len(self.orbit.bpms))
-        y1 = np.zeros(len(self.orbit.bpms))
-        for i in range(n_meas):
-            for i, elem in enumerate(self.orbit.bpms):
-                x_mm, y_mm = elem.mi.get_pos()
-                x1[i] += x_mm
-                y1[i] += y_mm
-            time.sleep(0.2)
-        x1 = x1 / n_meas
-        y1 = y1 / n_meas
-        dx = (x1 - x) / dV
-        dy = (y1 - y) / dV
-
-        for i, elem in enumerate(self.orbit.bpms):
-            elem.Dx = dx[i]/1000
-            elem.Dy = dy[i]/1000
-            elem.Dx_des = Dx0[i]
-            elem.Dy_des = Dy0[i]
-
-        s_bpm = np.array([bpm.s for bpm in self.orbit.bpms]) + self.parent.lat_zi
-        #x_bpm = np.array([bpm.Dx for bpm in self.orbit.bpms])*1000
-        self.orb_x_ref.setData(x=s_bpm, y=dx)
-        self.orb_x.setData(x=s_bpm, y=Dx0)
-        self.orb_y_ref.setData(x=s_bpm, y=dy)
-        self.orb_y.setData(x=s_bpm, y=Dy0)
-
-        #self.plot_cor.update()
-        self.orb_y.update()
-        self.orb_x.update()
 
     def scale(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
@@ -304,58 +253,19 @@ class OrbitInterface:
 
     def apply_kicks(self):
         corrs = self.get_dev_from_cb_state(self.corrs)
+
+        for cor in corrs:
+            if cor.ui.alarm:
+                self.parent.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
+                return 0
+
+
         for cor in corrs:
 
             kick_mrad = cor.ui.get_value() * self.ui.sb_kick_weight.value()
             print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
             #if -2.5 <= kick_mrad <=2.5:
             cor.mi.set_value(kick_mrad)
-
-    def intro_misal(self):
-        #lat = MagneticLattice(cell)
-
-        for elem in self.parent.lat.sequence:
-            if elem.id == 'CKX.23.I1':
-                elem.angle = 0.1*0.001
-            if elem.id == 'CKX.24.I1':
-                elem.angle = -0.2 * 0.001
-            #if elem.__class__ == Quadrupole:
-            #    elem.dx = np.random.normal(0, 200e-6)
-            #    elem.dx = np.random.normal(0, 200e-6)
-        self.parent.lat.update_transfer_maps()
-
-    def read_traj(self):
-        self.orbit = Orbit(self.parent.lat)
-        X0, Y0 = self.orbit.read_virtual_orbit(p_init=Particle(x=0.00, y=-0.00, px=0.000, E=self.parent.tws0.E))
-
-
-    def read_orbit_sim(self):
-        self.intro_misal()
-        self.read_traj()
-        self.online_calc = False
-        for elem in self.corrs:
-            elem.kick_mrad = elem.angle*1000.
-            #angle = elem.kick_mrad*1e-3
-            elem.angle = 0.
-            elem.angle_read = elem.kick_mrad*1e-3
-            elem.i_kick = elem.kick_mrad
-            #print(elem.id, elem.angle)
-            elem.ui.set_init_value(elem.kick_mrad)
-            elem.ui.set_value(elem.kick_mrad)
-        self.online_calc = True
-        self.parent.lat.update_transfer_maps()
-        for elem in self.bpms:
-            try:
-                x_mm, y_mm = elem.x*1000, elem.y*1000
-                print(elem.id, x_mm, y_mm)
-                elem.x = x_mm/1000.
-                elem.y = y_mm/1000.
-                elem.ui.set_value((x_mm, y_mm))
-            except:
-                print("deleted BPM", elem.id)
-                self.bpms.remove(elem)
-
-        self.update_plot()
 
 
     def read_orbit(self):
@@ -459,11 +369,8 @@ class OrbitInterface:
         """
         for elem in self.corrs:
             print("angle = ", elem.angle)
-        #print("response")
         self.orbit = NewOrbit(self.parent.lat, empty=True)
-        #corrs = self.get_correctors()
         corrs = self.get_dev_from_cb_state(self.corrs)
-        #print("correctors" , corrs)
         s_pos = np.min([cor.s for cor in corrs])
         bpms = np.array(self.bpms)
         #print([bpm.id for bpm in self.bpms])
@@ -471,8 +378,7 @@ class OrbitInterface:
         [bpm.ui.uncheck() for bpm in bpms_unch]
         #bpms = bpms[np.array([bpm.s for bpm in self.bpms])>=s_pos]
         bpms = self.get_dev_from_cb_state(bpms)
-        #print([bpm.x for bpm in bpms])
-        #self.orbit.bpms = copy.deepcopy(bpms)
+
         self.orbit.bpms = bpms
         self.hcors = []
         self.vcors = []
@@ -504,26 +410,27 @@ class OrbitInterface:
                 elem.x_ref = 0.
                 elem.y_ref = 0.
 
+    def is_rm_ok(self, orbit):
+        cor_list = [cor.id for cor in np.append(orbit.hcors, orbit.vcors)]
+        bpm_list = [bpm.id for bpm in orbit.bpms]
+        RM = self.response_matrix.extract(cor_list=cor_list, bpm_list=bpm_list)
+        #print("RM = ", np.shape(RM), len(cor_list), len(bpm_list))
+        if np.shape(RM)[0] != len(bpm_list)*2 or np.shape(RM)[1] != len(cor_list):
+            return False
+        else:
+            return True
+
     def correct(self):
-        #for bpm in self.bpms:
-        #    bpm.x = bpm.x_mm/1000
-        #    bpm.y = bpm.y_mm/1000
+
+        self.uncheck_red()
 
         self.orbit = self.create_Orbit_obj()
-        #if self.ui.cb_golden_correct.isChecked():
 
+        if not self.is_rm_ok(self.orbit):
+            self.parent.error_box("Calculate Response Matrix")
+            return 0
         self.dict2golden_orbit()
-            #print("golden", elem.id, x_gold, y_gold)
-        #else:
-        #    for elem in self.orbit.bpms:
-        #        elem.x_ref = 0.
-        #        elem.y_ref = 0.
-        #corr_list = np.append(np.array([c.id for c in self.hcors]), np.array([c.id for c in self.vcors]))
-        #r_matrix = self.resp_matrix.extract(cor_list=corr_list,
-        #                                           bpm_list=[bpm.id for bpm in self.orbit.bpms])
 
-
-        #self.orbit.resp = r_matrix.matrix
         p0 = Particle(E=self.parent.tws0.E)
         for cor in self.corrs:
             cor.angle = 0.
@@ -531,7 +438,6 @@ class OrbitInterface:
         self.orbit.correction(alpha=alpha, p_init=p0)
         self.online_calc = False
         for cor in self.corrs:
-            #print("fin = ",  cor.angle, cor.id, cor)
             kick_mrad_old = cor.ui.get_init_value()
             delta_kick_mrad = cor.angle*1000
             new_kick_mrad = kick_mrad_old + delta_kick_mrad
@@ -539,7 +445,6 @@ class OrbitInterface:
             cor.ui.set_value(cor.kick_mrad)
             warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
 
-            #print(cor.id, cor.ui.get_value(), cor.kick_mrad, delta_kick_mrad, warn)
             cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
         self.online_calc = True
 
@@ -564,23 +469,13 @@ class OrbitInterface:
         beam_on = self.read_orbit()
         time.sleep(0.01)
         if beam_on:
-        	self.correct()
-        	time.sleep(0.01)
-        	self.apply_kicks()
-        	time.sleep(0.5)
+            self.correct()
+            time.sleep(0.01)
+            self.apply_kicks()
+            time.sleep(0.5)
         else:
             print("no beam")
             time.sleep(1)
-
-    #def get_correctors(self):
-    #    pvs = self.getPvsFromCbState()
-    #    corrs = self.get_devices(pvs)
-    #    return corrs
-
-    #def get_devices(self, pvs):
-    #    d_pvs = [dev.id for dev in self.corrs]
-    #    inxs = [d_pvs.index(pv) for pv in pvs]
-    #    return [self.corrs[inx] for inx in inxs]
 
     def get_dev_from_cb_state(self, devs):
 
@@ -606,7 +501,7 @@ class OrbitInterface:
                                 vcors=self.orbit.vcors, bpms=self.orbit.bpms)
         self.response_matrix = ResponseMatrix(method=method) #self.orbit.linac_response_matrix_r(tw_init=self.parent.tws0)
         self.response_matrix.calculate(tw_init=self.parent.tws0)
-        self.response_matrix.dump("tld_r.json")
+        self.response_matrix.dump(self.parent.rm_files_dir + "tld_r.json")
 
         print("response_matrix: hcor = ", len(self.response_matrix.cor_names), len(self.response_matrix.bpm_names))
 
@@ -615,36 +510,9 @@ class OrbitInterface:
 
         self.disp_response_matrix = ResponseMatrix(method=method)  # self.orbit.linac_response_matrix_r(tw_init=self.parent.tws0)
         self.disp_response_matrix.calculate(tw_init=self.parent.tws0)
-        self.disp_response_matrix.dump("disp_tld.json")
+        self.disp_response_matrix.dump(self.parent.rm_files_dir + "disp_tld.json")
         print("disp_resp_matrix: hcor = ", len(self.disp_response_matrix.cor_names),
          len(self.disp_response_matrix.bpm_names))
-        #self.orbit.resp = self.resp_matrix.matrix
-        #return self.resp_matrix
-
-    def calc_misalignment_rm(self):
-        for elem in self.corrs:
-            print("angle = ", elem.angle)
-        #self.orbit = Orbit(self.parent.lat, empty=True)
-
-        self.misal_resp_mat = self.orbit.misalignment_rm(p_init=Particle(E=self.parent.tws0.E),
-                                   elem_types=[Quadrupole, Bend, SBend,RBend], remove_elem=[])
-
-        p = self.orbit.elem_correction(self.misal_resp_mat, elem_types=[Quadrupole, Bend, SBend, RBend], remove_elems=[])
-        p.E=self.parent.tws0.E
-        self.p_init = p
-        self.calc_orbit()
-
-    def create_orbit(self):
-        self.orbit = Orbit(self.parent.lat)
-
-        resp_m = self.orbit.misalignment_rm(p_init=Particle(E=self.parent.tws0.E),
-                                   elem_types=[Quadrupole, Bend, SBend,RBend], remove_elem=[])
-        self.orbit.elem_correction(resp_m, elem_types=[Quadrupole, Bend, SBend,RBend], remove_elems=[])
-        self.calc_orbit()
-
-    def func(self):
-        pass
-
 
     def load_correctors(self):
 

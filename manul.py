@@ -25,7 +25,7 @@ else:
     from importlib import reload
 import time
 import pyqtgraph as pg
-from gui_main import *
+from gui.gui_main import *
 from orbit import OrbitInterface
 from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
@@ -137,8 +137,12 @@ class ManulInterfaceWindow(QFrame):
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
         self.path2ocelot = path[:indx]
+        self.path2manul = path[:path.find("manul")]
+
         self.optimizer_path = self.path2ocelot + "ocelot" + os.sep + "optimizer" + os.sep
         self.config_dir = self.path2ocelot + "config_optim" +os.sep
+        self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
+        self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
         self.set_file = self.config_dir + "default.json" # ./parameters/default.json"
         self.obj_func_path = self.optimizer_path + "mint" + os.sep + "obj_function.py"
         self.obj_save_path = self.config_dir +  "obj_funcs" + os.sep
@@ -148,8 +152,8 @@ class ManulInterfaceWindow(QFrame):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
@@ -930,7 +934,8 @@ class ManulInterfaceWindow(QFrame):
         self.plot3.addItem(self.Dy)
         self.plot2.sigRangeChanged.connect(self.zoom_signal)
 
-
+    def error_box(self, message):
+        QtGui.QMessageBox.about(self, "Error box", message)
 
 
     def update_plot(self, s, bx, by, dx, dy):
@@ -949,7 +954,7 @@ class ManulInterfaceWindow(QFrame):
     def loadStyleSheet(self):
         """ Sets the dark GUI theme from a css file."""
         try:
-            self.cssfile = "style.css"
+            self.cssfile = "gui/style.css"
             with open(self.cssfile, "r") as f:
                 self.setStyleSheet(f.read())
         except IOError:
