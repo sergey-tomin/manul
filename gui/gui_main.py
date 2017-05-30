@@ -117,7 +117,7 @@ class MainWindow(Ui_Form):
         #self.read_alarm.start(1000)
         self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
-        self.table_bpm = self.add_table(widget=self.w_bpm, headers=["BPM", "X", "Y", "Active"])
+        self.table_bpm = self.add_table(widget=self.w_bpm, headers=["BPM", "       X       ", "       Y       ", "Act."])
         #self.add_cor_table()
 
         #self.pb_save_ref.connect(self.save_ref_as)
@@ -147,16 +147,17 @@ class MainWindow(Ui_Form):
         tableWidget.setColumnCount(len(headers))
         tableWidget.setHorizontalHeaderLabels(headers)
         header = tableWidget.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setStretchLastSection(True)
         #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
-        if len(headers) == 4:
-            header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
+        #header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        #header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        #if len(headers) == 4:
+        #    header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
         tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
-        tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        tableWidget.setColumnWidth(0, 200)
+        #tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        #tableWidget.setColumnWidth(0, 200)
         #tableWidget.setColumnWidth(1, 100)
+        #header.setStretchLastSection(True)
         return tableWidget
 
     def add_cor_table(self):

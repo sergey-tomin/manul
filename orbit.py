@@ -297,7 +297,7 @@ class OrbitInterface:
             except:
                 print("deleted BPM", elem.id)
                 #self.bpms.remove(elem)
-
+        self.update_cors_plot()
         self.update_plot()
         return beam_on
 
@@ -316,6 +316,25 @@ class OrbitInterface:
             elem.y_ref = 0.
             self.golden_orbit[elem.id] = [0., 0.]
 
+    def update_cors_plot(self):
+        kicks = [elem.kick_mrad for elem in self.corrs]
+        self.plot_cor.setYRange(np.floor(min(kicks)), np.ceil(max(kicks)))
+        #print("plot corr = ", self.plot_cor.viewRange())
+        #if
+        #self.plot_cor.setYRange(-3, 3)
+        for elem in self.corrs:
+            if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
+                self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
+                self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
+            else:
+                self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
+                self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
+            r = self.r_items[elem.ui.row]
+            sizes = r.init_params
+            #sizes = list(r.boundingRect().getRect())
+            sizes[3] = elem.kick_mrad/self.cor_ampl
+            r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
+
     def calc_orbit(self):
         #lat = MagneticLattice(cell)
         if self.online_calc == False:
@@ -328,36 +347,29 @@ class OrbitInterface:
                 #print(elem.id, elem.row)
                 elem.kick_mrad = elem.ui.get_value()
 
-
                 kick_mrad_i = elem.ui.get_init_value()
                 warn = (np.abs(elem.kick_mrad) - np.abs(elem.ui.get_init_value())) > 0.5
                 #print(elem.id, warn)
                 elem.ui.check_values(elem.kick_mrad, elem.lims, warn=warn)
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
                 elem.angle = angle # elem.kick_mrad/1000.
-                if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
-                    self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
-                    self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
-                else:
-                    self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
-                    self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
-                r = self.r_items[elem.ui.row]
-                sizes = r.init_params
-                #sizes = list(r.boundingRect().getRect())
-                sizes[3] = elem.kick_mrad/self.cor_ampl
-                r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
+                #if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
+                #    self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
+                #    self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
+                #else:
+                #    self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
+                #    self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
+                #r = self.r_items[elem.ui.row]
+                #sizes = r.init_params
+                ##sizes = list(r.boundingRect().getRect())
+                #sizes[3] = elem.kick_mrad/self.cor_ampl
+                #r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
                 elem.transfer_map = self.parent.lat.method.create_tm(elem)
+        self.update_cors_plot()
         print("1 = ", start - time.time())
         start = time.time()
-        #self.parent.lat.update_transfer_maps()
         print("2 = ", start - time.time())
-        #print("test")
-        # exit(0)
-        #if self.p_init == None:
-
-
         self.update_plot()
-        #self.update_plot(s, x, y, s_bpm=self.s_bpm, x_ref=self.x_bpm, y_ref=self.y_bpm)
 
     def create_Orbit_obj(self):
         """
@@ -521,6 +533,7 @@ class OrbitInterface:
         self.parent.add_devs2table(self.corrs, w_table=self.ui.table_cor, calc_obj=self.calc_orbit,
                                    spin_params=[-100, 100, 0.1], check_box=True)
         self.cor_ampl = np.max(np.append(1, np.abs(np.array([q.kick_mrad for q in self.corrs]))))
+        self.ui.table_cor.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
     def load_bpms(self, lat):
         devices = []
@@ -557,7 +570,9 @@ class OrbitInterface:
             w_table.setItem(row, 2, QtGui.QTableWidgetItem(str(devs[row].y)))
 
             w_table.resizeColumnsToContents()
-
+            #header = w_table.horizontalHeader()
+            #header.setStretchLastSection(True)
+            #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
 
             if check_box:
                 checkBoxItem = QtGui.QTableWidgetItem()
@@ -579,9 +594,12 @@ class OrbitInterface:
     def load_orbit_devs(self):
         self.bpms = self.load_bpms(lat=self.parent.lat)
         self.add_bpms2table(self.bpms, w_table=self.ui.table_bpm, check_box=True)
+        #header = self.ui.table_bpm.horizontalHeader()
+        #header.setStretchLastSection(True)
+        #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
         self.load_correctors()
 
-        self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor])
+        self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
 
     def load_devices(self, types):
         devices = []
@@ -767,9 +785,10 @@ class OrbitInterface:
         if len(self.corrs) == 0:
             return
 
-
         s_up = self.plot_y.viewRange()[0][0]
         s_down = self.plot_y.viewRange()[0][1]
+        #print(s_up)
+        #print(s_down)
 
         s_pos = np.array([q.s for q in self.corrs]) + self.parent.lat_zi
         s_up = s_up if s_up <= s_pos[-1] else s_pos[-1]
@@ -778,7 +797,10 @@ class OrbitInterface:
         s_bpm_pos = np.array([q.s for q in self.bpms]) + self.parent.lat_zi
         s_bpm_up = s_up if s_up <= s_bpm_pos[-1] else s_bpm_pos[-1]
         s_bpm_down = s_down if s_down >= s_bpm_pos[0] else s_bpm_pos[0]
-
+        #print("s_pos", s_pos, "s_up=", s_up)
+        #print("s_down=", s_down)
+        #print("arg1",np.argwhere(s_pos >= s_up))
+        #print("arg2",np.argwhere(s_pos <= s_down), np.argwhere(s_pos <= s_down)[-1][0])
         indexes = np.arange(np.argwhere(s_pos >= s_up)[0][0], np.argwhere(s_pos <= s_down)[-1][0] + 1)
         mask = np.ones(len(self.corrs), np.bool)
         mask[indexes] = 0
@@ -788,8 +810,11 @@ class OrbitInterface:
 
         #[q.ui.check() for q in self.corrs[indexes]]
         #[q.ui.uncheck() for q in self.corrs[mask]]
+        s_bpm_pos = np.array([q.s for q in self.bpms]) + self.parent.lat_zi
+        s_bpm_up = s_bpm_up if s_bpm_up <= s_bpm_pos[-1] else s_bpm_pos[-1]
+        s_bpm_down = s_bpm_down if s_bpm_down >= s_bpm_pos[0] else s_bpm_pos[0]
 
-        indexes_bpm = np.arange(np.argwhere(s_bpm_pos >= s_bpm_up)[0][0], np.argwhere(s_bpm_pos <= s_down)[-1][0] + 1)
+        indexes_bpm = np.arange(np.argwhere(s_bpm_pos >= s_bpm_up)[0][0], np.argwhere(s_bpm_pos <= s_bpm_down)[-1][0] + 1)
         mask_bpm = np.ones(len(self.bpms), np.bool)
         mask_bpm[indexes_bpm] = 0
         self.bpms = np.array(self.bpms)

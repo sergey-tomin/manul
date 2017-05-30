@@ -762,7 +762,8 @@ class ManulInterfaceWindow(QFrame):
             # put PV in the table
             w_table.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
             # put start val in
-            w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(devs[row].kick_mrad)))
+            val = np.round(devs[row].kick_mrad, 4)
+            w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(val)))
             spin_box = QtGui.QDoubleSpinBox()
             spin_box.setStyleSheet("color: #b1b1b1; font-size: 16px; background-color:#595959; border: 2px solid #b1b1b1")
             spin_box.setLocale(eng)
@@ -827,8 +828,8 @@ class ManulInterfaceWindow(QFrame):
         layout.addWidget(self.toolbar)
         self.ui.widget_2.setLayout(layout)
 
-    def plot_lat(self, plot_wdg, types):
-        self.plot2.clear()
+    def plot_lat(self, plot_wdg, types, x_scale=1):
+        plot_wdg.clear()
         r_items = []
         L = self.lat_zi
         for elem in self.lat.sequence:
@@ -836,13 +837,13 @@ class ManulInterfaceWindow(QFrame):
             L += elem.l
             if elem.__class__ in types:
                 s = L - elem.l
-                r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l, 1)#10*elem.k1/self.quad_ampl)
+                r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
                 #print()
                 #color = QtGui.QColor(164, 230, 10)
                 #pen = pg.mkPen(color, width=1)
                 r1.setPen(pg.mkPen(None))
                 r1.setBrush(pg.mkBrush("g"))
-                r1.init_params = [s, 0, elem.l, 1] #*elem.k1/self.quad_ampl]
+                r1.init_params = [s, 0, elem.l*x_scale, 1] #*elem.k1/self.quad_ampl]
                 r_items.append(r1)
                 plot_wdg.addItem(r1)
         plot_wdg.update()
