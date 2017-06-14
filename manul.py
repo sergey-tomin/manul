@@ -2,7 +2,7 @@
 Sergey Tomin. XFEL/DESY, 2017.
 """
 #QT imports
-from PyQt4.QtGui import QApplication, QFrame, QPixmap, QMessageBox
+from PyQt4.QtGui import QApplication, QFrame, QPixmap, QMessageBox, QMainWindow, QDialog
 from PyQt4 import QtGui, QtCore
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
@@ -45,82 +45,10 @@ from ocelot.optimizer.mint.opt_objects import Device
 from ocelot.optimizer.mint.xfel_interface import *
 import copy
 from scipy import optimize
-#GUI layout file
+from devices import *
 
 
-
-#import taperThread
-
-class DeviceUI:
-    def __init__(self, ui=None):
-        self.tableWidget = None
-        self.row = 0
-        self.col = 0
-        self.alarm = False
-
-    def get_value(self):
-        return self.tableWidget.cellWidget(self.row, self.col).value()
-
-    def set_value(self, val):
-        self.tableWidget.cellWidget(self.row, self.col).setValue(val)
-
-    def set_init_value(self, val):
-        val = np.round(val, 4) # "{:1.4e}".format(val)
-        self.tableWidget.item(self.row, 1).setText(str(val))
-
-    def get_init_value(self):
-        return float(self.tableWidget.item(self.row, 1).text())
-
-    def uncheck(self):
-        item = self.tableWidget.item(self.row, 3)
-        item.setCheckState(False)
-
-    def check(self):
-        item = self.tableWidget.item(self.row, 3)
-        item.setCheckState(QtCore.Qt.Checked)
-
-    def state(self):
-        item = self.tableWidget.item(self.row, 3)
-        state = item.checkState()
-        return state
-
-    def check_values(self, val, lims, warn=False):
-        if warn:
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 255, 0))  # yellow
-        else:
-            #print("grey")
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
-        self.alarm = False
-        if not(lims[0]<= val <=lims[1]):
-            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
-            self.alarm = True
-
-    def set_hide(self, hide):
-        #if hide and uncheck:
-        #    self.uncheck()
-        #else:
-        #    self.check()
-        self.tableWidget.setRowHidden(self.row, hide)
-
-class MICavity(Device):
-    def __init__(self, eid=None):
-        super(MICavity, self).__init__(eid=eid)
-
-    def get_value(self):
-        #C.A3.1.1.L2
-        #M4.A4.L2
-        parts = self.eid.split(".")
-        eid = "M"+parts[2]+"."+parts[1]+"."+parts[4]
-        print(eid)
-        ch = "XFEL.RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN.SA1"
-        val = self.mi.get_value(ch)/8.
-        return val
-
-
-
-
-
-class ManulInterfaceWindow(QFrame):
+class ManulInterfaceWindow(QMainWindow):
     """ Main class for the GUI application """
     def __init__(self):
         """
@@ -171,6 +99,7 @@ class ManulInterfaceWindow(QFrame):
         #load in the dark theme style sheet
         self.loadStyleSheet()
 
+
         self.timer_live = pg.QtCore.QTimer()
         self.timer_live.timeout.connect(self.orbit.live_orbit)
 
@@ -184,18 +113,6 @@ class ManulInterfaceWindow(QFrame):
         #self.initTable()
         #print("quads", self.quads)
         self.add_plot()
-
-        self.lat = self.return_lat()
-        #self.tws0 = self.return_tws()
-        #self.load_lattice()
-        #taperThread.Taper(initPVs = True, mi=self.mi) #update taper PVs with initial taper parameters
-
-
-        self.ui.pb_write.clicked.connect(self.calc_twiss)
-        self.ui.pb_read.clicked.connect(self.read_quads)
-        self.ui.pb_reset.clicked.connect(self.reset_quads)
-
-        #self.ui.cb_select_alg.addItem(self.name_gauss)
         self.ui.cb_lattice.addItem("I1D")
         self.ui.cb_lattice.addItem("B1D")
         self.ui.cb_lattice.addItem("B2D")
@@ -212,29 +129,31 @@ class ManulInterfaceWindow(QFrame):
         self.ui.cb_lattice.addItem("up to B2")
         self.ui.cb_lattice.addItem("up to TL")
         self.ui.cb_lattice.addItem("up to SASE3")
+        self.ui.cb_lattice.setCurrentIndex(0)
+        self.lat = self.return_lat()
+        #self.tws0 = self.return_tws()
+        #self.load_lattice()
 
-
+        self.ui.pb_write.clicked.connect(self.calc_twiss)
+        self.ui.pb_read.clicked.connect(self.read_quads)
+        self.ui.pb_reset.clicked.connect(self.reset_quads)
 
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         self.ui.cb_otr55.setChecked(True)
         self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
-        self.ui.pb_reload.clicked.connect(self.reload_lat)
-
-        self.ui.pb_save_golden.clicked.connect(self.ui.save_golden_as)
-        self.ui.pb_load_golden.clicked.connect(self.ui.load_golden_from)
+        #self.ui.pb_reload.clicked.connect(self.reload_lat)
 
 
-
-    def reload_lat(self):
-        cell_i1 = copy.deepcopy(self.copy_cells[0])
-        cell_l1 = copy.deepcopy(self.copy_cells[1])
-        cell_l2 = copy.deepcopy(self.copy_cells[2])
-        try:
-            pass
-        except:
-            print("ERROR in RELOAD")
+    #def reload_lat(self):
+    #    cell_i1 = copy.deepcopy(self.copy_cells[0])
+    #    cell_l1 = copy.deepcopy(self.copy_cells[1])
+    #    cell_l2 = copy.deepcopy(self.copy_cells[2])
+    #    try:
+    #        pass
+    #    except:
+    #        print("ERROR in RELOAD")
 
 
     def update_table(self):
@@ -251,10 +170,13 @@ class ManulInterfaceWindow(QFrame):
 
 
     def read_quads(self):
+        update = self.question_box("Are you sure?")
+        if not update:
+            return
         self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
-            #print(elem.id, elem.kick_mrad)
+            print("Quad."+elem.id," updated. ", "k1="+str(elem.kick_mrad)+ " mrad")
             k1 = elem.kick_mrad/elem.l*1e-3
             elem.k1 = k1
             elem.i_kick = elem.kick_mrad
@@ -414,9 +336,7 @@ class ManulInterfaceWindow(QFrame):
         else:
             method.global_method = TransferMap
         self.lat = MagneticLattice(self.lat.sequence, method=method)
-        #self.lat.update_transfer_maps()
-        #self.calc_twiss()
-        #print("second")
+
         # calc orbit
         self.orbit.calc_orbit()
 
@@ -465,6 +385,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 62.08894499999998
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "B2D":
             self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_b2d, method=method)
             self.tws_des = tws_i1
@@ -539,6 +460,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 229.30069400000002
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "L3":
             self.lat = MagneticLattice(cell_l3_no_cl , method=method)
             self.tws_des = tws_l3
@@ -550,6 +472,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 466.81916599999636
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "CL":
             self.lat = MagneticLattice(cell_cl , method=method)
             self.tws_des = tws_cl
@@ -573,6 +496,7 @@ class ManulInterfaceWindow(QFrame):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
         elif current_lat == "SASE1":
             self.lat = MagneticLattice(cell_sase1 , method=method)
             self.tws_des = tws_sase1
@@ -631,9 +555,7 @@ class ManulInterfaceWindow(QFrame):
         # for orbit
         #self.orbit.load_orbit_devs()
         self.orbit.calc_orbit()
-        #self.ui.tableWidget.repaint()
-        #self.ui.tableWidget.resizeColumnsToContents()
-        #self.repaint()
+
         return self.lat
 
     def return_tws(self):
@@ -648,8 +570,6 @@ class ManulInterfaceWindow(QFrame):
     def load_devices(self, types):
         devices = []
         mi_devs = {}
-        #cell_i1_copy = copy.deepcopy(cell_i1_copy)
-        #lat_tmp = MagneticLattice(cell_i1_copy)
 
         L = 0
         for elem in self.lat.sequence:
@@ -660,16 +580,6 @@ class ManulInterfaceWindow(QFrame):
                 elem.kick_mrad = elem.k1 * elem.l * 1000.
                 elem.i_kick = elem.kick_mrad
                 devices.append(elem)
-                #elem.mi = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                #if "ps_id" in elem.__dict__:
-                #    if elem.ps_id not in mi_devs.keys():
-                #        mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
-                #        mi_dev.mi = self.mi
-                #        elem.mi = mi_dev
-                #        mi_devs[elem.ps_id] = mi_dev
-                #    else:
-                #        elem.mi = mi_devs[elem.ps_id]
-                #else:
                 mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                 mi_dev.mi = self.mi
                 elem.mi = mi_dev
@@ -700,12 +610,7 @@ class ManulInterfaceWindow(QFrame):
         self.orbit.load_orbit_devs()
 
         tws = twiss(self.lat, self.tws_des)
-        #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
-        #plt.show()
-        #beta_x_des = [tw.beta_x for tw in tws]
-        #beta_y_des = [tw.beta_y for tw in tws]
-        #dx_des = [tw.Dx for tw in tws]
-        #dy_des = [tw.Dy for tw in tws]
+
         s = np.array([tw.s for tw in tws]) + self.lat_zi
         self.beta_x_des.setData(x=self.s_des + self.lat_zi, y=self.b_x_des)
         self.beta_y_des.setData(x=self.s_des + self.lat_zi, y=self.b_y_des)
@@ -736,12 +641,8 @@ class ManulInterfaceWindow(QFrame):
 
         self.lat.update_transfer_maps()
 
-        #print("test")
-        # exit(0)
         tws = twiss(self.lat, self.tws0)
-        #print(tws[-1], self.tws0)
-        #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
-        #plt.show()
+
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
         dx = [tw.Dx for tw in tws]
@@ -798,35 +699,6 @@ class ManulInterfaceWindow(QFrame):
             devs[row].ui = ui
         #w_table.repaint()
 
-    def add_plot_matplotlib(self):
-
-        #fig = plt.figure()#(figsize=(width, height), dpi=dpi)
-        #self.axes = fig.add_subplot(111)
-        #self.axes = plt.plot([1,2,3,4])
-        ##self.compute_initial_figure()
-        #
-        #FigureCanvas.__init__(self, fig)
-        ##self.setParent(parent)
-        #
-        #FigureCanvas.setSizePolicy(self,
-        #                           QtGui.QSizePolicy.Expanding,
-        #                           QtGui.QSizePolicy.Expanding)
-        #FigureCanvas.updateGeometry(self)
-        # a figure instance to plot on
-        self.figure = plt.figure()
-        self.axes = self.figure.add_subplot(111)
-        self.axes.plot([1,2,3])
-        # this is the Canvas Widget that displays the `figure`
-        # it takes the `figure` instance as a parameter to __init__
-        self.canvas = FigureCanvas(self.figure)
-
-        self.toolbar = NavigationToolbar(self.canvas, self)
-        # set the layout
-        layout = QtGui.QVBoxLayout()
-
-        layout.addWidget(self.canvas)
-        layout.addWidget(self.toolbar)
-        self.ui.widget_2.setLayout(layout)
 
     def plot_lat(self, plot_wdg, types, x_scale=1):
         plot_wdg.clear()
@@ -838,9 +710,6 @@ class ManulInterfaceWindow(QFrame):
             if elem.__class__ in types:
                 s = L - elem.l
                 r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
-                #print()
-                #color = QtGui.QColor(164, 230, 10)
-                #pen = pg.mkPen(color, width=1)
                 r1.setPen(pg.mkPen(None))
                 r1.setBrush(pg.mkBrush("g"))
                 r1.init_params = [s, 0, elem.l*x_scale, 1] #*elem.k1/self.quad_ampl]
@@ -848,7 +717,6 @@ class ManulInterfaceWindow(QFrame):
                 plot_wdg.addItem(r1)
         plot_wdg.update()
         return r_items
-        #print(self.plot2.items())
 
     def zoom_signal(self):
         #s = self.plot1.viewRange()[0][0]
@@ -865,14 +733,6 @@ class ManulInterfaceWindow(QFrame):
         self.quads = np.array(self.quads)
         [q.ui.set_hide(hide=False) for q in self.quads[indexes]]
         [q.ui.set_hide(hide=True) for q in self.quads[mask]]
-
-
-        #indx = np.argwhere(s_pos>s)[0][0]
-        #row = self.quads[indx].ui.row
-        ##self.ui.tableWidget.scrollTo(row)
-        #item = self.ui.tableWidget.item(row, 2)
-        #self.ui.tableWidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtBottom)
-        #self.ui.tableWidget.selectRow(row)
 
 
     def add_plot(self):
@@ -938,6 +798,15 @@ class ManulInterfaceWindow(QFrame):
     def error_box(self, message):
         QtGui.QMessageBox.about(self, "Error box", message)
 
+    def question_box(self, message):
+        #QtGui.QMessageBox.question(self, "Question box", message)
+        reply = QtGui.QMessageBox.question(self, "Update Lattice?",
+                "Usually Design Lattice works very well. Do you want to update lattice? After do not forget to recalculate Response Matrices",
+                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        if reply==QtGui.QMessageBox.Yes:
+            return True
+
+        return False
 
     def update_plot(self, s, bx, by, dx, dy):
         # Line
@@ -960,9 +829,6 @@ class ManulInterfaceWindow(QFrame):
                 self.setStyleSheet(f.read())
         except IOError:
             print ('No style sheet found!')
-
-
-
 
 
 
@@ -993,50 +859,4 @@ def main():
 if __name__ == "__main__":
 
     main()
-"""
-import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
-import numpy as np
 
-win = pg.plot()
-win.setWindowTitle('pyqtgraph example: FillBetweenItem')
-win.setXRange(-10, 10)
-win.setYRange(-10, 10)
-
-N = 200
-x = np.linspace(-10, 10, N)
-gauss = np.exp(-x ** 2 / 20.)
-mn = mx = np.zeros(len(x))
-curves = [win.plot(x=x, y=np.zeros(len(x)), pen='k') for i in range(4)]
-brushes = [0.5, (100, 100, 255), 0.5]
-fills = [pg.FillBetweenItem(curves[i], curves[i + 1], brushes[i]) for i in range(3)]
-for f in fills:
-    win.addItem(f)
-
-
-def update():
-    global mx, mn, curves, gauss, x
-    a = 5 / abs(np.random.normal(loc=1, scale=0.2))
-    y1 = -np.abs(a * gauss + np.random.normal(size=len(x)))
-    y2 = np.abs(a * gauss + np.random.normal(size=len(x)))
-
-    s = 0.01
-    mn = np.where(y1 < mn, y1, mn) * (1 - s) + y1 * s
-    mx = np.where(y2 > mx, y2, mx) * (1 - s) + y2 * s
-    curves[0].setData(x, mn)
-    curves[1].setData(x, y1)
-    curves[2].setData(x, y2)
-    curves[3].setData(x, mx)
-
-
-timer = QtCore.QTimer()
-timer.timeout.connect(update)
-timer.start(30)
-
-## Start Qt event loop unless running in interactive mode or using pyside.
-if __name__ == '__main__':
-    import sys
-
-    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
-"""
