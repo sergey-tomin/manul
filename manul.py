@@ -46,7 +46,7 @@ from ocelot.optimizer.mint.xfel_interface import *
 import copy
 from scipy import optimize
 from devices import *
-
+from dispersion import *
 
 class ManulInterfaceWindow(QMainWindow):
     """ Main class for the GUI application """
@@ -85,7 +85,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
-
+        self.dispersion = DispertionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
         self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))

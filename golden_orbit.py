@@ -1,3 +1,7 @@
+"""
+Sergey Tomin, XFEL/DESY, 2017
+"""
+
 import numpy as np
 import json
 from PyQt4 import QtGui, QtCore

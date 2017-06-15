@@ -1,4 +1,6 @@
-
+"""
+Sergey Tomin, XFEL/DESY, 2017
+"""
 
 class Simulator:
     def __init__(self):

@@ -1,6 +1,7 @@
 """
-S Tomin
+Sergey Tomin, XFEL/DESY, 2017
 """
+
 import sys, os
 #path = sys.path[0]
 #indx = path.find("ocelot")

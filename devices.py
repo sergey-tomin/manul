@@ -1,4 +1,6 @@
-
+"""
+Sergey Tomin, XFEL/DESY, 2017
+"""
 from ocelot.optimizer.mint.opt_objects import Device
 from PyQt4 import QtGui, QtCore
 import numpy as np
@@ -25,6 +27,9 @@ class Corrector(Device):
         return [min_kick*1000, max_kick*1000]
 
 class CavityA1(Device):
+    def __init__(self, eid):
+        super(Device, self).__init__(eid=eid)
+
     def set_value(self, val):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)

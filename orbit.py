@@ -71,8 +71,8 @@ class OrbitInterface:
         self.ui.pb_online_orbit.clicked.connect(self.start_stop_live_orbit)
 
 
-        self.cavity = CavityA1(eid="CTRL.A1.I1")
-        self.cavity.mi = self.parent.mi
+        #self.cavity = CavityA1(eid="CTRL.A1.I1")
+        #self.cavity.mi = self.parent.mi
         self.ui.pb_feedback.clicked.connect(self.start_stop_feedback)
 
         self.rm_calc = pg.QtCore.QTimer()
