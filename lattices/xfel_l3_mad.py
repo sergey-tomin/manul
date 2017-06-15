@@ -787,7 +787,7 @@ sa_1852_cl = Sextupole(l=0.3164, k2=-5.577060799324, tilt=1.570796327, eid='SA.1
 # undulator 
 
 # cavity
-k_e = 0
+k_e = 1
 c_a6_1_1_l3 = Cavity(l=1.0377, v=k_e*0.02359375, freq=1300000.0, phi=0.0, eid='C.A6.1.1.L3')
 c_a6_1_2_l3 = Cavity(l=1.0377, v=k_e*0.02359375, freq=1300000.0, phi=0.0, eid='C.A6.1.2.L3')
 c_a6_1_3_l3 = Cavity(l=1.0377, v=k_e*0.02359375, freq=1300000.0, phi=0.0, eid='C.A6.1.3.L3')

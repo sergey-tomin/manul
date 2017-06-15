@@ -474,15 +474,24 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "CL":
-            self.lat = MagneticLattice(cell_cl , method=method)
-            self.tws_des = tws_cl
-            tmp_lat = MagneticLattice( self.copy_cells[4])
+            self.lat = MagneticLattice(cell_l3_no_cl + cell_cl + cell_sase1, start = enac_1382_l3, stop=qa_2253_sa1, method=method)
+
+            self.tws_des = Twiss()
+            self.tws_des.beta_x = 21.6754251533
+            self.tws_des.beta_y = 44.5714136209
+            self.tws_des.alpha_x = -0.758842958261
+            self.tws_des.alpha_y = 1.42869027612
+            self.tws_des.E = 16.3674999889
+            #self.tws_des.s = 1359.6367660000235
+            #self.tws_des = tws_cl
+            tmp_lat = MagneticLattice(deepcopy(self.lat.sequence))
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            self.lat_zi = 1629.7019660000299
+            #self.lat_zi = 1629.7019660000299
+            self.lat_zi = 1359.6367660000235 + 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "I1D":

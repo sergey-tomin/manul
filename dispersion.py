@@ -69,6 +69,7 @@ class DispertionInterface:
             X = np.vstack((X, x))
             Y = np.vstack((Y, y))
             time.sleep(0.11)
+        s_bpm = np.array([bpm.s for bpm in bpms])
         x_mean = np.mean(X, axis=0)
         y_mean = np.mean(Y, axis=0)
         x_std = np.std(x, axis=0)
@@ -105,19 +106,26 @@ class DispertionInterface:
         energy = self.get_section_energy()
         Dx = (x_mean - x_mean_i) / (dV * n_steps) * energy
         Dy = (y_mean - y_mean_i) / (dV * n_steps) * energy
+        s_bpm = np.array([bpm.s for bpm in bpms])
 
         self.cavity.set_value(V_init)
+
+        self.plot_dispersion(s_bpm, Dx, Dy)
 
     def add_orbit_plot(self):
         win = pg.GraphicsLayoutWidget()
         self.plot_x = win.addPlot(row=0, col=0)
-
+        axis = self.plot_x.getAxis("bottom")
+        axis.setStyle(showValues=False)
         # win.ci.layout.setRowMaximumHeight(0, 200)
-
         self.plot_x.showGrid(1, 1, 1)
 
         self.plot_y = win.addPlot(row=1, col=0)
+        axis = self.plot_y.getAxis("bottom")
+        axis.setStyle(showValues=False)
+
         self.plot_x.setXLink(self.plot_y)
+        #self.plot_x.hideAxis("bottom")
 
         self.plot_y.showGrid(1, 1, 1)
 
@@ -131,60 +139,78 @@ class DispertionInterface:
 
         self.plot_y.addLegend()
 
+        #color = QtGui.QColor(0, 255, 255)
+        #pen = pg.mkPen(color, width=3)
+        #self.orb_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y calc', antialias=True)
+        #self.plot_y.addItem(self.orb_y)
+        #
+
+
+        #color = QtGui.QColor(255, 255, 0)
+        #pen = pg.mkPen(color, width=3)
+        #self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
+
+        #color = QtGui.QColor(0, 255, 0)
+        #pen = pg.mkPen(color, width=2)
+        #self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
+
+        self.plot_Dx = win.addPlot(row=2, col=0)
+        axis = self.plot_Dx.getAxis("bottom")
+        axis.setStyle(showValues=False)
+        self.plot_Dy = win.addPlot(row=3, col=0)
+
+        self.plot_Dy.showGrid(1, 1, 1)
+        self.plot_Dy.setXLink(self.plot_y)
+        #win.ci.layout.setRowMaximumHeight(2, 150)
+
+        self.plot_Dx.setXLink(self.plot_y)
+        self.plot_Dx.showGrid(1, 1, 1)
+
+        #color = QtGui.QColor(255, 0, 0)
+        #pen = pg.mkPen(color, width=3)
+        #
+        #self.orb_x0 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
+        #self.plot_x.addItem(self.orb_x0)
+        #
+        #self.orb_y = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
+        #self.plot_y.addItem(self.orb_y0)
+        #
+        #color = QtGui.QColor(0, 255, 255)
+        #pen = pg.mkPen(color, width=3)
+        #
+        #self.orb_x1 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
+        #self.plot_x.addItem(self.orb_x1)
+        #
+        #self.orb_y1 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
+        #self.plot_y.addItem(self.orb_y1)
+
+        #self.plot_Dx.addItem(pg.InfiniteLine(pos=62.09, angle=90, movable=False), ignoreBounds=True)
+        #lh_t = pg.TextItem("I1", anchor=(0, 0))
+        #lh_t.setPos(62.09, 0)
+        #self.plot_cor.addItem(lh_t, ignoreBounds=True)
+
+
+        self.plot_Dx.addLegend()
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)
-        self.orb_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y calc', antialias=True)
-        self.plot_y.addItem(self.orb_y)
+        self.Dx_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Dx', antialias=True)
+        self.plot_Dx.addItem(self.Dx_curve)
 
-        color = QtGui.QColor(255, 0, 0)
-        pen = pg.mkPen(color, width=4)
-        self.orb_y_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
-        self.plot_y.addItem(self.orb_y_ref)
-
-        color = QtGui.QColor(255, 255, 0)
-        pen = pg.mkPen(color, width=3)
-        self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
-
-        color = QtGui.QColor(0, 255, 0)
-        pen = pg.mkPen(color, width=2)
-        self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
-
-        self.plot_cor = win.addPlot(row=2, col=0)
-        win.ci.layout.setRowMaximumHeight(2, 150)
-
-        self.plot_cor.setXLink(self.plot_y)
-        self.plot_cor.showGrid(1, 1, 1)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos=62.09, angle=90, movable=False), ignoreBounds=True)
-        lh_t = pg.TextItem("I1", anchor=(0, 0))
-        lh_t.setPos(62.09, 0)
-        self.plot_cor.addItem(lh_t, ignoreBounds=True)
-
-
-        self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen(color, width=3)
-        self.orb_x = pg.PlotCurveItem(x=[], y=[], pen=pen, name='X calc', antialias=True)
+        pen = pg.mkPen(color, width=3, symbolPen='o')
+        self.Dy_curve = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Dy', antialias=True)
+        self.plot_Dy.addItem(self.Dy_curve)
 
-        self.plot_x.addItem(self.orb_x)
+    def plot_orbits(self):
+        pass
 
-        color = QtGui.QColor(255, 0, 0)
-        pen = pg.mkPen(color, width=4, symbolPen='o')
-        self.orb_x_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X', antialias=True)
-        self.plot_x.addItem(self.orb_x_ref)
+    def plot_dispersion(self, s, Dx, Dy):
+        s = s + self.parent.lat_zi
+        self.Dx_curve.setData(x=s, y=Dx)
+        self.Dy_curve.setData(x=s, y=Dy)
+        self.Dx_curve.update()
+        self.Dy_curve.update()
 
-        color = QtGui.QColor(0, 255, 0)
-        pen = pg.mkPen(color, width=2)
-        self.orb_x_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X live', antialias=True)
-
-        color = QtGui.QColor(255, 255, 0)
-        pen = pg.mkPen(color, width=2)
-        self.orb_x_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
-
-        #self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
-        self.plot_cor.setYRange(-3, 3)
-        self.plot_x.setYRange(-2, 2)
-        self.plot_y.setYRange(-2, 2)
 
     def dispersion_measurement_sim(self):
         self.create_Orbit_obj()

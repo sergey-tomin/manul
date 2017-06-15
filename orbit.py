@@ -14,6 +14,7 @@ from ocelot.cpbd.response_matrix import *
 from devices import *
 from golden_orbit import GoldenOrbit
 
+
 class ResponseMatrixCalculator(Thread):
     """
     Wrap for ResponseMatrix class. Allow to calculate response matrices (ORM and DRM) in different thread
@@ -38,6 +39,9 @@ class ResponseMatrixCalculator(Thread):
 
 
 class OrbitInterface:
+    """
+    Main class for orbit correction
+    """
     def __init__(self, parent):
         self.parent = parent
         self.ui = parent.ui
@@ -48,7 +52,6 @@ class OrbitInterface:
         self.s_bpm = []
         self.x_bpm = []
         self.y_bpm = []
-        #self.golden_orbit = {}
         self.p_init = None
         self.add_orbit_plot()
         self.ui.pb_check.clicked.connect(lambda: self.getRows(2, self.ui.table_cor))
@@ -81,6 +84,11 @@ class OrbitInterface:
         self.golden_orbit = GoldenOrbit(parent=self)
 
     def uncheck_red(self):
+        """
+        Method to uncheck correctors if they are out of limits (red color in the GUI)
+
+        :return:
+        """
         corrs = self.get_dev_from_cb_state(self.corrs)
 
         for cor in corrs:
@@ -125,6 +133,11 @@ class OrbitInterface:
 
 
     def reset_all(self):
+        """
+        Method to reset initial values of the correctors
+
+        :return:
+        """
         corrs = self.get_dev_from_cb_state(self.corrs)
         self.online_calc = False
         for cor in corrs:
@@ -134,7 +147,7 @@ class OrbitInterface:
 
     def apply_kicks(self):
         """
-        Sends correctors strength to DOOCS, if strengths belos limits
+        Methos sends correctors kicks to DOOCS, if strengths below the limits,
         otherwise error box will appear
 
         :return:
@@ -148,15 +161,15 @@ class OrbitInterface:
                 return 0
 
         for cor in corrs:
-            kick_mrad = cor.ui.get_value() #* self.ui.sb_kick_weight.value()
+            kick_mrad = cor.ui.get_value()
             print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
-            #if -2.5 <= kick_mrad <=2.5:
             cor.mi.set_value(kick_mrad)
 
 
     def read_orbit(self):
         """
-        Reads from MI: correctors (angles: mrad->rad) and BPMs (X and Y: mm -> m) and checks charge on the BPMs
+        Method to readw from MI: correctors (angles: mrad->rad) and
+        BPMs (X and Y: mm -> m) and checks charge on the BPMs
         if the charge below charge_thresh return False
 
         :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
@@ -200,6 +213,12 @@ class OrbitInterface:
 
 
     def update_cors_plot(self):
+        """
+        Method to update corrector bars on the plot.
+        High of the bars depends on the corrector amplitude
+
+        :return:
+        """
 
         kicks = [elem.kick_mrad for elem in self.corrs]
         self.plot_cor.setYRange(np.floor(min(kicks)), np.ceil(max(kicks)))
@@ -226,8 +245,6 @@ class OrbitInterface:
         if self.online_calc == False:
             return
 
-        # L = 0
-        #start = time.time()
         for elem in self.parent.lat.sequence:
             if elem.__class__ in [Hcor, Vcor]:
                 elem.kick_mrad = elem.ui.get_value()
@@ -235,23 +252,22 @@ class OrbitInterface:
                 warn = (np.abs(elem.kick_mrad) - np.abs(elem.ui.get_init_value())) > 0.5
                 elem.ui.check_values(elem.kick_mrad, elem.lims, warn=warn)
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
-                elem.angle = angle # elem.kick_mrad/1000.
+                elem.angle = angle
                 elem.transfer_map = self.parent.lat.method.create_tm(elem)
         self.update_cors_plot()
-        #print("1 = ", start - time.time())
-        #start = time.time()
-        #print("2 = ", start - time.time())
         self.update_plot()
 
     def create_Orbit_obj(self):
         """
         function creates the Orbit object with correctors and bpms which are active in the GUI
+        NewOrbit - is object form ocelot.cpbd.orbitcorrection
 
         :return: Orbit
         """
-        for elem in self.corrs:
-            print("angle = ", elem.angle)
-        self.orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM, disp_rm_method=LinacDisperseSimRM)
+        #for elem in self.corrs:
+        #    print("angle = ", elem.angle)
+        self.orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM,
+                              disp_rm_method=LinacDisperseSimRM)
         corrs = self.get_dev_from_cb_state(self.corrs)
         s_pos = np.min([cor.s for cor in corrs])
         bpms = np.array(self.bpms)
@@ -278,6 +294,11 @@ class OrbitInterface:
 
 
     def load_response_matrices(self):
+        """
+        Method to load ORM and DRM from the file.
+
+        :return: True if the corresponding file exists and False if not
+        """
 
         print(self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
         try:
@@ -294,6 +315,12 @@ class OrbitInterface:
         return True
 
     def is_rm_ok(self, orbit):
+        """
+        Method to check and load if needed the RMs
+
+        :return: True -  if shape of the ORM (!) is correct (shape of the DRM is not checked)
+                 False - if the RM does not exist or RM load was failed
+        """
         if len(self.orbit.response_matrix.matrix) == 0:
             print("tring to load response matrix ... Is OK?")
             is_ok = self.load_response_matrices()
@@ -303,13 +330,19 @@ class OrbitInterface:
         cor_list = [cor.id for cor in np.append(orbit.hcors, orbit.vcors)]
         bpm_list = [bpm.id for bpm in orbit.bpms]
         RM = self.orbit.response_matrix.extract(cor_list=cor_list, bpm_list=bpm_list)
-        #print("RM = ", np.shape(RM), len(cor_list), len(bpm_list))
         if np.shape(RM)[0] != len(bpm_list)*2 or np.shape(RM)[1] != len(cor_list):
             return False
         else:
             return True
 
     def correct(self):
+        """
+        Method to the Orbit correctiion. Method calculate correctors strengths (kicks)
+        and call function to calculate (self.calc_orbit()) and draw orbit on the plot
+        but does not send it to the DOOCS server.
+
+        :return:
+        """
 
         self.read_orbit()
 
@@ -332,7 +365,7 @@ class OrbitInterface:
             kick_mrad_old = cor.ui.get_init_value()
             delta_kick_mrad = cor.angle*1000
             new_kick_mrad = kick_mrad_old + delta_kick_mrad
-            cor.kick_mrad =  new_kick_mrad # cor.angle*1000
+            cor.kick_mrad =  new_kick_mrad
             cor.ui.set_value(cor.kick_mrad)
             warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
 
@@ -342,6 +375,13 @@ class OrbitInterface:
         self.calc_orbit()
 
     def start_stop_feedback(self):
+        """
+        Method to start/stop feedback timer.
+        sb_feedback_sec - spinBox - set seconds for timer
+        pb_feedback - pushBatton Off/On
+        feedback_timer - timer
+        :return:
+        """
         delay = self.ui.sb_feedback_sec.value()*1000
         if self.ui.pb_feedback.text() == "Orbit Keeper Off":
             self.parent.feedback_timer.stop()
@@ -354,7 +394,13 @@ class OrbitInterface:
             self.ui.pb_feedback.setStyleSheet("color: red")
 
     def auto_correction(self):
+        """
+        Method repeats correction in a loop.
+        repetation rate is defined by spinBox - sb_feedback_sec
+        feedback_timer - QTimer to repats correction oin different thread
 
+        :return:
+        """
         beam_on = self.read_orbit()
         time.sleep(0.01)
         if beam_on:
@@ -383,6 +429,17 @@ class OrbitInterface:
         return checked_devs
 
     def calc_response_matrix(self):
+        """
+        Method is connected to pushBatton pb_calc_RM and creates ResponseMatrixCalculator
+        which calculates ORM and DRM in different thread
+        self.parent.rm_files_dir - name of directory for RMs sore
+        self.ui.cb_lattice.currentText() - name of the sections (e.g. "I1D, L1, SASE1 and so on)
+
+        The method also launchs the Qtimer self.rm_calc to controle when the thread
+        ResponseMatrixCalculator finishs the calculations
+
+        :return:
+        """
         self.orbit = self.create_Orbit_obj()
 
         self.RMs = ResponseMatrixCalculator(rm=self.orbit.response_matrix,
@@ -397,20 +454,32 @@ class OrbitInterface:
         self.RMs.start()
         self.rm_calc.start()
 
+
     def is_rm_calc_alive(self):
+        """
+        Method to check if the ResponseMatrixCalculator thread is alive.
+        it is needed to change name and color of the pushBatton pb_calc_RM.
+        When RMs caclulation is finished. If the thread is dead QTimer self.rm_calc is stopped
+
+        :return:
+        """
         if not self.RMs.is_alive():
             self.ui.pb_calc_RM.setStyleSheet("color: rgb(85, 255, 127);")
             self.ui.pb_calc_RM.setText("Calculate RM")
             self.rm_calc.stop()
 
-    def load_correctors(self):
 
+    def load_correctors(self):
+        """
+
+        """
         self.corrs = self.load_devices(types=[Hcor, Vcor])
 
         self.parent.add_devs2table(self.corrs, w_table=self.ui.table_cor, calc_obj=self.calc_orbit,
                                    spin_params=[-100, 100, 0.1], check_box=True)
         self.cor_ampl = np.max(np.append(1, np.abs(np.array([q.kick_mrad for q in self.corrs]))))
         self.ui.table_cor.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+
 
     def load_bpms(self, lat):
         devices = []
@@ -433,7 +502,7 @@ class OrbitInterface:
 
     def add_bpms2table(self, devs, w_table, check_box=False):
         """ Initialize the UI table object """
-        #spin_boxes = [QtGui.QDoubleSpinBox()]*
+
         self.spin_boxes = []
         w_table.setRowCount(0)
         for row in range(len(devs)):
@@ -478,9 +547,7 @@ class OrbitInterface:
     def load_devices(self, types):
         devices = []
         mi_devs = {}
-        #cell_i1_copy = copy.deepcopy(cell_i1_copy)
-        #lat_tmp = MagneticLattice(cell_i1_copy)
-        print("load_devices", len(self.parent.lat.sequence))
+
         L = 0
         for i, elem in enumerate(self.parent.lat.sequence):
             L += elem.l
@@ -490,17 +557,17 @@ class OrbitInterface:
                 elem.i_kick = elem.kick_mrad
 
                 elem.lat_inx = i
-                #elem.mi = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+
                 if "ps_id" in elem.__dict__:
                     if elem.ps_id not in mi_devs.keys():
-                        mi_dev = Corrector(eid=elem.id) # Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                        mi_dev = Corrector(eid=elem.id)
                         mi_dev.mi = self.parent.mi
                         elem.mi = mi_dev
                         mi_devs[elem.ps_id] = mi_dev
                     else:
                         elem.mi = mi_devs[elem.ps_id]
                 else:
-                    mi_dev = Corrector(eid=elem.id) # Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                    mi_dev = Corrector(eid=elem.id)
                     mi_dev.mi = self.parent.mi
                     elem.mi = mi_dev
 
@@ -724,15 +791,10 @@ class OrbitInterface:
 
     def update_plot(self):
 
-        start = time.time()
+        #start = time.time()
         p_list = lattice_track(self.parent.lat, Particle(E=self.parent.tws0.E))
-        print("3 = ", start - time.time())
-        #else:
-        #    p_list = lattice_track(self.parent.lat, copy.deepcopy(self.p_init))
-        #tws = twiss(self.lat, self.tws0)
-        #print(tws[-1], self.tws0)
-        #plot_opt_func(lat, tws, top_plot=["Dx", "Dy"])
-        #plt.show()
+        #print("3 = ", start - time.time())
+
         x = np.array([p.x for p in p_list])*1000
         y = np.array([p.y for p in p_list])*1000
         s = np.array([p.s for p in p_list]) + self.parent.lat_zi
@@ -757,8 +819,7 @@ class OrbitInterface:
         """ Method to unchecked all active boxes """
         for cor in self.corrs:
             cor.ui.uncheck()
-            # item = self.ui.tableWidget.cellWidget(row, 5)
-            #item.setCheckState(False)
+
 
     def getRows(self, state, widget):
         """
