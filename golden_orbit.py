@@ -48,6 +48,8 @@ class GoldenOrbit:
             elem.y_ref = 0.
             self.golden_orbit[elem.id] = [0., 0.]
 
+
+
     def dict2golden_orbit(self):
         """
         Method sets BPM.x_ref and BPM.y_ref from dictionary: self.golden_orbit

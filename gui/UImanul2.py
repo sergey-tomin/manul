@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul2.ui'
 #
-# Created: Thu Jun 15 14:01:08 2017
+# Created: Fri Jun 16 21:46:24 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1222, 923)
+        MainWindow.resize(1222, 892)
         MainWindow.setMinimumSize(QtCore.QSize(1150, 0))
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
@@ -75,6 +75,13 @@ class Ui_MainWindow(object):
         self.pb_read_orbit.setStyleSheet(_fromUtf8("color: rgb(85, 255, 255);"))
         self.pb_read_orbit.setObjectName(_fromUtf8("pb_read_orbit"))
         self.horizontalLayout_19.addWidget(self.pb_read_orbit)
+        self.cb_close_orbit = QtGui.QCheckBox(self.tab_2)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.cb_close_orbit.setFont(font)
+        self.cb_close_orbit.setChecked(True)
+        self.cb_close_orbit.setObjectName(_fromUtf8("cb_close_orbit"))
+        self.horizontalLayout_19.addWidget(self.cb_close_orbit)
         self.gridLayout_30.addLayout(self.horizontalLayout_19, 2, 0, 1, 2)
         self.groupBox_5 = QtGui.QGroupBox(self.tab_2)
         self.groupBox_5.setMinimumSize(QtCore.QSize(0, 100))
@@ -499,15 +506,13 @@ class Ui_MainWindow(object):
         self.label_10.setFont(font)
         self.label_10.setObjectName(_fromUtf8("label_10"))
         self.horizontalLayout_27.addWidget(self.label_10)
-        self.sb_n_readings = QtGui.QDoubleSpinBox(self.groupBox_7)
+        self.sb_n_readings = QtGui.QSpinBox(self.groupBox_7)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.sb_n_readings.setFont(font)
-        self.sb_n_readings.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
-        self.sb_n_readings.setMinimum(1.0)
-        self.sb_n_readings.setMaximum(30.0)
-        self.sb_n_readings.setSingleStep(1.0)
-        self.sb_n_readings.setProperty("value", 1.0)
+        self.sb_n_readings.setMinimum(1)
+        self.sb_n_readings.setMaximum(30)
+        self.sb_n_readings.setProperty("value", 1)
         self.sb_n_readings.setObjectName(_fromUtf8("sb_n_readings"))
         self.horizontalLayout_27.addWidget(self.sb_n_readings)
         self.verticalLayout_14.addLayout(self.horizontalLayout_27)
@@ -689,6 +694,7 @@ class Ui_MainWindow(object):
         self.pb_online_orbit.setText(_translate("MainWindow", "Live Orbit On", None))
         self.pb_golden_orbit.setText(_translate("MainWindow", "Show Golden Orbit", None))
         self.pb_read_orbit.setText(_translate("MainWindow", "Read BPMs/Corrs", None))
+        self.cb_close_orbit.setText(_translate("MainWindow", "Close Orbit", None))
         self.groupBox_5.setTitle(_translate("MainWindow", "Lattice", None))
         self.pb_update_lat.setText(_translate("MainWindow", "Update Lattice DOOCS", None))
         self.pb_reset_all.setText(_translate("MainWindow", "Reset All", None))

@@ -87,6 +87,9 @@ class ManulInterfaceWindow(QMainWindow):
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispertionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
+
+        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = enac_1382_l3, stop=qa_2253_sa1)
+        self.cl_copy = copy.deepcopy(lat.sequence)
         self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
         self.online_calc = True
@@ -484,7 +487,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.tws_des.E = 16.3674999889
             #self.tws_des.s = 1359.6367660000235
             #self.tws_des = tws_cl
-            tmp_lat = MagneticLattice(deepcopy(self.lat.sequence))
+            tmp_lat = MagneticLattice(self.cl_copy)
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]

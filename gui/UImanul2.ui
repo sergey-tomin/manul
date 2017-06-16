@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1222</width>
-    <height>923</height>
+    <height>892</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -106,6 +106,21 @@
               </property>
               <property name="text">
                <string>Read BPMs/Corrs</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="cb_close_orbit">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Close Orbit</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -997,26 +1012,20 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QDoubleSpinBox" name="sb_n_readings">
+                    <widget class="QSpinBox" name="sb_n_readings">
                      <property name="font">
                       <font>
                        <pointsize>12</pointsize>
                       </font>
                      </property>
-                     <property name="locale">
-                      <locale language="English" country="UnitedStates"/>
-                     </property>
                      <property name="minimum">
-                      <double>1.000000000000000</double>
+                      <number>1</number>
                      </property>
                      <property name="maximum">
-                      <double>30.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>1.000000000000000</double>
+                      <number>30</number>
                      </property>
                      <property name="value">
-                      <double>1.000000000000000</double>
+                      <number>1</number>
                      </property>
                     </widget>
                    </item>

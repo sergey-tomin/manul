@@ -28,11 +28,12 @@ class Corrector(Device):
 
 class CavityA1(Device):
     def __init__(self, eid):
-        super(Device, self).__init__(eid=eid)
+        super(CavityA1, self).__init__(eid=eid)
 
     def set_value(self, val):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
-        self.mi.set_value(ch, val)
+        #self.mi.set_value(ch, val)
+        print(ch, "V = ", val)
 
     def get_value(self):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"

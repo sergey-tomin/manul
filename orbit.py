@@ -335,6 +335,23 @@ class OrbitInterface:
         else:
             return True
 
+    def close_orbit(self):
+        """
+        Method sets BPM.x_ref and BPM.y_ref from dictionary: self.golden_orbit
+
+        :return:
+        """
+        n_bpms = len(self.orbit.bpms)
+        if n_bpms < 10:
+            self.ui.cb_close_orbit.setChecked(False)
+
+        for i, elem in enumerate(self.orbit.bpms[-5:]):
+
+            elem.x_ref = elem.x
+            elem.y_ref = elem.y
+            print(elem.id, "set close orbit")
+
+
     def correct(self):
         """
         Method to the Orbit correctiion. Method calculate correctors strengths (kicks)
@@ -353,7 +370,17 @@ class OrbitInterface:
         if not self.is_rm_ok(self.orbit):
             self.parent.error_box("Calculate Response Matrix")
             return 0
+
+        # TODO: TEST and implement
+        if self.ui.cb_close_orbit.isChecked():
+            self.close_orbit()
+
         self.golden_orbit.dict2golden_orbit()
+
+        # TODO: TEST and implement
+        if self.ui.cb_close_orbit.isChecked():
+            self.close_orbit()
+
         # TODO: look into particle
         p0 = Particle(E=self.parent.tws0.E)
         for cor in self.corrs:

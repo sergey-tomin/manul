@@ -14,32 +14,35 @@ class DispertionInterface:
         self.parent = parent
         self.ui.pb_start_meas.clicked.connect(self.dispersion_measurement)
         self.add_orbit_plot()
-        self.ui.cb_cav_list.addItem("A1")
-        self.ui.cb_cav_list.addItem("A2")
-        self.ui.cb_cav_list.addItem("A3")
-        self.ui.cb_cav_list.addItem("A4")
-        self.ui.cb_cav_list.addItem("A5")
+        self.ui.cb_cav_list.addItem("A1.I1")
+        self.ui.cb_cav_list.addItem("A2.L1")
+        self.ui.cb_cav_list.addItem("A3.L2")
+        self.ui.cb_cav_list.addItem("A4.L2")
+        self.ui.cb_cav_list.addItem("A5.L3")
 
-        self.ui.cb_cav_list.addItem("A6")
-        self.ui.cb_cav_list.addItem("A7")
-        self.ui.cb_cav_list.addItem("A8")
-        self.ui.cb_cav_list.addItem("A9")
-        self.ui.cb_cav_list.addItem("A10")
-        self.ui.cb_cav_list.addItem("A11")
-        self.ui.cb_cav_list.addItem("A12")
-        self.ui.cb_cav_list.addItem("A13")
-        self.ui.cb_cav_list.addItem("A14")
-        self.ui.cb_cav_list.addItem("A15")
-        self.ui.cb_cav_list.addItem("A16")
-        self.ui.cb_cav_list.addItem("A17")
-        self.ui.cb_cav_list.addItem("A18")
-        self.ui.cb_cav_list.addItem("A19")
-        self.ui.cb_cav_list.addItem("A20")
-        self.ui.cb_cav_list.addItem("A21")
-        self.ui.cb_cav_list.addItem("A22")
-        self.ui.cb_cav_list.addItem("A23")
-        self.ui.cb_cav_list.addItem("A24")
-        self.ui.cb_cav_list.addItem("A25")
+        self.ui.cb_cav_list.addItem("A6.L3")
+        self.ui.cb_cav_list.addItem("A7.L3")
+        self.ui.cb_cav_list.addItem("A8.L3")
+        self.ui.cb_cav_list.addItem("A9.L3")
+        self.ui.cb_cav_list.addItem("A10.L3")
+        self.ui.cb_cav_list.addItem("A11.L3")
+        self.ui.cb_cav_list.addItem("A12.L3")
+        self.ui.cb_cav_list.addItem("A13.L3")
+        self.ui.cb_cav_list.addItem("A14.L3")
+        self.ui.cb_cav_list.addItem("A15.L3")
+        self.ui.cb_cav_list.addItem("A16.L3")
+        self.ui.cb_cav_list.addItem("A17.L3")
+        self.ui.cb_cav_list.addItem("A18.L3")
+        self.ui.cb_cav_list.addItem("A19.L3")
+        self.ui.cb_cav_list.addItem("A20.L3")
+        self.ui.cb_cav_list.addItem("A21.L3")
+        self.ui.cb_cav_list.addItem("A22.L3")
+        self.ui.cb_cav_list.addItem("A23.L3")
+        self.ui.cb_cav_list.addItem("A24.L3")
+        self.ui.cb_cav_list.addItem("A25.L3")
+
+        self.multilines_x = {}
+        self.multilines_y = {}
 
     def read_bpms(self, bpms):
         """
@@ -55,12 +58,12 @@ class DispertionInterface:
             x_mm, y_mm = bpm.mi.get_pos()
             charge = bpm.mi.get_charge()
             bpm_list.append(bpm.id)
-            x.append(x_mm * 1000)
-            y.append(y_mm * 1000)
+            x.append(x_mm * 0.001)
+            y.append(y_mm * 0.001)
         return np.array(x), np.array(y), bpm_list
 
     def get_orbit(self, bpms):
-        n_readings = self.ui.n_readings.value()
+        n_readings = int(self.ui.sb_n_readings.value())
         n_bpms = len(bpms)
         X = np.zeros(n_bpms)
         Y = np.zeros(n_bpms)
@@ -83,7 +86,7 @@ class DispertionInterface:
         time_delay = self.ui.sb_time_delay.value()
 
         current_cav = self.ui.cb_cav_list.currentText()
-        cav_id = "CTRL." + current_cav + ".I1"
+        cav_id = "CTRL." + current_cav
         self.cavity = CavityA1(eid=cav_id)
         self.cavity.mi = self.parent.mi
 
@@ -91,26 +94,53 @@ class DispertionInterface:
 
         dV = self.ui.sb_voltage.value()
         n_steps = self.ui.sb_n_steps.value()
+
+        volts_list = [V_init + dV*(i) for i in range(n_steps+1)]
+        print(volts_list)
+        multilines_x = self.setup_multi_plot(volts_list, self.plot_x, self.leg_x)
+        multilines_y = self.setup_multi_plot(volts_list, self.plot_y, self.leg_y)
+        print(len(multilines_x))
         bpms = self.parent.orbit.bpms
         bpms = self.parent.orbit.get_dev_from_cb_state(bpms)
 
-        disp_orbit = {}
+        s_bpm = np.array([bpm.s for bpm in bpms])
 
-        x_mean_i, y_mean_i, x_std_i, y_std_i = self.get_orbit(bpms)
+        #x_mean_i, y_mean_i, x_std_i, y_std_i = self.get_orbit(bpms)
 
-        for n in range(n_steps):
-            self.cavity.set_value(V_init + dV*(n + 1))
+        #self.plot_orbits(multilines_x[0], s_bpm, x_mean_i)
+        #self.plot_orbits(multilines_y[0], s_bpm, y_mean_i)
+        X_mean = []
+        Y_mean = []
+        for i, v in enumerate(volts_list):
+            self.cavity.set_value(v)
+            print("set Voltage: ",  v)
             time.sleep(time_delay)
             x_mean, y_mean, x_std, y_std = self.get_orbit(bpms)
+            X_mean.append(x_mean)
+            Y_mean.append(y_mean)
+            self.plot_orbits(multilines_x[i], s_bpm, x_mean*1000)
+            self.plot_orbits(multilines_y[i], s_bpm, y_mean*1000)
 
         energy = self.get_section_energy()
-        Dx = (x_mean - x_mean_i) / (dV * n_steps) * energy
-        Dy = (y_mean - y_mean_i) / (dV * n_steps) * energy
-        s_bpm = np.array([bpm.s for bpm in bpms])
+        if volts_list[-1] - volts_list[0] != 0:
+
+            Dx = (X_mean[-1] - X_mean[0]) / (volts_list[-1] - volts_list[0]) * energy
+            Dy = (Y_mean[-1] - Y_mean[0]) / (volts_list[-1] - volts_list[0]) * energy
+        else:
+            Dx = np.zeros_like(X_mean[0])
+            Dy = np.zeros_like(Y_mean[0])
 
         self.cavity.set_value(V_init)
 
         self.plot_dispersion(s_bpm, Dx, Dy)
+        self.set_disp2bpms(Dx, Dy, bpms)
+
+    def set_disp2bpms(self, Dx, Dy, bpms):
+        for i, bpm in enumerate(bpms):
+            bpm.Dx = Dx[i]
+            bpm.Dy = Dy[i]
+
+
 
     def add_orbit_plot(self):
         win = pg.GraphicsLayoutWidget()
@@ -136,23 +166,12 @@ class DispertionInterface:
         layout.addWidget(win, 0, 0)
 
         self.plot_y.setAutoVisible(y=True)
+        #legend for plot_x and plot_y
+        self.leg_x = customLegend(offset=(75, 20))
+        self.leg_x.setParentItem(self.plot_x.graphicsItem())
 
-        self.plot_y.addLegend()
-
-        #color = QtGui.QColor(0, 255, 255)
-        #pen = pg.mkPen(color, width=3)
-        #self.orb_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y calc', antialias=True)
-        #self.plot_y.addItem(self.orb_y)
-        #
-
-
-        #color = QtGui.QColor(255, 255, 0)
-        #pen = pg.mkPen(color, width=3)
-        #self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
-
-        #color = QtGui.QColor(0, 255, 0)
-        #pen = pg.mkPen(color, width=2)
-        #self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
+        self.leg_y = customLegend(offset=(75, 20))
+        self.leg_y.setParentItem(self.plot_y.graphicsItem())
 
         self.plot_Dx = win.addPlot(row=2, col=0)
         axis = self.plot_Dx.getAxis("bottom")
@@ -166,52 +185,95 @@ class DispertionInterface:
         self.plot_Dx.setXLink(self.plot_y)
         self.plot_Dx.showGrid(1, 1, 1)
 
-        #color = QtGui.QColor(255, 0, 0)
-        #pen = pg.mkPen(color, width=3)
-        #
-        #self.orb_x0 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
-        #self.plot_x.addItem(self.orb_x0)
-        #
-        #self.orb_y = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
-        #self.plot_y.addItem(self.orb_y0)
-        #
-        #color = QtGui.QColor(0, 255, 255)
-        #pen = pg.mkPen(color, width=3)
-        #
-        #self.orb_x1 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
-        #self.plot_x.addItem(self.orb_x1)
-        #
-        #self.orb_y1 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
-        #self.plot_y.addItem(self.orb_y1)
-
-        #self.plot_Dx.addItem(pg.InfiniteLine(pos=62.09, angle=90, movable=False), ignoreBounds=True)
-        #lh_t = pg.TextItem("I1", anchor=(0, 0))
-        #lh_t.setPos(62.09, 0)
-        #self.plot_cor.addItem(lh_t, ignoreBounds=True)
-
-
-        self.plot_Dx.addLegend()
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)
         self.Dx_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Dx', antialias=True)
         self.plot_Dx.addItem(self.Dx_curve)
+        self.plot_Dx.addLegend()
 
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3, symbolPen='o')
-        self.Dy_curve = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Dy', antialias=True)
+        self.Dy_curve = pg.PlotDataItem(x=[], y=[], pen=pen, name='Dy', antialias=True)
         self.plot_Dy.addItem(self.Dy_curve)
+        self.plot_Dx.addLegend()
 
-    def plot_orbits(self):
-        pass
+    def setup_multi_plot(self, volts_list, plot, legend, ):
+        """
+        Reset plots when a new scan is started.
+        """
+        plot.clear()
+        multilines = {}
+        #self.plot_x.removeItem(self.orb_x_live)
+    	#self.plot_y.removeItem(self.orb_y_live)
+        #self.plot_x.legend.removeItem(self.orb_x_live.name())
+        #self.plot_y.legend.removeItem(self.orb_y_live.name())
+
+
+        #legend.scene().removeItem(legend)
+        legend = customLegend(offset=(50, 10))
+        legend.setParentItem(plot.graphicsItem())
+
+        default_colors = [QtGui.QColor(255, 51, 51), QtGui.QColor(51, 255, 51), QtGui.QColor(255, 255, 51),QtGui.QColor(178, 102, 255)]
+        for i, volt in enumerate(volts_list):
+
+            #set the first 4 devices to have the same default colors
+            if i < 4:
+                color = default_colors[i]
+            else:
+                color = self.randColor()
+
+            pen=pg.mkPen(color, width=2)
+            multilines[i] = pg.PlotCurveItem([], [], pen=pen, antialias=True, name=str(volt))
+            plot.addItem(multilines[i])
+            legend.addItem(multilines[i], str(volt), color=str(color.name()))
+        return multilines
+
+    def randColor(self):
+        """
+        Generate random line color for each device plotted.
+        :return: QColor object of a random color
+        """
+        hi = 255
+        lo = 128
+        c1 = np.random.randint(lo,hi)
+        c2 = np.random.randint(lo,hi)
+        c3 = np.random.randint(lo,hi)
+        return QtGui.QColor(c1,c2,c3)
+
+    def plot_orbits(self, line, s, y):
+        line.setData(x=s, y = y)
+        line.update()
+
 
     def plot_dispersion(self, s, Dx, Dy):
-        s = s + self.parent.lat_zi
+        s = s #+ self.parent.lat_zi
         self.Dx_curve.setData(x=s, y=Dx)
         self.Dy_curve.setData(x=s, y=Dy)
         self.Dx_curve.update()
         self.Dy_curve.update()
 
 
+class customLegend(pg.LegendItem):
+    """
+    STUFF FOR PG CUSTOM LEGEND (subclassed from pyqtgraph).
+    Class responsible for drawing a single item in a LegendItem (sans label).
+    This may be subclassed to draw custom graphics in a Legend.
+    """
+    def __init__(self, size=None, offset=None):
+        pg.LegendItem.__init__(self, size, offset)
+
+    def addItem(self, item, name, color="CCFF00"):
+
+        label = pg.LabelItem(name, color=color, size="6pt", bold=True)
+        sample = None
+        row = self.layout.rowCount()
+        self.items.append((sample, label))
+        self.layout.addItem(sample, row, 0)
+        self.layout.addItem(label, row, 1)
+        self.layout.setSpacing(0)
+
+
+    """
     def dispersion_measurement_sim(self):
         self.create_Orbit_obj()
         disp_meas = LinacDisperseSimRM(lattice=copy.deepcopy(self.orbit.lat),
@@ -268,3 +330,4 @@ class DispertionInterface:
         #self.plot_cor.update()
         self.orb_y.update()
         self.orb_x.update()
+    """
