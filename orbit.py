@@ -198,10 +198,10 @@ class OrbitInterface:
                     beam_on = False
                 elem.x = x_mm/1000.
                 elem.y = y_mm/1000.
-                elem.Dx = 0.
-                elem.Dy = 0.
-                elem.Dx_des = 0.
-                elem.Dy_des = 0.
+                #elem.Dx = 0.
+                #elem.Dy = 0.
+                #elem.Dx_des = 0.
+                #elem.Dy_des = 0.
                 elem.ui.set_value((x_mm, y_mm))
             except:
                 print("BPM: " + elem.id + " was unchecked ")
@@ -523,6 +523,10 @@ class OrbitInterface:
                 elem.lat_inx = i
                 elem.x = 0
                 elem.y = 0
+                elem.Dx = 0
+                elem.Dy = 0
+                elem.Dx_des = 0
+                elem.Dy_des = 0
                 elem.weight = 1
 
         return devices

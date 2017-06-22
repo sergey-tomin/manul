@@ -80,9 +80,28 @@ class DispertionInterface:
         return x_mean, y_mean, x_std, y_std
 
     def get_section_energy(self):
-        return 13200 # MeV
+        current_lat = self.ui.cb_lattice.currentText()
+        if current_lat in ["CL", "SASE1", "T4", "SASE3"]:
+            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")
+        elif current_lat in ["B2"]:
+            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/B2/ENERGY.SA1")
+        elif current_lat in ["B1"]:
+            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/B1/ENERGY.SA1")
+        else:
+            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/LH/ENERGY.SA1")
+        return energy
+
 
     def dispersion_measurement(self):
+        beam_on = self.parent.orbit.read_orbit()
+        if not beam_on:
+            print("BEAM OFF")
+            return
+
+        self.parent.orbit.uncheck_red()
+
+        self.orbit = self.parent.orbit.create_Orbit_obj()
+
         time_delay = self.ui.sb_time_delay.value()
 
         current_cav = self.ui.cb_cav_list.currentText()
@@ -122,23 +141,43 @@ class DispertionInterface:
             self.plot_orbits(multilines_y[i], s_bpm, y_mean*1000)
 
         energy = self.get_section_energy()
-        if volts_list[-1] - volts_list[0] != 0:
+        print("ENERGY = ", energy)
+        dp_over_p = (volts_list[-1] - volts_list[0]) / energy
+        if dp_over_p != 0:
 
-            Dx = (X_mean[-1] - X_mean[0]) / (volts_list[-1] - volts_list[0]) * energy
-            Dy = (Y_mean[-1] - Y_mean[0]) / (volts_list[-1] - volts_list[0]) * energy
+            Dx = (X_mean[-1] - X_mean[0]) / dp_over_p
+            Dy = (Y_mean[-1] - Y_mean[0]) / dp_over_p
         else:
             Dx = np.zeros_like(X_mean[0])
             Dy = np.zeros_like(Y_mean[0])
 
         self.cavity.set_value(V_init)
 
-        self.plot_dispersion(s_bpm, Dx, Dy)
-        self.set_disp2bpms(Dx, Dy, bpms)
 
-    def set_disp2bpms(self, Dx, Dy, bpms):
+        self.set_disp2bpms(Dx, Dy, bpms, energy)
+
+        Dx_des = np.array([bpm.Dx_des for bpm in bpms])
+        Dy_des = np.array([bpm.Dy_des for bpm in bpms])
+
+        self.plot_dispersion(s_bpm, Dx, Dy, Dx_des, Dy_des)
+
+
+    def calculate_disp(self, energy):
+        Dx0, Dy0 = self.parent.orbit.orbit.response_matrix.method.read_virtual_dispersion(E0=energy)
+        print("Dx0", Dx0)
+        print("Dy0", Dy0)
+        return Dx0, Dy0
+
+
+    def set_disp2bpms(self, Dx, Dy, bpms, energy):
+
+        Dx0, Dy0 = self.calculate_disp(energy)
         for i, bpm in enumerate(bpms):
             bpm.Dx = Dx[i]
             bpm.Dy = Dy[i]
+            bpm.Dx_des = Dx0[i]
+            bpm.Dy_des = Dy0[i]
+
 
 
 
@@ -192,10 +231,23 @@ class DispertionInterface:
         self.plot_Dx.addLegend()
 
         color = QtGui.QColor(0, 255, 255)
+        pen = pg.mkPen(color, width=1)
+        self.Dx_des_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Dx des', antialias=True)
+        self.plot_Dx.addItem(self.Dx_des_curve)
+        self.plot_Dx.addLegend()
+
+        color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3, symbolPen='o')
         self.Dy_curve = pg.PlotDataItem(x=[], y=[], pen=pen, name='Dy', antialias=True)
         self.plot_Dy.addItem(self.Dy_curve)
         self.plot_Dx.addLegend()
+
+        color = QtGui.QColor(0, 255, 255)
+        pen = pg.mkPen(color, width=1, symbolPen='o')
+        self.Dy_des_curve = pg.PlotDataItem(x=[], y=[], pen=pen, name='Dy des', antialias=True)
+        self.plot_Dy.addItem(self.Dy_des_curve)
+        self.plot_Dx.addLegend()
+
 
     def setup_multi_plot(self, volts_list, plot, legend, ):
         """
@@ -245,12 +297,17 @@ class DispertionInterface:
         line.update()
 
 
-    def plot_dispersion(self, s, Dx, Dy):
+    def plot_dispersion(self, s, Dx, Dy, Dx_des, Dy_des):
         s = s #+ self.parent.lat_zi
         self.Dx_curve.setData(x=s, y=Dx)
         self.Dy_curve.setData(x=s, y=Dy)
         self.Dx_curve.update()
         self.Dy_curve.update()
+
+        self.Dx_des_curve.setData(x=s, y=Dx_des)
+        self.Dy_des_curve.setData(x=s, y=Dy_des)
+        self.Dx_des_curve.update()
+        self.Dy_des_curve.update()
 
 
 class customLegend(pg.LegendItem):

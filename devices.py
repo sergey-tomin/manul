@@ -32,7 +32,7 @@ class CavityA1(Device):
 
     def set_value(self, val):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
-        #self.mi.set_value(ch, val)
+        self.mi.set_value(ch, val)
         print(ch, "V = ", val)
 
     def get_value(self):

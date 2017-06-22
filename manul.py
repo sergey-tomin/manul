@@ -80,15 +80,15 @@ class ManulInterfaceWindow(QMainWindow):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispertionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
 
-        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = enac_1382_l3, stop=qa_2253_sa1)
+        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)
         self.cl_copy = copy.deepcopy(lat.sequence)
         self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
@@ -477,14 +477,19 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "CL":
-            self.lat = MagneticLattice(cell_l3_no_cl + cell_cl + cell_sase1, start = enac_1382_l3, stop=qa_2253_sa1, method=method)
+            self.lat = MagneticLattice(cell_l3_no_cl + cell_cl + cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1, method=method)
 
             self.tws_des = Twiss()
-            self.tws_des.beta_x = 21.6754251533
-            self.tws_des.beta_y = 44.5714136209
-            self.tws_des.alpha_x = -0.758842958261
-            self.tws_des.alpha_y = 1.42869027612
-            self.tws_des.E = 16.3674999889
+            #self.tws_des.beta_x = 21.6754251533
+            #self.tws_des.beta_y = 44.5714136209
+            #self.tws_des.alpha_x = -0.758842958261
+            #self.tws_des.alpha_y = 1.42869027612
+            #self.tws_des.E = 16.3674999889
+            self.tws_des.beta_x = 20.8408455944
+            self.tws_des.beta_y = 45.1306436718
+            self.tws_des.alpha_x = -0.712872984902
+            self.tws_des.alpha_y = 1.41986586551
+            self.tws_des.E = 15.2349999889
             #self.tws_des.s = 1359.6367660000235
             #self.tws_des = tws_cl
             tmp_lat = MagneticLattice(self.cl_copy)

@@ -23,7 +23,7 @@ cell = cell_i1 + cell_l1 + cell_l2 + cell_l3
 #    print(elem.id)
 #R = lattice_transfer_map(lat, energy = 0.005)
 #print("test", R)
-lat = MagneticLattice(cell, stop=enac_1382_l3)
+lat = MagneticLattice(cell, stop=bpmr_1307_l3)
 tws2 = twiss(lat, tws0)
 print(tws2[-1])
 plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"])
