@@ -5,6 +5,25 @@ Sergey Tomin, XFEL/DESY, 2017
 import numpy as np
 import json
 from PyQt4 import QtGui, QtCore
+from scipy import io
+
+
+def save_json(filename, py_dict):
+
+    with open(filename, 'w') as f:
+        json.dump(py_dict, f)
+
+def mat2json(mat_file, json_file):
+    a = io.loadmat(mat_file, variable_names=None, mat_dtype=True)
+    y = a["data"]["y"][0, 0][0]
+    x = a["data"]["x"][0, 0][0]
+    names = a["data"]["names"][0, 0]
+    names = [str(name.replace(" ", "")) for name in names]
+    orbit = {}
+    for i in range(len(x)):
+        orbit[names[i]] = [float(x[i] / 1000.), float(y[i] / 1000.)]
+    # print(orbit)
+    save_json(json_file, orbit)
 
 
 class GoldenOrbit:
@@ -20,6 +39,8 @@ class GoldenOrbit:
 
         self.ui.pb_save_golden.clicked.connect(self.save_golden_as)
         self.ui.pb_load_golden.clicked.connect(self.load_golden_from)
+        self.ui.actionLoad_Golden_Orbit.triggered.connect(self.load_golden_from)
+        self.ui.actionSave_Golden_Orbit.triggered.connect(self.save_golden_as)
 
     def set_golden_orbit(self):
         """
@@ -127,6 +148,21 @@ class GoldenOrbit:
             orbit = json.load(f)
         self.golden_orbit = orbit
 
+    def mat2orbit(self, mat_file):
+        a = io.loadmat(mat_file, variable_names=None, mat_dtype=True)
+        y = a["data"]["y"][0, 0][0]
+        x = a["data"]["x"][0, 0][0]
+        names = a["data"]["names"][0, 0]
+        names = [str(name.replace(" ", "")) for name in names]
+        orbit = {}
+        for i in range(len(x)):
+            orbit[names[i]] = [float(x[i] / 1000.), float(y[i] / 1000.)]
+
+        return orbit
+
+    def restore_golden_orbit_from_mat(self, filename):
+        orbit = self.mat2orbit(filename)
+        self.golden_orbit = orbit
 
     def save_golden_as(self):
         print(self.Form.gold_orbits_dir)
@@ -146,9 +182,11 @@ class GoldenOrbit:
 
     def load_golden_from(self):
         filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.gold_orbits_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
+        self.Form.gold_orbits_dir, "txt (*.json *.mat)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             #print(filename)
             (body_name, extension) = filename.split("/")[-1].split(".")
-
-            self.restore_golden_orbit(filename)
+            if extension == "mat":
+                self.restore_golden_orbit_from_mat(filename=filename)
+            else:
+                self.restore_golden_orbit(filename)

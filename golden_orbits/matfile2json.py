@@ -7,10 +7,9 @@ def save_json(filename, py_dict):
         json.dump(py_dict, f)
 
 def mat2json(mat_file, json_file):
-    a = io.loadmat("2017-05-03-004109_terrific_exponential_gain_at_6GeV.mat", variable_names=None, mat_dtype=True)
-    "2017-05-03-004109_terrific_exponential_gain_at_6GeV.mat",
-    y = a["data"]["y"][0,0][0]
-    x = a["data"]["x"][0,0][0]
+    a = io.loadmat(mat_file, variable_names=None, mat_dtype=True)
+    y = a["data"]["y"][0, 0][0]
+    x = a["data"]["x"][0, 0][0]
     names = a["data"]["names"][0,0]
     names = [str(name.replace(" ", "")) for name in names]
     orbit = {}

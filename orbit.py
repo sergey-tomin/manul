@@ -52,17 +52,19 @@ class OrbitInterface:
         self.s_bpm = []
         self.x_bpm = []
         self.y_bpm = []
+        self.calc_correction = {}
         self.p_init = None
         self.add_orbit_plot()
         self.ui.pb_check.clicked.connect(lambda: self.getRows(2, self.ui.table_cor))
         self.ui.pb_uncheck.clicked.connect(lambda: self.getRows(0, self.ui.table_cor))
         self.ui.pb_bpm_uncheck.clicked.connect(lambda: self.getRows(0, self.ui.table_bpm))
         self.ui.pb_bpm_check.clicked.connect(lambda: self.getRows(2, self.ui.table_bpm))
-        self.ui.pb_read_orbit.clicked.connect(self.read_orbit)
-
+        #self.ui.pb_read_orbit.clicked.connect(self.read_orbit)
+        self.ui.actionRead_BPMs_Corrs.triggered.connect(self.read_orbit)
         self.ui.pb_apply_kicks.clicked.connect(self.apply_kicks)
 
-        self.ui.pb_calc_RM.clicked.connect(self.calc_response_matrix)
+        #self.ui.pb_calc_RM.clicked.connect(self.calc_response_matrix)
+        self.ui.actionCalculate_RM.triggered.connect(self.calc_response_matrix)
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
@@ -82,6 +84,8 @@ class OrbitInterface:
         self.rm_calc.timeout.connect(self.is_rm_calc_alive)
 
         self.golden_orbit = GoldenOrbit(parent=self)
+        self.ui.sb_apply_fraction.valueChanged.connect(self.set_values2correctors)
+        self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
 
     def uncheck_red(self):
         """
@@ -351,6 +355,25 @@ class OrbitInterface:
             elem.y_ref = elem.y
             print(elem.id, "set close orbit")
 
+    def set_values2correctors(self):
+
+        apply_fraction = self.ui.sb_apply_fraction.value()
+        self.online_calc = False
+        for cor in self.corrs:
+            kick_mrad_old = cor.ui.get_init_value()
+            if cor.id in self.calc_correction.keys():
+                cor.angle = self.calc_correction[cor.id]
+
+            delta_kick_mrad = cor.angle*1000*apply_fraction
+            #print(cor.angle*1000, delta_kick_mrad)
+            new_kick_mrad = kick_mrad_old + delta_kick_mrad
+            cor.kick_mrad =  new_kick_mrad
+            cor.ui.set_value(cor.kick_mrad)
+            warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
+
+            cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
+        self.online_calc = True
+        self.calc_orbit()
 
     def correct(self):
         """
@@ -383,23 +406,21 @@ class OrbitInterface:
 
         # TODO: look into particle
         p0 = Particle(E=self.parent.tws0.E)
+
+        self.calc_correction = {}
         for cor in self.corrs:
             cor.angle = 0.
+            self.calc_correction[cor.id] = cor.angle
+
         alpha = self.ui.sb_alpha.value()
         self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=1e-3, epsilon_y=1e-3)
-        self.online_calc = False
+
         for cor in self.corrs:
-            kick_mrad_old = cor.ui.get_init_value()
-            delta_kick_mrad = cor.angle*1000
-            new_kick_mrad = kick_mrad_old + delta_kick_mrad
-            cor.kick_mrad =  new_kick_mrad
-            cor.ui.set_value(cor.kick_mrad)
-            warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
+            self.calc_correction[cor.id] = cor.angle
 
-            cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
-        self.online_calc = True
+        self.set_values2correctors()
 
-        self.calc_orbit()
+        #self.calc_orbit()
 
     def start_stop_feedback(self):
         """
@@ -830,17 +851,35 @@ class OrbitInterface:
         y = np.array([p.y for p in p_list])*1000
         s = np.array([p.s for p in p_list]) + self.parent.lat_zi
 
+
+
         bpms = self.get_dev_from_cb_state(self.bpms)
 
         s_bpm = np.array([bpm.s for bpm in bpms]) + self.parent.lat_zi
+
+
+
         x_bpm = np.array([bpm.x - bpm.x_ref for bpm in bpms])*1000
         y_bpm = np.array([bpm.y - bpm.y_ref for bpm in bpms])*1000
 
+        indx = np.searchsorted(s, s_bpm)
+        x_bpms_track = x[indx]
+        y_bpms_track = y[indx]
+        print(self.ui.cb_correction_result.isChecked(), x_bpms_track, y_bpms_track)
         # Line
         self.orb_x_ref.setData(x=s_bpm, y=x_bpm)
-        self.orb_x.setData(x=s, y=x)
         self.orb_y_ref.setData(x=s_bpm, y=y_bpm)
-        self.orb_y.setData(x=s, y=y)
+
+        if self.ui.cb_correction_result.isChecked():
+            self.orb_x.setData(x=s_bpm, y=x_bpm + x_bpms_track)
+            self.orb_y.setData(x=s_bpm, y=y_bpm + y_bpms_track)
+        else:
+            self.orb_x.setData(x=s, y=x)
+            self.orb_y.setData(x=s, y=y)
+
+
+
+        #self.orb_y.setData(x=s, y=y)
 
         self.plot_cor.update()
         self.orb_y.update()

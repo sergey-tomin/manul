@@ -59,7 +59,6 @@ class ManulInterfaceWindow(QMainWindow):
         Make the timer object that updates GUI on clock cycle during a scan.
         """
         # PATHS
-
         self.dev_mode = True
 
         path = os.path.realpath(__file__)
@@ -77,13 +76,15 @@ class ManulInterfaceWindow(QMainWindow):
         # initialize
         QFrame.__init__(self)
 
+
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
+
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispertionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
@@ -147,16 +148,6 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
         #self.ui.pb_reload.clicked.connect(self.reload_lat)
-
-
-    #def reload_lat(self):
-    #    cell_i1 = copy.deepcopy(self.copy_cells[0])
-    #    cell_l1 = copy.deepcopy(self.copy_cells[1])
-    #    cell_l2 = copy.deepcopy(self.copy_cells[2])
-    #    try:
-    #        pass
-    #    except:
-    #        print("ERROR in RELOAD")
 
 
     def update_table(self):
