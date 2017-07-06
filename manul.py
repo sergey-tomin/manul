@@ -87,10 +87,20 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispertionInterface(parent=self)
-        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl+cell_cl)
+        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
 
         lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)
         self.cl_copy = copy.deepcopy(lat.sequence)
+
+        lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start = engrd_419_b2, stop=mpbpmi_1693_cl)
+        self.l3_copy = copy.deepcopy(lat.sequence)
+
+        lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
+        self.sase1_copy = copy.deepcopy(lat.sequence)
+
+        lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
+        self.sase3_copy = copy.deepcopy(lat.sequence)
+
         self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
         self.online_calc = True
@@ -418,7 +428,7 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "up to TL":
-            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl , method=method)
+            self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
                                       + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4])
@@ -456,19 +466,29 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "L3":
-            self.lat = MagneticLattice(cell_l3_no_cl , method=method)
-            self.tws_des = tws_l3
-            tmp_lat = MagneticLattice( self.copy_cells[3])
+            self.lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl,
+                                       start = engrd_419_b2, stop=mpbpmi_1693_cl, method=method)
+
+            #self.tws_des = tws_l3
+            self.tws_des = Twiss()
+            self.tws_des.beta_x = 20.6928140374
+            self.tws_des.beta_y = 6.8214735433
+            self.tws_des.alpha_x = 0.0332419824342
+            self.tws_des.alpha_y = -0.869862984066
+            self.tws_des.E = 2.39999998888
+
+            tmp_lat = MagneticLattice(self.l3_copy)
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            self.lat_zi = 466.81916599999636
+            self.lat_zi = 396.2191659999965
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "CL":
-            self.lat = MagneticLattice(cell_l3_no_cl + cell_cl + cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1, method=method)
+            self.lat = MagneticLattice(cell_l3_no_cl + cell_cl + cell_sase1,
+                                       start = bpmr_1307_l3, stop=qa_2253_sa1, method=method)
 
             self.tws_des = Twiss()
             #self.tws_des.beta_x = 21.6754251533
@@ -506,9 +526,9 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "SASE1":
-            self.lat = MagneticLattice(cell_sase1 , method=method)
+            self.lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4, method=method)
             self.tws_des = tws_sase1
-            tmp_lat = MagneticLattice( self.copy_cells[9])
+            tmp_lat = MagneticLattice( self.sase1_copy)
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
@@ -530,15 +550,23 @@ class ManulInterfaceWindow(QMainWindow):
             print("totlaLen=", self.lat.totalLen+ 23.2)
 
         elif current_lat == "SASE3":
-            self.lat = MagneticLattice(cell_sase3, method=method)
-            self.tws_des = tws_sase3
-            tmp_lat = MagneticLattice( self.copy_cells[10])
+            self.lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4, method=method)
+            #self.tws_des = tws_sase3
+            self.tws_des = Twiss()
+
+            self.tws_des.beta_x = 13.6455956218
+            self.tws_des.beta_y = 3.93176166974
+            self.tws_des.alpha_x = 2.20226650304
+            self.tws_des.alpha_y = -0.830611804908
+            self.tws_des.E = 17.4999999889
+
+            tmp_lat = MagneticLattice( self.sase3_copy)
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            self.lat_zi = 2777.8147070000155
+            self.lat_zi = 2560.450479000018
             print("totlaLen=", self.lat.totalLen+ 23.2)
         else:
             self.lat = MagneticLattice(cell_i1, method=method)

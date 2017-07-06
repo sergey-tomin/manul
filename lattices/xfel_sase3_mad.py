@@ -48,8 +48,8 @@ qa_2940_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2940.SA3')
 # bending magnets 
 
 # correctors 
-cux_2803_sa3 = Hcor(l=0.0, angle=0.0, eid='CUX.2803.SA3')
-cux_2809_sa3 = Hcor(l=0.0, angle=0.0, eid='CUX.2809.SA3')
+cux_2803_sa3 = Drift(l=0.)#Hcor(l=0.0, angle=0.0, eid='CUX.2803.SA3')
+cux_2809_sa3 = Drift(l=0.)#Hcor(l=0.0, angle=0.0, eid='CUX.2809.SA3')
 cax_2813_sa3 = Hcor(l=0.0, angle=0.0, eid='CAX.2813.SA3')
 cay_2813_sa3 = Vcor(l=0.0, angle=0.0, eid='CAY.2813.SA3')
 cbx_2818_sa3 = Hcor(l=0.0, angle=0.0, eid='CBX.2818.SA3')

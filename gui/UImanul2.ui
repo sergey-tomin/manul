@@ -511,7 +511,7 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string>Apply fraction</string>
+                      <string>Apply fraction             </string>
                      </property>
                     </widget>
                    </item>
@@ -1388,6 +1388,7 @@
      <string>&amp;Expert Panel</string>
     </property>
     <addaction name="action_Parameters"/>
+    <addaction name="actionCalculate_ORM"/>
     <addaction name="actionCalculate_RM"/>
     <addaction name="actionLoad_Golden_Orbit"/>
     <addaction name="actionSave_Golden_Orbit"/>
@@ -1426,7 +1427,12 @@
   </action>
   <action name="actionCalculate_RM">
    <property name="text">
-    <string>Calculate RM</string>
+    <string>Calculate ORM and DRM</string>
+   </property>
+  </action>
+  <action name="actionCalculate_ORM">
+   <property name="text">
+    <string>Calculate ORM</string>
    </property>
   </action>
  </widget>

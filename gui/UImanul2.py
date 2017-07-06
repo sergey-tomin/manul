@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul2.ui'
 #
-# Created: Wed Jul 05 17:42:04 2017
+# Created: Thu Jul 06 15:50:14 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -711,7 +711,10 @@ class Ui_MainWindow(object):
         self.actionRead_BPMs_Corrs.setObjectName(_fromUtf8("actionRead_BPMs_Corrs"))
         self.actionCalculate_RM = QtGui.QAction(MainWindow)
         self.actionCalculate_RM.setObjectName(_fromUtf8("actionCalculate_RM"))
+        self.actionCalculate_ORM = QtGui.QAction(MainWindow)
+        self.actionCalculate_ORM.setObjectName(_fromUtf8("actionCalculate_ORM"))
         self.menu_File.addAction(self.action_Parameters)
+        self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
         self.menu_File.addAction(self.actionLoad_Golden_Orbit)
         self.menu_File.addAction(self.actionSave_Golden_Orbit)
@@ -754,7 +757,7 @@ class Ui_MainWindow(object):
         self.groupBox_4.setTitle(_translate("MainWindow", "Controls", None))
         self.pb_feedback.setText(_translate("MainWindow", "Orbit Keeper On", None))
         self.label_8.setText(_translate("MainWindow", " Repeat in sec", None))
-        self.label_12.setText(_translate("MainWindow", "Apply fraction", None))
+        self.label_12.setText(_translate("MainWindow", "Apply fraction             ", None))
         self.label_7.setText(_translate("MainWindow", "alpha (0-orbit. 1-disp)", None))
         self.pb_apply_kicks.setText(_translate("MainWindow", "Apply Kicks", None))
         self.pb_correct_orbit.setText(_translate("MainWindow", "Calculate Correction", None))
@@ -790,5 +793,6 @@ class Ui_MainWindow(object):
         self.actionLoad_Golden_Orbit.setText(_translate("MainWindow", "Load Golden Orbit", None))
         self.actionSave_Golden_Orbit.setText(_translate("MainWindow", "Save Golden Orbit", None))
         self.actionRead_BPMs_Corrs.setText(_translate("MainWindow", "Read BPMs and Corrs", None))
-        self.actionCalculate_RM.setText(_translate("MainWindow", "Calculate RM", None))
+        self.actionCalculate_RM.setText(_translate("MainWindow", "Calculate ORM and DRM", None))
+        self.actionCalculate_ORM.setText(_translate("MainWindow", "Calculate ORM", None))
 

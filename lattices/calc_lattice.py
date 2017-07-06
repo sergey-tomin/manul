@@ -2,6 +2,8 @@ from xfel_i1_mad import *
 from xfel_l1_mad import *
 from xfel_l2_mad import *
 from xfel_l3_mad import *
+from xfel_sase1_mad import *
+from xfel_sase3_mad import *
 from xfel_tld_892 import *
 from ocelot import *
 from ocelot.cpbd.track import *
@@ -16,14 +18,15 @@ tws0.beta_y  = 55.7887190242
 tws0.alpha_x = 18.185436973
 tws0.alpha_y = 18.185436973
 
-cell = cell_i1 + cell_l1 + cell_l2 + cell_l3
+cell = cell_i1 + cell_l1 + cell_l2 + cell_l3 + cell_sase1 + cell_t4 + cell_sase3
 
 #lat = MagneticLattice(cell, start=d_12, stop = d_23)
 #for elem in lat.sequence:
 #    print(elem.id)
 #R = lattice_transfer_map(lat, energy = 0.005)
 #print("test", R)
-lat = MagneticLattice(cell, stop=bpmr_1307_l3)
+#lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start = engrd_419_b2, stop=mpbpmi_1693_cl)
+lat = MagneticLattice(cell, stop=ensub_2583_t4)
 tws2 = twiss(lat, tws0)
 print(tws2[-1])
 plot_opt_func(lat, tws2, top_plot=["Dx", "Dy"])

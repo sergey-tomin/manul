@@ -24,6 +24,7 @@ class ResponseMatrixCalculator(Thread):
         super(ResponseMatrixCalculator, self).__init__()
         self.rm = rm
         self.drm = drm
+        self.do_DRM_calc = True
         self.tw_init = None
         self.rm_filename = None
         self.drm_filename = None
@@ -32,10 +33,12 @@ class ResponseMatrixCalculator(Thread):
         self.rm.calculate(tw_init=self.tw_init)
         if self.rm_filename != None:
             self.rm.dump(filename=self.rm_filename)
-        if self.drm != None:
-            self.drm.calculate(tw_init=self.tw_init)
-        if self.drm_filename != None:
-            self.rm.dump(filename=self.drm_filename)
+
+        if self.do_DRM_calc:
+            if self.drm != None:
+                self.drm.calculate(tw_init=self.tw_init)
+            if self.drm_filename != None:
+                self.rm.dump(filename=self.drm_filename)
 
 
 class OrbitInterface:
@@ -64,7 +67,8 @@ class OrbitInterface:
         self.ui.pb_apply_kicks.clicked.connect(self.apply_kicks)
 
         #self.ui.pb_calc_RM.clicked.connect(self.calc_response_matrix)
-        self.ui.actionCalculate_RM.triggered.connect(self.calc_response_matrix)
+        self.ui.actionCalculate_RM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=True))
+        self.ui.actionCalculate_ORM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=False))
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
         self.ui.pb_reset_all.clicked.connect(self.reset_all)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
@@ -395,8 +399,8 @@ class OrbitInterface:
             return 0
 
         # TODO: TEST and implement
-        if self.ui.cb_close_orbit.isChecked():
-            self.close_orbit()
+        # if self.ui.cb_close_orbit.isChecked():
+        #     self.close_orbit()
 
         self.golden_orbit.dict2golden_orbit()
 
@@ -476,7 +480,7 @@ class OrbitInterface:
                 checked_devs.append(dev)
         return checked_devs
 
-    def calc_response_matrix(self):
+    def calc_response_matrix(self, do_DRM_calc=True):
         """
         Method is connected to pushBatton pb_calc_RM and creates ResponseMatrixCalculator
         which calculates ORM and DRM in different thread
@@ -492,9 +496,10 @@ class OrbitInterface:
 
         self.RMs = ResponseMatrixCalculator(rm=self.orbit.response_matrix,
                                       drm=self.orbit.disp_response_matrix)
+        self.RMs.do_DRM_calc = do_DRM_calc
 
-        self.ui.pb_calc_RM.setText("Please Wait...")
-        self.ui.pb_calc_RM.setStyleSheet("color: red")
+        self.ui.pb_correct_orbit.setText("RMs are calculated. Please Wait...")
+        self.ui.pb_correct_orbit.setStyleSheet("color: red")
 
         self.RMs.tw_init = self.parent.tws0
         self.RMs.rm_filename = self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json"
@@ -512,8 +517,8 @@ class OrbitInterface:
         :return:
         """
         if not self.RMs.is_alive():
-            self.ui.pb_calc_RM.setStyleSheet("color: rgb(85, 255, 127);")
-            self.ui.pb_calc_RM.setText("Calculate RM")
+            self.ui.pb_correct_orbit.setStyleSheet("color: rgb(85, 255, 127);")
+            self.ui.pb_correct_orbit.setText("Calculate Correction")
             self.rm_calc.stop()
 
 
@@ -865,7 +870,7 @@ class OrbitInterface:
         indx = np.searchsorted(s, s_bpm)
         x_bpms_track = x[indx]
         y_bpms_track = y[indx]
-        print(self.ui.cb_correction_result.isChecked(), x_bpms_track, y_bpms_track)
+        #print(self.ui.cb_correction_result.isChecked(), x_bpms_track, y_bpms_track)
         # Line
         self.orb_x_ref.setData(x=s_bpm, y=x_bpm)
         self.orb_y_ref.setData(x=s_bpm, y=y_bpm)
