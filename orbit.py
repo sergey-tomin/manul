@@ -46,6 +46,7 @@ class OrbitInterface:
     Main class for orbit correction
     """
     def __init__(self, parent):
+        self.bpms4remove = ["BPMS.99.I1", "BPMS.192.B1"]
         self.parent = parent
         self.ui = parent.ui
         self.online_calc = True
@@ -594,10 +595,16 @@ class OrbitInterface:
             ui.col = 2
             devs[row].ui = ui
 
+    def uncheck_bpms(self, bpms, bmps4uncheck):
+        for bpm in bpms:
+            if bpm.id in bmps4uncheck:
+                bpm.ui.uncheck()
+
     def load_orbit_devs(self):
 
         self.bpms = self.load_bpms(lat=self.parent.lat)
         self.add_bpms2table(self.bpms, w_table=self.ui.table_bpm, check_box=True)
+        self.uncheck_bpms(self.bpms, self.bpms4remove)
         self.load_correctors()
         self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
 
