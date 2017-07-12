@@ -1393,6 +1393,7 @@
     <addaction name="actionLoad_Golden_Orbit"/>
     <addaction name="actionSave_Golden_Orbit"/>
     <addaction name="actionRead_BPMs_Corrs"/>
+    <addaction name="actionAdaptive_Feedback"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
@@ -1433,6 +1434,11 @@
   <action name="actionCalculate_ORM">
    <property name="text">
     <string>Calculate ORM</string>
+   </property>
+  </action>
+  <action name="actionAdaptive_Feedback">
+   <property name="text">
+    <string>Adaptive Feedback</string>
    </property>
   </action>
  </widget>

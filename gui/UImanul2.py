@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul2.ui'
 #
-# Created: Thu Jul 06 15:50:14 2017
+# Created: Mon Jul 10 17:41:17 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -713,12 +713,15 @@ class Ui_MainWindow(object):
         self.actionCalculate_RM.setObjectName(_fromUtf8("actionCalculate_RM"))
         self.actionCalculate_ORM = QtGui.QAction(MainWindow)
         self.actionCalculate_ORM.setObjectName(_fromUtf8("actionCalculate_ORM"))
+        self.actionAdaptive_Feedback = QtGui.QAction(MainWindow)
+        self.actionAdaptive_Feedback.setObjectName(_fromUtf8("actionAdaptive_Feedback"))
         self.menu_File.addAction(self.action_Parameters)
         self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
         self.menu_File.addAction(self.actionLoad_Golden_Orbit)
         self.menu_File.addAction(self.actionSave_Golden_Orbit)
         self.menu_File.addAction(self.actionRead_BPMs_Corrs)
+        self.menu_File.addAction(self.actionAdaptive_Feedback)
         self.menuBar.addAction(self.menu_File.menuAction())
         self.mainToolBar.addSeparator()
 
@@ -795,4 +798,5 @@ class Ui_MainWindow(object):
         self.actionRead_BPMs_Corrs.setText(_translate("MainWindow", "Read BPMs and Corrs", None))
         self.actionCalculate_RM.setText(_translate("MainWindow", "Calculate ORM and DRM", None))
         self.actionCalculate_ORM.setText(_translate("MainWindow", "Calculate ORM", None))
+        self.actionAdaptive_Feedback.setText(_translate("MainWindow", "Adaptive Feedback", None))
 

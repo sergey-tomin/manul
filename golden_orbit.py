@@ -87,6 +87,10 @@ class GoldenOrbit:
                 elem.x_ref = 0.
                 elem.y_ref = 0.
 
+    def update_golden_orbit(self, new_dict):
+        for name in self.golden_orbit.keys():
+            if name in new_dict.keys():
+                self.golden_orbit[name] = new_dict[name]
 
     def start_stop_golden_orbit(self):
 

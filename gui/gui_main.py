@@ -18,6 +18,8 @@ import webbrowser
 from shutil import copy
 #from gui.UImanul2 import Ui_Form
 from gui.UImanul2 import Ui_MainWindow
+#from gui.UIadaptive_feedback import Ui_Form
+
 from PyQt4 import QtGui, QtCore
 
 try:
@@ -87,6 +89,8 @@ def send_to_desy_elog(author, title, severity, text, elog, image=None):
     return succeded
 
 
+
+
 class MainWindow(Ui_MainWindow):
     def __init__(self, Form):
         Ui_MainWindow.__init__(self)
@@ -132,6 +136,7 @@ class MainWindow(Ui_MainWindow):
         # self.pb_hyper_file.setStyleSheet("font: 16px, color: red")
 
         # self.window = window
+
 
     def add_table(self, widget, headers):
 
@@ -208,9 +213,9 @@ class MainWindow(Ui_MainWindow):
         self.is_le_addr_ok(self.le_a)
         self.is_le_addr_ok(self.le_b)
         self.is_le_addr_ok(self.le_c)
-        self.is_le_addr_ok(self.le_d)
-        self.is_le_addr_ok(self.le_e)
-        self.is_le_addr_ok(self.le_alarm)
+        #self.is_le_addr_ok(self.le_d)
+        #self.is_le_addr_ok(self.le_e)
+        #self.is_le_addr_ok(self.le_alarm)
 
     def is_le_addr_ok(self, line_edit):
         dev = str(line_edit.text())

@@ -13,6 +13,7 @@ from ocelot.cpbd.orbit_correction import NewOrbit, OrbitSVD
 from ocelot.cpbd.response_matrix import *
 from devices import *
 from golden_orbit import GoldenOrbit
+from adaptive_feedback import UIAFeedBack
 
 
 class ResponseMatrixCalculator(Thread):
@@ -91,6 +92,18 @@ class OrbitInterface:
         self.golden_orbit = GoldenOrbit(parent=self)
         self.ui.sb_apply_fraction.valueChanged.connect(self.set_values2correctors)
         self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
+
+
+
+        self.ui.actionAdaptive_Feedback.triggered.connect(self.run_awindow)
+        self.adaptive_feedback = None
+        #self.adaptive_feedback = None
+
+    def run_awindow(self):
+        if self.adaptive_feedback is None:
+            self.adaptive_feedback = UIAFeedBack(orbit=self)
+            #self.adaptive_feedback = AdaptiveFeedback(parent=self)
+        self.adaptive_feedback.show()
 
     def uncheck_red(self):
         """
