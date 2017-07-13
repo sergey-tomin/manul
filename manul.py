@@ -81,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
 
@@ -886,7 +886,7 @@ def main():
     window.setWindowIcon(QtGui.QIcon('manul.png'))
 
     window.show()
-
+    window.raise_()
     #Build documentaiton if source files have changed
     # TODO: make more universal
     #os.system("cd ./docs && xterm -T 'Ocelot Doc Builder' -e 'bash checkDocBuild.sh' &")

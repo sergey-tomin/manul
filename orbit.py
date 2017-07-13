@@ -216,6 +216,9 @@ class OrbitInterface:
         for elem in bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
+                if np.isnan(x_mm) or np.isnan(y_mm):
+                    print("BPM: " + elem.id + " was unchecked NAN")
+                    elem.ui.uncheck()
                 charge = elem.mi.get_charge()
                 if charge < charge_thresh:
                     beam_on = False
@@ -418,7 +421,8 @@ class OrbitInterface:
         #     self.close_orbit()
 
         self.golden_orbit.dict2golden_orbit()
-
+        for bpm in self.bpms:
+            print(bpm.id, bpm.x, bpm.y)
         # TODO: TEST and implement
         if self.ui.cb_close_orbit.isChecked():
             self.close_orbit()
