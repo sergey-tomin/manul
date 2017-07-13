@@ -48,6 +48,7 @@ class OrbitInterface:
     """
     def __init__(self, parent):
         self.bpms4remove = ["BPMS.99.I1", "BPMS.192.B1"]
+        self.corrs4remove = ['CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1']
         self.parent = parent
         self.ui = parent.ui
         self.online_calc = True
@@ -613,13 +614,25 @@ class OrbitInterface:
             if bpm.id in bmps4uncheck:
                 bpm.ui.uncheck()
 
+    def uncheck_corrs(self, corrs, cors4uncheck):
+        for cor in corrs:
+            if cor.id in cors4uncheck:
+                cor.ui.uncheck()
+
     def load_orbit_devs(self):
 
         self.bpms = self.load_bpms(lat=self.parent.lat)
         self.add_bpms2table(self.bpms, w_table=self.ui.table_bpm, check_box=True)
         self.uncheck_bpms(self.bpms, self.bpms4remove)
         self.load_correctors()
+
+        # TODO: need to check
+
+        self.uncheck_corrs(self.corrs, self.corrs4remove)
+
+
         self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
+
 
     def load_devices(self, types):
         devices = []

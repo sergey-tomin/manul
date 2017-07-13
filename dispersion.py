@@ -8,7 +8,7 @@ import pyqtgraph as pg
 from PyQt4 import QtGui, QtCore
 
 
-class DispertionInterface:
+class DispersionInterface:
     def __init__(self, parent):
         self.ui = parent.ui
         self.parent = parent

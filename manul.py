@@ -69,6 +69,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.optimizer_path = self.path2ocelot + "ocelot" + os.sep + "optimizer" + os.sep
         self.config_dir = self.path2ocelot + "config_optim" +os.sep
         self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
+        self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
         self.set_file = self.config_dir + "default.json" # ./parameters/default.json"
         self.obj_func_path = self.optimizer_path + "mint" + os.sep + "obj_function.py"
@@ -86,7 +87,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui = MainWindow(self)
 
         self.orbit = OrbitInterface(parent=self)
-        self.dispersion = DispertionInterface(parent=self)
+        self.dispersion = DispersionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
 
         lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)

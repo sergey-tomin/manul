@@ -41,6 +41,7 @@ class GoldenOrbit:
         self.ui.pb_load_golden.clicked.connect(self.load_golden_from)
         self.ui.actionLoad_Golden_Orbit.triggered.connect(self.load_golden_from)
         self.ui.actionSave_Golden_Orbit.triggered.connect(self.save_golden_as)
+        self.ui.actionLoad_GO_from_Orbit_Display.triggered.connect(self.load_golden_from)
 
     def set_golden_orbit(self):
         """
@@ -187,6 +188,17 @@ class GoldenOrbit:
     def load_golden_from(self):
         filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
         self.Form.gold_orbits_dir, "txt (*.json *.mat)", QtGui.QFileDialog.DontUseNativeDialog)
+        if filename:
+            #print(filename)
+            (body_name, extension) = filename.split("/")[-1].split(".")
+            if extension == "mat":
+                self.restore_golden_orbit_from_mat(filename=filename)
+            else:
+                self.restore_golden_orbit(filename)
+
+    def load_golden_from_OD(self):
+        filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
+        self.Form.gold_orbits_from_OD_dir, "txt (*.json *.mat)", QtGui.QFileDialog.DontUseNativeDialog)
         if filename:
             #print(filename)
             (body_name, extension) = filename.split("/")[-1].split(".")

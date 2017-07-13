@@ -1390,12 +1390,19 @@
     <addaction name="action_Parameters"/>
     <addaction name="actionCalculate_ORM"/>
     <addaction name="actionCalculate_RM"/>
-    <addaction name="actionLoad_Golden_Orbit"/>
-    <addaction name="actionSave_Golden_Orbit"/>
     <addaction name="actionRead_BPMs_Corrs"/>
     <addaction name="actionAdaptive_Feedback"/>
    </widget>
+   <widget class="QMenu" name="menuGolden_Orbit">
+    <property name="title">
+     <string>Golden Orbit</string>
+    </property>
+    <addaction name="actionLoad_Golden_Orbit"/>
+    <addaction name="actionSave_Golden_Orbit"/>
+    <addaction name="actionLoad_GO_from_Orbit_Display"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuGolden_Orbit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1439,6 +1446,11 @@
   <action name="actionAdaptive_Feedback">
    <property name="text">
     <string>Adaptive Feedback</string>
+   </property>
+  </action>
+  <action name="actionLoad_GO_from_Orbit_Display">
+   <property name="text">
+    <string>Load GO from Orbit Display</string>
    </property>
   </action>
  </widget>
