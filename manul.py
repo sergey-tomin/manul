@@ -1,9 +1,11 @@
+#!/opt/anaconda4/bin/python
 """
 Sergey Tomin. XFEL/DESY, 2017.
 """
 #QT imports
-from PyQt4.QtGui import QApplication, QFrame, QPixmap, QMessageBox, QMainWindow, QDialog
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtGui import QPixmap
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QApplication, QFrame, QMessageBox, QMainWindow, QDialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
@@ -81,8 +83,8 @@ class ManulInterfaceWindow(QMainWindow):
         self.logbook = "xfellog"
         self.dev_mode = True
 
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
 
@@ -90,10 +92,10 @@ class ManulInterfaceWindow(QMainWindow):
         self.dispersion = DispersionInterface(parent=self)
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
 
-        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)
+        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
         self.cl_copy = copy.deepcopy(lat.sequence)
 
-        lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start = engrd_419_b2, stop=mpbpmi_1693_cl)
+        lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
         self.l3_copy = copy.deepcopy(lat.sequence)
 
         lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
@@ -104,6 +106,10 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
+
+        self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
+                                   cell_cl + cell_sase1 + cell_t4 + cell_sase3))
+
         self.online_calc = True
 
         #QFrame.__init__(self)
@@ -128,6 +134,7 @@ class ManulInterfaceWindow(QMainWindow):
         #self.initTable()
         #print("quads", self.quads)
         self.add_plot()
+        self.ui.cb_lattice.addItem("Arbitrary")
         self.ui.cb_lattice.addItem("I1D")
         self.ui.cb_lattice.addItem("B1D")
         self.ui.cb_lattice.addItem("B2D")
@@ -145,6 +152,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.cb_lattice.addItem("up to TL")
         self.ui.cb_lattice.addItem("up to SASE3")
         self.ui.cb_lattice.setCurrentIndex(0)
+        self.correctors_list()
         self.lat = self.return_lat()
         #self.tws0 = self.return_tws()
         #self.load_lattice()
@@ -160,6 +168,12 @@ class ManulInterfaceWindow(QMainWindow):
         #self.ui.pb_write.clicked.connect(self.match)
         #self.ui.pb_reload.clicked.connect(self.reload_lat)
 
+        self.ui.sb_lat_from.editingFinished.connect(self.arbitrary_lattice)
+        self.ui.sb_lat_to.editingFinished.connect(self.arbitrary_lattice)
+        #self.ui.sb_lat_from.valueChanged.connect(self.arbitrary_lattice)
+        #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
+
+
 
     def update_table(self):
         for quad in self.quads:
@@ -173,11 +187,34 @@ class ManulInterfaceWindow(QMainWindow):
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
+    def correctors_list(self):
+
+        self.corr_list = []
+        L = 23.2
+        for elem in self.big_sequence:
+            L += elem.l
+            if elem.__class__ in [Hcor, Vcor]:
+                elem.s_pos = L - elem.l/2.
+                self.corr_list.append(elem)
+        self.ui.sb_lat_from.setMaximum(L-30)
+        self.ui.sb_lat_to.setMaximum(L)
+        print("L_maximum", L)
+        # self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
+        #                            cell_cl + cell_sase1 + cell_t4 + cell_sase3,
+        #                            # start=start_elem, stop=stop_elem,
+        #                            method=method)
 
     def read_quads(self):
-        update = self.question_box("Are you sure?")
-        if not update:
-            return
+
+
+        #if self.ui.cb_lattice.currentText() == "Arbitrary":
+        #    lat_from = self.ui.sb_lat_from.value()
+        #    lat_to = self.ui.sb_lat_to.value()
+        #    self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
+        #    self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
+        #    self.arbitrary_lattice()
+
+
         self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
@@ -201,7 +238,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.lat.update_transfer_maps()
         #TODO: add in GUI option to return design twiss
         self.tws0 = self.back_tracking()
-        #print("back_tracking = ", self.tws0)
+        print("back_tracking = ", self.tws0)
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
@@ -210,7 +247,13 @@ class ManulInterfaceWindow(QMainWindow):
         s = [tw.s for tw in tws]
 
         self.update_plot(s, beta_x, beta_y, dx, dy)
-
+        update = self.question_box("Reclculate ORM?")
+        if update:
+            self.orbit.calc_response_matrix(do_DRM_calc=False)
+        #if self.ui.cb_lattice.currentText() == "Arbitrary":
+        #    self.ui.sb_lat_from.setValue(lat_from)
+        #    self.ui.sb_lat_to.setValue(lat_to)
+        #    self.parent.arbitrary_lattice()
         #self.update_table()
 
     def back_tracking(self):
@@ -345,7 +388,23 @@ class ManulInterfaceWindow(QMainWindow):
         # calc orbit
         self.orbit.calc_orbit()
 
+    def arbitrary_lattice(self):
+        current_lat = self.ui.cb_lattice.currentText()
+        if current_lat != "Arbitrary":
+            return 0
+        print("here")
+        lat_from = self.ui.sb_lat_from.value()
+        lat_to = self.ui.sb_lat_to.value()
+        print("arbitrary_lattice", lat_from, lat_to)
+        if lat_to - 20 < lat_from:
+            self.ui.sb_lat_to.setValue(lat_from+20)
+            print("set ", lat_from+20)
+        self.return_lat()
+
+
+
     def return_lat(self):
+        self.orbit.reset_undo_database()
         #self.lat = MagneticLattice(cell_i1+cell_l1)
         current_lat = self.ui.cb_lattice.currentText()
         method = MethodTM()
@@ -363,6 +422,29 @@ class ManulInterfaceWindow(QMainWindow):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen + 23.2)
+
+        elif current_lat == "Arbitrary":
+
+            lat_from = self.ui.sb_lat_from.value()
+            lat_to = self.ui.sb_lat_to.value()
+            s_poss = np.array([cor.s_pos for cor in self.corr_list])
+            idx_frm = (np.abs(s_poss - lat_from)).argmin()
+            idx_to = (np.abs(s_poss - lat_to)).argmin()
+            if idx_frm == idx_to:
+                idx_to += 1
+                self.ui.sb_lat_to.setValue(self.corr_list[idx_to].s_pos)
+            print(lat_from, lat_to, idx_frm, idx_to)
+            self.lat = MagneticLattice(self.big_sequence,
+                                       start=self.corr_list[idx_frm], stop=self.corr_list[idx_to],
+                                       method=method)
+            self.tws_des = tws_i1
+            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1])
+            tws = twiss(tmp_lat, self.tws_des)
+            self.s_des = [tw.s for tw in tws]
+            self.b_x_des = [tw.beta_x for tw in tws]
+            self.b_y_des = [tw.beta_y for tw in tws]
+            self.tws_end = tws[-1]
+            self.lat_zi = 23.2
 
         elif current_lat == "up to B1":
             self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)
@@ -837,8 +919,8 @@ class ManulInterfaceWindow(QMainWindow):
 
     def question_box(self, message):
         #QtGui.QMessageBox.question(self, "Question box", message)
-        reply = QtGui.QMessageBox.question(self, "Update Lattice?",
-                "Usually Design Lattice works very well. Do you want to update lattice? After do not forget to recalculate Response Matrices",
+        reply = QtGui.QMessageBox.question(self, "Recalculate ORM?",
+                "Recalculate Orbit Response Matrix?",
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply==QtGui.QMessageBox.Yes:
             return True
@@ -896,4 +978,6 @@ def main():
 if __name__ == "__main__":
 
     main()
+    #window = ManulInterfaceWindow()
+    #window.read_quads()
 

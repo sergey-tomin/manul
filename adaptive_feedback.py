@@ -5,12 +5,14 @@ Sergey Tomin, XFEL/DESY, 2017
 import numpy as np
 import json
 from ocelot.optimizer.mint import opt_objects as obj
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QWidget
 from scipy import io
 import pyqtgraph as pg
 from gui.UIadaptive_feedback import Ui_Form
 from collections import deque
 import time
+import os
 from threading import Thread, Event
 
 class Statistics(Thread):
@@ -27,9 +29,11 @@ class Statistics(Thread):
     def stop(self):
         self._stop_event.set()
 
-class UIAFeedBack(QtGui.QWidget, Ui_Form):
+
+
+class UIAFeedBack(QWidget, Ui_Form):
     def __init__(self, parent=None, orbit=None):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         #self.paren = main_parent
         #self.ui = self.parent.ui
         self.setupUi(self)
@@ -43,6 +47,8 @@ class UIAFeedBack(QtGui.QWidget, Ui_Form):
         #self.ui = parent.parent.ui
 
         #self.Form = parent.parent
+        print("load style")
+        
         self.golden_orbit = {}
 
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
@@ -63,7 +69,8 @@ class UIAFeedBack(QtGui.QWidget, Ui_Form):
         self.add_orbit_plot()
         self.add_objective_func_plot()
         self.objective_func = None
-
+        self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/BUNCH_1.TD")
+        self.le_of.setText("-np.min(np.array(A)[:,1])")
         self.le_a.textChanged.connect(self.check_address)
         self.le_b.textChanged.connect(self.check_address)
         self.le_c.textChanged.connect(self.check_address)
@@ -138,7 +145,8 @@ class UIAFeedBack(QtGui.QWidget, Ui_Form):
         orbit_y = []
         orbit_s = []
         self.bpms_name = []
-        for elem in self.orbit_class.bpms:
+        bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
+        for elem in bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()

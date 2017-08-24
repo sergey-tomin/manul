@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -29,7 +29,7 @@ class Ui_Form(object):
         Form.resize(1152, 781)
         Form.setMinimumSize(QtCore.QSize(0, 0))
         Form.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        Form.setStyleSheet(_fromUtf8("background-color: white"))
+        #Form.setStyleSheet(_fromUtf8("background-color: white"))
         self.gridLayout_2 = QtGui.QGridLayout(Form)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.gridLayout = QtGui.QGridLayout()

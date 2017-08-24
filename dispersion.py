@@ -5,7 +5,7 @@ import numpy as np
 from devices import *
 import time
 import pyqtgraph as pg
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 
 class DispersionInterface:

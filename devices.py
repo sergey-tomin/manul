@@ -2,7 +2,7 @@
 Sergey Tomin, XFEL/DESY, 2017
 """
 from ocelot.optimizer.mint.opt_objects import Device
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import numpy as np
 
 

@@ -1,9 +1,9 @@
 """
 Sergey Tomin. XFEL/DESY, 2017.
 """
-
+from threading import Thread, Event
 import pyqtgraph as pg
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import numpy as np
 from ocelot import *
 
@@ -32,6 +32,17 @@ class ResponseMatrixCalculator(Thread):
 
     def run(self):
         self.rm.calculate(tw_init=self.tw_init)
+        cor_names = self.rm.cor_names
+        bpm_names = self.rm.bpm_names
+        inj_matrix = self.rm.matrix
+        try:
+            self.rm.load(self.rm_filename)
+        except:
+            print("No Response Matrix")
+            return False
+
+        self.rm.inject(cor_names, bpm_names, inj_matrix)
+
         if self.rm_filename != None:
             self.rm.dump(filename=self.rm_filename)
 
@@ -42,16 +53,48 @@ class ResponseMatrixCalculator(Thread):
                 self.rm.dump(filename=self.drm_filename)
 
 
+class AutoCorrection(Thread):
+    def __init__(self, orbit_class):
+        super(AutoCorrection, self).__init__()
+        self.orbit_class = orbit_class
+        self._stop_event = Event()
+        self.do = None
+        self.delay = 1
+        self.stop_event = False
+    
+    def one_correction(self):
+        beam_on = self.orbit_class.read_orbit()
+        time.sleep(0.01)
+        if beam_on:
+            self.orbit_class.correct()
+            time.sleep(0.01)
+            self.orbit_class.apply_kicks()
+            time.sleep(0.5)
+        else:
+            print("no beam")
+            time.sleep(1)
+    
+    def run(self):
+        while not self.stop_event:
+            self.one_correction()
+            print("correct")
+            time.sleep(self.delay)
+            
+    def stop(self):
+        self._stop_event.set()
+
+
 class OrbitInterface:
     """
     Main class for orbit correction
     """
     def __init__(self, parent):
         self.bpms4remove = ["BPMS.99.I1", "BPMS.192.B1"]
-        self.corrs4remove = ['CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1']
+        self.corrs4remove = ['CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
         self.parent = parent
         self.ui = parent.ui
         self.online_calc = True
+        self.reset_undo_database()
         self.corrs = []
         self.hcors = []
         self.vcors = []
@@ -73,7 +116,7 @@ class OrbitInterface:
         self.ui.actionCalculate_RM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=True))
         self.ui.actionCalculate_ORM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=False))
         self.ui.pb_correct_orbit.clicked.connect(self.correct)
-        self.ui.pb_reset_all.clicked.connect(self.reset_all)
+        self.ui.pb_reset_all.clicked.connect(self.undo)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
         self.ui.pb_update_lat.clicked.connect(self.parent.read_quads)
@@ -94,16 +137,19 @@ class OrbitInterface:
         self.ui.sb_apply_fraction.valueChanged.connect(self.set_values2correctors)
         self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
 
-
+        
 
         self.ui.actionAdaptive_Feedback.triggered.connect(self.run_awindow)
         self.adaptive_feedback = None
         #self.adaptive_feedback = None
+        #self.auto_correction = AutoCorrection(orbit_class=self)
+
+    def reset_undo_database(self):
+        self.undo_data_base = []
 
     def run_awindow(self):
         if self.adaptive_feedback is None:
             self.adaptive_feedback = UIAFeedBack(orbit=self)
-            #self.adaptive_feedback = AdaptiveFeedback(parent=self)
         self.adaptive_feedback.show()
 
     def uncheck_red(self):
@@ -168,6 +214,32 @@ class OrbitInterface:
             cor.ui.set_value(kick_mrad)
         self.online_calc = True
 
+    def undo(self):
+        """
+        Method to reset initial values of the correctors
+
+        :return:
+        """
+        if len(self.undo_data_base) == 0:
+            return 0
+        #cor_ids = [cor.id for cor in self.corrs]
+        #corrs = self.get_dev_from_cb_state(self.corrs)
+        self.online_calc = False
+        corrs_dict = self.undo_data_base[-1]
+        for cor in self.corrs:
+            if cor.id in corrs_dict.keys():
+                cor.ui.check()
+                kick_mrad = corrs_dict[cor.id]
+                #print(cor.id, kick_mrad)
+                cor.ui.set_init_value(kick_mrad)
+                cor.ui.set_value(kick_mrad)
+            else:
+                cor.ui.uncheck()
+        del self.undo_data_base[-1]
+        #print(len(self.undo_data_base))
+        self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
+        self.online_calc = True
+
     def apply_kicks(self):
         """
         Methos sends correctors kicks to DOOCS, if strengths below the limits,
@@ -185,9 +257,24 @@ class OrbitInterface:
 
         for cor in corrs:
             kick_mrad = cor.ui.get_value()
-            print( cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            print(cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
             cor.mi.set_value(kick_mrad)
 
+        self.write_old_kicks(corrs)
+
+
+    def write_old_kicks(self, corrs):
+        old_corrs_kicks = {}
+        save_flag = False
+        for cor in corrs:
+            # write to dict old kicker strengths
+            old_corrs_kicks[cor.id] = cor.ui.get_init_value()
+            if cor.ui.get_init_value() != cor.ui.get_value():
+                save_flag = True
+            #print(cor.id, old_corrs_kicks[cor.id])
+        if save_flag:
+            self.undo_data_base.append(old_corrs_kicks)
+            self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
 
     def read_orbit(self):
         """
@@ -233,33 +320,33 @@ class OrbitInterface:
                 print("BPM: " + elem.id + " was unchecked ")
                 elem.ui.uncheck()
 
-        self.update_cors_plot()
+        #self.update_cors_plot()
         self.update_plot()
         return beam_on
 
 
-    def update_cors_plot(self):
-        """
-        Method to update corrector bars on the plot.
-        High of the bars depends on the corrector amplitude
-
-        :return:
-        """
-
-        kicks = [elem.kick_mrad for elem in self.corrs]
-        self.plot_cor.setYRange(np.floor(min(kicks)), np.ceil(max(kicks)))
-
-        for elem in self.corrs:
-            if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
-                self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
-                self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
-            else:
-                self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
-                self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
-            r = self.r_items[elem.ui.row]
-            sizes = r.init_params
-            sizes[3] = elem.kick_mrad/self.cor_ampl
-            r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
+    #def update_cors_plot(self):
+    #    """
+    #    Method to update corrector bars on the plot.
+    #    High of the bars depends on the corrector amplitude
+    #
+    #    :return:
+    #    """
+    #
+    #    kicks = [elem.kick_mrad for elem in self.corrs]
+    #    self.plot_cor.setYRange(np.floor(min(kicks)), np.ceil(max(kicks)))
+    #
+    #    for elem in self.corrs:
+    #        if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
+    #            self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
+    #            self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
+    #        else:
+    #            self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
+    #            self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
+    #        r = self.r_items[elem.ui.row]
+    #        sizes = r.init_params
+    #        sizes[3] = elem.kick_mrad/self.cor_ampl
+    #        r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
 
     def calc_orbit(self):
         """
@@ -280,7 +367,7 @@ class OrbitInterface:
                 angle = (elem.kick_mrad - kick_mrad_i)/1000.
                 elem.angle = angle
                 elem.transfer_map = self.parent.lat.method.create_tm(elem)
-        self.update_cors_plot()
+        #self.update_cors_plot()
         self.update_plot()
 
     def create_Orbit_obj(self):
@@ -336,7 +423,7 @@ class OrbitInterface:
             self.orbit.disp_response_matrix.load(self.parent.rm_files_dir + "DRM_" + self.ui.cb_lattice.currentText() + ".json")
         except:
             print("No Dispersion Response Matrix")
-            return False
+            return True
 
         return True
 
@@ -416,14 +503,10 @@ class OrbitInterface:
             self.parent.error_box("Calculate Response Matrix")
             return 0
 
-        # TODO: TEST and implement
-        # if self.ui.cb_close_orbit.isChecked():
-        #     self.close_orbit()
-
         self.golden_orbit.dict2golden_orbit()
-        for bpm in self.bpms:
-            print(bpm.id, bpm.x, bpm.y)
-        # TODO: TEST and implement
+        #for bpm in self.bpms:
+        #    print(bpm.id, bpm.x, bpm.y)
+
         if self.ui.cb_close_orbit.isChecked():
             self.close_orbit()
 
@@ -434,7 +517,7 @@ class OrbitInterface:
         for cor in self.corrs:
             cor.angle = 0.
             self.calc_correction[cor.id] = cor.angle
-
+        
         alpha = self.ui.sb_alpha.value()
         self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=1e-3, epsilon_y=1e-3)
 
@@ -463,6 +546,29 @@ class OrbitInterface:
             self.parent.feedback_timer.start(delay)
             self.ui.pb_feedback.setText("Orbit Keeper Off")
             self.ui.pb_feedback.setStyleSheet("color: red")
+
+    def start_stop_feedback_new(self):
+        """
+        Method to start/stop feedback timer.
+        sb_feedback_sec - spinBox - set seconds for timer
+        pb_feedback - pushBatton Off/On
+        feedback_timer - timer
+        :return:
+        """
+        delay = self.ui.sb_feedback_sec.value()
+        if self.ui.pb_feedback.text() == "Orbit Keeper Off":
+            self.auto_correction.stop_event = True
+            self.auto_correction.stop()
+            self.ui.pb_feedback.setStyleSheet("color: rgb(85, 255, 127);")
+            self.ui.pb_feedback.setText("Orbit Keeper On")
+        else:
+            self.auto_correction = AutoCorrection(orbit_class=self)
+            self.auto_correction.delay = delay
+            self.auto_correction.stop_event = False
+            self.auto_correction.start()
+            self.ui.pb_feedback.setText("Orbit Keeper Off")
+            self.ui.pb_feedback.setStyleSheet("color: red")
+
 
     def auto_correction(self):
         """
@@ -499,6 +605,33 @@ class OrbitInterface:
                 checked_devs.append(dev)
         return checked_devs
 
+    #def super_orbit_obj(self):
+    #    orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM,
+    #                          disp_rm_method=LinacDisperseSimRM)
+    #
+    #    corrs = self.load_devices(types=[Hcor, Vcor], load_all=True)
+    #    s_pos = np.min([cor.s for cor in corrs])
+    #    bpms_all = self.load_bpms(lat=self.parent.big_sequence)
+    #    bpms = np.array(bpms_all)
+    #    bpms_unch = bpms[np.array([bpm.s for bpm in bpms_all]) < s_pos]
+    #    [bpm.ui.uncheck() for bpm in bpms_unch]
+    #    bpms = self.get_dev_from_cb_state(bpms)
+    #
+    #    self.orbit.bpms = bpms
+    #    self.hcors = []
+    #    self.vcors = []
+    #    for cor in corrs:
+    #        if cor.__class__ == Hcor:
+    #            self.hcors.append(cor)
+    #        else:
+    #            self.vcors.append(cor)
+    #
+    #    self.orbit.hcors = self.hcors
+    #    self.orbit.vcors = self.vcors
+    #
+    #    self.orbit.setup_response_matrix()
+    #    self.orbit.setup_disp_response_matrix()
+
     def calc_response_matrix(self, do_DRM_calc=True):
         """
         Method is connected to pushBatton pb_calc_RM and creates ResponseMatrixCalculator
@@ -511,6 +644,14 @@ class OrbitInterface:
 
         :return:
         """
+        #if self.ui.cb_lattice.currentText() == "Arbitrary":
+        #    lat_from = self.ui.sb_lat_from.value()
+        #    lat_to = self.ui.sb_lat_to.value()
+        #    self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
+        #    self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
+        #    self.parent.arbitrary_lattice()
+
+
         self.orbit = self.create_Orbit_obj()
 
         self.RMs = ResponseMatrixCalculator(rm=self.orbit.response_matrix,
@@ -526,6 +667,12 @@ class OrbitInterface:
         self.RMs.start()
         self.rm_calc.start()
 
+        #if self.ui.cb_lattice.currentText() == "Arbitrary":
+        #    self.ui.sb_lat_from.setValue(lat_from)
+        #    self.ui.sb_lat_to.setValue(lat_to)
+        #    #self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
+        #    #self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
+        #    self.parent.arbitrary_lattice()
 
     def is_rm_calc_alive(self):
         """
@@ -630,20 +777,20 @@ class OrbitInterface:
         self.uncheck_bpms(self.bpms, self.bpms4remove)
         self.load_correctors()
 
-        # TODO: need to check
-
         self.uncheck_corrs(self.corrs, self.corrs4remove)
 
 
-        self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
+        #self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
 
 
-    def load_devices(self, types):
+    def load_devices(self, types, load_all=False):
         devices = []
         mi_devs = {}
-
+        lat_seq = self.parent.lat.sequence
+        if load_all:
+            lat_seq = self.parent.big_sequence
         L = 0
-        for i, elem in enumerate(self.parent.lat.sequence):
+        for i, elem in enumerate(lat_seq):
             L += elem.l
             if elem.__class__ in types:
                 elem.s = L - elem.l / 2.
@@ -717,66 +864,66 @@ class OrbitInterface:
         pen = pg.mkPen(color, width=2)
         self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
 
-        self.plot_cor = win.addPlot(row=2, col=0)
-        win.ci.layout.setRowMaximumHeight(2, 150)
+        #self.plot_cor = win.addPlot(row=2, col=0)
+        #win.ci.layout.setRowMaximumHeight(2, 150)
 
-        self.plot_cor.setXLink(self.plot_y)
-        self.plot_cor.showGrid(1, 1, 1)
+        #self.plot_cor.setXLink(self.plot_y)
+        #self.plot_cor.showGrid(1, 1, 1)
 
-        self.plot_cor.addItem(pg.InfiniteLine(pos =62.09,  angle=90, movable=False), ignoreBounds=True)
-        lh_t = pg.TextItem("I1", anchor=(0, 0))
-        lh_t.setPos(62.09, 0)
-        self.plot_cor.addItem(lh_t, ignoreBounds=True)
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =62.09,  angle=90, movable=False), ignoreBounds=True)
+        #lh_t = pg.TextItem("I1", anchor=(0, 0))
+        #lh_t.setPos(62.09, 0)
+        #self.plot_cor.addItem(lh_t, ignoreBounds=True)
 
-        i1_pos = 62.09
-        dl_pos = 23.2 + 72
-        bc0_pos = 79 + 23.2
-        l1_pos = 150 + 23.2
-        bc1_pos = 180 + 23.2
-        l2_pos = 360 + 23.2
-        bc2_pos = 392 + 23.2
-        l3_pos = 1435 + 23.2
-        cl_pos = 1830 + 23.2
-        self.plot_cor.addItem(pg.InfiniteLine(pos =i1_pos,  angle=90, movable=False), ignoreBounds=True)
-        lh_t = pg.TextItem("I1", anchor=(0, 0))
-        lh_t.setPos(i1_pos, 0)
-        self.plot_cor.addItem(lh_t, ignoreBounds=True)
+        #i1_pos = 62.09
+        #dl_pos = 23.2 + 72
+        #bc0_pos = 79 + 23.2
+        #l1_pos = 150 + 23.2
+        #bc1_pos = 180 + 23.2
+        #l2_pos = 360 + 23.2
+        #bc2_pos = 392 + 23.2
+        #l3_pos = 1435 + 23.2
+        #cl_pos = 1830 + 23.2
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =i1_pos,  angle=90, movable=False), ignoreBounds=True)
+        #lh_t = pg.TextItem("I1", anchor=(0, 0))
+        #lh_t.setPos(i1_pos, 0)
+        #self.plot_cor.addItem(lh_t, ignoreBounds=True)
 
 
-        self.plot_cor.addItem(pg.InfiniteLine(pos =bc0_pos,  angle=90, movable=False), ignoreBounds=True)
-        bc0_t = pg.TextItem("BC0", anchor=(0, 0))
-        bc0_t.setPos(bc0_pos, 0)
-        self.plot_cor.addItem(bc0_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =l1_pos,  angle=90, movable=False), ignoreBounds=True)
-        l1_t = pg.TextItem("L1", anchor=(0, 0))
-        l1_t.setPos(l1_pos, 0)
-        self.plot_cor.addItem(l1_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =bc1_pos,  angle=90, movable=False), ignoreBounds=True)
-        bc1_t = pg.TextItem("BC1", anchor=(0, 0))
-        bc1_t.setPos(bc1_pos, 0)
-        self.plot_cor.addItem(bc1_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =l2_pos,  angle=90, movable=False), ignoreBounds=True)
-        l2_t = pg.TextItem("L2", anchor=(0, 0))
-        l2_t.setPos(l2_pos, 0)
-        self.plot_cor.addItem(l2_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =bc2_pos,  angle=90, movable=False), ignoreBounds=True)
-        bc2_t = pg.TextItem("BC2", anchor=(0, 0))
-        bc2_t.setPos(bc2_pos, 0)
-        self.plot_cor.addItem(bc2_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =l3_pos,  angle=90, movable=False), ignoreBounds=True)
-        l3_t = pg.TextItem("L3", anchor=(0, 0))
-        l3_t.setPos(l3_pos, 0)
-        self.plot_cor.addItem(l3_t, ignoreBounds=True)
-
-        self.plot_cor.addItem(pg.InfiniteLine(pos =cl_pos,  angle=90, movable=False), ignoreBounds=True)
-        cl_t = pg.TextItem("CL", anchor=(0, 0))
-        cl_t.setPos(cl_pos, 0)
-        self.plot_cor.addItem(cl_t, ignoreBounds=True)
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc0_pos,  angle=90, movable=False), ignoreBounds=True)
+        #bc0_t = pg.TextItem("BC0", anchor=(0, 0))
+        #bc0_t.setPos(bc0_pos, 0)
+        #self.plot_cor.addItem(bc0_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =l1_pos,  angle=90, movable=False), ignoreBounds=True)
+        #l1_t = pg.TextItem("L1", anchor=(0, 0))
+        #l1_t.setPos(l1_pos, 0)
+        #self.plot_cor.addItem(l1_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc1_pos,  angle=90, movable=False), ignoreBounds=True)
+        #bc1_t = pg.TextItem("BC1", anchor=(0, 0))
+        #bc1_t.setPos(bc1_pos, 0)
+        #self.plot_cor.addItem(bc1_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =l2_pos,  angle=90, movable=False), ignoreBounds=True)
+        #l2_t = pg.TextItem("L2", anchor=(0, 0))
+        #l2_t.setPos(l2_pos, 0)
+        #self.plot_cor.addItem(l2_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc2_pos,  angle=90, movable=False), ignoreBounds=True)
+        #bc2_t = pg.TextItem("BC2", anchor=(0, 0))
+        #bc2_t.setPos(bc2_pos, 0)
+        #self.plot_cor.addItem(bc2_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =l3_pos,  angle=90, movable=False), ignoreBounds=True)
+        #l3_t = pg.TextItem("L3", anchor=(0, 0))
+        #l3_t.setPos(l3_pos, 0)
+        #self.plot_cor.addItem(l3_t, ignoreBounds=True)
+        #
+        #self.plot_cor.addItem(pg.InfiniteLine(pos =cl_pos,  angle=90, movable=False), ignoreBounds=True)
+        #cl_t = pg.TextItem("CL", anchor=(0, 0))
+        #cl_t.setPos(cl_pos, 0)
+        #self.plot_cor.addItem(cl_t, ignoreBounds=True)
 
         self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)
@@ -798,8 +945,9 @@ class OrbitInterface:
         pen = pg.mkPen(color, width=2)
         self.orb_x_golden= pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
 
-        self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
-        self.plot_cor.setYRange(-3, 3)
+        #self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
+        #self.plot_cor.setYRange(-3, 3)
+        self.plot_x.sigRangeChanged.connect(self.zoom_signal)
         self.plot_x.setYRange(-2, 2)
         self.plot_y.setYRange(-2, 2)
 
@@ -893,13 +1041,9 @@ class OrbitInterface:
         y = np.array([p.y for p in p_list])*1000
         s = np.array([p.s for p in p_list]) + self.parent.lat_zi
 
-
-
         bpms = self.get_dev_from_cb_state(self.bpms)
 
         s_bpm = np.array([bpm.s for bpm in bpms]) + self.parent.lat_zi
-
-
 
         x_bpm = np.array([bpm.x - bpm.x_ref for bpm in bpms])*1000
         y_bpm = np.array([bpm.y - bpm.y_ref for bpm in bpms])*1000
@@ -923,7 +1067,7 @@ class OrbitInterface:
 
         #self.orb_y.setData(x=s, y=y)
 
-        self.plot_cor.update()
+        #self.plot_cor.update()
         self.orb_y.update()
         self.orb_x.update()
 

@@ -4,7 +4,8 @@ Sergey Tomin, XFEL/DESY, 2017
 
 import numpy as np
 import json
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QFileDialog
 from scipy import io
 
 
@@ -171,8 +172,9 @@ class GoldenOrbit:
 
     def save_golden_as(self):
         print(self.Form.gold_orbits_dir)
-        filename = QtGui.QFileDialog.getSaveFileName(self.Form, 'Save Golden Orbit',
-        self.Form.gold_orbits_dir, "txt (*.json)", QtGui.QFileDialog.DontUseNativeDialog)
+        filename = QFileDialog.getSaveFileName(self.Form, 'Save Golden Orbit',
+        self.Form.gold_orbits_dir, "txt (*.json)",  None, QFileDialog.DontUseNativeDialog)[0]
+        
         if filename:
             name = filename.split("/")[-1]
             parts = name.split(".")
@@ -186,8 +188,10 @@ class GoldenOrbit:
 
 
     def load_golden_from(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.gold_orbits_dir, "txt (*.json *.mat)", QtGui.QFileDialog.DontUseNativeDialog)
+        filename = QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
+        self.Form.gold_orbits_dir, "txt (*.json *.mat)", None, QFileDialog.DontUseNativeDialog)[0]
+        print(filename)
+        #QtGui.QFileDialog.DontUseNativeDialog
         if filename:
             #print(filename)
             (body_name, extension) = filename.split("/")[-1].split(".")
@@ -197,9 +201,10 @@ class GoldenOrbit:
                 self.restore_golden_orbit(filename)
 
     def load_golden_from_OD(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.gold_orbits_from_OD_dir, "txt (*.mat)", QtGui.QFileDialog.DontUseNativeDialog)
+        filename = QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
+        self.Form.gold_orbits_from_OD_dir, "txt (*.mat)", None, QFileDialog.DontUseNativeDialog)[0]
+        print(filename)
         if filename:
             #print(filename)
             self.restore_golden_orbit_from_mat(filename=filename)
-
+ 
