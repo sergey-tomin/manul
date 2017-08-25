@@ -389,6 +389,7 @@ class OrbitInterface:
         bpms = self.get_dev_from_cb_state(bpms)
 
         self.orbit.bpms = bpms
+        self.orbit.corrs = corrs
         self.hcors = []
         self.vcors = []
         for cor in corrs:

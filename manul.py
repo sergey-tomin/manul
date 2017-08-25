@@ -168,12 +168,12 @@ class ManulInterfaceWindow(QMainWindow):
         #self.ui.pb_write.clicked.connect(self.match)
         #self.ui.pb_reload.clicked.connect(self.reload_lat)
 
-        self.ui.sb_lat_from.editingFinished.connect(self.arbitrary_lattice)
-        self.ui.sb_lat_to.editingFinished.connect(self.arbitrary_lattice)
+        #self.ui.sb_lat_from.editingFinished.connect(self.arbitrary_lattice)
+        #self.ui.sb_lat_to.editingFinished.connect(self.arbitrary_lattice)
         #self.ui.sb_lat_from.valueChanged.connect(self.arbitrary_lattice)
         #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
 
-
+        self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
 
     def update_table(self):
         for quad in self.quads:
@@ -392,15 +392,17 @@ class ManulInterfaceWindow(QMainWindow):
         current_lat = self.ui.cb_lattice.currentText()
         if current_lat != "Arbitrary":
             return 0
-        print("here")
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
-        print("arbitrary_lattice", lat_from, lat_to)
-        if lat_to - 20 < lat_from:
-            self.ui.sb_lat_to.setValue(lat_from+20)
-            print("set ", lat_from+20)
+        if lat_to - 30 < lat_from:
+            self.ui.sb_lat_to.setValue(lat_from+30)
+
         self.return_lat()
 
+    #def set_arbitrary_positions(self):
+    #    current_lat = self.ui.cb_lattice.currentText()
+    #    if current_lat == "Arbitrary":
+    #        self.return_lat()
 
 
     def return_lat(self):
@@ -438,13 +440,13 @@ class ManulInterfaceWindow(QMainWindow):
                                        start=self.corr_list[idx_frm], stop=self.corr_list[idx_to],
                                        method=method)
             self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1])
+            tmp_lat = MagneticLattice(self.copy_cells[0])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
             self.b_x_des = [tw.beta_x for tw in tws]
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
-            self.lat_zi = 23.2
+            self.lat_zi = s_poss[idx_frm]
 
         elif current_lat == "up to B1":
             self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)

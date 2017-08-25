@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul2.ui'
 #
-# Created: Thu Aug 24 09:31:15 2017
+# Created: Fri Aug 25 10:10:28 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -383,7 +383,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_32 = QtGui.QHBoxLayout()
         self.horizontalLayout_32.setObjectName(_fromUtf8("horizontalLayout_32"))
         self.label = QtGui.QLabel(self.tab_2)
-        self.label.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.label.setMaximumSize(QtCore.QSize(75, 16777215))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label.setFont(font)
@@ -408,7 +408,7 @@ class Ui_MainWindow(object):
         self.cb_lattice.setObjectName(_fromUtf8("cb_lattice"))
         self.horizontalLayout_32.addWidget(self.cb_lattice)
         self.label_2 = QtGui.QLabel(self.tab_2)
-        self.label_2.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.label_2.setMaximumSize(QtCore.QSize(75, 16777215))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_2.setFont(font)
@@ -425,6 +425,16 @@ class Ui_MainWindow(object):
         self.sb_lat_to.setProperty("value", 60.0)
         self.sb_lat_to.setObjectName(_fromUtf8("sb_lat_to"))
         self.horizontalLayout_32.addWidget(self.sb_lat_to)
+        self.pb_set_pos = QtGui.QPushButton(self.tab_2)
+        self.pb_set_pos.setMinimumSize(QtCore.QSize(0, 35))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pb_set_pos.setFont(font)
+        self.pb_set_pos.setStyleSheet(_fromUtf8("color: rgb(85, 255, 255);"))
+        self.pb_set_pos.setObjectName(_fromUtf8("pb_set_pos"))
+        self.horizontalLayout_32.addWidget(self.pb_set_pos)
         self.gridLayout_30.addLayout(self.horizontalLayout_32, 2, 0, 1, 2)
         self.tabWidget_2.addTab(self.tab_2, _fromUtf8(""))
         self.tab = QtGui.QWidget()
@@ -816,6 +826,7 @@ class Ui_MainWindow(object):
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_9), _translate("MainWindow", "BPMs", None))
         self.label.setText(_translate("MainWindow", "From", None))
         self.label_2.setText(_translate("MainWindow", "To", None))
+        self.pb_set_pos.setText(_translate("MainWindow", "Set Positions", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_2), _translate("MainWindow", "Orbit Correction", None))
         self.groupBox_8.setTitle(_translate("MainWindow", "Cavity Controls", None))
         self.label_9.setText(_translate("MainWindow", "Voltage Changes [MeV]", None))

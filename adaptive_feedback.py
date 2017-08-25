@@ -6,7 +6,7 @@ import numpy as np
 import json
 from ocelot.optimizer.mint import opt_objects as obj
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QMessageBox
 from scipy import io
 import pyqtgraph as pg
 from gui.UIadaptive_feedback import Ui_Form
@@ -14,6 +14,7 @@ from collections import deque
 import time
 import os
 from threading import Thread, Event
+from ocelot.cpbd.magnetic_lattice import *
 
 class Statistics(Thread):
     def __init__(self):
@@ -45,23 +46,24 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.parent = parent
         #self.self_ui = parent.window2
         #self.ui = parent.parent.ui
-
+        self.ref_aver_x = []
+        self.ref_aver_y = []
         #self.Form = parent.parent
-        print("load style")
+        #print("load style")
         
         self.golden_orbit = {}
 
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
 
         self.pb_start_statistics.clicked.connect(self.start_stop_statistics)
-
+        self.update_plot_counter = 0
         self.orbits_x = []
         self.orbits_y = []
         self.orbit_s = []
         self.target_values = []
         self.nreadings = 100
         self.feedback_timer = pg.QtCore.QTimer()
-        self.feedback_timer.timeout.connect(self.calc_golden_orbit)
+        self.feedback_timer.timeout.connect(self.auto_correction)
 
         self.statistics_timer = pg.QtCore.QTimer()
         self.statistics_timer.timeout.connect(self.loop)
@@ -76,11 +78,18 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.le_c.textChanged.connect(self.check_address)
 
         self.bpms_name = []
+        self.counter = 0
 
     def loop(self):
-
-        self.read_data()
-
+        self.counter += 1
+        beam_on = self.read_data()
+        if not beam_on:
+            self.counter -= 1
+        bpm_delay = self.sb_time_delay.value()
+        go_delay = self.sb_go_recalc_delay.value()
+        #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
+        if self.counter % int(go_delay/bpm_delay) == int(go_delay/bpm_delay)-1:
+            self.calc_golden_orbit()
 
     def closeEvent(self, QCloseEvent):
         self.feedback_timer.stop()
@@ -96,8 +105,17 @@ class UIAFeedBack(QWidget, Ui_Form):
         feedback_timer - timer
         :return:
         """
-        print("I am here")
+        #print("I am here")
+
+        self.counter = 0
         delay = self.sb_time_delay.value()*1000
+        #self.corrs = self.get_dev_from_cb_state(self.orbit_class.corrs)
+        #self.bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
+        self.orbit = self.orbit_class.create_Orbit_obj()
+        len_array = self.sb_array_len.value()
+        #self.orbits_x = np.zeros((len_array, len(self.orbit.bpms)))
+        #self.orbits_y = np.zeros((len_array, len(self.orbit.bpms)))
+
         if self.pb_start_statistics.text() == "Statistics Accum Off":
             self.statistics_timer.stop()
             #self.stat_thread.stop()
@@ -127,7 +145,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         feedback_timer - timer
         :return:
         """
-        print("I am here")
+        #print("I am here")
+
+        if self.pb_start_statistics.text() == "Statistics Accum On":
+            return 0
+
+        #self.orbit = self.orbit_class.create_Orbit_obj()
+
         delay = self.sb_feedback_rep.value()*1000
         if self.pb_start_feedback.text() == "Stop Feedback":
             self.feedback_timer.stop()
@@ -138,6 +162,132 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.pb_start_feedback.setText("Stop Feedback")
             self.pb_start_feedback.setStyleSheet("color: red")
 
+
+    def auto_correction(self):
+        """
+        Method repeats correction in a loop.
+        repetation rate is defined by spinBox - sb_feedback_sec
+        feedback_timer - QTimer to repats correction oin different thread
+
+        :return:
+        """
+        #beam_on = self.read_orbit()
+        #time.sleep(0.01)
+        #if beam_on:
+        stop_flag = self.correct()
+        time.sleep(0.01)
+        if not stop_flag:
+            self.apply_kicks()
+            time.sleep(0.5)
+        else:
+            print("Exceed limits")
+            time.sleep(1)
+
+    def correct(self):
+        """
+        Method to the Orbit correctiion. Method calculate correctors strengths (kicks)
+        and call function to calculate (self.calc_orbit()) and draw orbit on the plot
+        but does not send it to the DOOCS server.
+
+        :return:
+        """
+        stop_flag = False
+        self.orbit_class.online_calc = False
+        # read orbit devs
+        for elem in self.orbit.corrs:
+            elem.kick_mrad = elem.mi.get_value()
+            elem.angle_read = elem.kick_mrad*1e-3
+            elem.i_kick = elem.kick_mrad
+            elem.ui.set_init_value(elem.kick_mrad)
+            elem.ui.set_value(elem.kick_mrad)
+            #elem.transfer_map = create_transfer_map(elem)
+            elem.transfer_map = self.parent.lat.method.create_tm(elem)
+            if elem.ui.alarm:
+                stop_flag = True
+
+
+        #self.parent.lat.update_transfer_maps()
+
+        for elem in self.orbit.bpms:
+            elem.x = self.new_ref_orbit[elem.id][0]
+            elem.y = self.new_ref_orbit[elem.id][1]
+            elem.ui.set_value((elem.x*1000., elem.y*1000.))
+            #print(elem.id, (elem.x*1000., elem.y*1000.))
+            if elem.ui.alarm:
+                stop_flag = True
+        if stop_flag:
+            return stop_flag
+        self.orbit_class.online_calc = True
+        #self.uncheck_red()
+
+        #self.orbit = self.create_Orbit_obj()
+
+        if not self.orbit_class.is_rm_ok(self.orbit):
+            self.parent.error_box("Calculate Response Matrix")
+            return 0
+
+        self.orbit_class.golden_orbit.dict2golden_orbit()
+        # for bpm in self.bpms:
+        #    print(bpm.id, bpm.x, bpm.y)
+
+        if self.orbit_class.ui.cb_close_orbit.isChecked():
+            self.orbit_class.close_orbit()
+
+        self.calc_correction = {}
+        for cor in self.orbit.corrs:
+            cor.angle = 0.
+            self.calc_correction[cor.id] = cor.angle
+
+        alpha = 0.#self.ui.sb_alpha.value()
+        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=1e-3, epsilon_y=1e-3)
+
+        for cor in self.orbit.corrs:
+            self.calc_correction[cor.id] = cor.angle
+
+        self.set_values2correctors()
+        return stop_flag
+
+    def apply_kicks(self):
+        """
+        Methos sends correctors kicks to DOOCS, if strengths below the limits,
+        otherwise error box will appear
+
+        :return:
+        """
+
+        #corrs = self.get_dev_from_cb_state(self.corrs)
+
+        for cor in self.orbit.corrs:
+            if cor.ui.alarm:
+                self.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
+                return 0
+
+        for cor in self.orbit.corrs:
+            kick_mrad = cor.ui.get_value()
+            print(cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            cor.mi.set_value(kick_mrad)
+
+    def set_values2correctors(self):
+
+        apply_fraction = self.sb_afeed_fraction.value()
+        self.orbit_class.online_calc = False
+        for cor in self.orbit.corrs:
+            kick_mrad_old = cor.ui.get_init_value()
+            if cor.id in self.calc_correction.keys():
+                cor.angle = self.calc_correction[cor.id]
+
+            delta_kick_mrad = cor.angle*1000*apply_fraction
+            #print(cor.angle*1000, delta_kick_mrad)
+            new_kick_mrad = kick_mrad_old + delta_kick_mrad
+            cor.kick_mrad = new_kick_mrad
+            cor.ui.set_value(cor.kick_mrad)
+            warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
+
+            cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
+        self.orbit_class.online_calc = True
+        if self.cb_update_display.isChecked():
+            self.orbit_class.calc_orbit()
+
     def read_bpms(self):
         charge_thresh = 0.005
         beam_on = True
@@ -145,12 +295,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         orbit_y = []
         orbit_s = []
         self.bpms_name = []
-        bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
-        for elem in bpms:
+        for elem in self.orbit.bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
-                if charge < charge_thresh:
+                if False:# or charge < charge_thresh:
                     beam_on = False
                 x = x_mm / 1000.
                 y = y_mm / 1000.
@@ -159,36 +308,48 @@ class UIAFeedBack(QWidget, Ui_Form):
                 orbit_s.append(elem.s)
                 self.bpms_name.append(elem.id)
             except:
-                print("BPM: " + elem.id + " was unchecked ")
-                elem.ui.uncheck()
-
+                #print("BPM: " + elem.id + " was unchecked ")
+                #elem.ui.uncheck()
+                beam_on = False
+        #print(beam_on)
         return beam_on, np.array(orbit_x), np.array(orbit_y), np.array(orbit_s)
 
 
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
         #if not beam_on:
-        #    return
-
+        #    return beam_on
+        print("read data")
         target = self.read_objective_function()
-        if len(self.target_values) > self.nreadings:
+        if target == None:
+            self.stop_statistics()
+            return None
+        if len(self.target_values) >= self.nreadings:
             self.target_values = self.target_values[1:]
+            #self.orbits_x = np.roll(self.orbits_x, -1) #self.orbits_x[1:]
+            #self.orbits_y = np.roll(self.orbits_y, -1) #self.orbits_y[1:]
             self.orbits_x = self.orbits_x[1:]
             self.orbits_y = self.orbits_y[1:]
+        self.target_values = np.append(self.target_values, target)
         self.orbits_x.append(orbit_x)
         self.orbits_y.append(orbit_y)
+        #print(np.shape(self.orbits_x), len(self.target_values)-1)
+        #self.orbits_x[len(self.target_values)-1] = orbit_x
+        #self.orbits_y[len(self.target_values)-1] = orbit_y
         self.orbit_s = orbit_s
 
-        self.target_values = np.append(self.target_values, target)
+        self.update_plot_counter += 1
+        if self.update_plot_counter%2 == 0:
+            self.update_obj_plot()
+        return beam_on
 
-        self.update_plot()
-
-    def update_plot(self, ):
+    def update_obj_plot(self, ):
 
         self.obj_curve.setData(x=np.arange(len(self.target_values)), y=np.array(self.target_values))
 
-        self.orb_y.setData(x=self.orbit_s, y= self.orbits_y[-1])
-        self.orb_x.setData(x=self.orbit_s, y=self.orbits_x[-1])
+    def update_orb_plot(self):
+        self.orb_y.setData(x=self.orbit_s, y= self.ref_aver_x)
+        self.orb_x.setData(x=self.orbit_s, y= self.ref_aver_y)
 
 
     def stop_statistics(self):
@@ -197,7 +358,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.pb_start_statistics.setText("Statistics Accum On")
 
     def read_objective_function(self):
-        val = self.objective_func()
+        try:
+            val = self.objective_func()
+        except:
+            self.error_box("Wrong Objective Function")
+            return None
         return val
 
 
@@ -206,19 +371,39 @@ class UIAFeedBack(QWidget, Ui_Form):
         indx = np.argsort(targets)
         orbits_x = np.array(self.orbits_x)
         orbits_y = np.array(self.orbits_y)
-        num = int(self.sb_array_len.value()*self.sb_averaging.value()*0.01)
-        best_orbits_x = orbits_x[indx[-num:]]
-        best_orbits_y = orbits_y[indx[-num:]]
-        aver_x = np.mean(best_orbits_x, axis=0)
-        aver_y = np.mean(best_orbits_y, axis=0)
-
-        self.orb_x_ref.setData(x=self.orbit_s, y=aver_x)
-        self.orb_y_ref.setData(x=self.orbit_s, y=aver_y)
+        n_orbits = len(orbits_x)
+        num_good_obits = int(n_orbits*self.sb_averaging.value()*0.01)
+        if num_good_obits<1:
+            num_good_obits = 1
+        best_orbits_x = orbits_x[indx[-num_good_obits:]]
+        best_orbits_y = orbits_y[indx[-num_good_obits:]]
+        if len(best_orbits_x) ==1:
+            aver_x = best_orbits_x[0]
+            aver_y = best_orbits_y[0]
+        else:
+            aver_x = np.mean(best_orbits_x, axis=0)
+            aver_y = np.mean(best_orbits_y, axis=0)
         new_golden_orbit = {}
         for i, name in enumerate(self.bpms_name):
             new_golden_orbit[name] = [aver_x[i], aver_y[i]]
-
         self.orbit_class.golden_orbit.update_golden_orbit(new_golden_orbit)
+
+        # ********* reference orbit ***********
+        num_bad_orbits = int(n_orbits*0.2) # 20% bad orbits
+        ref_orbits_x = orbits_x[indx[num_bad_orbits : n_orbits - num_good_obits]]
+        ref_orbits_y = orbits_y[indx[num_bad_orbits : n_orbits - num_good_obits]]
+        self.ref_aver_x = np.mean(ref_orbits_x, axis=0)
+        self.ref_aver_y = np.mean(ref_orbits_y, axis=0)
+
+        self.new_ref_orbit = {}
+        for i, name in enumerate(self.bpms_name):
+            self.new_ref_orbit[name] = [self.ref_aver_x[i], self.ref_aver_y[i]]
+        #self.update_orb_plot()
+        self.orb_x_ref.setData(x=self.orbit_s, y=aver_x*1000)
+        self.orb_y_ref.setData(x=self.orbit_s, y=aver_y*1000)
+        self.orb_y.setData(x=self.orbit_s, y= self.ref_aver_x*1000)
+        self.orb_x.setData(x=self.orbit_s, y= self.ref_aver_y*1000)
+
 
     def set_obj_fun(self):
         """
@@ -249,7 +434,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             return eval(func)
         if len(func) == 0:
             return None
+
         self.objective_func = get_value_exp
+
         return self.objective_func
 
 
@@ -351,7 +538,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.plot_y.setYRange(-2, 2)
 
     def zoom_signal(self):
-        if len(self.corrs) == 0:
+        if len(self.orbit.corrs) == 0:
             return
 
         s_up = self.plot_y.viewRange()[0][0]
@@ -391,3 +578,6 @@ class UIAFeedBack(QWidget, Ui_Form):
                 self.setStyleSheet(f.read())
         except IOError:
             print ('No style sheet found!')
+
+    def error_box(self, message):
+        QtGui.QMessageBox.about(self, "Error box", message)
