@@ -14,7 +14,7 @@ from ocelot.cpbd.response_matrix import *
 from devices import *
 from golden_orbit import GoldenOrbit
 from adaptive_feedback import UIAFeedBack
-
+from ocelot.optimizer.mint.xfel_interface import *
 
 class ResponseMatrixCalculator(Thread):
     """
@@ -143,6 +143,8 @@ class OrbitInterface:
         self.adaptive_feedback = None
         #self.adaptive_feedback = None
         #self.auto_correction = AutoCorrection(orbit_class=self)
+        if self.parent.mi.__class__ == TestMachineInterface:
+            self.debug_mode = True
 
     def reset_undo_database(self):
         self.undo_data_base = []
@@ -645,13 +647,6 @@ class OrbitInterface:
 
         :return:
         """
-        #if self.ui.cb_lattice.currentText() == "Arbitrary":
-        #    lat_from = self.ui.sb_lat_from.value()
-        #    lat_to = self.ui.sb_lat_to.value()
-        #    self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
-        #    self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
-        #    self.parent.arbitrary_lattice()
-
 
         self.orbit = self.create_Orbit_obj()
 
@@ -668,12 +663,6 @@ class OrbitInterface:
         self.RMs.start()
         self.rm_calc.start()
 
-        #if self.ui.cb_lattice.currentText() == "Arbitrary":
-        #    self.ui.sb_lat_from.setValue(lat_from)
-        #    self.ui.sb_lat_to.setValue(lat_to)
-        #    #self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
-        #    #self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
-        #    self.parent.arbitrary_lattice()
 
     def is_rm_calc_alive(self):
         """
@@ -814,6 +803,8 @@ class OrbitInterface:
                     elem.mi = mi_dev
 
                 elem.lims = elem.mi.get_limits()
+                if self.debug_mode:
+                    elem.lims = [-1, 1]
                 if elem.__class__ == Hcor:
                     self.hcors.append(elem)
                 elif elem.__class__ == Vcor:

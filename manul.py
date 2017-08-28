@@ -191,11 +191,18 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.corr_list = []
         L = 23.2
+        E = tws_i1.E
         for elem in self.big_sequence:
             L += elem.l
             if elem.__class__ in [Hcor, Vcor]:
                 elem.s_pos = L - elem.l/2.
+                elem.E = E
                 self.corr_list.append(elem)
+            if elem.__class__ == Cavity:
+                E += elem.v*cos(elem.phi*np.pi/180.)
+            #if elem.__class__ == Monitor:
+            #    elem.s_pos = L - elem.l/2.
+            #    self.corr_list.append(elem)
         self.ui.sb_lat_from.setMaximum(L-30)
         self.ui.sb_lat_to.setMaximum(L)
         print("L_maximum", L)
@@ -205,15 +212,6 @@ class ManulInterfaceWindow(QMainWindow):
         #                            method=method)
 
     def read_quads(self):
-
-
-        #if self.ui.cb_lattice.currentText() == "Arbitrary":
-        #    lat_from = self.ui.sb_lat_from.value()
-        #    lat_to = self.ui.sb_lat_to.value()
-        #    self.ui.sb_lat_from.setValue(self.ui.sb_lat_from.minimum())
-        #    self.ui.sb_lat_to.setValue(self.ui.sb_lat_to.maximum())
-        #    self.arbitrary_lattice()
-
 
         self.online_calc = False
         for elem in self.quads:
@@ -436,10 +434,12 @@ class ManulInterfaceWindow(QMainWindow):
                 idx_to += 1
                 self.ui.sb_lat_to.setValue(self.corr_list[idx_to].s_pos)
             print(lat_from, lat_to, idx_frm, idx_to)
+
             self.lat = MagneticLattice(self.big_sequence,
                                        start=self.corr_list[idx_frm], stop=self.corr_list[idx_to],
                                        method=method)
             self.tws_des = tws_i1
+            self.tws_des.E = self.corr_list[idx_frm].E
             tmp_lat = MagneticLattice(self.copy_cells[0])
             tws = twiss(tmp_lat, self.tws_des)
             self.s_des = [tw.s for tw in tws]
@@ -447,6 +447,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.b_y_des = [tw.beta_y for tw in tws]
             self.tws_end = tws[-1]
             self.lat_zi = s_poss[idx_frm]
+            print("totlaLen=", self.lat.totalLen + 23.2, " energy = ", self.tws_des.E)
 
         elif current_lat == "up to B1":
             self.lat = MagneticLattice(cell_i1 + cell_l1, method=method)
