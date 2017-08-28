@@ -15,6 +15,8 @@ import time
 import os
 from threading import Thread, Event
 from ocelot.cpbd.magnetic_lattice import *
+from ocelot.optimizer.mint.xfel_interface import *
+
 
 class Statistics(Thread):
     def __init__(self):
@@ -79,12 +81,17 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.bpms_name = []
         self.counter = 0
+        self.debug_mode = False
+        if self.parent.mi.__class__ == TestMachineInterface:
+            self.debug_mode = True
+
 
     def loop(self):
         self.counter += 1
         beam_on = self.read_data()
         if not beam_on:
             self.counter -= 1
+            print("beam OFF")
         bpm_delay = self.sb_time_delay.value()
         go_delay = self.sb_go_recalc_delay.value()
         #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
@@ -112,9 +119,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.corrs = self.get_dev_from_cb_state(self.orbit_class.corrs)
         #self.bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
         self.orbit = self.orbit_class.create_Orbit_obj()
-        len_array = self.sb_array_len.value()
-        #self.orbits_x = np.zeros((len_array, len(self.orbit.bpms)))
-        #self.orbits_y = np.zeros((len_array, len(self.orbit.bpms)))
+
 
         if self.pb_start_statistics.text() == "Statistics Accum Off":
             self.statistics_timer.stop()
@@ -130,6 +135,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.objective_func = self.set_obj_fun()
             if self.objective_func == None:
                 self.stop_statistics()
+                print("objective function = None")
                 return None
 
             self.statistics_timer.start(delay)
@@ -174,6 +180,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #beam_on = self.read_orbit()
         #time.sleep(0.01)
         #if beam_on:
+        self.ref_orbit_calc()
         stop_flag = self.correct()
         time.sleep(0.01)
         if not stop_flag:
@@ -181,6 +188,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             time.sleep(0.5)
         else:
             print("Exceed limits")
+            self.le_warn.clear()
+            self.le_warn.setText("Exceed limits")
+            self.le_warn.setStyleSheet("color: red")
             time.sleep(1)
 
     def correct(self):
@@ -295,11 +305,15 @@ class UIAFeedBack(QWidget, Ui_Form):
         orbit_y = []
         orbit_s = []
         self.bpms_name = []
+
         for elem in self.orbit.bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
-                if False:# or charge < charge_thresh:
+                if not self.debug_mode and charge < charge_thresh:
+                    print("charge < charge_thresh", charge < charge_thresh)
+                    self.le_warn.clear()
+                    self.le_warn.setText(elem.id+" charge < charge_thresh")
                     beam_on = False
                 x = x_mm / 1000.
                 y = y_mm / 1000.
@@ -310,6 +324,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             except:
                 #print("BPM: " + elem.id + " was unchecked ")
                 #elem.ui.uncheck()
+                self.le_warn.clear()
+                self.le_warn.setText("beam OFF")
+                print("beam OFF")
                 beam_on = False
         #print(beam_on)
         return beam_on, np.array(orbit_x), np.array(orbit_y), np.array(orbit_s)
@@ -317,8 +334,8 @@ class UIAFeedBack(QWidget, Ui_Form):
 
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
-        #if not beam_on:
-        #    return beam_on
+        if not beam_on:
+            return beam_on
         print("read data")
         target = self.read_objective_function()
         if target == None:
@@ -387,22 +404,39 @@ class UIAFeedBack(QWidget, Ui_Form):
         for i, name in enumerate(self.bpms_name):
             new_golden_orbit[name] = [aver_x[i], aver_y[i]]
         self.orbit_class.golden_orbit.update_golden_orbit(new_golden_orbit)
+        #self.update_orb_plot()
+        self.orb_x_ref.setData(x=self.orbit_s, y=aver_x*1000)
+        self.orb_y_ref.setData(x=self.orbit_s, y=aver_y*1000)
 
+    def ref_orbit_calc(self):
         # ********* reference orbit ***********
+
+        nlast_readings = int(self.sb_ref_orbit_nread.value())
+
+        orbits_x = np.array(self.orbits_x)
+        orbits_y = np.array(self.orbits_y)
+        n_orbits = len(orbits_x)
+
+        if n_orbits < nlast_readings:
+            nlast_readings = n_orbits - 1
+
         num_bad_orbits = int(n_orbits*0.2) # 20% bad orbits
-        ref_orbits_x = orbits_x[indx[num_bad_orbits : n_orbits - num_good_obits]]
-        ref_orbits_y = orbits_y[indx[num_bad_orbits : n_orbits - num_good_obits]]
+
+        #ref_orbits_x = orbits_x[indx[num_bad_orbits : n_orbits - num_good_obits]]
+        #ref_orbits_y = orbits_y[indx[num_bad_orbits : n_orbits - num_good_obits]]
+
+        ref_orbits_x = orbits_x[-nlast_readings:]
+        ref_orbits_y = orbits_y[-nlast_readings:]
+
         self.ref_aver_x = np.mean(ref_orbits_x, axis=0)
         self.ref_aver_y = np.mean(ref_orbits_y, axis=0)
 
         self.new_ref_orbit = {}
         for i, name in enumerate(self.bpms_name):
             self.new_ref_orbit[name] = [self.ref_aver_x[i], self.ref_aver_y[i]]
-        #self.update_orb_plot()
-        self.orb_x_ref.setData(x=self.orbit_s, y=aver_x*1000)
-        self.orb_y_ref.setData(x=self.orbit_s, y=aver_y*1000)
-        self.orb_y.setData(x=self.orbit_s, y= self.ref_aver_x*1000)
-        self.orb_x.setData(x=self.orbit_s, y= self.ref_aver_y*1000)
+
+        self.orb_y.setData(x=self.orbit_s, y=self.ref_aver_x*1000)
+        self.orb_x.setData(x=self.orbit_s, y=self.ref_aver_y*1000)
 
 
     def set_obj_fun(self):
@@ -431,9 +465,11 @@ class UIAFeedBack(QWidget, Ui_Form):
                 B = self.mi.get_value(b_str)
             if state_c:
                 C = self.mi.get_value(c_str)
+            if func == "":
+                return 0
             return eval(func)
-        if len(func) == 0:
-            return None
+        #if len(func) == 0:
+        #    return None
 
         self.objective_func = get_value_exp
 
