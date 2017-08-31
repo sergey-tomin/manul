@@ -32,12 +32,13 @@ from orbit import OrbitInterface
 from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
 from lattices.xfel_l2_mad import *
-#from lattices.xfel_l3_mad import *
-from lattices.xfel_l3_no_cl import *
-from lattices.xfel_cl import *
+#from lattices.xfel_l3_no_cl import *
+from lattices.xfel_l3_no_cl_mode_B import *
+#from lattices.xfel_cl import *
+from lattices.xfel_cl_mode_B import *
 from lattices.xfel_tld_892 import *
-from lattices.xfel_sase1_mad import *
-from lattices.xfel_sase3_mad import *
+from lattices.xfel_sase1_mode_B import *
+from lattices.xfel_sase3_mode_B import *
 from ocelot import *
 from ocelot.gui.accelerator import *
 from ocelot.cpbd.track import *
@@ -61,7 +62,6 @@ class ManulInterfaceWindow(QMainWindow):
         Make the timer object that updates GUI on clock cycle during a scan.
         """
         # PATHS
-        self.dev_mode = True
 
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
@@ -81,10 +81,9 @@ class ManulInterfaceWindow(QMainWindow):
 
 
         self.logbook = "xfellog"
-        self.dev_mode = True
 
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
 

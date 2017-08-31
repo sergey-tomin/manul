@@ -1512,8 +1512,16 @@
     <addaction name="actionSave_Golden_Orbit"/>
     <addaction name="actionLoad_GO_from_Orbit_Display"/>
    </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Correctors</string>
+    </property>
+    <addaction name="actionSave_corrs"/>
+    <addaction name="actionLoad_corrs"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuGolden_Orbit"/>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1562,6 +1570,16 @@
   <action name="actionLoad_GO_from_Orbit_Display">
    <property name="text">
     <string>Load GO from Orbit Display</string>
+   </property>
+  </action>
+  <action name="actionSave_corrs">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionLoad_corrs">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>

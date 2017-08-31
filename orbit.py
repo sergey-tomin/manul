@@ -143,8 +143,12 @@ class OrbitInterface:
         self.adaptive_feedback = None
         #self.adaptive_feedback = None
         #self.auto_correction = AutoCorrection(orbit_class=self)
+        self.debug_mode = False
         if self.parent.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
+        
+        self.ui.actionSave_corrs.triggered.connect(self.save_correctors)
+        self.ui.actionLoad_corrs.triggered.connect(self.restore_correctors)
 
     def reset_undo_database(self):
         self.undo_data_base = []
@@ -240,6 +244,33 @@ class OrbitInterface:
         del self.undo_data_base[-1]
         #print(len(self.undo_data_base))
         self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
+        self.online_calc = True
+        
+        
+        
+    def save_correctors(self):
+        corrs_save = {}
+        for cor in self.corrs:
+            kick_mrad = cor.ui.get_value()
+            print(cor.id," save: ", cor.ui.get_init_value())
+            corrs_save[cor.id] = cor.ui.get_init_value()
+            
+        with open("corrs_save.json", 'w') as f:
+            json.dump(corrs_save, f)
+            
+            
+    def restore_correctors(self):
+        with open("corrs_save.json", 'r') as f:
+            # data_new = pickle.load(f)
+            table = json.load(f)        
+        cor_ids = [cor.id for cor in self.corrs]
+        self.online_calc = False
+        for cor_id in table.keys():
+            if cor_id in cor_ids:
+                inx = cor_ids.index(cor_id)
+                cor = self.corrs[inx]
+                cor.ui.set_value(table[cor.id])
+                print(cor.id," get: ", cor.ui.get_value(), table[cor.id])
         self.online_calc = True
 
     def apply_kicks(self):
@@ -481,6 +512,12 @@ class OrbitInterface:
             new_kick_mrad = kick_mrad_old + delta_kick_mrad
             cor.kick_mrad =  new_kick_mrad
             cor.ui.set_value(cor.kick_mrad)
+            
+            if np.abs(delta_kick_mrad)> 0.001:
+                self.ui.table_cor.item(cor.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
+            else:
+                self.ui.table_cor.item(cor.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
+                
             warn = (np.abs(new_kick_mrad) - np.abs(kick_mrad_old)) > 0.5
 
             cor.ui.check_values(cor.kick_mrad, cor.lims, warn)
@@ -514,7 +551,7 @@ class OrbitInterface:
             self.close_orbit()
 
         # TODO: look into particle
-        p0 = Particle(E=self.parent.tws0.E)
+        #p0 = Particle(E=self.parent.tws0.E)
 
         self.calc_correction = {}
         for cor in self.corrs:
@@ -608,32 +645,6 @@ class OrbitInterface:
                 checked_devs.append(dev)
         return checked_devs
 
-    #def super_orbit_obj(self):
-    #    orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM,
-    #                          disp_rm_method=LinacDisperseSimRM)
-    #
-    #    corrs = self.load_devices(types=[Hcor, Vcor], load_all=True)
-    #    s_pos = np.min([cor.s for cor in corrs])
-    #    bpms_all = self.load_bpms(lat=self.parent.big_sequence)
-    #    bpms = np.array(bpms_all)
-    #    bpms_unch = bpms[np.array([bpm.s for bpm in bpms_all]) < s_pos]
-    #    [bpm.ui.uncheck() for bpm in bpms_unch]
-    #    bpms = self.get_dev_from_cb_state(bpms)
-    #
-    #    self.orbit.bpms = bpms
-    #    self.hcors = []
-    #    self.vcors = []
-    #    for cor in corrs:
-    #        if cor.__class__ == Hcor:
-    #            self.hcors.append(cor)
-    #        else:
-    #            self.vcors.append(cor)
-    #
-    #    self.orbit.hcors = self.hcors
-    #    self.orbit.vcors = self.vcors
-    #
-    #    self.orbit.setup_response_matrix()
-    #    self.orbit.setup_disp_response_matrix()
 
     def calc_response_matrix(self, do_DRM_calc=True):
         """

@@ -84,19 +84,25 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.debug_mode = False
         if self.parent.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
-
+        self.first_go_x = []
+        self.first_go_y = []
+        self.cur_go_x = []
+        self.cur_go_y = []
 
     def loop(self):
         self.counter += 1
         beam_on = self.read_data()
         if not beam_on:
             self.counter -= 1
-            print("beam OFF")
+            print("beam OFF. counter -= 1")
         bpm_delay = self.sb_time_delay.value()
         go_delay = self.sb_go_recalc_delay.value()
         #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
         if self.counter % int(go_delay/bpm_delay) == int(go_delay/bpm_delay)-1:
-            self.calc_golden_orbit()
+            go_x, go_y = self.calc_golden_orbit()
+            if self.counter  == int(go_delay/bpm_delay)*3-1:
+                self.first_go_x = go_x
+                self.first_go_y = go_y
 
     def closeEvent(self, QCloseEvent):
         self.feedback_timer.stop()
@@ -118,6 +124,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         delay = self.sb_time_delay.value()*1000
         #self.corrs = self.get_dev_from_cb_state(self.orbit_class.corrs)
         #self.bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
+        self.orbit_class.read_orbit()
+
+        self.orbit_class.uncheck_red()
+
+        self.orbit_class.golden_orbit.set_golden_orbit()
+
         self.orbit = self.orbit_class.create_Orbit_obj()
 
 
@@ -143,6 +155,11 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.pb_start_statistics.setText("Statistics Accum Off")
             self.pb_start_statistics.setStyleSheet("color: red")
 
+    def stop_feedback(self):
+        self.feedback_timer.stop()
+        self.pb_start_feedback.setStyleSheet("color: rgb(85, 255, 127);")
+        self.pb_start_feedback.setText("Start Feedback")
+
     def start_stop_feedback(self):
         """
         Method to start/stop feedback timer.
@@ -160,9 +177,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         delay = self.sb_feedback_rep.value()*1000
         if self.pb_start_feedback.text() == "Stop Feedback":
-            self.feedback_timer.stop()
-            self.pb_start_feedback.setStyleSheet("color: rgb(85, 255, 127);")
-            self.pb_start_feedback.setText("Start Feedback")
+            self.stop_feedback()
         else:
             self.feedback_timer.start(delay)
             self.pb_start_feedback.setText("Stop Feedback")
@@ -186,10 +201,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         if not stop_flag:
             self.apply_kicks()
             time.sleep(0.5)
+            self.le_warn.clear()
         else:
             print("Exceed limits")
             self.le_warn.clear()
-            self.le_warn.setText("Exceed limits")
+            self.le_warn.setText("Stop flag. Kicks are not applied")
             self.le_warn.setStyleSheet("color: red")
             time.sleep(1)
 
@@ -219,6 +235,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.parent.lat.update_transfer_maps()
 
         for elem in self.orbit.bpms:
+            if elem.id not in self.new_ref_orbit.keys():
+                stop_flag = True
+                return stop_flag
             elem.x = self.new_ref_orbit[elem.id][0]
             elem.y = self.new_ref_orbit[elem.id][1]
             elem.ui.set_value((elem.x*1000., elem.y*1000.))
@@ -269,6 +288,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         for cor in self.orbit.corrs:
             if cor.ui.alarm:
+                self.stop_feedback()
                 self.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 return 0
 
@@ -314,6 +334,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                     print("charge < charge_thresh", charge < charge_thresh)
                     self.le_warn.clear()
                     self.le_warn.setText(elem.id+" charge < charge_thresh")
+                    self.le_warn.setStyleSheet("color: red")
                     beam_on = False
                 x = x_mm / 1000.
                 y = y_mm / 1000.
@@ -405,8 +426,18 @@ class UIAFeedBack(QWidget, Ui_Form):
             new_golden_orbit[name] = [aver_x[i], aver_y[i]]
         self.orbit_class.golden_orbit.update_golden_orbit(new_golden_orbit)
         #self.update_orb_plot()
-        self.orb_x_ref.setData(x=self.orbit_s, y=aver_x*1000)
-        self.orb_y_ref.setData(x=self.orbit_s, y=aver_y*1000)
+        if len(self.first_go_x) != len(aver_x) or len(self.first_go_y) != len(aver_y) :
+            delta_go_x = aver_x 
+            delta_go_y = aver_y
+        else:
+            delta_go_x = aver_x - self.first_go_x
+            delta_go_y = aver_y - self.first_go_y
+        self.orb_x_ref.setData(x=self.orbit_s, y=delta_go_x*1000)
+        self.orb_y_ref.setData(x=self.orbit_s, y=delta_go_y*1000)
+        
+        self.cur_go_x = aver_x
+        self.cur_go_y = aver_y
+        return aver_x, aver_y
 
     def ref_orbit_calc(self):
         # ********* reference orbit ***********
@@ -435,8 +466,15 @@ class UIAFeedBack(QWidget, Ui_Form):
         for i, name in enumerate(self.bpms_name):
             self.new_ref_orbit[name] = [self.ref_aver_x[i], self.ref_aver_y[i]]
 
-        self.orb_y.setData(x=self.orbit_s, y=self.ref_aver_x*1000)
-        self.orb_x.setData(x=self.orbit_s, y=self.ref_aver_y*1000)
+        if len(self.cur_go_x) != len(self.ref_aver_x ) or len(self.cur_go_y) != len(self.ref_aver_y ):
+            delta_ro_x = self.ref_aver_x 
+            delta_ro_y = self.ref_aver_y
+        else:
+            delta_ro_x = self.ref_aver_x - self.cur_go_x
+            delta_ro_y = self.ref_aver_y - self.cur_go_y
+
+        self.orb_y.setData(x=self.orbit_s, y=delta_ro_x*1000)
+        self.orb_x.setData(x=self.orbit_s, y=delta_ro_y*1000)
 
 
     def set_obj_fun(self):

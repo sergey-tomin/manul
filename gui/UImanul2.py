@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UImanul2.ui'
 #
-# Created: Fri Aug 25 10:10:28 2017
+# Created: Wed Aug 30 16:22:22 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -748,6 +748,8 @@ class Ui_MainWindow(object):
         self.menu_File.setObjectName(_fromUtf8("menu_File"))
         self.menuGolden_Orbit = QtGui.QMenu(self.menuBar)
         self.menuGolden_Orbit.setObjectName(_fromUtf8("menuGolden_Orbit"))
+        self.menuFile = QtGui.QMenu(self.menuBar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
         MainWindow.setMenuBar(self.menuBar)
         self.mainToolBar = QtGui.QToolBar(MainWindow)
         self.mainToolBar.setObjectName(_fromUtf8("mainToolBar"))
@@ -768,6 +770,10 @@ class Ui_MainWindow(object):
         self.actionAdaptive_Feedback.setObjectName(_fromUtf8("actionAdaptive_Feedback"))
         self.actionLoad_GO_from_Orbit_Display = QtGui.QAction(MainWindow)
         self.actionLoad_GO_from_Orbit_Display.setObjectName(_fromUtf8("actionLoad_GO_from_Orbit_Display"))
+        self.actionSave_corrs = QtGui.QAction(MainWindow)
+        self.actionSave_corrs.setObjectName(_fromUtf8("actionSave_corrs"))
+        self.actionLoad_corrs = QtGui.QAction(MainWindow)
+        self.actionLoad_corrs.setObjectName(_fromUtf8("actionLoad_corrs"))
         self.menu_File.addAction(self.action_Parameters)
         self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
@@ -776,8 +782,11 @@ class Ui_MainWindow(object):
         self.menuGolden_Orbit.addAction(self.actionLoad_Golden_Orbit)
         self.menuGolden_Orbit.addAction(self.actionSave_Golden_Orbit)
         self.menuGolden_Orbit.addAction(self.actionLoad_GO_from_Orbit_Display)
+        self.menuFile.addAction(self.actionSave_corrs)
+        self.menuFile.addAction(self.actionLoad_corrs)
         self.menuBar.addAction(self.menu_File.menuAction())
         self.menuBar.addAction(self.menuGolden_Orbit.menuAction())
+        self.menuBar.addAction(self.menuFile.menuAction())
         self.mainToolBar.addSeparator()
 
         self.retranslateUi(MainWindow)
@@ -851,6 +860,7 @@ class Ui_MainWindow(object):
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("MainWindow", "Twiss Monitor", None))
         self.menu_File.setTitle(_translate("MainWindow", "&Expert Panel", None))
         self.menuGolden_Orbit.setTitle(_translate("MainWindow", "Golden Orbit", None))
+        self.menuFile.setTitle(_translate("MainWindow", "Correctors", None))
         self.action_Parameters.setText(_translate("MainWindow", "Parameters", None))
         self.actionLoad_Golden_Orbit.setText(_translate("MainWindow", "Load Golden Orbit", None))
         self.actionSave_Golden_Orbit.setText(_translate("MainWindow", "Save Golden Orbit", None))
@@ -859,4 +869,6 @@ class Ui_MainWindow(object):
         self.actionCalculate_ORM.setText(_translate("MainWindow", "Calculate ORM", None))
         self.actionAdaptive_Feedback.setText(_translate("MainWindow", "Adaptive Feedback", None))
         self.actionLoad_GO_from_Orbit_Display.setText(_translate("MainWindow", "Load GO from Orbit Display", None))
+        self.actionSave_corrs.setText(_translate("MainWindow", "Save", None))
+        self.actionLoad_corrs.setText(_translate("MainWindow", "Load", None))
 
