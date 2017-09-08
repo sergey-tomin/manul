@@ -73,8 +73,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.add_orbit_plot()
         self.add_objective_func_plot()
         self.objective_func = None
-        self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/BUNCH_1.TD")
-        self.le_of.setText("-np.min(np.array(A)[:,1])")
+        self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")
+        self.le_of.setText("np.mean(np.array(A)[:,1])")
         self.le_a.textChanged.connect(self.check_address)
         self.le_b.textChanged.connect(self.check_address)
         self.le_c.textChanged.connect(self.check_address)

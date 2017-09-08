@@ -40,8 +40,16 @@ class ResponseMatrixCalculator(Thread):
         except:
             print("No Response Matrix")
             return False
-
-        self.rm.inject(cor_names, bpm_names, inj_matrix)
+            
+        if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
+            print("dump calculated ORM")
+            self.rm.cor_names = cor_names
+            self.rm.bpm_names = bpm_names
+            self.rm.matrix = inj_matrix
+            self.rm.dump(filename=self.rm_filename)
+        else:
+            print("inject calculated ORM")
+            self.rm.inject(cor_names, bpm_names, inj_matrix)
 
         if self.rm_filename != None:
             self.rm.dump(filename=self.rm_filename)
@@ -415,12 +423,17 @@ class OrbitInterface:
         self.orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM,
                               disp_rm_method=LinacDisperseSimRM)
         corrs = self.get_dev_from_cb_state(self.corrs)
+        if len(corrs) == 0:
+            self.parent.error_box("No correctors for correction")
+            return None
         s_pos = np.min([cor.s for cor in corrs])
         bpms = np.array(self.bpms)
         bpms_unch = bpms[np.array([bpm.s for bpm in self.bpms]) < s_pos]
         [bpm.ui.uncheck() for bpm in bpms_unch]
         bpms = self.get_dev_from_cb_state(bpms)
-
+        if len(bpms) == 0:
+            self.parent.error_box("No BPM")
+            return None
         self.orbit.bpms = bpms
         self.orbit.corrs = corrs
         self.hcors = []
@@ -538,7 +551,8 @@ class OrbitInterface:
         self.uncheck_red()
 
         self.orbit = self.create_Orbit_obj()
-
+        if self.orbit == None:
+            return 
         if not self.is_rm_ok(self.orbit):
             self.parent.error_box("Calculate Response Matrix")
             return 0
@@ -660,7 +674,8 @@ class OrbitInterface:
         """
 
         self.orbit = self.create_Orbit_obj()
-
+        if self.orbit == None:
+            return
         self.RMs = ResponseMatrixCalculator(rm=self.orbit.response_matrix,
                                       drm=self.orbit.disp_response_matrix)
         self.RMs.do_DRM_calc = do_DRM_calc
