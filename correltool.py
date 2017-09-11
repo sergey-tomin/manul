@@ -70,6 +70,11 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
         #load in the dark theme style sheet
         self.loadStyleSheet()
 
+        self.cb_energy_ch.addItem("CL")
+        self.cb_energy_ch.addItem("T4D")
+        self.cb_energy_ch.setCurrentIndex(0)
+
+
         self.statistics_timer = pg.QtCore.QTimer()
         self.statistics_timer.timeout.connect(self.loop)
         
@@ -77,23 +82,6 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
         self.cb_sase.setChecked(True)
         self.cb_disp.stateChanged.connect(self.disp_line)
         self.cb_sase.stateChanged.connect(self.sase_line)
-        #self.ui.pb_write.clicked.connect(self.calc_twiss)
-        #self.ui.pb_read.clicked.connect(self.read_quads)
-        #self.ui.pb_reset.clicked.connect(self.reset_quads)
-#
-        #self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
-
-        #
-        #self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
-        #self.ui.pb_write.clicked.connect(self.match)
-        #self.ui.pb_reload.clicked.connect(self.reload_lat)
-
-        #self.ui.sb_lat_from.editingFinished.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_to.editingFinished.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_from.valueChanged.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
-
-        #self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
         self.pb_statistics_start.clicked.connect(self.start_stop_statistics)
         self.add_orbit_plot()
 
@@ -121,26 +109,43 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
 
 
     def read_once(self, i):
-	    #start = time.time()
+        #start = time.time()
         try:
             sase = pydoocs.read("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")["data"]
             sase = np.mean(sase)
-            cl_energy = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")["data"]
-            t4d_energy = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/T4D/ENERGY.SA1")["data"]
-        
+            if self.cb_energy_ch.currentText() == "CL":
+                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")["data"]
+            elif self.cb_energy_ch.currentText() == "T4D":
+                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/T4D/ENERGY.SA1")["data"]
+            else:
+                print("Wrong Energy Channel")
+
             orbit_x = pydoocs.read("XFEL.DIAG/ORBIT/*/X.SA1")
             orbit_y = pydoocs.read("XFEL.DIAG/ORBIT/*/Y.SA1")
         except:
             print("bad readings")
             return 
         self.sase_array[i] = sase
-        self.energy_array[i] = t4d_energy
+        self.energy_array[i] = energy_ch
         values_x = np.array([data["float"] for data in orbit_x["data"]])
         values_y = np.array([data["float"] for data in orbit_y["data"]])
         #names = [data["str"] for data in orbit["data"]]
         self.bpms_x[:,i] = values_x[:]
         self.bpms_y[:,i] = values_y[:]
         #print(sase, values_x[100])
+
+    def correl_matrix(self, x, y):
+        x_var = x - np.mean(x)
+        y_var = y - np.mean(y)
+        correl = np.sum(x_var * y_var)
+        return correl
+
+    def correl_least(self, x, y):
+        x_var = x - np.mean(x)
+        y_var = y - np.mean(y)
+        a = np.vstack([x_var, np.ones(len(x_var))]).T
+        res = np.dot(np.linalg.inv(np.dot(a.T, a)), np.dot(a.T, y_var))
+        return res[0]
 
     def calculate_correlation(self, n_real_readings):
         sase_array = np.array(self.sase_array)[:n_real_readings]
@@ -153,25 +158,17 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
             #print(bpm)
             bpm_x = self.bpms_x[n_bpm][:n_real_readings]
             bpm_y = self.bpms_y[n_bpm][:n_real_readings]
-            x_var = bpm_x - np.mean(bpm_x)
-            y_var = bpm_y - np.mean(bpm_y)
-            sase_var = sase_array - np.mean(sase_array)
-            correl_x = np.sum(x_var * sase_var)
-            correl_y = np.sum(y_var * sase_var)
-            corelation_x.append(correl_x)
-            corelation_y.append(correl_y)
-            
-            e_var = energy_array - np.mean(energy_array)
-            e_correl_x = np.sum(x_var * e_var)
-            e_correl_y = np.sum(y_var * e_var)
-            e_corelation_x.append(e_correl_x)
-            e_corelation_y.append(e_correl_y)
+
+            corelation_x.append(self.correl_matrix(x=bpm_x, y=sase_array))
+            corelation_y.append(self.correl_matrix(x=bpm_y, y=sase_array))
+            e_corelation_x.append(self.correl_matrix(x=bpm_x, y=energy_array))
+            e_corelation_y.append(self.correl_matrix(x=bpm_x, y=energy_array))
         sase_correl_x = np.array(corelation_x)
         sase_correl_y = np.array(corelation_y)
         e_correl_x = np.array(e_corelation_x)
         e_correl_y = np.array(e_corelation_y)
         
-        disp_coef = 0.12/e_correl_x[self.bpm_index]
+        disp_coef = 1 #0.12/e_correl_x[self.bpm_index]
             
         if self.cb_sase.isChecked():
             self.orb_x.setData(x=np.arange(self.n_bpms), y=sase_correl_x*disp_coef)

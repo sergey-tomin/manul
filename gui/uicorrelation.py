@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'uicorrelation.ui'
 #
-# Created: Mon Sep 04 21:47:36 2017
+# Created: Mon Sep 11 16:35:59 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -116,6 +116,9 @@ class Ui_MainWindow(object):
         self.gridLayout_24.addLayout(self.gridLayout_25, 4, 1, 1, 1)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.cb_energy_ch = QtGui.QComboBox(self.groupBox_4)
+        self.cb_energy_ch.setObjectName(_fromUtf8("cb_energy_ch"))
+        self.horizontalLayout.addWidget(self.cb_energy_ch)
         self.cb_disp = QtGui.QCheckBox(self.groupBox_4)
         font = QtGui.QFont()
         font.setPointSize(14)
