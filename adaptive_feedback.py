@@ -88,6 +88,73 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.first_go_y = []
         self.cur_go_x = []
         self.cur_go_y = []
+        self.cb_load_settings.addItem("SASE1 launch")
+        #self.cb_load_settings.addItem("SASE1 aircoils")
+        self.cb_load_settings.setCurrentIndex(0)
+        self.pb_load_settings.clicked.connect(self.load_presettings)
+        self.pb_save_settings.clicked.connect(self.save_presettings)
+
+    def save_state(self, filename):
+        # pvs = self.ui.widget.pvs
+        table = {}
+        bpms = [bpm.id for bpm in self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)]
+        corrs = [cor.id for cor in self.orbit_class.get_dev_from_cb_state(self.orbit_class.corrs)]
+        table["active_corrs"] = corrs
+        table["active_bpms"] = bpms
+        table["feedback_reprate"] = self.sb_feedback_rep.value()
+        table["close_orbit"] = self.orbit_class.ui.cb_close_orbit.checkState()
+        table["current_lattice"] = self.orbit_class.ui.cb_lattice.currentText()
+        table["array_len"] = self.sb_array_len.value()
+        table["go_recalc_delay"] = self.sb_go_recalc_delay.value()
+        table["ref_orbit_nread"] = self.sb_ref_orbit_nread.value()
+        table["averaging"] = self.sb_averaging.value()
+        with open(filename, 'w') as f:
+            json.dump(table, f)
+        # pickle.dump(table, filename)
+        print("SAVE State")
+
+    def load_state(self, filename):
+        # pvs = self.ui.widget.pvs
+        with open(filename, 'r') as f:
+            table = json.load(f)
+        corrs = table["active_corrs"]
+        bpms = table["active_bpms"]
+
+        self.orbit_class.ui.cb_close_orbit.setCheckState(table["close_orbit"])
+
+        all_items = [str(self.parent.ui.cb_lattice.itemText(i)) for i in range(self.parent.ui.cb_lattice.count())]
+        inx = all_items.index(table["current_lattice"])
+        self.parent.ui.cb_lattice.setCurrentIndex(inx)
+
+        self.sb_feedback_rep.setValue(table["feedback_reprate"])
+        self.sb_array_len.setValue(table["array_len"])
+        self.sb_go_recalc_delay.setValue(table["go_recalc_delay"] )
+        self.sb_ref_orbit_nread.setValue(table["ref_orbit_nread"])
+        self.sb_averaging.setValue(table["averaging"])
+        print("LOAD State")
+        return corrs, bpms
+
+    def save_presettings(self):
+        update = self.question_box("Rewrite config?")
+        if update:
+            self.save_state("./configs/"+ self.cb_load_settings.currentText()+".json")
+
+    def load_presettings(self):
+        if self.cb_load_settings.currentText() == "SASE1 launch":
+            active_corrs, active_bpms = self.load_state("./configs/"+ str(self.cb_load_settings.currentText()) +".json")
+
+
+        for cor in self.orbit_class.corrs:
+            if cor.id not in active_corrs:
+                cor.ui.uncheck()
+        for bpm in self.orbit_class.bpms:
+            if bpm.id not in active_bpms:
+                bpm.ui.uncheck()
+        self.orbit_class.correct()
+        self.orbit_class.golden_orbit.set_golden_orbit()
+
+
+
 
     def loop(self):
         self.counter += 1
@@ -655,3 +722,13 @@ class UIAFeedBack(QWidget, Ui_Form):
 
     def error_box(self, message):
         QtGui.QMessageBox.about(self, "Error box", message)
+
+    def question_box(self, message):
+        #QtGui.QMessageBox.question(self, "Question box", message)
+        reply = QtGui.QMessageBox.question(self, "Question Box",
+                message,
+                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        if reply==QtGui.QMessageBox.Yes:
+            return True
+
+        return False
