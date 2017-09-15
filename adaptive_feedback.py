@@ -52,7 +52,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.ref_aver_y = []
         #self.Form = parent.parent
         #print("load style")
-        
+        self.configs_dir = "./configs/"
         self.golden_orbit = {}
 
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
@@ -137,11 +137,18 @@ class UIAFeedBack(QWidget, Ui_Form):
     def save_presettings(self):
         update = self.question_box("Rewrite config?")
         if update:
-            self.save_state("./configs/"+ self.cb_load_settings.currentText()+".json")
+            if not os.path.exists(self.configs_dir):
+                os.makedirs(self.configs_dir)
+                #self.error_box("Config file does not exist.")
+                #return
+            self.save_state(self.configs_dir+ self.cb_load_settings.currentText()+".json")
 
     def load_presettings(self):
         if self.cb_load_settings.currentText() == "SASE1 launch":
-            active_corrs, active_bpms = self.load_state("./configs/"+ str(self.cb_load_settings.currentText()) +".json")
+            if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
+                self.error_box("Config file does not exist.")
+                return
+            active_corrs, active_bpms = self.load_state(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json")
 
 
         for cor in self.orbit_class.corrs:
@@ -494,14 +501,14 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.update_golden_orbit(new_golden_orbit)
         #self.update_orb_plot()
         if len(self.first_go_x) != len(aver_x) or len(self.first_go_y) != len(aver_y) :
-            delta_go_x = aver_x 
+            delta_go_x = aver_x
             delta_go_y = aver_y
         else:
             delta_go_x = aver_x - self.first_go_x
             delta_go_y = aver_y - self.first_go_y
         self.orb_x_ref.setData(x=self.orbit_s, y=delta_go_x*1000)
         self.orb_y_ref.setData(x=self.orbit_s, y=delta_go_y*1000)
-        
+
         self.cur_go_x = aver_x
         self.cur_go_y = aver_y
         return aver_x, aver_y
@@ -534,7 +541,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.new_ref_orbit[name] = [self.ref_aver_x[i], self.ref_aver_y[i]]
 
         if len(self.cur_go_x) != len(self.ref_aver_x ) or len(self.cur_go_y) != len(self.ref_aver_y ):
-            delta_ro_x = self.ref_aver_x 
+            delta_ro_x = self.ref_aver_x
             delta_ro_y = self.ref_aver_y
         else:
             delta_ro_x = self.ref_aver_x - self.cur_go_x
