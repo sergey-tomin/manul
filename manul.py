@@ -82,8 +82,8 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.logbook = "xfellog"
 
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
 

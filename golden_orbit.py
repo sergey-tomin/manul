@@ -38,8 +38,8 @@ class GoldenOrbit:
         self.ui.pb_set_golden.clicked.connect(self.set_golden_orbit)
         self.ui.pb_zero_gold.clicked.connect(self.set_zero_golden_orbit)
 
-        self.ui.pb_save_golden.clicked.connect(self.save_golden_as)
-        self.ui.pb_load_golden.clicked.connect(self.load_golden_from)
+        #self.ui.pb_save_golden.clicked.connect(self.save_golden_as)
+        #self.ui.pb_load_golden.clicked.connect(self.load_golden_from)
         self.ui.actionLoad_Golden_Orbit.triggered.connect(self.load_golden_from)
         self.ui.actionSave_Golden_Orbit.triggered.connect(self.save_golden_as)
         self.ui.actionLoad_GO_from_Orbit_Display.triggered.connect(self.load_golden_from_OD)

@@ -109,6 +109,8 @@ class OrbitInterface:
         self.s_bpm = []
         self.x_bpm = []
         self.y_bpm = []
+        self.mi_orbit = MIOrbit()
+        self.mi_orbit.mi = self.parent.mi
         self.calc_correction = {}
         self.p_init = None
         self.add_orbit_plot()
@@ -123,7 +125,12 @@ class OrbitInterface:
         #self.ui.pb_calc_RM.clicked.connect(self.calc_response_matrix)
         self.ui.actionCalculate_RM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=True))
         self.ui.actionCalculate_ORM.triggered.connect(lambda: self.calc_response_matrix(do_DRM_calc=False))
-        self.ui.pb_correct_orbit.clicked.connect(self.correct)
+        #self.ui.pb_correct_orbit.clicked.connect(self.correct)
+        self.ui.pb_correct_orbit.clicked.connect(self.read_and_correct)
+
+        self.ui.pb_read_orbit.clicked.connect(self.read_bpms)
+        self.ui.pb_calculate.clicked.connect(self.calculate_correction)
+
         self.ui.pb_reset_all.clicked.connect(self.undo)
         self.ui.cb_x_cors.stateChanged.connect(self.choose_plane)
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
@@ -317,16 +324,85 @@ class OrbitInterface:
             self.undo_data_base.append(old_corrs_kicks)
             self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
 
-    def read_orbit(self):
-        """
-        Method to readw from MI: correctors (angles: mrad->rad) and
-        BPMs (X and Y: mm -> m) and checks charge on the BPMs
-        if the charge below charge_thresh return False
+    #def read_all_bpms(self):
+    #    bpm_server = "ORBIT"
+    #    orbit_x = self.parent.mi.get_value("XFEL.DIAG/" + bpm_server + "/*/X.SA1")
+    #    orbit_y = self.parent.mi.get_value("XFEL.DIAG/" + bpm_server + "/*/Y.SA1")
+    #    names = np.array([data["str"] for data in orbit_x["data"]])
+    #    values_x = np.array([data["float"] for data in orbit_x["data"]])
+    #    values_y = np.array([data["float"] for data in orbit_y["data"]])
 
-        :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
-        """
-        charge_thresh = 0.005
 
+
+
+    #def read_bpms(self, n_readings, n_last_readings):
+    #    """
+    #    Method to read from MI BPMs (X and Y: mm -> m) and checks charge on the BPMs
+    #    if the charge below charge_thresh return False
+    #
+    #    :param n_readings:
+    #    :param n_last_readings:
+    #    :return:
+    #    """
+    #
+    #    if n_last_readings> n_readings:
+    #        print("wrong settings")
+    #        return
+    #
+    #    charge_thresh = 0.005
+    #    bpms = self.get_dev_from_cb_state(self.bpms)
+    #    beam_on = True
+    #    for i in range(n_readings):
+    #
+    #        for elem in bpms:
+    #            if "x_array" not in elem.__dict__:
+    #                elem.x_array = []
+    #            if "y_array" not in elem.__dict__:
+    #                elem.y_array = []
+    #
+    #            try:
+    #
+    #                charge = elem.mi.get_charge()
+    #                if charge < charge_thresh:
+    #                    beam_on = False
+    #                    continue
+    #
+    #                x_mm, y_mm = elem.mi.get_pos()
+    #
+    #                if np.isnan(x_mm) or np.isnan(y_mm):
+    #                    print("BPM: " + elem.id + " was unchecked NAN")
+    #                    #elem.ui.uncheck()
+    #                    continue
+    #                elem.x_array.append(x_mm/1000.)
+    #                elem.y_array.append(y_mm/1000.)
+    #            except:
+    #                print("BPM: " + elem.id + " error reading")
+    #        time.sleep(0.1)
+    #
+    #    for elem in bpms:
+    #        if "x_array" not in elem.__dict__ or "y_array" not in elem.__dict__ :
+    #            elem.ui.uncheck()
+    #            print("no data")
+    #            continue
+    #        elif len(elem.x_array) == 0 or len(elem.y_array) == 0:
+    #            elem.ui.uncheck()
+    #            print("no data")
+    #            continue
+    #        else:
+    #            elem.x = np.mean(np.array(elem.x_array)[-n_last_readings:])   # in [m]
+    #            elem.y = np.mean(np.array(elem.y_array)[-n_last_readings:])   # in [m]
+    #            elem.ui.set_value((elem.x*1000., elem.y*1000))                # table in [mm]
+    #
+    #    return beam_on
+
+    def read_correctors(self):
+        """
+        Method to read from MI correctors (angles: mrad->rad)
+        self.online_calc = False - switch off recalculating of the calculated orbit
+        otherwise after every set in table orbit will be recalculated.
+
+        :return:
+        """
         self.online_calc = False
 
         for elem in self.corrs:
@@ -338,6 +414,35 @@ class OrbitInterface:
 
         self.online_calc = True
         self.parent.lat.update_transfer_maps()
+
+
+
+    def read_orbit(self):
+        """
+        Method to readw from MI: correctors (angles: mrad->rad) and
+        BPMs (X and Y: mm -> m) and checks charge on the BPMs
+        if the charge below charge_thresh return False
+
+        :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
+        """
+
+        #self.online_calc = False
+        #
+        #for elem in self.corrs:
+        #    elem.kick_mrad = elem.mi.get_value()
+        #    elem.angle_read = elem.kick_mrad*1e-3
+        #    elem.i_kick = elem.kick_mrad
+        #    elem.ui.set_init_value(elem.kick_mrad)
+        #    elem.ui.set_value(elem.kick_mrad)
+        #
+        #self.online_calc = True
+        #self.parent.lat.update_transfer_maps()
+        self.read_correctors()
+
+        charge_thresh = 0.005
+
+
+
         bpms = self.get_dev_from_cb_state(self.bpms)
 
         beam_on = True
@@ -352,18 +457,15 @@ class OrbitInterface:
                     beam_on = False
                 elem.x = x_mm/1000.
                 elem.y = y_mm/1000.
-                #elem.Dx = 0.
-                #elem.Dy = 0.
-                #elem.Dx_des = 0.
-                #elem.Dy_des = 0.
                 elem.ui.set_value((x_mm, y_mm))
             except:
                 print("BPM: " + elem.id + " was unchecked ")
                 elem.ui.uncheck()
-
+        #beam_on = self.read_bpms(n_readings=1, n_last_readings=1)
         #self.update_cors_plot()
         self.update_plot()
         return beam_on
+
 
 
     #def update_cors_plot(self):
@@ -537,18 +639,57 @@ class OrbitInterface:
         self.online_calc = True
         self.calc_orbit()
 
+    def read_bpms(self):
+        self.read_correctors()
+        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+
+    def calculate_correction(self):
+
+        bpms = self.get_dev_from_cb_state(self.bpms)
+        checked_bpms_id = [bpm.id for bpm in bpms]
+        self.mi_orbit.get_bpms(bpms)
+        charge_thresh = 0.005
+
+        for elem in bpms:
+
+            if np.isnan(elem.x) or np.isnan(elem.y):
+                print("BPM: " + elem.id + " was unchecked NAN")
+                elem.ui.uncheck()
+            if elem.charge < charge_thresh:
+                elem.ui.uncheck()
+            elem.ui.set_value((elem.x*1000, elem.y*1000))
+
+        self.update_plot()
+        self.correct()
+
+        for elem in bpms:
+            if elem.id in checked_bpms_id:
+                elem.ui.check()
+
+
+    def read_and_correct(self):
+        self.read_orbit()
+
+        self.uncheck_red()
+
+        self.correct()
+
+
     def correct(self):
         """
-        Method to the Orbit correctiion. Method calculate correctors strengths (kicks)
+        Method to the Orbit correction. Method calculate correctors strengths (kicks)
         and call function to calculate (self.calc_orbit()) and draw orbit on the plot
         but does not send it to the DOOCS server.
 
         :return:
         """
 
-        self.read_orbit()
+        #self.read_correctors()
 
-        self.uncheck_red()
+
+        #self.read_orbit()
+
+        #self.uncheck_red()
 
         self.orbit = self.create_Orbit_obj()
         if self.orbit == None:
@@ -558,14 +699,9 @@ class OrbitInterface:
             return 0
 
         self.golden_orbit.dict2golden_orbit()
-        #for bpm in self.bpms:
-        #    print(bpm.id, bpm.x, bpm.y)
 
         if self.ui.cb_close_orbit.isChecked():
             self.close_orbit()
-
-        # TODO: look into particle
-        #p0 = Particle(E=self.parent.tws0.E)
 
         self.calc_correction = {}
         for cor in self.corrs:
@@ -580,7 +716,6 @@ class OrbitInterface:
 
         self.set_values2correctors()
 
-        #self.calc_orbit()
 
     def start_stop_feedback(self):
         """

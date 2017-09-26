@@ -4,6 +4,7 @@ Sergey Tomin, XFEL/DESY, 2017
 from ocelot.optimizer.mint.opt_objects import Device
 from PyQt5 import QtGui, QtCore
 import numpy as np
+import time
 
 
 class Corrector(Device):
@@ -183,3 +184,91 @@ class MICavity(Device):
         val = self.mi.get_value(ch)/8.
         return val
 
+
+class MIOrbit(Device):
+    def __init__(self, eid=None):
+        super(MIOrbit, self).__init__(eid=eid)
+        self.bpm_server = "ORBIT"     # or "BPM"
+        self.time_delay = 0.1         # sec
+        self.charge_threshold = 0.005 # nC
+        self.bpm_names = []
+        self.x = []
+        self.y = []
+        self.mean_x = []
+        self.mena_y = []
+        self.mean_charge = []
+        #self.charge = []
+
+    def read_positions(self):
+        #try:
+        orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X.SA1")
+        orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y.SA1")
+        #except:
+        #    print("ERROR: reading from DOOCS")
+        #    return False
+        names_x = np.array([data["str"] for data in orbit_x["data"]])
+        names_y = np.array([data["str"] for data in orbit_y["data"]])
+        if not np.array_equal(names_x, names_y):
+            print("X and Y orbits are not equal")
+        self.x = np.array([data["float"] for data in orbit_x["data"]])
+        self.y = np.array([data["float"] for data in orbit_y["data"]])
+        return [names_x, self.x, self.y]
+
+    def read_charge(self):
+        try:
+            charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE.SA1")
+        except:
+            print("ERROR: reading from DOOCS")
+            return False
+        names = np.array([data["str"] for data in charge["data"]])
+        values = np.array([data["float"] for data in charge["data"]])
+        return names, values
+
+    def read_orbit(self):
+        names_xy, x, y = self.read_positions()
+        names_charge, charge = self.read_charge()
+        if not np.array_equal(names_xy, names_charge):
+            print("CHARGE reading and POSITIONS are not equal")
+            return False
+        return names_xy, x, y, charge
+
+
+    def read_and_average(self, nreadings, take_last_n):
+        orbits_x = []
+        orbits_y = []
+        orbits_charge = []
+        saved_names = []
+        for i in range(nreadings):
+            names, x, y, charge = self.read_orbit()
+            orbits_x.append(x)
+            orbits_y.append(y)
+            orbits_charge.append(charge)
+            if i > 0:
+                if not np.array_equal(saved_names, names):
+                    print("error: different ")
+            saved_names = names
+            time.sleep(self.time_delay)
+        self.bpm_names = saved_names
+        self.mean_x = np.mean(orbits_x[-take_last_n:], axis=0)
+        self.mean_y = np.mean(orbits_y[-take_last_n:], axis=0)
+        self.mean_charge = np.mean(orbits_charge[-take_last_n:], axis=0)
+        return self.bpm_names, self.mean_x, self.mean_y, self.mean_charge
+
+    def get_bpms(self, bpms):
+        """
+        All bpm works with [m] but doocs gives position in [mm]
+
+        :param bpms: list of BPM objects
+        :param charge_threshold:
+        :return:
+        """
+        if len(self.bpm_names) == 0:
+            return False
+        #bpm_names = [bpm.id for bpm in bpms]
+        indxs = [self.bpm_names.index(bpm.id) for bpm in bpms]
+        for i, bpm in enumerate(bpms):
+            inx = indxs[i]
+            bpm.x = self.mean_x[inx]/1000      # [mm] -> [m]
+            bpm.y = self.mean_y[inx]/1000      # [mm] -> [m]
+            bpm.charge = self.mean_charge[inx] # nC
+        return True
