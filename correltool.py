@@ -138,11 +138,19 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
         x_var = x - np.mean(x)
         y_var = y - np.mean(y)
         correl = np.sum(x_var * y_var)
+        #if not np.any(x_var) or not np.any(x_var):
+        #    print("wrong orbit reasing")
         return correl
 
     def correl_least(self, x, y):
         x_var = x - np.mean(x)
         y_var = y - np.mean(y)
+        #print("x_var", x_var)
+        #print("y_var", y_var)
+        if not np.any(x_var) or not np.any(x_var):
+            #print("wrong orbit reasing")
+            return 0
+            
         a = np.vstack([x_var, np.ones(len(x_var))]).T
         res = np.dot(np.linalg.inv(np.dot(a.T, a)), np.dot(a.T, y_var))
         return res[0]
@@ -155,20 +163,23 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
         e_corelation_x = []
         e_corelation_y = []
         for n_bpm in range(self.n_bpms):
-            #print(bpm)
+            
             bpm_x = self.bpms_x[n_bpm][:n_real_readings]
             bpm_y = self.bpms_y[n_bpm][:n_real_readings]
-
+            #print("corelation_x")
             corelation_x.append(self.correl_matrix(x=bpm_x, y=sase_array))
+            #print("corelation_y")
             corelation_y.append(self.correl_matrix(x=bpm_y, y=sase_array))
+            #print("corelation_xe")
             e_corelation_x.append(self.correl_matrix(x=bpm_x, y=energy_array))
-            e_corelation_y.append(self.correl_matrix(x=bpm_x, y=energy_array))
+            #print("corelation_ye")
+            e_corelation_y.append(self.correl_matrix(x=bpm_y, y=energy_array))
         sase_correl_x = np.array(corelation_x)
         sase_correl_y = np.array(corelation_y)
         e_correl_x = np.array(e_corelation_x)
         e_correl_y = np.array(e_corelation_y)
         
-        disp_coef = 1 #0.12/e_correl_x[self.bpm_index]
+        disp_coef = 0.12/e_correl_x[self.bpm_index]
             
         if self.cb_sase.isChecked():
             self.orb_x.setData(x=np.arange(self.n_bpms), y=sase_correl_x*disp_coef)
@@ -432,4 +443,3 @@ if __name__ == "__main__":
     main()
     #window = ManulInterfaceWindow()
     #window.read_quads()
-

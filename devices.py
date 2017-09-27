@@ -188,7 +188,7 @@ class MICavity(Device):
 class MIOrbit(Device):
     def __init__(self, eid=None):
         super(MIOrbit, self).__init__(eid=eid)
-        self.bpm_server = "ORBIT"     # or "BPM"
+        self.bpm_server = "BPM" # "ORBIT"     # or "BPM"
         self.time_delay = 0.1         # sec
         self.charge_threshold = 0.005 # nC
         self.bpm_names = []
@@ -206,30 +206,33 @@ class MIOrbit(Device):
         #except:
         #    print("ERROR: reading from DOOCS")
         #    return False
-        names_x = np.array([data["str"] for data in orbit_x["data"]])
-        names_y = np.array([data["str"] for data in orbit_y["data"]])
+        #print(orbit_x)
+        names_x = [data["str"] for data in orbit_x]
+        names_y = [data["str"] for data in orbit_y]
         if not np.array_equal(names_x, names_y):
             print("X and Y orbits are not equal")
-        self.x = np.array([data["float"] for data in orbit_x["data"]])
-        self.y = np.array([data["float"] for data in orbit_y["data"]])
+        self.x = np.array([data["float"] for data in orbit_x])
+        self.y = np.array([data["float"] for data in orbit_y])
         return [names_x, self.x, self.y]
 
     def read_charge(self):
-        try:
-            charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE.SA1")
-        except:
-            print("ERROR: reading from DOOCS")
-            return False
-        names = np.array([data["str"] for data in charge["data"]])
-        values = np.array([data["float"] for data in charge["data"]])
+        #try:
+        charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE.SA1")
+        #except:
+        #    print("ERROR: reading from DOOCS")
+        #    return False
+        names = [data["str"] for data in charge]
+        values = np.array([data["float"] for data in charge])
         return names, values
 
     def read_orbit(self):
         names_xy, x, y = self.read_positions()
         names_charge, charge = self.read_charge()
+        #print(names_xy)
+        #print(names_charge)
         if not np.array_equal(names_xy, names_charge):
             print("CHARGE reading and POSITIONS are not equal")
-            return False
+            #return False
         return names_xy, x, y, charge
 
 
@@ -265,7 +268,17 @@ class MIOrbit(Device):
         if len(self.bpm_names) == 0:
             return False
         #bpm_names = [bpm.id for bpm in bpms]
-        indxs = [self.bpm_names.index(bpm.id) for bpm in bpms]
+        print("bpm", len(bpms))
+        indxs = []
+        valid_bpm_inx = []
+        for i, bpm in enumerate(bpms):
+            if bpm.id not in self.bpm_names:
+                bpm.ui.uncheck()
+            else:
+                valid_bpm_inx.append(i)
+                indxs.append(self.bpm_names.index(bpm.id))
+        print("bpm", len(bpms), len(indxs))
+        bpms = [bpms[indx] for indx in valid_bpm_inx]
         for i, bpm in enumerate(bpms):
             inx = indxs[i]
             bpm.x = self.mean_x[inx]/1000      # [mm] -> [m]

@@ -640,14 +640,20 @@ class OrbitInterface:
         self.calc_orbit()
 
     def read_bpms(self):
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+        
         self.read_correctors()
-        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        self.mi_orbit.read_and_average(nreadings=15, take_last_n=5)
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.calculate_correction()
 
     def calculate_correction(self):
 
         bpms = self.get_dev_from_cb_state(self.bpms)
         checked_bpms_id = [bpm.id for bpm in bpms]
         self.mi_orbit.get_bpms(bpms)
+        bpms = self.get_dev_from_cb_state(self.bpms)
         charge_thresh = 0.005
 
         for elem in bpms:
@@ -660,6 +666,9 @@ class OrbitInterface:
             elem.ui.set_value((elem.x*1000, elem.y*1000))
 
         self.update_plot()
+        
+        self.uncheck_red()
+        
         self.correct()
 
         for elem in bpms:
