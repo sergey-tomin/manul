@@ -98,7 +98,8 @@ class OrbitInterface:
     """
     def __init__(self, parent):
         self.bpms4remove = ["BPMS.99.I1", "BPMS.192.B1"]
-        self.corrs4remove = ['CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
+        self.corrs4remove = ["CBB.98.I1", "CBB.100.I1", "CBB.101.I1","CBB.191.B1", "CBB.193.B1", "CBB.202.B1",
+            'CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
         self.parent = parent
         self.ui = parent.ui
         self.online_calc = True
@@ -150,7 +151,7 @@ class OrbitInterface:
 
         self.golden_orbit = GoldenOrbit(parent=self)
         self.ui.sb_apply_fraction.valueChanged.connect(self.set_values2correctors)
-        self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
+        #self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
 
         
 
@@ -644,7 +645,7 @@ class OrbitInterface:
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
         
         self.read_correctors()
-        self.mi_orbit.read_and_average(nreadings=15, take_last_n=5)
+        self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
         self.calculate_correction()
 
@@ -1000,6 +1001,7 @@ class OrbitInterface:
 
         self.plot_y.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
         layout = QtGui.QGridLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         self.ui.w_orbit.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -1213,12 +1215,11 @@ class OrbitInterface:
         indx = np.searchsorted(s, s_bpm)
         x_bpms_track = x[indx]
         y_bpms_track = y[indx]
-        #print(self.ui.cb_correction_result.isChecked(), x_bpms_track, y_bpms_track)
         # Line
         self.orb_x_ref.setData(x=s_bpm, y=x_bpm)
         self.orb_y_ref.setData(x=s_bpm, y=y_bpm)
 
-        if self.ui.cb_correction_result.isChecked():
+        if self.parent.show_correction_result: #otherwise "changes"
             self.orb_x.setData(x=s_bpm, y=x_bpm + x_bpms_track)
             self.orb_y.setData(x=s_bpm, y=y_bpm + y_bpms_track)
         else:

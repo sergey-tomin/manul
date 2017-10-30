@@ -6,10 +6,10 @@ Sergey Tomin. XFEL/DESY, 2017.
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QFrame, QMessageBox, QMainWindow, QDialog
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
-import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+#import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+#import matplotlib.pyplot as plt
 #normal imports
 import numpy as np
 #import epics
@@ -21,6 +21,7 @@ path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH", os.path.realpath(__file__), path[:indx])
 sys.path.append(path[:indx])
+sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
 if sys.version_info[0] == 2:
     from imp import reload
 else:
@@ -50,6 +51,9 @@ import copy
 from scipy import optimize
 from devices import *
 from dispersion import *
+from gui.settings_gui import *
+import json
+
 
 class ManulInterfaceWindow(QMainWindow):
     """ Main class for the GUI application """
@@ -69,7 +73,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.path2manul = path[:path.find("manul")]
 
         self.optimizer_path = self.path2ocelot + "ocelot" + os.sep + "optimizer" + os.sep
-        self.config_dir = self.path2ocelot + "config_optim" +os.sep
+        self.config_dir = self.path2manul + "manul" + os.sep + "configs" + os.sep
         self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
@@ -81,11 +85,14 @@ class ManulInterfaceWindow(QMainWindow):
 
 
         self.logbook = "xfellog"
-
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        self.settings = None
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
 
         self.ui = MainWindow(self)
+
+        self.show_correction_result = True
+        self.load_settings()
 
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispersionInterface(parent=self)
@@ -129,7 +136,6 @@ class ManulInterfaceWindow(QMainWindow):
         #timer for plots, starts when scan starts
         self.multiPvTimer = QtCore.QTimer()
         #self.multiPvTimer.timeout.connect(self.getPlotData)
-        self.pvs = ["sdf","asdf"]
         #self.initTable()
         #print("quads", self.quads)
         self.add_plot()
@@ -173,6 +179,24 @@ class ManulInterfaceWindow(QMainWindow):
         #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
 
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
+        self.ui.action_Parameters.triggered.connect(self.run_settings_window)
+
+
+    def run_settings_window(self):
+        if self.settings is None:
+            self.settings = ManulSettings(parent=self)
+        self.settings.show()
+
+    def load_settings(self):
+        filename = self.config_dir + "settings.json"
+        with open(filename, 'r') as f:
+            table = json.load(f)
+
+        self.show_correction_result = table["show_correction_result"]
+        self.gc_nlast = table["nlast"]
+        self.gc_nreadings = table["nreadings"]
+        self.lattice_settings = table["lattice"]
+        print("LOAD State")
 
     def update_table(self):
         for quad in self.quads:
@@ -664,6 +688,19 @@ class ManulInterfaceWindow(QMainWindow):
             self.tws_end = tws[-1]
             self.lat_zi = 23.2
             print("totlaLen=", self.lat.totalLen+ 23.2)
+
+        if current_lat != "Arbitrary":
+            self.ui.sb_lat_from.setMinimum(self.lat_zi)
+            self.ui.sb_lat_from.setMaximum(self.lat_zi + self.lat.totalLen - 30)
+            self.ui.sb_lat_to.setMaximum(self.lat_zi + self.lat.totalLen)
+            self.ui.sb_lat_to.setMinimum(self.lat_zi + 30)
+        else:
+            L = np.sum([elem.l for elem in self.big_sequence])
+            self.ui.sb_lat_from.setMinimum(23.2)
+            self.ui.sb_lat_from.setMaximum(L - 30)
+            self.ui.sb_lat_to.setMaximum(23.2 + L)
+            self.ui.sb_lat_to.setMinimum(23.2 + 30)
+
         self.s_des = np.array(self.s_des)
         self.tws0 = copy.deepcopy(self.tws_des)
 
@@ -967,7 +1004,7 @@ def main():
 
 
     #show app
-    window.setWindowIcon(QtGui.QIcon('manul.png'))
+    window.setWindowIcon(QtGui.QIcon('gui/manul.png'))
 
     window.show()
     window.raise_()
