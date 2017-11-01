@@ -95,6 +95,8 @@ class MainWindow(Ui_MainWindow):
     def __init__(self, Form):
         Ui_MainWindow.__init__(self)
         self.setupUi(Form)
+        self.menuBar.setNativeMenuBar(False)
+        self.mainToolBar.setVisible(False)
         self.Form = Form
         # load in the dark theme style sheet
         self.loadStyleSheet()

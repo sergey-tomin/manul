@@ -38,10 +38,22 @@ class ManulSettings(QWidget):
         table["nlast"] = self.ui.sb_nlast.value()
         table["nreadings"] = self.ui.sb_nreadings.value()
         table["lattice"] = self.ui.le_lattice.text()
-
+        table["epsilon_x"] = self.ui.sb_epsilon_x.value()
+        table["epsilon_y"] = self.ui.sb_epsilon_y.value()
+        table["uncheck_corrs"] = self.string2list(self.ui.te_corrs.toPlainText())
+        table["uncheck_bpms"] = self.string2list(self.ui.te_bpms.toPlainText())
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
+
+    def list2string(self, dev_list):
+        return ", ".join(dev_list)
+    
+    def string2list(self, dev_str):
+        lst = dev_str.split(",")
+        lst = [text.replace(" ", "") for text in lst]
+        lst = [text.replace("\n", "") for text in lst]
+        return lst
 
     def load_state(self, filename):
         # pvs = self.ui.widget.pvs
@@ -52,6 +64,15 @@ class ManulSettings(QWidget):
         self.ui.sb_nlast.setValue(table["nlast"])
         self.ui.sb_nreadings.setValue(table["nreadings"])
         self.ui.le_lattice.setText(table["lattice"])
+
+        if "epsilon_x" in table.keys():  self.ui.sb_epsilon_x.setValue(table["epsilon_x"])
+        if "epsilon_y" in table.keys():  self.ui.sb_epsilon_y.setValue(table["epsilon_y"])
+        if "uncheck_corrs" in table.keys(): self.ui.te_corrs.setPlainText(self.list2string(table["uncheck_corrs"]))
+        if "uncheck_bpms" in table.keys():  self.ui.te_bpms.setPlainText(self.list2string(table["uncheck_bpms"]))
+#        a = table["uncheck_corrs"].split(",")
+#        a = [text.replace(" ", "") for text in a]
+#        a = [text.replace("\n", "") for text in a]
+#        print(a)
         print("LOAD State")
 
     def save_presettings(self):

@@ -237,28 +237,40 @@ ciy_63_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.63.I1')
 cix_65_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.65.I1')
 ciy_72_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.72.I1')
 cix_73i_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.73I.I1')
-cbl_73_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.73.I1')
+
+cbl_73_i1 = Drift(eid='CBL.73.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.73.I1')
+
 cix_73ii_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.73II.I1')
 ciy_75_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.75.I1')
 cix_76_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.76.I1')
-cbl_78_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.78.I1')
+
+cbl_78_i1 = Drift(eid='CBL.78.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.78.I1')
+
 cix_78_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.78.I1')
 ciy_80_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.80.I1')
 cix_81_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.81.I1')
-cbl_83_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.83.I1')
+
+cbl_83_i1 = Drift(eid='CBL.83.I1') # Vcor(l=0.0, angle=0.0, eid='CBL.83.I1')
+
 cix_83_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.83.I1')
 ciy_85_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.85.I1')
 cix_86_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.86.I1')
-cbl_88_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.88.I1')
+
+cbl_88_i1 = Drift(eid='CBL.88.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.88.I1')
+
 cix_88_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.88.I1')
-cbl_90_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.90.I1')
+
+cbl_90_i1 = Drift(eid='CBL.90.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.90.I1')
+
 cix_90_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.90.I1')
 ciy_92_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.92.I1')
 ciy_94_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.94.I1')
 cix_95_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.95.I1')
-cbb_98_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.98.I1')
-cbb_100_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.100.I1')
-cbb_101_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.101.I1')
+
+cbb_98_i1 = Drift(eid='CBB.98.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.98.I1')
+cbb_100_i1 = Drift(eid='CBB.100.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.100.I1')
+cbb_101_i1 = Drift(eid='CBB.101.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.101.I1')
+
 cix_102_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.102.I1')
 ciy_103_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.103.I1')
 cix_104_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.104.I1')
@@ -280,9 +292,11 @@ ciy_176_b1 = Vcor(l=0.1, angle=0.0, eid='CIY.176.B1')
 cix_177_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.177.B1')
 ccx_179_b1 = Hcor(l=0.1, angle=0.0, eid='CCX.179.B1')
 ccy_181_b1 = Vcor(l=0.1, angle=0.0, eid='CCY.181.B1')
-cbb_191_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.191.B1')
-cbb_193_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.193.B1')
-cbb_202_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.202.B1')
+
+cbb_191_b1 = Drift(eid='CBB.191.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.191.B1')
+cbb_193_b1 = Drift(eid='CBB.193.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.193.B1')
+cbb_202_b1 = Drift(eid='CBB.202.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.202.B1')
+
 ciy_204_b1 = Vcor(l=0.1, angle=0.0, eid='CIY.204.B1')
 cix_205_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.205.B1')
 cix_209_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.209.B1')

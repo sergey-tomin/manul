@@ -1,55 +1,44 @@
-from ocelot import *
-
-tws_sase3 = Twiss()
-tws_sase3.beta_x  = 22.7539042345
-tws_sase3.beta_y  = 9.57644121557
-tws_sase3.alpha_x = 1.55409787119
-tws_sase3.alpha_y = -0.649007483021
-tws_sase3.E       = 17.4999999889
-#tws_sase3.s       = 2777.8147070000155
+from ocelot import * 
 
 # drifts 
-d_1 = Drift(l=2.8905, eid='D_1')
-d_2 = Drift(l=2.869, eid='D_2')
-d_3 = Drift(l=0.18665, eid='D_3')
-d_4 = Drift(l=2.93065, eid='D_4')
-d_7 = Drift(l=0.04015, eid='D_7')
-d_8 = Drift(l=0.31772, eid='D_8')
-d_9 = Drift(l=0.07278, eid='D_9')
-d_10 = Drift(l=0.0717, eid='D_10')
-d_11 = Drift(l=0.2973, eid='D_11')
-d_13 = Drift(l=0.35787, eid='D_13')
+d_1 = Drift(l=5.7595, eid='D_1')
+d_2 = Drift(l=0.18665, eid='D_2')
+d_3 = Drift(l=5.79965, eid='D_3')
+d_5 = Drift(l=0.04015, eid='D_5')
+d_6 = Drift(l=0.31772, eid='D_6')
+d_7 = Drift(l=0.07278, eid='D_7')
+d_8 = Drift(l=0.0717, eid='D_8')
+d_9 = Drift(l=0.2973, eid='D_9')
+d_11 = Drift(l=0.35787, eid='D_11')
 
 # quadrupoles 
 qa_2806_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2806.SA3')
-qa_2812_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2812.SA3')
-qa_2818_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2818.SA3')
-qa_2824_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2824.SA3')
-qa_2831_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2831.SA3')
-qa_2837_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2837.SA3')
-qa_2843_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2843.SA3')
-qa_2849_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2849.SA3')
-qa_2855_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2855.SA3')
-qa_2861_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2861.SA3')
-qa_2867_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2867.SA3')
-qa_2873_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2873.SA3')
-qa_2879_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2879.SA3')
-qa_2885_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2885.SA3')
-qa_2892_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2892.SA3')
-qa_2898_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2898.SA3')
-qa_2904_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2904.SA3')
-qa_2910_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2910.SA3')
-qa_2916_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2916.SA3')
-qa_2922_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2922.SA3')
-qa_2928_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2928.SA3')
-qa_2934_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2934.SA3')
-qa_2940_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2940.SA3')
+qa_2812_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2812.SA3')
+qa_2818_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2818.SA3')
+qa_2824_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2824.SA3')
+qa_2831_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2831.SA3')
+qa_2837_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2837.SA3')
+qa_2843_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2843.SA3')
+qa_2849_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2849.SA3')
+qa_2855_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2855.SA3')
+qa_2861_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2861.SA3')
+qa_2867_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2867.SA3')
+qa_2873_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2873.SA3')
+qa_2879_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2879.SA3')
+qa_2885_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2885.SA3')
+qa_2892_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2892.SA3')
+qa_2898_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2898.SA3')
+qa_2904_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2904.SA3')
+qa_2910_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2910.SA3')
+qa_2916_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2916.SA3')
+qa_2922_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2922.SA3')
+qa_2928_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2928.SA3')
+qa_2934_sa3 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2934.SA3')
+qa_2940_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2940.SA3')
 
 # bending magnets 
 
 # correctors 
-cux_2803_sa3 = Drift(l=0.)#Hcor(l=0.0, angle=0.0, eid='CUX.2803.SA3')
-cux_2809_sa3 = Drift(l=0.)#Hcor(l=0.0, angle=0.0, eid='CUX.2809.SA3')
 cax_2813_sa3 = Hcor(l=0.0, angle=0.0, eid='CAX.2813.SA3')
 cay_2813_sa3 = Vcor(l=0.0, angle=0.0, eid='CAY.2813.SA3')
 cbx_2818_sa3 = Hcor(l=0.0, angle=0.0, eid='CBX.2818.SA3')
@@ -202,40 +191,40 @@ u68_2937_sa3 = Undulator(lperiod=0.068, nperiods=73.53, Kx=0.0, Ky=0.0, eid='U68
 # Solenoids 
 
 # lattice 
-cell_sase3 = (ensec_2800_t4, stsec_2800_sa3, d_1, cux_2803_sa3, d_2, bpme_2806_sa3, d_3,
-qa_2806_sa3, d_4, cux_2809_sa3, d_2, bpme_2812_sa3, d_3, qa_2812_sa3, d_7, 
-match_2812_sa3, d_8, cax_2813_sa3, cay_2813_sa3, d_9, u68_2815_sa3, d_10, cbx_2818_sa3, 
-cby_2818_sa3, d_11, bpme_2818_sa3, d_3, qa_2818_sa3, d_13, cax_2819_sa3, cay_2819_sa3, 
-d_9, u68_2821_sa3, d_10, cbx_2824_sa3, cby_2824_sa3, d_11, bpme_2824_sa3, d_3, 
-qa_2824_sa3, d_13, cax_2825_sa3, cay_2825_sa3, d_9, u68_2827_sa3, d_10, cbx_2830_sa3, 
-cby_2830_sa3, d_11, bpme_2830_sa3, d_3, qa_2831_sa3, d_13, cax_2831_sa3, cay_2831_sa3, 
-d_9, u68_2834_sa3, d_10, cbx_2836_sa3, cby_2836_sa3, d_11, bpme_2836_sa3, d_3, 
-qa_2837_sa3, d_13, cax_2838_sa3, cay_2838_sa3, d_9, u68_2840_sa3, d_10, cbx_2842_sa3, 
-cby_2842_sa3, d_11, bpme_2842_sa3, d_3, qa_2843_sa3, d_13, cax_2844_sa3, cay_2844_sa3, 
-d_9, u68_2846_sa3, d_10, cbx_2848_sa3, cby_2848_sa3, d_11, bpme_2849_sa3, d_3, 
-qa_2849_sa3, d_13, cax_2850_sa3, cay_2850_sa3, d_9, u68_2852_sa3, d_10, cbx_2854_sa3, 
-cby_2854_sa3, d_11, bpme_2855_sa3, d_3, qa_2855_sa3, d_13, cax_2856_sa3, cay_2856_sa3, 
-d_9, u68_2858_sa3, d_10, cbx_2860_sa3, cby_2860_sa3, d_11, bpme_2861_sa3, d_3, 
-qa_2861_sa3, d_13, cax_2862_sa3, cay_2862_sa3, d_9, u68_2864_sa3, d_10, cbx_2867_sa3, 
-cby_2867_sa3, d_11, bpme_2867_sa3, d_3, qa_2867_sa3, d_13, cax_2868_sa3, cay_2868_sa3, 
-d_9, u68_2870_sa3, d_10, cbx_2873_sa3, cby_2873_sa3, d_11, bpme_2873_sa3, d_3, 
-qa_2873_sa3, d_13, cax_2874_sa3, cay_2874_sa3, d_9, u68_2876_sa3, d_10, cbx_2879_sa3, 
-cby_2879_sa3, d_11, bpme_2879_sa3, d_3, qa_2879_sa3, d_13, cax_2880_sa3, cay_2880_sa3, 
-d_9, u68_2882_sa3, d_10, cbx_2885_sa3, cby_2885_sa3, d_11, bpme_2885_sa3, d_3, 
-qa_2885_sa3, d_13, cax_2886_sa3, cay_2886_sa3, d_9, u68_2888_sa3, d_10, cbx_2891_sa3, 
-cby_2891_sa3, d_11, bpme_2891_sa3, d_3, qa_2892_sa3, d_13, cax_2892_sa3, cay_2892_sa3, 
-d_9, u68_2894_sa3, d_10, cbx_2897_sa3, cby_2897_sa3, d_11, bpme_2897_sa3, d_3, 
-qa_2898_sa3, d_13, cax_2899_sa3, cay_2899_sa3, d_9, u68_2901_sa3, d_10, cbx_2903_sa3, 
-cby_2903_sa3, d_11, bpme_2903_sa3, d_3, qa_2904_sa3, d_13, cax_2905_sa3, cay_2905_sa3, 
-d_9, u68_2907_sa3, d_10, cbx_2909_sa3, cby_2909_sa3, d_11, bpme_2910_sa3, d_3, 
-qa_2910_sa3, d_13, cax_2911_sa3, cay_2911_sa3, d_9, u68_2913_sa3, d_10, cbx_2915_sa3, 
-cby_2915_sa3, d_11, bpme_2916_sa3, d_3, qa_2916_sa3, d_13, cax_2917_sa3, cay_2917_sa3, 
-d_9, u68_2919_sa3, d_10, cbx_2921_sa3, cby_2921_sa3, d_11, bpme_2922_sa3, d_3, 
-qa_2922_sa3, d_13, cax_2923_sa3, cay_2923_sa3, d_9, u68_2925_sa3, d_10, cbx_2928_sa3, 
-cby_2928_sa3, d_11, bpme_2928_sa3, d_3, qa_2928_sa3, d_13, cax_2929_sa3, cay_2929_sa3, 
-d_9, u68_2931_sa3, d_10, cbx_2934_sa3, cby_2934_sa3, d_11, bpme_2934_sa3, d_3, 
-qa_2934_sa3, d_13, cax_2935_sa3, cay_2935_sa3, d_9, u68_2937_sa3, d_10, cbx_2940_sa3, 
-cby_2940_sa3, d_11, bpme_2940_sa3, d_3, qa_2940_sa3, d_7, ensec_2940_sa3)
+cell_sase3 = (ensec_2800_t4, stsec_2800_sa3, d_1, bpme_2806_sa3, d_2, qa_2806_sa3, d_3,
+bpme_2812_sa3, d_2, qa_2812_sa3, d_5, match_2812_sa3, d_6, cax_2813_sa3, cay_2813_sa3, 
+d_7, u68_2815_sa3, d_8, cbx_2818_sa3, cby_2818_sa3, d_9, bpme_2818_sa3, d_2, 
+qa_2818_sa3, d_11, cax_2819_sa3, cay_2819_sa3, d_7, u68_2821_sa3, d_8, cbx_2824_sa3, 
+cby_2824_sa3, d_9, bpme_2824_sa3, d_2, qa_2824_sa3, d_11, cax_2825_sa3, cay_2825_sa3, 
+d_7, u68_2827_sa3, d_8, cbx_2830_sa3, cby_2830_sa3, d_9, bpme_2830_sa3, d_2, 
+qa_2831_sa3, d_11, cax_2831_sa3, cay_2831_sa3, d_7, u68_2834_sa3, d_8, cbx_2836_sa3, 
+cby_2836_sa3, d_9, bpme_2836_sa3, d_2, qa_2837_sa3, d_11, cax_2838_sa3, cay_2838_sa3, 
+d_7, u68_2840_sa3, d_8, cbx_2842_sa3, cby_2842_sa3, d_9, bpme_2842_sa3, d_2, 
+qa_2843_sa3, d_11, cax_2844_sa3, cay_2844_sa3, d_7, u68_2846_sa3, d_8, cbx_2848_sa3, 
+cby_2848_sa3, d_9, bpme_2849_sa3, d_2, qa_2849_sa3, d_11, cax_2850_sa3, cay_2850_sa3, 
+d_7, u68_2852_sa3, d_8, cbx_2854_sa3, cby_2854_sa3, d_9, bpme_2855_sa3, d_2, 
+qa_2855_sa3, d_11, cax_2856_sa3, cay_2856_sa3, d_7, u68_2858_sa3, d_8, cbx_2860_sa3, 
+cby_2860_sa3, d_9, bpme_2861_sa3, d_2, qa_2861_sa3, d_11, cax_2862_sa3, cay_2862_sa3, 
+d_7, u68_2864_sa3, d_8, cbx_2867_sa3, cby_2867_sa3, d_9, bpme_2867_sa3, d_2, 
+qa_2867_sa3, d_11, cax_2868_sa3, cay_2868_sa3, d_7, u68_2870_sa3, d_8, cbx_2873_sa3, 
+cby_2873_sa3, d_9, bpme_2873_sa3, d_2, qa_2873_sa3, d_11, cax_2874_sa3, cay_2874_sa3, 
+d_7, u68_2876_sa3, d_8, cbx_2879_sa3, cby_2879_sa3, d_9, bpme_2879_sa3, d_2, 
+qa_2879_sa3, d_11, cax_2880_sa3, cay_2880_sa3, d_7, u68_2882_sa3, d_8, cbx_2885_sa3, 
+cby_2885_sa3, d_9, bpme_2885_sa3, d_2, qa_2885_sa3, d_11, cax_2886_sa3, cay_2886_sa3, 
+d_7, u68_2888_sa3, d_8, cbx_2891_sa3, cby_2891_sa3, d_9, bpme_2891_sa3, d_2, 
+qa_2892_sa3, d_11, cax_2892_sa3, cay_2892_sa3, d_7, u68_2894_sa3, d_8, cbx_2897_sa3, 
+cby_2897_sa3, d_9, bpme_2897_sa3, d_2, qa_2898_sa3, d_11, cax_2899_sa3, cay_2899_sa3, 
+d_7, u68_2901_sa3, d_8, cbx_2903_sa3, cby_2903_sa3, d_9, bpme_2903_sa3, d_2, 
+qa_2904_sa3, d_11, cax_2905_sa3, cay_2905_sa3, d_7, u68_2907_sa3, d_8, cbx_2909_sa3, 
+cby_2909_sa3, d_9, bpme_2910_sa3, d_2, qa_2910_sa3, d_11, cax_2911_sa3, cay_2911_sa3, 
+d_7, u68_2913_sa3, d_8, cbx_2915_sa3, cby_2915_sa3, d_9, bpme_2916_sa3, d_2, 
+qa_2916_sa3, d_11, cax_2917_sa3, cay_2917_sa3, d_7, u68_2919_sa3, d_8, cbx_2921_sa3, 
+cby_2921_sa3, d_9, bpme_2922_sa3, d_2, qa_2922_sa3, d_11, cax_2923_sa3, cay_2923_sa3, 
+d_7, u68_2925_sa3, d_8, cbx_2928_sa3, cby_2928_sa3, d_9, bpme_2928_sa3, d_2, 
+qa_2928_sa3, d_11, cax_2929_sa3, cay_2929_sa3, d_7, u68_2931_sa3, d_8, cbx_2934_sa3, 
+cby_2934_sa3, d_9, bpme_2934_sa3, d_2, qa_2934_sa3, d_11, cax_2935_sa3, cay_2935_sa3, 
+d_7, u68_2937_sa3, d_8, cbx_2940_sa3, cby_2940_sa3, d_9, bpme_2940_sa3, d_2, 
+qa_2940_sa3, d_5, ensec_2940_sa3)
 # power supplies 
 
 #  

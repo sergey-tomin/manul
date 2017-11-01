@@ -97,10 +97,12 @@ class OrbitInterface:
     Main class for orbit correction
     """
     def __init__(self, parent):
-        self.bpms4remove = ["BPMS.99.I1", "BPMS.192.B1"]
-        self.corrs4remove = ["CBB.98.I1", "CBB.100.I1", "CBB.101.I1","CBB.191.B1", "CBB.193.B1", "CBB.202.B1",
-            'CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
         self.parent = parent
+        self.bpms4remove = self.parent.uncheck_bpms #["BPMS.99.I1", "BPMS.192.B1"]
+        self.corrs4remove = self.parent.uncheck_corrs #["CBB.98.I1", "CBB.100.I1", "CBB.101.I1","CBB.191.B1", "CBB.193.B1", "CBB.202.B1",
+           # 'CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
+        self.svd_epsilon_x = self.parent.svd_epsilon_x
+        self.svd_epsilon_y =self.parent.svd_epsilon_y
         self.ui = parent.ui
         self.online_calc = True
         self.reset_undo_database()
@@ -719,7 +721,7 @@ class OrbitInterface:
             self.calc_correction[cor.id] = cor.angle
         
         alpha = self.ui.sb_alpha.value()
-        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=1e-3, epsilon_y=1e-3)
+        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.svd_epsilon_x, epsilon_y=self.svd_epsilon_y)
 
         for cor in self.corrs:
             self.calc_correction[cor.id] = cor.angle

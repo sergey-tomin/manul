@@ -1,1 +1,1 @@
-{"lattice": "", "show_correction_result": 2, "nreadings": 20, "nlast": 8}
+{"show_correction_result": 2, "nlast": 8, "nreadings": 20, "lattice": "", "epsilon_x": 0.01, "epsilon_y": 0.01, "uncheck_corrs": [""], "uncheck_bpms": ["BPMS.99.I1", "BPMS.192.B1", "BPMR.608.L3", "BPMR.1112.L3", "BPMC.1454.L3", "BPMR.1184.L3", "BPMR.1430.L3"]}

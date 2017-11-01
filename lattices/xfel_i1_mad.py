@@ -63,9 +63,8 @@ d_79 = Drift(l=0.20115, eid='D_79')
 d_80 = Drift(l=0.38, eid='D_80')
 d_81 = Drift(l=0.28115, eid='D_81')
 d_82 = Drift(l=0.26285, eid='D_82')
-d_83 = Drift(l=0.3643, eid='D_83')
-d_85 = Drift(l=0.23515, eid='D_85')
-d_86 = Drift(l=0.53115, eid='D_86')
+d_83 = Drift(l=0.74945, eid='D_83')
+d_84 = Drift(l=0.53115, eid='D_84')
 
 # quadrupoles 
 q_37_i1 = Quadrupole(l=0.2136, k1=-1.114451709, tilt=0.0, eid='Q.37.I1')
@@ -156,8 +155,6 @@ bpmf_52_i1 = Monitor(eid='BPMF.52.I1')
 bpma_55_i1 = Monitor(eid='BPMA.55.I1')
 bpma_57_i1 = Monitor(eid='BPMA.57.I1')
 bpma_59_i1 = Monitor(eid='BPMA.59.I1')
-bpmatest_60_i1 = Drift(l=0)#Monitor(eid='BPMATEST.60.I1')
-bpmatest_61_i1 = Drift(l=0)#Monitor(eid='BPMATEST.61.I1')
 
 # sextupoles 
 
@@ -193,7 +190,7 @@ tdsa_52_i1 = Cavity(l=0.7, v=0.0, freq=2800000.0, phi=0.0, eid='TDSA.52.I1')
 solb_23_i1 = Solenoid(l=0.0, k=0.0, eid='SOLB.23.I1')
 
 # lattice 
-cell_i1 = (stsec_23_i1, stsub_23_i1, gun_23_i1, d_1, solb_23_i1, d_2, ckx_23_i1,
+cell_i1 = (stsec_23_i1, stsub_23_i1, gun_23_i1, d_1, solb_23_i1, d_2, ckx_23_i1, 
 cky_23_i1, d_3, ckx_24_i1, cky_24_i1, d_4, bpmg_24_i1, d_5, scrn_24_i1, 
 fcup_24_i1, d_6, ensub_24_i1, stsub_24i_i1, d_7, tora_25_i1, d_8, scrn_25i_i1, 
 fcup_25i_i1, d_9, bpmg_25i_i1, d_10, dcm_25_i1, d_11, ckx_25_i1, cky_25_i1, 
@@ -215,8 +212,7 @@ qi_53_i1, d_66, qi_54_i1, d_67, stlat_55_i1, d_68, match_55_i1, otrc_55_i1,
 d_69, ciy_55_i1, d_5, bpma_55_i1, d_71, qi_55_i1, d_72, otrc_56_i1, 
 d_69, cix_57_i1, d_5, bpma_57_i1, d_71, qi_57_i1, d_72, otrc_58_i1, 
 d_77, ciy_58_i1, d_78, qi_59_i1, d_79, bpma_59_i1, d_80, otrc_59_i1, 
-d_81, qi_60_i1, d_82, tora_60_i1, d_83, bpmatest_60_i1, d_5, bpmatest_61_i1, 
-d_85, qi_61_i1, d_86, ensub_62_i1)
+d_81, qi_60_i1, d_82, tora_60_i1, d_83, qi_61_i1, d_84, ensub_62_i1)
 # power supplies 
 
 #  
