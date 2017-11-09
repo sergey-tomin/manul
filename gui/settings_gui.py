@@ -7,22 +7,40 @@ from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QMessageBox, QApplication,QM
 import os
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
-from gui.UISettings import *
+from gui.UISettings import Ui_Form
 import json
 
 
 class ManulSettings(QWidget):
     def __init__(self, parent=None):
         super().__init__()
+        #QWidget.__init__(self, parent)
         self.master = parent
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        #self.setStyleSheet("background-color:black;")
         self.loadStyleSheet()
         #self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.load_state(filename=self.master.config_dir + "settings.json")
+
+
         self.ui.pb_apply.clicked.connect(self.apply_settings)
+        self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
         self.ui.pb_cancel.clicked.connect(self.close)
 
+        self.load_state(filename=self.master.config_dir + "settings.json")
+
+
+    def single_shot_set(self):
+        if self.ui.cb_single_shot.isChecked():
+            self.ui.sb_nreadings.setEnabled(False)
+            self.ui.sb_nlast.setEnabled(False)
+            self.ui.label_2.setEnabled(False)
+            self.ui.label_8.setEnabled(False)
+        else:
+            self.ui.sb_nreadings.setEnabled(True)
+            self.ui.sb_nlast.setEnabled(True)
+            self.ui.label_2.setEnabled(True)
+            self.ui.label_8.setEnabled(True)
 
     def apply_settings(self):
         update = self.question_box("Rewrite Settings?")
@@ -42,6 +60,15 @@ class ManulSettings(QWidget):
         table["epsilon_y"] = self.ui.sb_epsilon_y.value()
         table["uncheck_corrs"] = self.string2list(self.ui.te_corrs.toPlainText())
         table["uncheck_bpms"] = self.string2list(self.ui.te_bpms.toPlainText())
+        table["single_shot"] = self.ui.cb_single_shot.checkState()
+
+        table["le_cl_energy"] = self.ui.le_cl_energy.text()
+        table["le_b2_energy"] = self.ui.le_b2_energy.text()
+        table["le_b1_energy"] = self.ui.le_b1_energy.text()
+        table["le_i1_energy"] = self.ui.le_i1_energy.text()
+
+        table["co_nlast"] = self.ui.sb_co_nlast.value()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -69,6 +96,15 @@ class ManulSettings(QWidget):
         if "epsilon_y" in table.keys():  self.ui.sb_epsilon_y.setValue(table["epsilon_y"])
         if "uncheck_corrs" in table.keys(): self.ui.te_corrs.setPlainText(self.list2string(table["uncheck_corrs"]))
         if "uncheck_bpms" in table.keys():  self.ui.te_bpms.setPlainText(self.list2string(table["uncheck_bpms"]))
+        if "single_shot" in table.keys(): self.ui.cb_single_shot.setCheckState(table["single_shot"])
+
+        if "le_cl_energy" in table.keys(): self.ui.le_cl_energy.setText(table["le_cl_energy"])
+        if "le_b2_energy" in table.keys(): self.ui.le_b2_energy.setText(table["le_b2_energy"])
+        if "le_b1_energy" in table.keys(): self.ui.le_b1_energy.setText(table["le_b1_energy"])
+        if "le_i1_energy" in table.keys(): self.ui.le_i1_energy.setText(table["le_i1_energy"])
+
+        if "co_nlast" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
+
 #        a = table["uncheck_corrs"].split(",")
 #        a = [text.replace(" ", "") for text in a]
 #        a = [text.replace("\n", "") for text in a]
@@ -96,10 +132,10 @@ class ManulSettings(QWidget):
     def loadStyleSheet(self):
         """ Load in the dark theme style sheet. """
         try:
-            self.cssfile = "gui/style.css"
-            print("load style")
+            self.cssfile = self.master.gui_dir +"style.css"
+            print(self.cssfile)
             with open(self.cssfile, "r") as f:
-                print(f)
+                #print(f)
                 self.setStyleSheet(f.read())
         except IOError:
             print('No style sheet found!')

@@ -327,76 +327,7 @@ class OrbitInterface:
             self.undo_data_base.append(old_corrs_kicks)
             self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
 
-    #def read_all_bpms(self):
-    #    bpm_server = "ORBIT"
-    #    orbit_x = self.parent.mi.get_value("XFEL.DIAG/" + bpm_server + "/*/X.SA1")
-    #    orbit_y = self.parent.mi.get_value("XFEL.DIAG/" + bpm_server + "/*/Y.SA1")
-    #    names = np.array([data["str"] for data in orbit_x["data"]])
-    #    values_x = np.array([data["float"] for data in orbit_x["data"]])
-    #    values_y = np.array([data["float"] for data in orbit_y["data"]])
 
-
-
-
-    #def read_bpms(self, n_readings, n_last_readings):
-    #    """
-    #    Method to read from MI BPMs (X and Y: mm -> m) and checks charge on the BPMs
-    #    if the charge below charge_thresh return False
-    #
-    #    :param n_readings:
-    #    :param n_last_readings:
-    #    :return:
-    #    """
-    #
-    #    if n_last_readings> n_readings:
-    #        print("wrong settings")
-    #        return
-    #
-    #    charge_thresh = 0.005
-    #    bpms = self.get_dev_from_cb_state(self.bpms)
-    #    beam_on = True
-    #    for i in range(n_readings):
-    #
-    #        for elem in bpms:
-    #            if "x_array" not in elem.__dict__:
-    #                elem.x_array = []
-    #            if "y_array" not in elem.__dict__:
-    #                elem.y_array = []
-    #
-    #            try:
-    #
-    #                charge = elem.mi.get_charge()
-    #                if charge < charge_thresh:
-    #                    beam_on = False
-    #                    continue
-    #
-    #                x_mm, y_mm = elem.mi.get_pos()
-    #
-    #                if np.isnan(x_mm) or np.isnan(y_mm):
-    #                    print("BPM: " + elem.id + " was unchecked NAN")
-    #                    #elem.ui.uncheck()
-    #                    continue
-    #                elem.x_array.append(x_mm/1000.)
-    #                elem.y_array.append(y_mm/1000.)
-    #            except:
-    #                print("BPM: " + elem.id + " error reading")
-    #        time.sleep(0.1)
-    #
-    #    for elem in bpms:
-    #        if "x_array" not in elem.__dict__ or "y_array" not in elem.__dict__ :
-    #            elem.ui.uncheck()
-    #            print("no data")
-    #            continue
-    #        elif len(elem.x_array) == 0 or len(elem.y_array) == 0:
-    #            elem.ui.uncheck()
-    #            print("no data")
-    #            continue
-    #        else:
-    #            elem.x = np.mean(np.array(elem.x_array)[-n_last_readings:])   # in [m]
-    #            elem.y = np.mean(np.array(elem.y_array)[-n_last_readings:])   # in [m]
-    #            elem.ui.set_value((elem.x*1000., elem.y*1000))                # table in [mm]
-    #
-    #    return beam_on
 
     def read_correctors(self):
         """
@@ -429,22 +360,9 @@ class OrbitInterface:
         :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
         """
 
-        #self.online_calc = False
-        #
-        #for elem in self.corrs:
-        #    elem.kick_mrad = elem.mi.get_value()
-        #    elem.angle_read = elem.kick_mrad*1e-3
-        #    elem.i_kick = elem.kick_mrad
-        #    elem.ui.set_init_value(elem.kick_mrad)
-        #    elem.ui.set_value(elem.kick_mrad)
-        #
-        #self.online_calc = True
-        #self.parent.lat.update_transfer_maps()
         self.read_correctors()
 
         charge_thresh = 0.005
-
-
 
         bpms = self.get_dev_from_cb_state(self.bpms)
 
@@ -469,30 +387,6 @@ class OrbitInterface:
         self.update_plot()
         return beam_on
 
-
-
-    #def update_cors_plot(self):
-    #    """
-    #    Method to update corrector bars on the plot.
-    #    High of the bars depends on the corrector amplitude
-    #
-    #    :return:
-    #    """
-    #
-    #    kicks = [elem.kick_mrad for elem in self.corrs]
-    #    self.plot_cor.setYRange(np.floor(min(kicks)), np.ceil(max(kicks)))
-    #
-    #    for elem in self.corrs:
-    #        if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 0.001:
-    #            self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
-    #            self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
-    #        else:
-    #            self.ui.table_cor.item(elem.row, 1).setForeground(QtGui.QColor(255, 255, 255))  # white
-    #            self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
-    #        r = self.r_items[elem.ui.row]
-    #        sizes = r.init_params
-    #        sizes[3] = elem.kick_mrad/self.cor_ampl
-    #        r.setRect(sizes[0]-0.1, sizes[1], sizes[2]+0.1, sizes[3])
 
     def calc_orbit(self):
         """

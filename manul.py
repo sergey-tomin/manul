@@ -78,6 +78,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.optimizer_path = self.path2ocelot + "ocelot" + os.sep + "optimizer" + os.sep
         self.config_dir = self.path2manul + "manul" + os.sep + "configs" + os.sep
+        self.gui_dir = self.path2manul + "manul" + os.sep + "gui" + os.sep
         self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
@@ -90,9 +91,10 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.logbook = "xfellog"
         self.settings = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
-
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
+        if self.mi.__class__ == TestMachineInterface:
+            self.debug_mode = True
         self.ui = MainWindow(self)
 
         self.show_correction_result = True
@@ -202,10 +204,18 @@ class ManulInterfaceWindow(QMainWindow):
         self.lattice_settings = table["lattice"]
         self.svd_epsilon_x = table["epsilon_x"]
         self.svd_epsilon_y = table["epsilon_y"]
-        self.uncheck_corrs = table["uncheck_corrs"] 
+        self.uncheck_corrs = table["uncheck_corrs"]
         self.uncheck_bpms = table["uncheck_bpms"]
-        
-        
+
+        self.le_cl_energy = table["le_cl_energy"]
+        self.le_b2_energy = table["le_b2_energy"]
+        self.le_b1_energy = table["le_b1_energy"]
+        self.le_i1_energy = table["le_i1_energy"]
+
+        self.single_shot_flag = table["single_shot"]
+
+        self.co_nlast_bpms = table["co_nlast"]
+
         print("LOAD State")
 
     def update_table(self):

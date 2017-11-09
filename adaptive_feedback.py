@@ -50,6 +50,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.ui = parent.parent.ui
         self.ref_aver_x = []
         self.ref_aver_y = []
+        self.nring = 30
         #self.Form = parent.parent
         #print("load style")
         self.configs_dir = "./configs/"
@@ -63,6 +64,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbits_y = []
         self.orbit_s = []
         self.target_values = []
+        self.target_filtered = []
         self.nreadings = 100
         self.feedback_timer = pg.QtCore.QTimer()
         self.feedback_timer.timeout.connect(self.auto_correction)
@@ -73,8 +75,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.add_orbit_plot()
         self.add_objective_func_plot()
         self.objective_func = None
-        self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")
-        self.le_of.setText("np.mean(np.array(A)[:,1])")
+        #self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")
+        #self.le_of.setText("np.mean(np.array(A)[:,1])")
         self.le_a.textChanged.connect(self.check_address)
         self.le_b.textChanged.connect(self.check_address)
         self.le_c.textChanged.connect(self.check_address)
@@ -89,7 +91,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cur_go_x = []
         self.cur_go_y = []
         self.cb_load_settings.addItem("SASE1 launch")
-        #self.cb_load_settings.addItem("SASE1 aircoils")
+        self.cb_load_settings.addItem("SASE1 aircoils")
         self.cb_load_settings.setCurrentIndex(0)
         self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
@@ -108,6 +110,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         table["go_recalc_delay"] = self.sb_go_recalc_delay.value()
         table["ref_orbit_nread"] = self.sb_ref_orbit_nread.value()
         table["averaging"] = self.sb_averaging.value()
+
+        table["le_a"] = self.le_a.text()
+        table["le_b"] = self.le_b.text()
+        table["le_c"] = self.le_c.text()
+        table["le_of"] = self.le_of.text()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         # pickle.dump(table, filename)
@@ -131,6 +139,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.sb_go_recalc_delay.setValue(table["go_recalc_delay"] )
         self.sb_ref_orbit_nread.setValue(table["ref_orbit_nread"])
         self.sb_averaging.setValue(table["averaging"])
+
+        if "le_a" in table.keys(): self.le_a.setText(table["le_a"])
+        if "le_b" in table.keys(): self.le_b.setText(table["le_b"])
+        if "le_c" in table.keys(): self.le_c.setText(table["le_c"])
+        if "le_of" in table.keys(): self.le_of.setText(table["le_of"])
+
         print("LOAD State")
         return corrs, bpms
 
@@ -159,9 +173,6 @@ class UIAFeedBack(QWidget, Ui_Form):
                 bpm.ui.uncheck()
         self.orbit_class.correct()
         self.orbit_class.golden_orbit.set_golden_orbit()
-
-
-
 
     def loop(self):
         self.counter += 1
@@ -208,13 +219,12 @@ class UIAFeedBack(QWidget, Ui_Form):
 
 
         if self.pb_start_statistics.text() == "Statistics Accum Off":
-            self.statistics_timer.stop()
-            #self.stat_thread.stop()
-            self.pb_start_statistics.setStyleSheet("color: rgb(85, 255, 127);")
-            self.pb_start_statistics.setText("Statistics Accum On")
+            self.stop_statistics()
+
         else:
             self.nreadings = self.sb_array_len.value()
             self.target_values = [] #deque(maxlen=self.nreadings)
+            self.target_filtered = []
             self.orbits_x = []
             self.orbits_y = []
             self.orbit_s = [] #deque(maxlen=self.nreadings)
@@ -429,13 +439,15 @@ class UIAFeedBack(QWidget, Ui_Form):
 
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
-        if not beam_on:
+
+        if not beam_on and not self.debug_mode:
             return beam_on
-        print("read data")
         target = self.read_objective_function()
+        print("read data, target: ", target)
         if target == None:
             self.stop_statistics()
             return None
+
         if len(self.target_values) >= self.nreadings:
             self.target_values = self.target_values[1:]
             #self.orbits_x = np.roll(self.orbits_x, -1) #self.orbits_x[1:]
@@ -449,15 +461,28 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.orbits_x[len(self.target_values)-1] = orbit_x
         #self.orbits_y[len(self.target_values)-1] = orbit_y
         self.orbit_s = orbit_s
+        self.filter_target_func()
 
         self.update_plot_counter += 1
         if self.update_plot_counter%2 == 0:
             self.update_obj_plot()
         return beam_on
 
+    def filter_target_func(self):
+        if len(self.target_values) <= self.nring:
+            y_nring = np.mean(self.target_values)
+        else:
+            y_nring = np.mean(self.target_values[-self.nring:])
+        if len(self.target_filtered) >= self.nreadings:
+            self.target_filtered = self.target_filtered[1:]
+        self.target_filtered = np.append(self.target_filtered, y_nring)
+
+
     def update_obj_plot(self, ):
 
         self.obj_curve.setData(x=np.arange(len(self.target_values)), y=np.array(self.target_values))
+
+        self.obj_curve_filtered.setData(x=np.arange(len(self.target_filtered)), y=np.array(self.target_filtered))
 
     def update_orb_plot(self):
         self.orb_y.setData(x=self.orbit_s, y= self.ref_aver_x)
@@ -465,6 +490,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
 
     def stop_statistics(self):
+        self.stop_feedback()
         self.statistics_timer.stop()
         self.pb_start_statistics.setStyleSheet("color: rgb(85, 255, 127);")
         self.pb_start_statistics.setText("Statistics Accum On")
@@ -667,13 +693,17 @@ class UIAFeedBack(QWidget, Ui_Form):
         layout.addWidget(win, 0, 0)
 
 
-        self.plot_obj.addLegend()
+
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=3)
-        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='X calc', antialias=True)
+        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Obj Func', antialias=True)
 
         self.plot_obj.addItem(self.obj_curve)
-
+        color = QtGui.QColor(255, 0, 0)
+        pen = pg.mkPen(color, width=4)
+        self.obj_curve_filtered = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Filtered', antialias=True)
+        self.plot_obj.addItem(self.obj_curve_filtered)
+        self.plot_obj.addLegend()
         #color = QtGui.QColor(255, 0, 0)
         #pen = pg.mkPen(color, width=4, symbolPen='o')
         #self.obj_plot2 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X', antialias=True)

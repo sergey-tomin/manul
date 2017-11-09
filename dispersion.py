@@ -80,21 +80,24 @@ class DispersionInterface:
         return x_mean, y_mean, x_std, y_std
 
     def get_section_energy(self):
+
         current_lat = self.ui.cb_lattice.currentText()
         if current_lat in ["CL", "SASE1", "T4", "SASE3"]:
-            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")
+            energy = self.parent.mi.get_value(self.parent.le_cl_energy)
+            #energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")
         elif current_lat in ["B2"]:
-            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/B2/ENERGY.SA1")
+            energy = self.parent.mi.get_value(self.parent.le_b2_energy)
         elif current_lat in ["B1"]:
-            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/B1/ENERGY.SA1")
+            energy = self.parent.mi.get_value(self.parent.le_b1_energy)
         else:
-            energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/LH/ENERGY.SA1")
+            energy = self.parent.mi.get_value(self.parent.le_i1_energy)
         return energy
+
 
 
     def dispersion_measurement(self):
         beam_on = self.parent.orbit.read_orbit()
-        if not beam_on:
+        if not beam_on and not self.parent.debug_mode:
             print("BEAM OFF")
             return
 
@@ -137,10 +140,15 @@ class DispersionInterface:
             x_mean, y_mean, x_std, y_std = self.get_orbit(bpms)
             X_mean.append(x_mean)
             Y_mean.append(y_mean)
-            self.plot_orbits(multilines_x[i], s_bpm, x_mean*1000)
-            self.plot_orbits(multilines_y[i], s_bpm, y_mean*1000)
+            self.plot_orbits(multilines_x[i], s_bpm + self.parent.lat_zi, x_mean*1000)
+            self.plot_orbits(multilines_y[i], s_bpm + self.parent.lat_zi, y_mean*1000)
 
-        energy = self.get_section_energy()
+        try:
+            energy = self.get_section_energy()
+        except:
+            self.cavity.set_value(V_init)
+            self.parent.error_box(message = "Can not read beam energy from the DOOCS. Cavity set value back.")
+            return
         print("ENERGY = ", energy)
         dp_over_p = (volts_list[-1] - volts_list[0]) / energy
         if dp_over_p != 0:
@@ -159,7 +167,7 @@ class DispersionInterface:
         Dx_des = np.array([bpm.Dx_des for bpm in bpms])
         Dy_des = np.array([bpm.Dy_des for bpm in bpms])
 
-        self.plot_dispersion(s_bpm, Dx, Dy, Dx_des, Dy_des)
+        self.plot_dispersion(s_bpm + self.parent.lat_zi, Dx, Dy, Dx_des, Dy_des)
 
 
     def calculate_disp(self, energy):
@@ -179,8 +187,6 @@ class DispersionInterface:
             bpm.Dy_des = Dy0[i]
 
 
-
-
     def add_orbit_plot(self):
         win = pg.GraphicsLayoutWidget()
         self.plot_x = win.addPlot(row=0, col=0)
@@ -195,9 +201,9 @@ class DispersionInterface:
 
         self.plot_x.setXLink(self.plot_y)
         #self.plot_x.hideAxis("bottom")
-
+        self.plot_x.setLabel('left', 'X Orbit', 'mm')
         self.plot_y.showGrid(1, 1, 1)
-
+        self.plot_y.setLabel('left', 'Y Orbit', 'mm')
         self.plot_y.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
         layout = QtGui.QGridLayout()
 
@@ -213,10 +219,11 @@ class DispersionInterface:
         self.leg_y.setParentItem(self.plot_y.graphicsItem())
 
         self.plot_Dx = win.addPlot(row=2, col=0)
+        self.plot_Dx.setLabel('left', 'Dx', 'm')
         axis = self.plot_Dx.getAxis("bottom")
         axis.setStyle(showValues=False)
         self.plot_Dy = win.addPlot(row=3, col=0)
-
+        self.plot_Dy.setLabel('left', 'Dy', 'm')
         self.plot_Dy.showGrid(1, 1, 1)
         self.plot_Dy.setXLink(self.plot_y)
         #win.ci.layout.setRowMaximumHeight(2, 150)
@@ -240,13 +247,13 @@ class DispersionInterface:
         pen = pg.mkPen(color, width=3, symbolPen='o')
         self.Dy_curve = pg.PlotDataItem(x=[], y=[], pen=pen, name='Dy', antialias=True)
         self.plot_Dy.addItem(self.Dy_curve)
-        self.plot_Dx.addLegend()
+        self.plot_Dy.addLegend()
 
         color = QtGui.QColor(0, 255, 255)
         pen = pg.mkPen(color, width=1, symbolPen='o')
         self.Dy_des_curve = pg.PlotDataItem(x=[], y=[], pen=pen, name='Dy des', antialias=True)
         self.plot_Dy.addItem(self.Dy_des_curve)
-        self.plot_Dx.addLegend()
+        self.plot_Dy.addLegend()
 
 
     def setup_multi_plot(self, volts_list, plot, legend, ):
