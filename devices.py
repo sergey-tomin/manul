@@ -204,15 +204,22 @@ class MIOrbit(Device):
         #self.charge = []
 
     def read_positions(self):
-        #try:
-        orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
-        orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
-        #except:
+        try:
+            orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+            orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+        except Exception as e:
+            logger.critical("read_positions: self.mi.get_value: " + e)
+            raise e
         #    print("ERROR: reading from DOOCS")
         #    return False
         #print(orbit_x)
-        names_x = [data["str"] for data in orbit_x]
-        names_y = [data["str"] for data in orbit_y]
+        try:
+            names_x = [data["str"] for data in orbit_x]
+            names_y = [data["str"] for data in orbit_y]
+        except Exception as e:
+            logger.critical("read_positions: names_x = [data['str'] for data in orbit_x]" + str(e))
+            raise e
+
         if not np.array_equal(names_x, names_y):
             logger.warning(" MIOrbit: read_positions: X and Y orbits are not equal")
         self.x = np.array([data["float"] for data in orbit_x])

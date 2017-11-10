@@ -575,12 +575,13 @@ class OrbitInterface:
         logger.debug("calculate_correction: .. OK")
 
     def read_and_correct(self):
+        logger.debug("read_and_correct ... ")
         self.read_orbit()
 
         self.uncheck_red()
 
         self.correct()
-
+        logger.debug("read_and_correct ... OK")
 
     def correct(self):
         """

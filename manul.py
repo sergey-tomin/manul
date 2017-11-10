@@ -19,7 +19,7 @@ import logging
 
 
 # filename="logs/afb.log",
-logging.basicConfig(filename="logs/manul.log", level=logging.INFO)
+logging.basicConfig(filename="logs/manul.log", level=logging.DEBUG)
 
 path = os.path.realpath(__file__)
 indx = path.find("manul")
