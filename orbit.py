@@ -1,6 +1,7 @@
 """
 Sergey Tomin. XFEL/DESY, 2017.
 """
+import logging
 from threading import Thread, Event
 import pyqtgraph as pg
 from PyQt5 import QtGui, QtCore
@@ -15,6 +16,8 @@ from devices import *
 from golden_orbit import GoldenOrbit
 from adaptive_feedback import UIAFeedBack
 from ocelot.optimizer.mint.xfel_interface import *
+logger = logging.getLogger(__name__)
+
 
 class ResponseMatrixCalculator(Thread):
     """
@@ -38,17 +41,17 @@ class ResponseMatrixCalculator(Thread):
         try:
             self.rm.load(self.rm_filename)
         except:
-            print("No Response Matrix")
+            logger.error("ResponseMatrixCalculator: No Response Matrix")
             return False
             
         if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
-            print("dump calculated ORM")
+            logger.debug("ResponseMatrixCalculator: dump calculated ORM")
             self.rm.cor_names = cor_names
             self.rm.bpm_names = bpm_names
             self.rm.matrix = inj_matrix
             self.rm.dump(filename=self.rm_filename)
         else:
-            print("inject calculated ORM")
+            logger.debug("ResponseMatrixCalculator: inject calculated ORM")
             self.rm.inject(cor_names, bpm_names, inj_matrix)
 
         if self.rm_filename != None:
@@ -79,13 +82,13 @@ class AutoCorrection(Thread):
             self.orbit_class.apply_kicks()
             time.sleep(0.5)
         else:
-            print("no beam")
+            logger.debug("AutoCorrection->one_correction: no beam")
             time.sleep(1)
     
     def run(self):
         while not self.stop_event:
             self.one_correction()
-            print("correct")
+            logger.debug("AutoCorrection->run: correct")
             time.sleep(self.delay)
             
     def stop(self):
@@ -161,9 +164,7 @@ class OrbitInterface:
         self.adaptive_feedback = None
         #self.adaptive_feedback = None
         #self.auto_correction = AutoCorrection(orbit_class=self)
-        self.debug_mode = False
-        if self.parent.mi.__class__ == TestMachineInterface:
-            self.debug_mode = True
+        self.debug_mode = self.parent.debug_mode
         
         self.ui.actionSave_corrs.triggered.connect(self.save_correctors)
         self.ui.actionLoad_corrs.triggered.connect(self.restore_correctors)
@@ -269,8 +270,8 @@ class OrbitInterface:
     def save_correctors(self):
         corrs_save = {}
         for cor in self.corrs:
-            kick_mrad = cor.ui.get_value()
-            print(cor.id," save: ", cor.ui.get_init_value())
+            #kick_mrad = cor.ui.get_value()
+            logger.debug("save correctors: " + cor.id + " " + str(cor.ui.get_init_value()))
             corrs_save[cor.id] = cor.ui.get_init_value()
             
         with open("corrs_save.json", 'w') as f:
@@ -288,12 +289,12 @@ class OrbitInterface:
                 inx = cor_ids.index(cor_id)
                 cor = self.corrs[inx]
                 cor.ui.set_value(table[cor.id])
-                print(cor.id," get: ", cor.ui.get_value(), table[cor.id])
+                logger.debug("restore correctors:" + cor.id +" before %s after %s" % (cor.ui.get_value(), table[cor.id]))
         self.online_calc = True
 
     def apply_kicks(self):
         """
-        Methos sends correctors kicks to DOOCS, if strengths below the limits,
+        Methods sends correctors kicks to DOOCS, if strengths below the limits,
         otherwise error box will appear
 
         :return:
@@ -308,7 +309,7 @@ class OrbitInterface:
 
         for cor in corrs:
             kick_mrad = cor.ui.get_value()
-            print(cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            logger.debug("Apply kicks: " + cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
             cor.mi.set_value(kick_mrad)
 
         self.write_old_kicks(corrs)
@@ -371,7 +372,7 @@ class OrbitInterface:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
                 if np.isnan(x_mm) or np.isnan(y_mm):
-                    print("BPM: " + elem.id + " was unchecked NAN")
+                    logger.warning("read bpm: " + elem.id + "NaN -> was unchecked")
                     elem.ui.uncheck()
                 charge = elem.mi.get_charge()
                 if charge < charge_thresh:
@@ -380,7 +381,7 @@ class OrbitInterface:
                 elem.y = y_mm/1000.
                 elem.ui.set_value((x_mm, y_mm))
             except:
-                print("BPM: " + elem.id + " was unchecked ")
+                logger.error("read bpm: " + elem.id + "ERROR during reading -> was unchecked ")
                 elem.ui.uncheck()
         #beam_on = self.read_bpms(n_readings=1, n_last_readings=1)
         #self.update_cors_plot()
@@ -459,16 +460,16 @@ class OrbitInterface:
         :return: True if the corresponding file exists and False if not
         """
 
-        print(self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
+        logger.debug("load_response_matrices: path: " + self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
         try:
             self.orbit.response_matrix.load(self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
         except:
-            print("No Response Matrix")
+            logger.error("load_response_matrices: No Response Matrix")
             return False
         try:
             self.orbit.disp_response_matrix.load(self.parent.rm_files_dir + "DRM_" + self.ui.cb_lattice.currentText() + ".json")
         except:
-            print("No Dispersion Response Matrix")
+            logger.error("load_response_matrices: No Dispersion Response Matrix")
             return True
 
         return True
@@ -481,9 +482,8 @@ class OrbitInterface:
                  False - if the RM does not exist or RM load was failed
         """
         if len(self.orbit.response_matrix.matrix) == 0:
-            print("tring to load response matrix ... Is OK?")
             is_ok = self.load_response_matrices()
-            print(is_ok)
+            logger.debug("is_rm_ok: tring to load response matrix ... Is OK? " + str(is_ok))
             if not is_ok:
                 return is_ok
         cor_list = [cor.id for cor in np.append(orbit.hcors, orbit.vcors)]
@@ -504,11 +504,11 @@ class OrbitInterface:
         if n_bpms < 10:
             self.ui.cb_close_orbit.setChecked(False)
 
-        for i, elem in enumerate(self.orbit.bpms[-5:]):
+        for i, elem in enumerate(self.orbit.bpms[-self.parent.co_nlast_bpms:]):
 
             elem.x_ref = elem.x
             elem.y_ref = elem.y
-            print(elem.id, "set close orbit")
+            logger.debug("close_orbit: set BPM to ref orbit: " + elem.id)
 
     def set_values2correctors(self):
 
@@ -546,7 +546,7 @@ class OrbitInterface:
         self.calculate_correction()
 
     def calculate_correction(self):
-
+        logger.debug("calculate_correction: .. ")
         bpms = self.get_dev_from_cb_state(self.bpms)
         checked_bpms_id = [bpm.id for bpm in bpms]
         self.mi_orbit.get_bpms(bpms)
@@ -556,7 +556,7 @@ class OrbitInterface:
         for elem in bpms:
 
             if np.isnan(elem.x) or np.isnan(elem.y):
-                print("BPM: " + elem.id + " was unchecked NAN")
+                logger.debug("calculate_correction: check BPM: " + elem.id + " NAN -> was unchecked")
                 elem.ui.uncheck()
             if elem.charge < charge_thresh:
                 elem.ui.uncheck()
@@ -572,6 +572,7 @@ class OrbitInterface:
             if elem.id in checked_bpms_id:
                 elem.ui.check()
 
+        logger.debug("calculate_correction: .. OK")
 
     def read_and_correct(self):
         self.read_orbit()
@@ -589,7 +590,7 @@ class OrbitInterface:
 
         :return:
         """
-
+        logger.debug("correct: ... ")
         #self.read_correctors()
 
 
@@ -615,13 +616,15 @@ class OrbitInterface:
             self.calc_correction[cor.id] = cor.angle
         
         alpha = self.ui.sb_alpha.value()
-        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.svd_epsilon_x, epsilon_y=self.svd_epsilon_y)
+        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.svd_epsilon_x,
+                              epsilon_y=self.svd_epsilon_y, print_log=False)
 
         for cor in self.corrs:
             self.calc_correction[cor.id] = cor.angle
 
         self.set_values2correctors()
 
+        logger.debug("correct: ... OK")
 
     def start_stop_feedback(self):
         """
@@ -681,7 +684,7 @@ class OrbitInterface:
             self.apply_kicks()
             time.sleep(0.5)
         else:
-            print("no beam")
+            logger.info("auto_correction: no beam")
             time.sleep(1)
 
     def get_dev_from_cb_state(self, devs):
@@ -877,7 +880,7 @@ class OrbitInterface:
                 elif elem.__class__ == Vcor:
                     self.vcors.append(elem)
                 else:
-                    print("wrong type")
+                    logger.error("load_devices: wrong device type")
                 devices.append(elem)
 
         return devices
@@ -1081,7 +1084,7 @@ class OrbitInterface:
                 x_bpm = np.append(x_bpm, x_mm - elem.x_ref*1000)
                 y_bpm = np.append(y_bpm, y_mm - elem.y_ref*1000)
             except:
-                print("could not read BPM", elem.id)
+                logger.warning("live_orbit: could not read BPM: " + elem.id)
 
         s_bpm += self.parent.lat_zi
 

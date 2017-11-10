@@ -6,36 +6,48 @@ Sergey Tomin. XFEL/DESY, 2017.
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QFrame, QMessageBox, QMainWindow, QDialog
-#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-#import matplotlib.pyplot as plt
-#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
-#import matplotlib.pyplot as plt
-#normal imports
 import numpy as np
-#import epics
 import sys
 import os
+import time
+import pyqtgraph as pg
+from copy import deepcopy
+from scipy import optimize
+import json
+from importlib import reload
+import logging
 
+
+# filename="logs/afb.log",
+logging.basicConfig(filename="logs/manul.log", level=logging.INFO)
 
 path = os.path.realpath(__file__)
 indx = path.find("manul")
-print("PATH", os.path.realpath(__file__), path[:indx])
+print("PATH to main file: " + os.path.realpath(__file__) + " path to folder"+ path[:indx])
 sys.path.append(path[:indx])
 sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
-if sys.version_info[0] == 2:
-    from imp import reload
-else:
-    from importlib import reload
-import time
-import pyqtgraph as pg
-from gui.gui_main import *
+
+
+from ocelot import *
+from ocelot.gui.accelerator import *
+from ocelot.cpbd.track import *
+
+#from ocelot.optimizer.mint.opt_objects import Device
+from ocelot.optimizer.mint.xfel_interface import *
+
+
 from orbit import OrbitInterface
+from devices import *
+from dispersion import *
+from gui.gui_main import *
+from gui.settings_gui import *
+
+logger = logging.getLogger(__name__)
+
 from lattices.xfel_i1_mad import *
 from lattices.xfel_l1_mad import *
 from lattices.xfel_l2_mad import *
-#from lattices.xfel_l3_no_cl import *
 from lattices.xfel_l3_no_cl_mode_B import *
-#from lattices.xfel_cl import *
 from lattices.xfel_cl_mode_B import *
 from lattices.xfel_tld_892 import *
 from lattices.xfel_sase1_mode_B import *
@@ -43,20 +55,8 @@ from lattices.xfel_sase3_mode_B import *
 try:
     from lattices.xfel_t4 import *
 except:
-    print("NO lattice file xfel_t4.py")
-from ocelot import *
-from ocelot.gui.accelerator import *
-from ocelot.cpbd.track import *
-from ocelot.optimizer.mint.xfel_interface import *
+    logger.error("NO lattice file xfel_t4.py")
 
-from ocelot.optimizer.mint.opt_objects import Device
-from ocelot.optimizer.mint.xfel_interface import *
-import copy
-from scipy import optimize
-from devices import *
-from dispersion import *
-from gui.settings_gui import *
-import json
 
 
 class ManulInterfaceWindow(QMainWindow):
@@ -88,11 +88,10 @@ class ManulInterfaceWindow(QMainWindow):
         # initialize
         QFrame.__init__(self)
 
-
         self.logbook = "xfellog"
         self.settings = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -106,18 +105,18 @@ class ManulInterfaceWindow(QMainWindow):
         self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
 
         lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
-        self.cl_copy = copy.deepcopy(lat.sequence)
+        self.cl_copy = deepcopy(lat.sequence)
 
         lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
-        self.l3_copy = copy.deepcopy(lat.sequence)
+        self.l3_copy = deepcopy(lat.sequence)
 
         lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
-        self.sase1_copy = copy.deepcopy(lat.sequence)
+        self.sase1_copy = deepcopy(lat.sequence)
 
         lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
-        self.sase3_copy = copy.deepcopy(lat.sequence)
+        self.sase3_copy = deepcopy(lat.sequence)
 
-        self.copy_cells = copy.deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
+        self.copy_cells = deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
                                          cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
 
         self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
@@ -195,6 +194,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.settings.show()
 
     def load_settings(self):
+        logger.debug("load settings ... ")
         filename = self.config_dir + "settings.json"
         with open(filename, 'r') as f:
             table = json.load(f)
@@ -216,8 +216,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.single_shot_flag = table["single_shot"]
 
         self.co_nlast_bpms = table["co_nlast"]
-
-        print("LOAD State")
+        logger.debug("load settings ... OK")
 
     def update_table(self):
         for quad in self.quads:
@@ -244,16 +243,6 @@ class ManulInterfaceWindow(QMainWindow):
                 self.corr_list.append(elem)
             if elem.__class__ == Cavity:
                 E += elem.v*cos(elem.phi*np.pi/180.)
-            #if elem.__class__ == Monitor:
-            #    elem.s_pos = L - elem.l/2.
-            #    self.corr_list.append(elem)
-        #self.ui.sb_lat_from.setMaximum(L-30)
-        #self.ui.sb_lat_to.setMaximum(L)
-        #print("L_maximum", L)
-        # self.lat = MagneticLattice(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
-        #                            cell_cl + cell_sase1 + cell_t4 + cell_sase3,
-        #                            # start=start_elem, stop=stop_elem,
-        #                            method=method)
         return self.corr_list
 
     def read_quads(self):
@@ -261,7 +250,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
-            print("Quad."+elem.id," updated. ", "k1="+str(elem.kick_mrad)+ " mrad")
+            logger.debug("Quad."+elem.id + " updated. k1 = "+str(elem.kick_mrad)+ " mrad")
             k1 = elem.kick_mrad/elem.l*1e-3
             elem.k1 = k1
             elem.i_kick = elem.kick_mrad
@@ -274,14 +263,15 @@ class ManulInterfaceWindow(QMainWindow):
                 v = cav.mi.get_value()
             except:
                 v = 0.
+                logger.warning("Could not read cavity voltage: " +cav.id)
             #print("Volt = ", v, cav.mi)
             cav.v = v*0.001
-
+            logger.debug("Cavity: " + cav.id + ":" + str(cav.v))
         self.online_calc = True
         self.lat.update_transfer_maps()
         #TODO: add in GUI option to return design twiss
         self.tws0 = self.back_tracking()
-        print("back_tracking = ", self.tws0)
+        logger.debug("back_tracking result: " + self.tws0)
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
@@ -293,13 +283,9 @@ class ManulInterfaceWindow(QMainWindow):
         update = self.question_box("Reclculate ORM?")
         if update:
             self.orbit.calc_response_matrix(do_DRM_calc=False)
-        #if self.ui.cb_lattice.currentText() == "Arbitrary":
-        #    self.ui.sb_lat_from.setValue(lat_from)
-        #    self.ui.sb_lat_to.setValue(lat_to)
-        #    self.parent.arbitrary_lattice()
-        #self.update_table()
 
     def back_tracking(self):
+        logger.debug("back_tracking: ... ")
         tws0 = self.read_twiss()
         if self.ui.cb_design_tws.isChecked():
             return self.tws_des
@@ -338,6 +324,7 @@ class ManulInterfaceWindow(QMainWindow):
             if elem.__class__  == Cavity:
                 elem.phi += 180
         lat_tmp.update_transfer_maps()
+        logger.debug("back_tracking: ... OK")
         return self.tws0
 
 
@@ -365,7 +352,7 @@ class ManulInterfaceWindow(QMainWindow):
         tws.alpha_x = self.mi.get_value(ch_alpha_x)
         tws.alpha_y = self.mi.get_value(ch_alpha_y)
         #tws.E = self.mi.get_value(ch_energy)*0.001
-        print(tws)
+        logger.debug(tws)
         return tws
 
     def match(self):
@@ -382,12 +369,12 @@ class ManulInterfaceWindow(QMainWindow):
             (tws[-1].beta_y - self.tws_end.beta_y)**2 +
             (tws[-1].alpha_x - self.tws_end.alpha_x)**2 +
             (tws[-1].alpha_y - self.tws_end.alpha_y)**2 )
-            print(err)
+            logger.debug("match -> error_func -> err = " + str(err))
             return err
 
 
         res = optimize.fmin(error_func, x, xtol=0.1)
-        print(res)
+        logger.debug(res)
         for i, quad in enumerate(quads):
             quad.kick_mrad = res[i]
             quad.k1 = res[i]/quad.l/1000.
@@ -396,7 +383,7 @@ class ManulInterfaceWindow(QMainWindow):
 
 
     def apply_coupler_kick(self):
-        print(self.ui.cb_coupler_kick.isChecked())
+        logger.debug("apply_coupler_kick: checkbox:" +str(self.ui.cb_coupler_kick.isChecked()))
         if self.ui.cb_coupler_kick.isChecked():
             for elem in self.lat.sequence:
                 if elem.__class__ == Cavity and not(".AH1." in elem.id):# and not(".A1." in elem.id):
@@ -418,9 +405,11 @@ class ManulInterfaceWindow(QMainWindow):
 
         # calc orbit
         self.orbit.calc_orbit()
+        logger.debug("apply_coupler_kick: OK")
+
 
     def apply_second_order(self):
-        print(self.ui.cb_sec_order.isChecked())
+        logger.debug("apply_second_order: checkbox:" +str(self.ui.cb_sec_order.isChecked()))
         method = MethodTM()
         if self.ui.cb_sec_order.isChecked():
             method.global_method = SecondTM
@@ -430,6 +419,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         # calc orbit
         self.orbit.calc_orbit()
+        logger.debug("apply_second_order: OK")
 
     def arbitrary_lattice(self):
         #current_lat = self.ui.cb_lattice.currentText()
@@ -439,9 +429,7 @@ class ManulInterfaceWindow(QMainWindow):
         lat_to = self.ui.sb_lat_to.value()
         if lat_to - 30 < lat_from:
             self.ui.sb_lat_to.setValue(lat_from+30)
-        
-        # TODO: make
-        # sstart changing of the code
+
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
         s_poss = np.array([cor.s_pos for cor in self.corr_list])
@@ -455,45 +443,23 @@ class ManulInterfaceWindow(QMainWindow):
         # start /stop elements should be correctors !!!
         self.return_lat(start=self.corr_list[idx_frm], stop=self.corr_list[idx_to])
 
-    #def set_arbitrary_positions(self):
-    #    current_lat = self.ui.cb_lattice.currentText()
-    #    if current_lat == "Arbitrary":
-    #        self.return_lat()
-
 
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
+        logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
-        #self.lat = MagneticLattice(cell_i1+cell_l1)
         current_lat = self.ui.cb_lattice.currentText()
         method = MethodTM()
         method.global_method = TransferMap
-        #print("STERT/STOP=", start, stop)
-        
+
         if current_lat == "B1D":
             self.seq = cell_i1 + cell_l1 + cell_b1d
-            #self.lat = MagneticLattice(self.seq, method=method)
-
             self.tws_des = tws_i1
-
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[5])
-
             self.lat_zi = 23.2
-            #print("totlaLen=", self.lat.totalLen + 23.2)
 
         elif current_lat == "Arbitrary":
             self.seq = self.big_sequence
-#            lat_from = self.ui.sb_lat_from.value()
-#            lat_to = self.ui.sb_lat_to.value()
-#            s_poss = np.array([cor.s_pos for cor in self.corr_list])
-#            idx_frm = (np.abs(s_poss - lat_from)).argmin()
-#            idx_to = (np.abs(s_poss - lat_to)).argmin()
-#            if idx_frm == idx_to:
-#                idx_to += 1
-#                self.ui.sb_lat_to.setValue(self.corr_list[idx_to].s_pos)
-            #print(lat_from, lat_to, idx_frm, idx_to)
-            #self.lat = MagneticLattice(self.seq,
-            #                           start=self.corr_list[idx_frm], stop=self.corr_list[idx_to],
-            #                           method=method)
+
             s_poss = np.array([cor.s_pos for cor in self.corr_list])
             idx_frm = 0
             idx_to = 14
@@ -503,7 +469,6 @@ class ManulInterfaceWindow(QMainWindow):
                 
                 idx_frm = (np.abs(s_poss - lat_from)).argmin()
                 idx_to = (np.abs(s_poss - lat_to)).argmin()
-                print(idx_frm, idx_to)
                 start=self.corr_list[idx_frm]
                 stop=self.corr_list[idx_to]
                 
@@ -515,7 +480,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "up to B1":
             self.seq = cell_i1 + cell_l1
-            #self.lat = MagneticLattice(self.seq, method=method)
 
             self.tws_des = tws_i1
 
@@ -525,7 +489,6 @@ class ManulInterfaceWindow(QMainWindow):
             
         elif current_lat == "L1":
             self.seq = cell_l1
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_l1
 
             tmp_lat = MagneticLattice(self.copy_cells[1] )
@@ -534,7 +497,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "B2D":
             self.seq = cell_i1 + cell_l1 + cell_l2 + cell_b2d
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2]  + self.copy_cells[6])
 
@@ -542,7 +504,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "up to B2":
             self.seq = cell_i1 + cell_l1 + cell_l2
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2] )
 
@@ -550,7 +511,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "TLD":
             self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_tld
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
                                       + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4]+ self.copy_cells[8])
@@ -559,7 +519,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "up to TL":
             self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
                                       + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4])
@@ -568,7 +527,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "up to SASE3":
             self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_sase1 + cell_t4 + cell_sase3
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
                                       + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4] + self.copy_cells[9] + self.copy_cells[11] + self.copy_cells[10])
@@ -577,19 +535,15 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "L2":
             self.seq = cell_l2
-            #self.lat = MagneticLattice(self.seq , method=method)
             self.tws_des = tws_l2
             tmp_lat = MagneticLattice( self.copy_cells[2])
 
             self.lat_zi = 229.30069400000002
 
         elif current_lat == "L3":
-            #self.seq = cell_l2 + cell_l3_no_cl + cell_cl
-            #self.lat = MagneticLattice(self.seq,
-            #                           start = engrd_419_b2, stop=mpbpmi_1693_cl, method=method)
+
             self.seq = self.get_slice_sequence(cell_l2 + cell_l3_no_cl + cell_cl, start = engrd_419_b2, stop=mpbpmi_1693_cl)
-            #print("L3", start, stop, len(self.seq))
-            #self.tws_des = tws_l3
+
             self.tws_des = Twiss()
             self.tws_des.beta_x = 20.6928140374
             self.tws_des.beta_y = 6.8214735433
@@ -602,9 +556,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.lat_zi = 396.2191659999965
 
         elif current_lat == "CL":
-            #self.seq = cell_l3_no_cl + cell_cl + cell_sase1
-            #self.lat = MagneticLattice(self.seq,
-            #                           start = bpmr_1307_l3, stop=qa_2253_sa1, method=method)
+
             self.seq = self.get_slice_sequence(cell_l3_no_cl + cell_cl + cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)
             self.tws_des = Twiss()
             #self.tws_des.beta_x = 21.6754251533
@@ -626,15 +578,13 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "I1D":
             self.seq = cell_i1 + cell_i1d
-            #self.lat = MagneticLattice(self.seq, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[5])
 
             self.lat_zi = 23.2
 
         elif current_lat == "SASE1":
-            #self.seq = cell_sase1+cell_t4
-            #self.lat = MagneticLattice(self.seq, stop=ensub_2583_t4, method=method)
+
             self.seq = self.get_slice_sequence(cell_sase1+cell_t4, stop=ensub_2583_t4)
             self.tws_des = tws_sase1
             tmp_lat = MagneticLattice( self.sase1_copy)
@@ -643,17 +593,13 @@ class ManulInterfaceWindow(QMainWindow):
 
         elif current_lat == "T4":
             self.seq = cell_t4
-            #self.lat = MagneticLattice(self.seq , method=method)
             self.tws_des = tws_t4
             tmp_lat = MagneticLattice( self.copy_cells[11])
 
             self.lat_zi = 2438.5169790000195
 
         elif current_lat == "SASE3":
-            #self.seq = cell_t4 + cell_sase3
-            #self.lat = MagneticLattice(self.seq, start=ensub_2583_t4, method=method)
             self.seq = self.get_slice_sequence(cell_t4 + cell_sase3, start=ensub_2583_t4)
-            #self.tws_des = tws_sase3
             self.tws_des = Twiss()
 
             self.tws_des.beta_x = 13.6455956218
@@ -667,18 +613,14 @@ class ManulInterfaceWindow(QMainWindow):
             self.lat_zi = 2560.450479000018
         else:
             self.seq = cell_i1
-            #self.lat = MagneticLattice(cell_i1, method=method)
             self.tws_des = tws_i1
             tmp_lat = MagneticLattice(self.copy_cells[0])
 
             self.lat_zi = 23.2
             
         
-        #print("Create MagnetLat ", start, stop)
         total_len = np.sum([elem.l for elem in self.seq])
-        #names = [elem.id for elem in self.seq]
-        
-        
+
         if current_lat != "Arbitrary":
             self.corr_list = self.correctors_list(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
             self.ui.sb_lat_from.setMinimum(self.lat_zi)
@@ -710,7 +652,7 @@ class ManulInterfaceWindow(QMainWindow):
             
         self.lat_zi = self.ui.sb_lat_from.value()
         self.s_des = np.array(self.s_des)
-        self.tws0 = copy.deepcopy(self.tws_des)
+        self.tws0 = deepcopy(self.tws_des)
 
         #self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
         #                                               Monitor, Bend, SBend, RBend, Sextupole, Octupole],
@@ -721,7 +663,7 @@ class ManulInterfaceWindow(QMainWindow):
         # for orbit
         #self.orbit.load_orbit_devs()
         self.orbit.calc_orbit()
-
+        logger.debug("return_lat: ... OK")
         return self.lat
 
         
@@ -740,7 +682,7 @@ class ManulInterfaceWindow(QMainWindow):
             else:
                 new_seq= seq[id1:]
         except:
-            print('cannot construct sequence, element not found')
+            logger.error('cannot construct sequence, element not found')
             raise
         return new_seq
 
@@ -779,7 +721,6 @@ class ManulInterfaceWindow(QMainWindow):
 
                 mi_dev.mi = self.mi
                 elem.mi = mi_dev
-                #print(elem.mi)
                 devices.append(elem)
         return devices
 
@@ -989,7 +930,7 @@ class ManulInterfaceWindow(QMainWindow):
         reply = QtGui.QMessageBox.question(self, "Recalculate ORM?",
                 "Recalculate Orbit Response Matrix?",
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-        if reply==QtGui.QMessageBox.Yes:
+        if reply == QtGui.QMessageBox.Yes:
             return True
 
         return False
@@ -1014,7 +955,7 @@ class ManulInterfaceWindow(QMainWindow):
             with open(self.cssfile, "r") as f:
                 self.setStyleSheet(f.read())
         except IOError:
-            print ('No style sheet found!')
+            logger.error('No style sheet found!')
 
 
 

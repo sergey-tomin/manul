@@ -5,7 +5,8 @@ from ocelot.optimizer.mint.opt_objects import Device
 from PyQt5 import QtGui, QtCore
 import numpy as np
 import time
-
+import logging
+logger = logging.getLogger(__name__)
 
 class Corrector(Device):
 
@@ -34,7 +35,7 @@ class CavityA1(Device):
     def set_value(self, val):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)
-        print(ch, "V = ", val)
+        logger.debug("CavityA1, ch: " + ch + " V = " + str(val))
 
     def get_value(self):
         ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
@@ -105,10 +106,13 @@ class BPMUI:
 
 
 class BPM(Device):
+    def __init__(self, eid, subtrain="SA1"):
+        super(BPM, self).__init__(eid=eid)
+        self.subtrain = subtrain
 
     def get_pos(self):
-        ch_x = "XFEL.DIAG/BPM/" + self.eid + "/X.SA1"
-        ch_y = "XFEL.DIAG/BPM/" + self.eid + "/Y.SA1"
+        ch_x = "XFEL.DIAG/BPM/" + self.eid + "/X." + self.subtrain
+        ch_y = "XFEL.DIAG/BPM/" + self.eid + "/Y." + self.subtrain
         #print(ch_x, ch_y)
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
@@ -116,7 +120,7 @@ class BPM(Device):
         return x, y
 
     def get_charge(self):
-        x = self.mi.get_value("XFEL.DIAG/BPM/" + self.eid + "/CHARGE.SA1")
+        x = self.mi.get_value("XFEL.DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
 class DeviceUI:
@@ -171,26 +175,26 @@ class DeviceUI:
         self.tableWidget.setRowHidden(self.row, hide)
 
 class MICavity(Device):
-    def __init__(self, eid=None):
+    def __init__(self, eid=None, subtrain="SA1"):
         super(MICavity, self).__init__(eid=eid)
-
+        self.subtrain = subtrain
     def get_value(self):
         #C.A3.1.1.L2
         #M4.A4.L2
         parts = self.eid.split(".")
         eid = "M"+parts[2]+"."+parts[1]+"."+parts[4]
-        print(eid)
-        ch = "XFEL.RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN.SA1"
+        ch = "XFEL.RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN." + self.subtrain
         val = self.mi.get_value(ch)/8.
         return val
 
 
 class MIOrbit(Device):
-    def __init__(self, eid=None):
+    def __init__(self, eid=None, subtrain="SA1"):
         super(MIOrbit, self).__init__(eid=eid)
         self.bpm_server = "BPM" # "ORBIT"     # or "BPM"
         self.time_delay = 0.1         # sec
         self.charge_threshold = 0.005 # nC
+        self.subtrain = subtrain
         self.bpm_names = []
         self.x = []
         self.y = []
@@ -201,8 +205,8 @@ class MIOrbit(Device):
 
     def read_positions(self):
         #try:
-        orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X.SA1")
-        orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y.SA1")
+        orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+        orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
         #except:
         #    print("ERROR: reading from DOOCS")
         #    return False
@@ -210,14 +214,14 @@ class MIOrbit(Device):
         names_x = [data["str"] for data in orbit_x]
         names_y = [data["str"] for data in orbit_y]
         if not np.array_equal(names_x, names_y):
-            print("X and Y orbits are not equal")
+            logger.warning(" MIOrbit: read_positions: X and Y orbits are not equal")
         self.x = np.array([data["float"] for data in orbit_x])
         self.y = np.array([data["float"] for data in orbit_y])
         return [names_x, self.x, self.y]
 
     def read_charge(self):
         #try:
-        charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE.SA1")
+        charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE." + self.subtrain)
         #except:
         #    print("ERROR: reading from DOOCS")
         #    return False
@@ -231,7 +235,7 @@ class MIOrbit(Device):
         #print(names_xy)
         #print(names_charge)
         if not np.array_equal(names_xy, names_charge):
-            print("CHARGE reading and POSITIONS are not equal")
+            logger.warning(" MIOrbit: read_orbit: CHARGE reading and POSITIONS are not equal")
             #return False
         return names_xy, x, y, charge
 
@@ -248,7 +252,7 @@ class MIOrbit(Device):
             orbits_charge.append(charge)
             if i > 0:
                 if not np.array_equal(saved_names, names):
-                    print("error: different ")
+                    logger.warning(" MIOrbit: read_and_average: error: arrays are different ")
             saved_names = names
             time.sleep(self.time_delay)
         self.bpm_names = saved_names
@@ -268,7 +272,6 @@ class MIOrbit(Device):
         if len(self.bpm_names) == 0:
             return False
         #bpm_names = [bpm.id for bpm in bpms]
-        print("bpm", len(bpms))
         indxs = []
         valid_bpm_inx = []
         for i, bpm in enumerate(bpms):
@@ -277,7 +280,7 @@ class MIOrbit(Device):
             else:
                 valid_bpm_inx.append(i)
                 indxs.append(self.bpm_names.index(bpm.id))
-        print("bpm", len(bpms), len(indxs))
+                logger.debug(" MIOrbit: get_bpms: len(bpm)="+ str(len(bpms)) + "  len(indxs) = " + str(len(indxs)))
         bpms = [bpms[indx] for indx in valid_bpm_inx]
         for i, bpm in enumerate(bpms):
             inx = indxs[i]

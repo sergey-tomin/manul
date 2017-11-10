@@ -16,7 +16,10 @@ import os
 from threading import Thread, Event
 from ocelot.cpbd.magnetic_lattice import *
 from ocelot.optimizer.mint.xfel_interface import *
-
+import logging
+# filename="logs/afb.log",
+#logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class Statistics(Thread):
     def __init__(self):
@@ -27,7 +30,7 @@ class Statistics(Thread):
     def run(self):
         while 1:
             self.do()
-            print("do")
+            logger.info("do")
             time.sleep(self.delay)
     def stop(self):
         self._stop_event.set()
@@ -86,6 +89,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.debug_mode = False
         if self.parent.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
+        logger.info("debug_mode = " + str(self.debug_mode))
         self.first_go_x = []
         self.first_go_y = []
         self.cur_go_x = []
@@ -119,7 +123,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         with open(filename, 'w') as f:
             json.dump(table, f)
         # pickle.dump(table, filename)
-        print("SAVE State")
+        logger.info("SAVE State")
 
     def load_state(self, filename):
         # pvs = self.ui.widget.pvs
@@ -145,7 +149,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         if "le_c" in table.keys(): self.le_c.setText(table["le_c"])
         if "le_of" in table.keys(): self.le_of.setText(table["le_of"])
 
-        print("LOAD State")
+        logger.info("LOAD State")
         return corrs, bpms
 
     def save_presettings(self):
@@ -160,7 +164,9 @@ class UIAFeedBack(QWidget, Ui_Form):
     def load_presettings(self):
         if self.cb_load_settings.currentText() == "SASE1 launch":
             if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
+                logger.error("Config file does not exist.")
                 self.error_box("Config file does not exist.")
+
                 return
             active_corrs, active_bpms = self.load_state(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json")
 
@@ -179,7 +185,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         beam_on = self.read_data()
         if not beam_on:
             self.counter -= 1
-            print("beam OFF. counter -= 1")
+            logger.info(" loop: beam OFF. counter -= 1")
         bpm_delay = self.sb_time_delay.value()
         go_delay = self.sb_go_recalc_delay.value()
         #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
@@ -231,7 +237,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.objective_func = self.set_obj_fun()
             if self.objective_func == None:
                 self.stop_statistics()
-                print("objective function = None")
+                logger.debug("objective function = None")
                 return None
 
             self.statistics_timer.start(delay)
@@ -287,7 +293,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             time.sleep(0.5)
             self.le_warn.clear()
         else:
-            print("Exceed limits")
+            logger.info("Exceed limits of correctors")
             self.le_warn.clear()
             self.le_warn.setText("Stop flag. Kicks are not applied")
             self.le_warn.setStyleSheet("color: red")
@@ -336,6 +342,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.orbit = self.create_Orbit_obj()
 
         if not self.orbit_class.is_rm_ok(self.orbit):
+            logger.error(" correct: Calculate Response Matrix")
             self.parent.error_box("Calculate Response Matrix")
             return 0
 
@@ -373,12 +380,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         for cor in self.orbit.corrs:
             if cor.ui.alarm:
                 self.stop_feedback()
+                logger.info("apply_kicks: kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 self.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 return 0
 
         for cor in self.orbit.corrs:
             kick_mrad = cor.ui.get_value()
-            print(cor.id," set: ", cor.ui.get_init_value(), "-->", kick_mrad)
+            logger.debug(cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
             cor.mi.set_value(kick_mrad)
 
     def set_values2correctors(self):
@@ -415,7 +423,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
-                    print("charge < charge_thresh", charge < charge_thresh)
+                    logger.info("charge < charge_thresh" + str(charge < charge_thresh))
                     self.le_warn.clear()
                     self.le_warn.setText(elem.id+" charge < charge_thresh")
                     self.le_warn.setStyleSheet("color: red")
@@ -431,7 +439,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                 #elem.ui.uncheck()
                 self.le_warn.clear()
                 self.le_warn.setText("beam OFF")
-                print("beam OFF")
+                logger.info("read_bpms: beam OFF")
                 beam_on = False
         #print(beam_on)
         return beam_on, np.array(orbit_x), np.array(orbit_y), np.array(orbit_s)
@@ -443,7 +451,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         if not beam_on and not self.debug_mode:
             return beam_on
         target = self.read_objective_function()
-        print("read data, target: ", target)
+        logger.debug("read data, target: " + str(target))
         if target == None:
             self.stop_statistics()
             return None
@@ -499,6 +507,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         try:
             val = self.objective_func()
         except:
+            logger.error("read_objective_function: Wrong Objective Function")
             self.error_box("Wrong Objective Function")
             return None
         return val
@@ -755,7 +764,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             with open(self.cssfile, "r") as f:
                 self.setStyleSheet(f.read())
         except IOError:
-            print ('No style sheet found!')
+            logger.error('No style sheet found!')
 
     def error_box(self, message):
         QtGui.QMessageBox.about(self, "Error box", message)
