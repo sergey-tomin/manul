@@ -286,7 +286,6 @@ class ManulInterfaceWindow(QMainWindow):
             logger.debug("Cavity: " + cav.id + ":" + str(cav.v))
         self.online_calc = True
         self.lat.update_transfer_maps()
-        #TODO: add in GUI option to return design twiss
         self.tws0 = self.back_tracking()
         logger.debug("back_tracking result: " + str(self.tws0))
         tws = twiss(self.lat, self.tws0)
@@ -468,13 +467,11 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
         current_lat = self.ui.cb_lattice.currentText()
-        print("before", start, stop)
         if current_lat == "Arbitrary" and start == None and stop == None:
             section = self.xfel_lattice.get_section(current_lat)
             cell = self.xfel_lattice.lats[section.str_cells[0]].cell
             start = cell[0]
             stop = cell[-1]
-        print("after", start, stop)
         section = self.xfel_lattice.return_lat(current_lat, start=start, stop=stop)
         self.seq = section.seq
         total_len = np.sum([elem.l for elem in section.seq])
@@ -503,8 +500,13 @@ class ManulInterfaceWindow(QMainWindow):
         # self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
         #                                               Monitor, Bend, SBend, RBend, Sextupole, Octupole],
         #                    init_energy=self.tws0.E)
+        try:
+            self.plot_design_twiss()
+        except Exception as e:
+            logger.error("return_lat: plot_design_twiss: " + str(e))
 
         self.load_lattice()
+
         try:
             #self.lat4twiss = MagneticLattice(self.seq)
             self.calc_twiss()
@@ -574,13 +576,15 @@ class ManulInterfaceWindow(QMainWindow):
             logger.error("load_lattice: error in r_items" + str(e))
 
 
-    #def plot_twiss(self):
-    #    # TODO: remove it
-    #    tws = twiss(self.lat, self.tws_des)
-    #
-    #    s = np.array([tw.s for tw in tws]) + self.lat_zi
-    #    self.beta_x_des.setData(x=self.s_des + self.lat_zi, y=self.b_x_des)
-    #    self.beta_y_des.setData(x=self.s_des + self.lat_zi, y=self.b_y_des)
+    def plot_design_twiss(self):
+        tws = twiss(self.lat, self.tws_des)
+
+        s = np.array([tw.s for tw in tws]) + self.lat_zi
+        bx = np.array([tw.beta_x for tw in tws])
+        by = np.array([tw.beta_y for tw in tws])
+        #self.s_des + self.lat_zi
+        self.beta_x_des.setData(x=s, y=bx)
+        self.beta_y_des.setData(x=s, y=by)
     #    self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
 
     def calc_twiss(self, calc=True):
