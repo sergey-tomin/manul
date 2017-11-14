@@ -14,12 +14,12 @@ import pyqtgraph as pg
 from copy import deepcopy
 from scipy import optimize
 import json
-from importlib import reload
+import importlib
 import logging
 
-
 # filename="logs/afb.log",
-logging.basicConfig(filename="logs/manul.log", level=logging.DEBUG)
+ilename="logs/manul.log"
+logging.basicConfig( level=logging.DEBUG)
 
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -41,22 +41,21 @@ from devices import *
 from dispersion import *
 from gui.gui_main import *
 from gui.settings_gui import *
-
+from lattices import lattice_manager
 logger = logging.getLogger(__name__)
 
-from lattices.xfel_i1_mad import *
-from lattices.xfel_l1_mad import *
-from lattices.xfel_l2_mad import *
-from lattices.xfel_l3_no_cl_mode_B import *
-from lattices.xfel_cl_mode_B import *
-from lattices.xfel_tld_892 import *
-from lattices.xfel_sase1_mode_B import *
-from lattices.xfel_sase3_mode_B import *
-try:
-    from lattices.xfel_t4 import *
-except:
-    logger.error("NO lattice file xfel_t4.py")
-
+#from lattices.xfel_i1_mad import *
+#from lattices.xfel_l1_mad import *
+#from lattices.xfel_l2_mad import *
+#from lattices.xfel_l3_no_cl_mode_B import *
+#from lattices.xfel_cl_mode_B import *
+#from lattices.xfel_tld_892 import *
+#from lattices.xfel_sase1_mode_B import *
+#from lattices.xfel_sase3_mode_B import *
+#try:
+#    from lattices.xfel_t4 import *
+#except:
+#    logger.error("NO lattice file xfel_t4.py")
 
 
 class ManulInterfaceWindow(QMainWindow):
@@ -70,6 +69,7 @@ class ManulInterfaceWindow(QMainWindow):
         Make the timer object that updates GUI on clock cycle during a scan.
         """
         # PATHS
+        #self.load_lattice_files()
 
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
@@ -102,25 +102,28 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispersionInterface(parent=self)
-        self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
 
-        lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
-        self.cl_copy = deepcopy(lat.sequence)
+        self.xfel_lattice = lattice_manager.XFELLattice()
 
-        lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
-        self.l3_copy = deepcopy(lat.sequence)
-
-        lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
-        self.sase1_copy = deepcopy(lat.sequence)
-
-        lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
-        self.sase3_copy = deepcopy(lat.sequence)
-
-        self.copy_cells = deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
-                                         cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
-
-        self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
-                                   cell_cl + cell_sase1 + cell_t4 + cell_sase3))
+        #self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
+#
+        #lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
+        #self.cl_copy = deepcopy(lat.sequence)
+#
+        #lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
+        #self.l3_copy = deepcopy(lat.sequence)
+#
+        #lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
+        #self.sase1_copy = deepcopy(lat.sequence)
+#
+        #lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
+        #self.sase3_copy = deepcopy(lat.sequence)
+#
+        #self.copy_cells = deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
+        #                                 cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
+#
+        #self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
+        #                           cell_cl + cell_sase1 + cell_t4 + cell_sase3))
 
         self.online_calc = True
 
@@ -145,25 +148,27 @@ class ManulInterfaceWindow(QMainWindow):
         #self.initTable()
         #print("quads", self.quads)
         self.add_plot()
-        self.ui.cb_lattice.addItem("Arbitrary")
-        self.ui.cb_lattice.addItem("I1D")
-        self.ui.cb_lattice.addItem("B1D")
-        self.ui.cb_lattice.addItem("B2D")
-        self.ui.cb_lattice.addItem("TLD")
-        self.ui.cb_lattice.addItem("I1")
-        self.ui.cb_lattice.addItem("L1")
-        self.ui.cb_lattice.addItem("L2")
-        self.ui.cb_lattice.addItem("L3")
-        self.ui.cb_lattice.addItem("CL")
-        self.ui.cb_lattice.addItem("SASE1")
-        self.ui.cb_lattice.addItem("T4")
-        self.ui.cb_lattice.addItem("SASE3")
-        self.ui.cb_lattice.addItem("up to B1")
-        self.ui.cb_lattice.addItem("up to B2")
-        self.ui.cb_lattice.addItem("up to TL")
-        self.ui.cb_lattice.addItem("up to SASE3")
-        self.ui.cb_lattice.setCurrentIndex(0)
-        self.correctors_list(seq=self.big_sequence)
+        #self.ui.cb_lattice.addItem("Arbitrary")
+        #self.ui.cb_lattice.addItem("I1D")
+        #self.ui.cb_lattice.addItem("B1D")
+        #self.ui.cb_lattice.addItem("B2D")
+        #self.ui.cb_lattice.addItem("TLD")
+        #self.ui.cb_lattice.addItem("I1")
+        #self.ui.cb_lattice.addItem("L1")
+        #self.ui.cb_lattice.addItem("L2")
+        #self.ui.cb_lattice.addItem("L3")
+        #self.ui.cb_lattice.addItem("CL")
+        #self.ui.cb_lattice.addItem("SASE1")
+        #self.ui.cb_lattice.addItem("T4")
+        #self.ui.cb_lattice.addItem("SASE3")
+        #self.ui.cb_lattice.addItem("up to B1")
+        #self.ui.cb_lattice.addItem("up to B2")
+        #self.ui.cb_lattice.addItem("up to TL")
+        #self.ui.cb_lattice.addItem("up to SASE3")
+        #self.ui.cb_lattice.setCurrentIndex(0)
+
+        #self.correctors_list(seq=self.big_sequence, energy=130)
+        self.load_lattice_files()
         self.lat = self.return_lat()
         #self.tws0 = self.return_tws()
         #self.load_lattice()
@@ -172,7 +177,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.pb_read.clicked.connect(self.read_quads)
         self.ui.pb_reset.clicked.connect(self.reset_quads)
 
-        self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
+        #self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         self.ui.cb_otr55.setChecked(True)
         self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
@@ -187,6 +192,18 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
         self.ui.action_Parameters.triggered.connect(self.run_settings_window)
 
+
+    def load_lattice_files(self):
+        names = [sec.name for sec in self.xfel_lattice.sections]
+        for name in names:
+            self.ui.cb_lattice.addItem(name)
+        self.ui.cb_lattice.setCurrentIndex(1)
+
+        self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
+        current_lat = self.ui.cb_lattice.currentText()
+        section = self.xfel_lattice.get_section(current_lat)
+        self.big_sequence = self.xfel_lattice.get_sequence(section)
+        self.correctors_list(seq=self.big_sequence, energy=130)
 
     def run_settings_window(self):
         if self.settings is None:
@@ -230,7 +247,7 @@ class ManulInterfaceWindow(QMainWindow):
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
-    def correctors_list(self, seq, start_pos=23.2, energy=tws_i1.E):
+    def correctors_list(self, seq, start_pos=23.2, energy=130.):
 
         self.corr_list = []
         L = start_pos
@@ -271,7 +288,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.lat.update_transfer_maps()
         #TODO: add in GUI option to return design twiss
         self.tws0 = self.back_tracking()
-        logger.debug("back_tracking result: " + self.tws0)
+        logger.debug("back_tracking result: " + str(self.tws0))
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
@@ -287,19 +304,23 @@ class ManulInterfaceWindow(QMainWindow):
     def back_tracking(self):
         logger.debug("back_tracking: ... ")
         tws0 = self.read_twiss()
+
+        section = self.xfel_lattice.return_lat("up to TL")
+        cell_back_track = section.seq
         if self.ui.cb_design_tws.isChecked():
             return self.tws_des
         if self.ui.cb_otr218.isChecked():
-            stop = otrb_218_b1
+            stop = 'OTRB.218.B1'
 
         elif self.ui.cb_otr450.isChecked():
-            stop = otrb_450_b2
+            stop = 'OTRB.450.B2'
 
         else:
-            stop = otrc_55_i1
+            stop = 'OTRC.55.I1'
 
+        stop_elem = cell_back_track[[elem.id for elem in cell_back_track].index(stop)]
 
-        lat_tmp = MagneticLattice(self.cell_back_track, stop=stop)
+        lat_tmp = MagneticLattice(cell_back_track, stop=stop_elem)
         lat_tmp = MagneticLattice(lat_tmp.sequence[::-1])
         for elem in lat_tmp.sequence:
             if elem.__class__  == Cavity:
@@ -443,248 +464,59 @@ class ManulInterfaceWindow(QMainWindow):
         # start /stop elements should be correctors !!!
         self.return_lat(start=self.corr_list[idx_frm], stop=self.corr_list[idx_to])
 
-
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
         logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
         current_lat = self.ui.cb_lattice.currentText()
-        method = MethodTM()
-        method.global_method = TransferMap
+        print("before", start, stop)
+        if current_lat == "Arbitrary" and start == None and stop == None:
+            section = self.xfel_lattice.get_section(current_lat)
+            cell = self.xfel_lattice.lats[section.str_cells[0]].cell
+            start = cell[0]
+            stop = cell[-1]
+        print("after", start, stop)
+        section = self.xfel_lattice.return_lat(current_lat, start=start, stop=stop)
+        self.seq = section.seq
+        total_len = np.sum([elem.l for elem in section.seq])
+        self.lat_zi = section.z0
+        self.tws_des = section.tws_des
 
-        if current_lat == "B1D":
-            self.seq = cell_i1 + cell_l1 + cell_b1d
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[5])
-            self.lat_zi = 23.2
 
-        elif current_lat == "Arbitrary":
-            self.seq = self.big_sequence
+        self.corr_list = self.correctors_list(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
+        self.ui.sb_lat_from.setMinimum(self.lat_zi)
+        # self.ui.sb_lat_from.setValue(self.lat_zi)
+        self.ui.sb_lat_from.setMaximum(self.lat_zi + total_len - 30)
+        self.ui.sb_lat_to.setMaximum(self.lat_zi + total_len)
+        self.ui.sb_lat_to.setMinimum(self.lat_zi + 30)
+        if start == None and stop == None:
+            self.ui.sb_lat_to.setValue(self.lat_zi + total_len)
+            self.ui.sb_lat_from.setValue(self.lat_zi)
 
-            s_poss = np.array([cor.s_pos for cor in self.corr_list])
-            idx_frm = 0
-            idx_to = 14
-            if start == None and stop== None:
-                lat_from = 23.2
-                lat_to = 60
-                
-                idx_frm = (np.abs(s_poss - lat_from)).argmin()
-                idx_to = (np.abs(s_poss - lat_to)).argmin()
-                start=self.corr_list[idx_frm]
-                stop=self.corr_list[idx_to]
-                
-            self.tws_des = tws_i1
-            self.tws_des.E = self.corr_list[idx_frm].E
-            tmp_lat = MagneticLattice(self.copy_cells[0])
 
-            self.lat_zi = s_poss[idx_frm]
+        self.lat = section.lat #MagneticLattice(self.get_slice_sequence(self.seq, start=start, stop=stop), method=method)
 
-        elif current_lat == "up to B1":
-            self.seq = cell_i1 + cell_l1
 
-            self.tws_des = tws_i1
-
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1])
-
-            self.lat_zi = 23.2
-            
-        elif current_lat == "L1":
-            self.seq = cell_l1
-            self.tws_des = tws_l1
-
-            tmp_lat = MagneticLattice(self.copy_cells[1] )
-
-            self.lat_zi = 62.08894499999998
-
-        elif current_lat == "B2D":
-            self.seq = cell_i1 + cell_l1 + cell_l2 + cell_b2d
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2]  + self.copy_cells[6])
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "up to B2":
-            self.seq = cell_i1 + cell_l1 + cell_l2
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1] + self.copy_cells[2] )
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "TLD":
-            self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_tld
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
-                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4]+ self.copy_cells[8])
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "up to TL":
-            self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
-                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4])
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "up to SASE3":
-            self.seq = cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl + cell_sase1 + cell_t4 + cell_sase3
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[1]
-                                      + self.copy_cells[2] + self.copy_cells[3] + self.copy_cells[4] + self.copy_cells[9] + self.copy_cells[11] + self.copy_cells[10])
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "L2":
-            self.seq = cell_l2
-            self.tws_des = tws_l2
-            tmp_lat = MagneticLattice( self.copy_cells[2])
-
-            self.lat_zi = 229.30069400000002
-
-        elif current_lat == "L3":
-
-            self.seq = self.get_slice_sequence(cell_l2 + cell_l3_no_cl + cell_cl, start = engrd_419_b2, stop=mpbpmi_1693_cl)
-
-            self.tws_des = Twiss()
-            self.tws_des.beta_x = 20.6928140374
-            self.tws_des.beta_y = 6.8214735433
-            self.tws_des.alpha_x = 0.0332419824342
-            self.tws_des.alpha_y = -0.869862984066
-            self.tws_des.E = 2.39999998888
-
-            tmp_lat = MagneticLattice(self.l3_copy)
-
-            self.lat_zi = 396.2191659999965
-
-        elif current_lat == "CL":
-
-            self.seq = self.get_slice_sequence(cell_l3_no_cl + cell_cl + cell_sase1, start = bpmr_1307_l3, stop=qa_2253_sa1)
-            self.tws_des = Twiss()
-            #self.tws_des.beta_x = 21.6754251533
-            #self.tws_des.beta_y = 44.5714136209
-            #self.tws_des.alpha_x = -0.758842958261
-            #self.tws_des.alpha_y = 1.42869027612
-            #self.tws_des.E = 16.3674999889
-            self.tws_des.beta_x = 20.8408455944
-            self.tws_des.beta_y = 45.1306436718
-            self.tws_des.alpha_x = -0.712872984902
-            self.tws_des.alpha_y = 1.41986586551
-            self.tws_des.E = 15.2349999889
-            #self.tws_des.s = 1359.6367660000235
-            #self.tws_des = tws_cl
-            tmp_lat = MagneticLattice(self.cl_copy)
-
-            #self.lat_zi = 1629.7019660000299
-            self.lat_zi = 1359.6367660000235 + 23.2
-
-        elif current_lat == "I1D":
-            self.seq = cell_i1 + cell_i1d
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0] + self.copy_cells[5])
-
-            self.lat_zi = 23.2
-
-        elif current_lat == "SASE1":
-
-            self.seq = self.get_slice_sequence(cell_sase1+cell_t4, stop=ensub_2583_t4)
-            self.tws_des = tws_sase1
-            tmp_lat = MagneticLattice( self.sase1_copy)
-
-            self.lat_zi = 1957.1856390000232
-
-        elif current_lat == "T4":
-            self.seq = cell_t4
-            self.tws_des = tws_t4
-            tmp_lat = MagneticLattice( self.copy_cells[11])
-
-            self.lat_zi = 2438.5169790000195
-
-        elif current_lat == "SASE3":
-            self.seq = self.get_slice_sequence(cell_t4 + cell_sase3, start=ensub_2583_t4)
-            self.tws_des = Twiss()
-
-            self.tws_des.beta_x = 13.6455956218
-            self.tws_des.beta_y = 3.93176166974
-            self.tws_des.alpha_x = 2.20226650304
-            self.tws_des.alpha_y = -0.830611804908
-            self.tws_des.E = 17.4999999889
-
-            tmp_lat = MagneticLattice( self.sase3_copy)
-
-            self.lat_zi = 2560.450479000018
-        else:
-            self.seq = cell_i1
-            self.tws_des = tws_i1
-            tmp_lat = MagneticLattice(self.copy_cells[0])
-
-            self.lat_zi = 23.2
-            
-        
-        total_len = np.sum([elem.l for elem in self.seq])
-
-        if current_lat != "Arbitrary":
-            self.corr_list = self.correctors_list(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
-            self.ui.sb_lat_from.setMinimum(self.lat_zi)
-            #self.ui.sb_lat_from.setValue(self.lat_zi)
-            self.ui.sb_lat_from.setMaximum(self.lat_zi + total_len - 30)
-            
-            self.ui.sb_lat_to.setMaximum(self.lat_zi + total_len)
-            self.ui.sb_lat_to.setMinimum(self.lat_zi + 30)
-            if start == None and stop == None:
-                self.ui.sb_lat_to.setValue(self.lat_zi + total_len)
-                self.ui.sb_lat_from.setValue(self.lat_zi)
-        else:
-            #L = np.sum([elem.l for elem in self.big_sequence])
-            self.corr_list = self.correctors_list(seq=self.big_sequence)
-            self.ui.sb_lat_from.setMinimum(23.2)
-            self.ui.sb_lat_from.setMaximum(total_len - 30)
-            self.ui.sb_lat_to.setMaximum(23.2 + total_len)
-            self.ui.sb_lat_to.setMinimum(23.2 + 30)
-            
-
-        self.lat = MagneticLattice(self.get_slice_sequence(self.seq, start=start, stop=stop), method=method)
-        tws = twiss(tmp_lat, self.tws_des)
-        self.s_des = [tw.s for tw in tws]
-        self.b_x_des = [tw.beta_x for tw in tws]
-        self.b_y_des = [tw.beta_y for tw in tws]
-        self.tws_end = tws[-1]
-        #print("totlaLen=", self.lat.totalLen + 23.2)
-
-            
         self.lat_zi = self.ui.sb_lat_from.value()
-        self.s_des = np.array(self.s_des)
+        # tws0 is used in match in backtracking
         self.tws0 = deepcopy(self.tws_des)
 
-        #self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
+        # self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
         #                                               Monitor, Bend, SBend, RBend, Sextupole, Octupole],
         #                    init_energy=self.tws0.E)
+
         self.load_lattice()
-        self.calc_twiss()
+        try:
+            #self.lat4twiss = MagneticLattice(self.seq)
+            self.calc_twiss()
+        except Exception as e:
+            logger.error("return_lat: calc_twiss: " + str(e))
 
         # for orbit
-        #self.orbit.load_orbit_devs()
+        # self.orbit.load_orbit_devs()
         self.orbit.calc_orbit()
         logger.debug("return_lat: ... OK")
         return self.lat
 
-        
-
-    def get_slice_sequence(self, seq, start=None, stop=None):
-        seq = list(flatten(seq))
-        names = [elem.id for elem in seq]
-        try:
-            if start != None:
-                id1 = names.index(start.id)
-            else:
-                id1 = 0
-            if stop != None:
-                id2 = names.index(stop.id) + 1
-                new_seq = seq[id1:id2]
-            else:
-                new_seq= seq[id1:]
-        except:
-            logger.error('cannot construct sequence, element not found')
-            raise
-        return new_seq
 
     def return_tws(self):
         tws0 = Twiss()
@@ -736,12 +568,20 @@ class ManulInterfaceWindow(QMainWindow):
         # for orbit
         self.orbit.load_orbit_devs()
 
-        tws = twiss(self.lat, self.tws_des)
+        try:
+            self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
+        except Exception as e:
+            logger.error("load_lattice: error in r_items" + str(e))
 
-        s = np.array([tw.s for tw in tws]) + self.lat_zi
-        self.beta_x_des.setData(x=self.s_des + self.lat_zi, y=self.b_x_des)
-        self.beta_y_des.setData(x=self.s_des + self.lat_zi, y=self.b_y_des)
-        self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
+
+    #def plot_twiss(self):
+    #    # TODO: remove it
+    #    tws = twiss(self.lat, self.tws_des)
+    #
+    #    s = np.array([tw.s for tw in tws]) + self.lat_zi
+    #    self.beta_x_des.setData(x=self.s_des + self.lat_zi, y=self.b_x_des)
+    #    self.beta_y_des.setData(x=self.s_des + self.lat_zi, y=self.b_y_des)
+    #    self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
 
     def calc_twiss(self, calc=True):
         #lat = MagneticLattice(cell)
@@ -762,12 +602,9 @@ class ManulInterfaceWindow(QMainWindow):
                     self.r_items[elem.ui.row].setBrush(pg.mkBrush("g"))
                 r = self.r_items[elem.ui.row]
                 sizes = r.init_params
-                #sizes = list(r.boundingRect().getRect())
                 sizes[3] = 10*elem.kick_mrad/self.quad_ampl
                 r.setRect(sizes[0], sizes[1], sizes[2], sizes[3])
-
         self.lat.update_transfer_maps()
-
         tws = twiss(self.lat, self.tws0)
 
         beta_x = [tw.beta_x for tw in tws]
@@ -775,7 +612,6 @@ class ManulInterfaceWindow(QMainWindow):
         dx = [tw.Dx for tw in tws]
         dy = [tw.Dy for tw in tws]
         s = [tw.s for tw in tws]
-
         self.update_plot(s, beta_x, beta_y, dx, dy)
 
     def add_devs2table(self, devs, w_table, calc_obj, spin_params=[-5000, 5000, 5], check_box=False):
