@@ -19,7 +19,7 @@ import logging
 
 # filename="logs/afb.log",
 ilename="logs/manul.log"
-logging.basicConfig( level=logging.DEBUG)
+logging.basicConfig(filename="logs/manul.log", level=logging.INFO)
 
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -44,18 +44,6 @@ from gui.settings_gui import *
 from lattices import lattice_manager
 logger = logging.getLogger(__name__)
 
-#from lattices.xfel_i1_mad import *
-#from lattices.xfel_l1_mad import *
-#from lattices.xfel_l2_mad import *
-#from lattices.xfel_l3_no_cl_mode_B import *
-#from lattices.xfel_cl_mode_B import *
-#from lattices.xfel_tld_892 import *
-#from lattices.xfel_sase1_mode_B import *
-#from lattices.xfel_sase3_mode_B import *
-#try:
-#    from lattices.xfel_t4 import *
-#except:
-#    logger.error("NO lattice file xfel_t4.py")
 
 
 class ManulInterfaceWindow(QMainWindow):
@@ -90,8 +78,8 @@ class ManulInterfaceWindow(QMainWindow):
 
         #self.logbook = "xfellog"
         self.settings = None
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -435,7 +423,13 @@ class ManulInterfaceWindow(QMainWindow):
             cell = self.xfel_lattice.lats[section.str_cells[0]].cell
             start = cell[0]
             stop = cell[-1]
-        section = self.xfel_lattice.return_lat(current_lat, start=start, stop=stop)
+            
+        try:
+            section = self.xfel_lattice.return_lat(current_lat, start=start, stop=stop)
+        except Exception as e:
+            logger.error("return_lat: xfel_lattice.return_lat()" +str(e))
+            raise
+            
         self.seq = section.seq
         total_len = np.sum([elem.l for elem in section.seq])
         self.lat_zi = section.z0

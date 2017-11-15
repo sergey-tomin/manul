@@ -1,7 +1,7 @@
 import importlib
 import logging
 import numpy as np
-from copy import deepcopy
+from copy import deepcopy, copy
 from ocelot import *
 from ocelot.cpbd.magnetic_lattice import *
 #logging.basicConfig(level=logging.DEBUG)
@@ -149,7 +149,7 @@ class XFELLattice:
     def get_correct_init_twiss(self, sequence, stop_element, tws_i):
         if stop_element == None:
             return tws_i
-        seq = deepcopy(self.get_slice_sequence(sequence, stop=stop_element))
+        seq = [copy(elem) for elem in self.get_slice_sequence(sequence, stop=stop_element)]
         tws = twiss(MagneticLattice(seq[:-1]), tws_i)
         #print(tws[-1])
         return tws[-1]
