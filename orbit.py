@@ -142,8 +142,11 @@ class OrbitInterface:
         self.ui.cb_y_cors.stateChanged.connect(self.choose_plane)
         self.ui.pb_update_lat.clicked.connect(self.parent.read_quads)
 
-        self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
+        self.ui.cb_cbxy.stateChanged.connect(self.uncheck_aircols)
+        self.ui.cb_caxy.stateChanged.connect(self.uncheck_aircols)
 
+        #self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
+        self.ui.actionUncheck_Red.triggered.connect(self.uncheck_red)
         self.ui.pb_online_orbit.clicked.connect(self.start_stop_live_orbit)
 
 
@@ -193,6 +196,33 @@ class OrbitInterface:
         for bpm in bpms:
             if bpm.ui.alarm:
                 bpm.ui.uncheck()
+
+    def uncheck_aircols(self):
+        """
+        Method checks and unchecks corresponding aircoils downstream or upstream
+
+        :return:
+        """
+        upstream = self.ui.cb_caxy.isChecked()
+        downstream = self.ui.cb_cbxy.isChecked()
+
+        #corrs = self.get_dev_from_cb_state(self.corrs)
+
+        for cor in self.corrs:
+            #print(cor.id, upstream, downstream)
+            if ".SA1" in cor.id or (".SA3" in cor.id):
+                if not upstream:
+                    if ("CAX." in cor.id) or ("CAY." in cor.id):
+                        cor.ui.uncheck()
+                if not downstream:
+                    if ("CBX." in cor.id) or ("CBY." in cor.id):
+                        cor.ui.uncheck()
+                if upstream:
+                    if ("CAX." in cor.id) or ("CAY." in cor.id):
+                        cor.ui.check()
+                if downstream:
+                    if ("CBX." in cor.id) or ("CBY." in cor.id):
+                        cor.ui.check()
 
     def choose_plane(self):
         """

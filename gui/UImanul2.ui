@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1150</width>
+    <width>1159</width>
     <height>803</height>
    </rect>
   </property>
@@ -336,8 +336,6 @@
             <property name="styleSheet">
              <string notr="true"/>
             </property>
-            <zorder>groupBox</zorder>
-            <zorder></zorder>
            </widget>
           </item>
           <item row="0" column="0">
@@ -592,7 +590,7 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QWidget" name="w_cor" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -614,7 +612,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_20">
               <item>
                <widget class="QPushButton" name="pb_reset_all">
@@ -705,6 +703,9 @@
                 <property name="text">
                  <string>X</string>
                 </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item>
@@ -717,37 +718,38 @@
                 <property name="text">
                  <string>Y</string>
                 </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pb_uncheck_red">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="sizeIncrement">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
+               <widget class="QCheckBox" name="cb_caxy">
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
                  </font>
                 </property>
-                <property name="styleSheet">
-                 <string notr="true"/>
+                <property name="text">
+                 <string>CA{X,Y}</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="cb_cbxy">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
                 </property>
                 <property name="text">
-                 <string>Uncheck Red</string>
+                 <string>CB{X,Y}</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1655,7 +1657,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1150</width>
+     <width>1159</width>
      <height>26</height>
     </rect>
    </property>
@@ -1683,6 +1685,8 @@
     </property>
     <addaction name="actionSave_corrs"/>
     <addaction name="actionLoad_corrs"/>
+    <addaction name="separator"/>
+    <addaction name="actionUncheck_Red"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuGolden_Orbit"/>
@@ -1745,6 +1749,11 @@
   <action name="actionLoad_corrs">
    <property name="text">
     <string>Load</string>
+   </property>
+  </action>
+  <action name="actionUncheck_Red">
+   <property name="text">
+    <string>Uncheck Red</string>
    </property>
   </action>
  </widget>
