@@ -144,7 +144,7 @@ sk_2102_tld = Sextupole(l=0.343, k2=0.540738342718, tilt=1.570796327, eid='SK.21
 
 
 # lattice 
-cell_tld = (stsec_1980_tld, bz_1980_tld, dtl_2, bz_1983_tld, dtl_3, bz_1985_tld,
+cell = (stsec_1980_tld, bz_1980_tld, dtl_2, bz_1983_tld, dtl_3, bz_1985_tld,
 dtl_3, bz_1986_tld, dtl_5, otrc_1995_tld, dtl_6, tora_1995_tld, dtl_7, bpma_1995_tld,
 dtl_8, qf_1996_tld, dtl_9, cfy_2000_tld, dtl_10, cfx_2000_tld, dtl_11, bd_2005_tld,
 dtl_12, bd_2006_tld, dtl_12, bd_2008_tld, dtl_14, bpma_2008_tld, dtl_15, qf_2009_tld,

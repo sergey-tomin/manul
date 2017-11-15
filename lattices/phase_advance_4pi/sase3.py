@@ -1,11 +1,11 @@
 from ocelot import *
 
-tws_sase3 = Twiss()
-tws_sase3.beta_x  = 22.7539042345
-tws_sase3.beta_y  = 9.57644121557
-tws_sase3.alpha_x = 1.55409787119
-tws_sase3.alpha_y = -0.649007483021
-tws_sase3.E       = 17.4999999889
+tws = Twiss()
+tws.beta_x  = 22.7539042345
+tws.beta_y  = 9.57644121557
+tws.alpha_x = 1.55409787119
+tws.alpha_y = -0.649007483021
+tws.E       = 17.4999999889
 #tws_sase3.s       = 2777.8147070000155
 
 # drifts 
@@ -21,29 +21,29 @@ d_11 = Drift(l=0.2973, eid='D_11')
 d_13 = Drift(l=0.35787, eid='D_13')
 
 # quadrupoles 
-qa_2806_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2806.SA3')
-qa_2812_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2812.SA3')
-qa_2818_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2818.SA3')
-qa_2824_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2824.SA3')
-qa_2831_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2831.SA3')
-qa_2837_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2837.SA3')
-qa_2843_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2843.SA3')
-qa_2849_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2849.SA3')
-qa_2855_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2855.SA3')
-qa_2861_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2861.SA3')
-qa_2867_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2867.SA3')
-qa_2873_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2873.SA3')
-qa_2879_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2879.SA3')
-qa_2885_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2885.SA3')
-qa_2892_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2892.SA3')
-qa_2898_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2898.SA3')
-qa_2904_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2904.SA3')
-qa_2910_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2910.SA3')
-qa_2916_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2916.SA3')
-qa_2922_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2922.SA3')
-qa_2928_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2928.SA3')
-qa_2934_sa3 = Quadrupole(l=0.1137, k1=1.197430123, tilt=0.0, eid='QA.2934.SA3')
-qa_2940_sa3 = Quadrupole(l=0.1137, k1=-1.197430123, tilt=0.0, eid='QA.2940.SA3')
+qa_2806_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2806.SA3')
+qa_2812_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2812.SA3')
+qa_2818_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2818.SA3')
+qa_2824_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2824.SA3')
+qa_2831_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2831.SA3')
+qa_2837_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2837.SA3')
+qa_2843_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2843.SA3')
+qa_2849_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2849.SA3')
+qa_2855_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2855.SA3')
+qa_2861_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2861.SA3')
+qa_2867_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2867.SA3')
+qa_2873_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2873.SA3')
+qa_2879_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2879.SA3')
+qa_2885_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2885.SA3')
+qa_2892_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2892.SA3')
+qa_2898_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2898.SA3')
+qa_2904_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2904.SA3')
+qa_2910_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2910.SA3')
+qa_2916_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2916.SA3')
+qa_2922_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2922.SA3')
+qa_2928_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2928.SA3')
+qa_2934_sa3 = Quadrupole(l=0.1137, k1= 0.5620550639, tilt=0.0, eid='QA.2934.SA3')
+qa_2940_sa3 = Quadrupole(l=0.1137, k1=-0.5620550639,  tilt=0.0, eid='QA.2940.SA3')
 
 # bending magnets 
 
@@ -202,7 +202,7 @@ u68_2937_sa3 = Undulator(lperiod=0.068, nperiods=73.53, Kx=0.0, Ky=0.0, eid='U68
 # Solenoids 
 
 # lattice 
-cell_sase3 = (ensec_2800_t4, stsec_2800_sa3, d_1, cux_2803_sa3, d_2, bpme_2806_sa3, d_3,
+cell = (ensec_2800_t4, stsec_2800_sa3, d_1, cux_2803_sa3, d_2, bpme_2806_sa3, d_3,
 qa_2806_sa3, d_4, cux_2809_sa3, d_2, bpme_2812_sa3, d_3, qa_2812_sa3, d_7, 
 match_2812_sa3, d_8, cax_2813_sa3, cay_2813_sa3, d_9, u68_2815_sa3, d_10, cbx_2818_sa3, 
 cby_2818_sa3, d_11, bpme_2818_sa3, d_3, qa_2818_sa3, d_13, cax_2819_sa3, cay_2819_sa3, 

@@ -1,10 +1,10 @@
 from ocelot import * 
-tws_l1 = Twiss()
-tws_l1.beta_x  = 3.09986112826
-tws_l1.beta_y  = 4.58926819905
-tws_l1.alpha_x = 0.303712073019
-tws_l1.alpha_y = -1.80453054653
-tws_l1.E       = 0.1299999892
+tws = Twiss()
+tws.beta_x  = 3.09986112826
+tws.beta_y  = 4.58926819905
+tws.alpha_x = 0.303712073019
+tws.alpha_y = -1.80453054653
+tws.E       = 0.1299999892
 # drifts 
 d_1 = Drift(l=1.24, eid='D_1')
 d_2 = Drift(l=0.08115, eid='D_2')
@@ -237,40 +237,28 @@ ciy_63_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.63.I1')
 cix_65_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.65.I1')
 ciy_72_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.72.I1')
 cix_73i_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.73I.I1')
-
-cbl_73_i1 = Drift(eid='CBL.73.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.73.I1')
-
+cbl_73_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.73.I1')
 cix_73ii_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.73II.I1')
 ciy_75_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.75.I1')
 cix_76_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.76.I1')
-
-cbl_78_i1 = Drift(eid='CBL.78.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.78.I1')
-
+cbl_78_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.78.I1')
 cix_78_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.78.I1')
 ciy_80_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.80.I1')
 cix_81_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.81.I1')
-
-cbl_83_i1 = Drift(eid='CBL.83.I1') # Vcor(l=0.0, angle=0.0, eid='CBL.83.I1')
-
+cbl_83_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.83.I1')
 cix_83_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.83.I1')
 ciy_85_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.85.I1')
 cix_86_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.86.I1')
-
-cbl_88_i1 = Drift(eid='CBL.88.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.88.I1')
-
+cbl_88_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.88.I1')
 cix_88_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.88.I1')
-
-cbl_90_i1 = Drift(eid='CBL.90.I1') #  Vcor(l=0.0, angle=0.0, eid='CBL.90.I1')
-
+cbl_90_i1 = Vcor(l=0.0, angle=0.0, eid='CBL.90.I1')
 cix_90_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.90.I1')
 ciy_92_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.92.I1')
 ciy_94_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.94.I1')
 cix_95_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.95.I1')
-
-cbb_98_i1 = Drift(eid='CBB.98.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.98.I1')
-cbb_100_i1 = Drift(eid='CBB.100.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.100.I1')
-cbb_101_i1 = Drift(eid='CBB.101.I1') # Vcor(l=0.0, angle=0.0, eid='CBB.101.I1')
-
+cbb_98_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.98.I1')
+cbb_100_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.100.I1')
+cbb_101_i1 = Vcor(l=0.0, angle=0.0, eid='CBB.101.I1')
 cix_102_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.102.I1')
 ciy_103_i1 = Vcor(l=0.1, angle=0.0, eid='CIY.103.I1')
 cix_104_i1 = Hcor(l=0.1, angle=0.0, eid='CIX.104.I1')
@@ -292,11 +280,9 @@ ciy_176_b1 = Vcor(l=0.1, angle=0.0, eid='CIY.176.B1')
 cix_177_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.177.B1')
 ccx_179_b1 = Hcor(l=0.1, angle=0.0, eid='CCX.179.B1')
 ccy_181_b1 = Vcor(l=0.1, angle=0.0, eid='CCY.181.B1')
-
-cbb_191_b1 = Drift(eid='CBB.191.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.191.B1')
-cbb_193_b1 = Drift(eid='CBB.193.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.193.B1')
-cbb_202_b1 = Drift(eid='CBB.202.B1') # Vcor(l=0.0, angle=0.0, eid='CBB.202.B1')
-
+cbb_191_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.191.B1')
+cbb_193_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.193.B1')
+cbb_202_b1 = Vcor(l=0.0, angle=0.0, eid='CBB.202.B1')
 ciy_204_b1 = Vcor(l=0.1, angle=0.0, eid='CIY.204.B1')
 cix_205_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.205.B1')
 cix_209_b1 = Hcor(l=0.1, angle=0.0, eid='CIX.209.B1')
@@ -457,38 +443,38 @@ sc_92_i1 = Sextupole(l=0.1121, k2=9.817522762156, tilt=1.570796327, eid='SC.92.I
 # undulator 
 
 # cavity 
-c_a2_1_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.1.L1')
-c_a2_1_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.2.L1')
-c_a2_1_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.3.L1')
-c_a2_1_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.4.L1')
-c_a2_1_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.5.L1')
-c_a2_1_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.6.L1')
-c_a2_1_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.7.L1')
-c_a2_1_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.1.8.L1')
-c_a2_2_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.1.L1')
-c_a2_2_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.2.L1')
-c_a2_2_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.3.L1')
-c_a2_2_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.4.L1')
-c_a2_2_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.5.L1')
-c_a2_2_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.6.L1')
-c_a2_2_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.7.L1')
-c_a2_2_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.2.8.L1')
-c_a2_3_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.1.L1')
-c_a2_3_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.2.L1')
-c_a2_3_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.3.L1')
-c_a2_3_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.4.L1')
-c_a2_3_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.5.L1')
-c_a2_3_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.6.L1')
-c_a2_3_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.7.L1')
-c_a2_3_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.3.8.L1')
-c_a2_4_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.1.L1')
-c_a2_4_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.2.L1')
-c_a2_4_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.3.L1')
-c_a2_4_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.4.L1')
-c_a2_4_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.5.L1')
-c_a2_4_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.6.L1')
-c_a2_4_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.7.L1')
-c_a2_4_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0, phi=0.0, eid='C.A2.4.8.L1')
+c_a2_1_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.1.L1')
+c_a2_1_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.2.L1')
+c_a2_1_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.3.L1')
+c_a2_1_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.4.L1')
+c_a2_1_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.5.L1')
+c_a2_1_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.6.L1')
+c_a2_1_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.7.L1')
+c_a2_1_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.1.8.L1')
+c_a2_2_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.1.L1')
+c_a2_2_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.2.L1')
+c_a2_2_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.3.L1')
+c_a2_2_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.4.L1')
+c_a2_2_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.5.L1')
+c_a2_2_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.6.L1')
+c_a2_2_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.7.L1')
+c_a2_2_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.2.8.L1')
+c_a2_3_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.1.L1')
+c_a2_3_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.2.L1')
+c_a2_3_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.3.L1')
+c_a2_3_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.4.L1')
+c_a2_3_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.5.L1')
+c_a2_3_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.6.L1')
+c_a2_3_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.7.L1')
+c_a2_3_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.3.8.L1')
+c_a2_4_1_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.1.L1')
+c_a2_4_2_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.2.L1')
+c_a2_4_3_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.3.L1')
+c_a2_4_4_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.4.L1')
+c_a2_4_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.5.L1')
+c_a2_4_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.6.L1')
+c_a2_4_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.7.L1')
+c_a2_4_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000.0*1e3, phi=0.0, eid='C.A2.4.8.L1')
 tdsb_208_b1 = Cavity(l=1.5, v=0.0, freq=2800000.0, phi=0.0, eid='TDSB.208.B1')
 
 # UnknowElement 
@@ -498,7 +484,7 @@ tdsb_208_b1 = Cavity(l=1.5, v=0.0, freq=2800000.0, phi=0.0, eid='TDSB.208.B1')
 # Solenoids 
 
 # lattice 
-cell_l1 = (ensub_62_i1, stsub_62_i1, d_1, ciy_63_i1, d_2, qi_63_i1, d_3,
+cell = (ensub_62_i1, stsub_62_i1, d_1, ciy_63_i1, d_2, qi_63_i1, d_3,
 bpma_63_i1, d_4, cix_65_i1, d_5, qi_66_i1, d_6, qi_69_i1, d_7, 
 qi_71_i1, d_8, bpma_72_i1, d_9, qi_72_i1, d_9, ciy_72_i1, d_11, 
 cix_73i_i1, d_2, stlat_73_i1, match_73_i1, qi_73_i1, id_90904668_, d_13, bl_73_i1, 
@@ -712,55 +698,3 @@ bb_182_b1.ps_id = 'BB.1.B1'
 bb_191_b1.ps_id = 'BB.1.B1'
 bb_193_b1.ps_id = 'BB.1.B1'
 bb_202_b1.ps_id = 'BB.1.B1'
-
-
-# drifts
-d1_1 = Drift(l=206.100754, eid='D_1')
-d1_2 = Drift(l=0.254587, eid='D_2')
-d1_3 = Drift(l=1.319557, eid='D_3')
-d1_4 = Drift(l=0.15065, eid='D_4')
-d1_5 = Drift(l=0.13165, eid='D_5')
-d1_6 = Drift(l=1.23165, eid='D_6')
-d1_7 = Drift(l=0.68965, eid='D_7')
-d1_8 = Drift(l=0.181, eid='D_8')
-d1_9 = Drift(l=2.584, eid='D_9')
-d1_10 = Drift(l=0.1483, eid='D_10')
-d1_11 = Drift(l=0.1543, eid='D_11')
-d1_12 = Drift(l=0.4253, eid='D_12')
-d1_13 = Drift(l=0.724, eid='D_13')
-
-# quadrupoles
-qd_231_b1d = Quadrupole(l=0.2367, k1=-3.0, tilt=0.0, eid='QD.231.B1D')
-qd_232_b1d = Quadrupole(l=0.2367, k1=0.0, tilt=0.0, eid='QD.232.B1D')
-
-# bending magnets
-bb_229_b1d = SBend(l = 0.5, angle=0.2094395102, e1=0.0, e2=0.20943951, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.229.B1D')
-
-# correctors
-ccy_231_b1d = Vcor(l=0.1, angle=0.0, eid='CCY.231.B1D')
-ccx_233_b1d = Hcor(l=0.1, angle=0.0, eid='CCX.233.B1D')
-
-# markers
-stsec_229_b1d = Marker(eid='STSEC.229.B1D')
-otrc_236_b1d = Marker(eid='OTRC.236.B1D')
-tora_236_b1d = Marker(eid='TORA.236.B1D')
-duflange_237_b1d = Marker(eid='DUFLANGE.237.B1D')
-duabsorb_237_b1d = Marker(eid='DUABSORB.237.B1D')
-ensec_237_b1d = Marker(eid='ENSEC.237.B1D')
-
-# monitor
-bpma_231_b1d = Monitor(eid='BPMA.231.B1D')
-bpma_233_b1d = Monitor(eid='BPMA.233.B1D')
-bpma_236_b1d = Monitor(eid='BPMA.236.B1D')
-
-
-cell_b1d = (stsec_229_b1d, d1_2, bb_229_b1d, d1_3, bpma_231_b1d, d1_4,
-qd_231_b1d, d1_5, ccy_231_b1d, d1_6, qd_232_b1d, d1_7, bpma_233_b1d, d1_8,
-ccx_233_b1d, d1_9, otrc_236_b1d, d1_10, tora_236_b1d, d1_11, bpma_236_b1d, d1_12,
-duflange_237_b1d, d1_13, duabsorb_237_b1d, ensec_237_b1d)
-# power supplies
-
-qd_231_b1d.ps_id = 'QD.25.B1D'
-qd_232_b1d.ps_id = 'QD.26.B1D'
-
-bb_229_b1d.ps_id = 'BB.1.B1D'

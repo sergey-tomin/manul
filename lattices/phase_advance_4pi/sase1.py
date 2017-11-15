@@ -1,11 +1,15 @@
-from ocelot import * 
-tws_sase1 = Twiss()
-tws_sase1.beta_x  = 42.548281572
-tws_sase1.beta_y  = 11.0277770725
-tws_sase1.alpha_x = -2.18143348313
-tws_sase1.alpha_y = 0.703868806111
-tws_sase1.E       = 17.4999999889
+from ocelot import *
+
+tws = Twiss()
+tws.beta_x  = 42.548281572
+tws.beta_y  = 11.0277770725
+tws.alpha_x = -2.18143348313
+tws.alpha_y = 0.703868806111
+tws.E       = 17.4999999889
 #tws_sase1.s        = 1957.1856390000232
+
+
+
 # drifts 
 d_1 = Drift(l=1.472401, eid='D_1')
 d_2 = Drift(l=13.047401, eid='D_2')
@@ -52,13 +56,14 @@ d_70 = Drift(l=0.15, eid='D_70')
 d_71 = Drift(l=0.4323, eid='D_71')
 d_72 = Drift(l=0.18665, eid='D_72')
 d_73 = Drift(l=0.04015, eid='D_73')
-d_74 = Drift(l=5.7595, eid='D_74')
-d_76 = Drift(l=5.79965, eid='D_76')
-d_79 = Drift(l=0.31772, eid='D_79')
-d_80 = Drift(l=0.07278, eid='D_80')
-d_81 = Drift(l=0.0717, eid='D_81')
-d_82 = Drift(l=0.2973, eid='D_82')
-d_84 = Drift(l=0.35787, eid='D_84')
+d_74 = Drift(l=2.8905, eid='D_74')
+d_75 = Drift(l=2.869, eid='D_75')
+d_77 = Drift(l=2.93065, eid='D_77')
+d_81 = Drift(l=0.31772, eid='D_81')
+d_82 = Drift(l=0.07278, eid='D_82')
+d_83 = Drift(l=0.0717, eid='D_83')
+d_84 = Drift(l=0.2973, eid='D_84')
+d_86 = Drift(l=0.35787, eid='D_86')
 
 # quadrupoles 
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.0903596001, tilt=0.0, eid='QK.1982.TL')
@@ -74,49 +79,51 @@ qf_2117_t2 = Quadrupole(l=0.5321, k1=-0.1791908476, tilt=0.0, eid='QF.2117.T2')
 qf_2132_t2 = Quadrupole(l=0.5321, k1=0.1791908476, tilt=0.0, eid='QF.2132.T2')
 qf_2145_t2 = Quadrupole(l=0.5321, k1=-0.1791908476, tilt=0.0, eid='QF.2145.T2')
 qf_2162_t2 = Quadrupole(l=0.5321, k1=0.1791908476, tilt=0.0, eid='QF.2162.T2')
-qf_2177_t2 = Quadrupole(l=0.5321, k1=-0.1525567278, tilt=0.0, eid='QF.2177.T2')
-qf_2192_t2 = Quadrupole(l=0.5321, k1=0.1521721569, tilt=0.0, eid='QF.2192.T2')
-qf_2207_t2 = Quadrupole(l=0.5321, k1=-0.1259982434, tilt=0.0, eid='QF.2207.T2')
-qf_2218_t2 = Quadrupole(l=0.5321, k1=0.1191993195, tilt=0.0, eid='QF.2218.T2')
-qa_2229_t2 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2229.T2')
-qa_2235_t2 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2235.T2')
-qa_2241_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2241.SA1')
-qa_2247_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2247.SA1')
-qa_2253_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2253.SA1')
-qa_2259_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2259.SA1')
-qa_2266_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2266.SA1')
-qa_2272_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2272.SA1')
-qa_2278_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2278.SA1')
-qa_2284_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2284.SA1')
-qa_2290_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2290.SA1')
-qa_2296_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2296.SA1')
-qa_2302_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2302.SA1')
-qa_2308_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2308.SA1')
-qa_2314_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2314.SA1')
-qa_2320_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2320.SA1')
-qa_2327_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2327.SA1')
-qa_2333_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2333.SA1')
-qa_2339_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2339.SA1')
-qa_2345_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2345.SA1')
-qa_2351_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2351.SA1')
-qa_2357_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2357.SA1')
-qa_2363_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2363.SA1')
-qa_2369_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2369.SA1')
-qa_2375_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2375.SA1')
-qa_2381_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2381.SA1')
-qa_2388_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2388.SA1')
-qa_2394_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2394.SA1')
-qa_2400_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2400.SA1')
-qa_2406_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2406.SA1')
-qa_2412_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2412.SA1')
-qa_2418_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2418.SA1')
-qa_2424_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2424.SA1')
-qa_2430_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2430.SA1')
-qa_2436_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2436.SA1')
-qa_2442_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2442.SA1')
-qa_2449_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2449.SA1')
-qa_2455_sa1 = Quadrupole(l=0.1137, k1=0.5501622372, tilt=0.0, eid='QA.2455.SA1')
-qa_2461_sa1 = Quadrupole(l=0.1137, k1=-0.5445788788, tilt=0.0, eid='QA.2461.SA1')
+qf_2177_t2 = Quadrupole(l=0.5321, k1=-0.1550803182, tilt=0.0, eid='QF.2177.T2')
+qf_2192_t2 = Quadrupole(l=0.5321, k1=0.1524541549, tilt=0.0, eid='QF.2192.T2')
+qf_2207_t2 = Quadrupole(l=0.5321, k1=-0.1286716831, tilt=0.0, eid='QF.2207.T2')
+qf_2218_t2 = Quadrupole(l=0.5321, k1=0.1206127216, tilt=0.0, eid='QF.2218.T2')
+qa_2229_t2 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2229.T2')
+qa_2235_t2 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2235.T2')
+qa_2241_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2241.SA1')
+qa_2247_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2247.SA1')
+qa_2253_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2253.SA1')
+qa_2259_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2259.SA1')
+qa_2266_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2266.SA1')
+qa_2272_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2272.SA1')
+qa_2278_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2278.SA1')
+qa_2284_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2284.SA1')
+qa_2290_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2290.SA1')
+qa_2296_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2296.SA1')
+qa_2302_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2302.SA1')
+qa_2308_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2308.SA1')
+qa_2314_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2314.SA1')
+qa_2320_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2320.SA1')
+qa_2327_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2327.SA1')
+qa_2333_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2333.SA1')
+qa_2339_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2339.SA1')
+qa_2345_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2345.SA1')
+qa_2351_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2351.SA1')
+qa_2357_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2357.SA1')
+qa_2363_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2363.SA1')
+qa_2369_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2369.SA1')
+qa_2375_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2375.SA1')
+qa_2381_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2381.SA1')
+qa_2388_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2388.SA1')
+qa_2394_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2394.SA1')
+qa_2400_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2400.SA1')
+qa_2406_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2406.SA1')
+qa_2412_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2412.SA1')
+qa_2418_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2418.SA1')
+qa_2424_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2424.SA1')
+qa_2430_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2430.SA1')
+qa_2436_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2436.SA1')
+qa_2442_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2442.SA1')
+qa_2449_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2449.SA1')
+qa_2455_sa1 = Quadrupole(l=0.1137, k1=0.5620550639, tilt=0.0, eid='QA.2455.SA1')
+qa_2461_sa1 = Quadrupole(l=0.1137, k1=-0.5620550639, tilt=0.0, eid='QA.2461.SA1')
+
+
 
 # bending magnets 
 bd_2079_t2 = RBend(l = 1.0, angle=0.0, e1=0.0, e2=0.0, gap=0, tilt=0, fint=0.0, fintx=0.0, eid='BD.2079.T2')
@@ -147,6 +154,8 @@ cny_2229_t2 = Vcor(l=0.3, angle=0.0, eid='CNY.2229.T2')
 cex_2230_t2 = Hcor(l=0.1, angle=0.0, eid='CEX.2230.T2')
 cny_2234_t2 = Vcor(l=0.3, angle=0.0, eid='CNY.2234.T2')
 cex_2234_t2 = Hcor(l=0.1, angle=0.0, eid='CEX.2234.T2')
+cux_2238_sa1 = Drift(l=0.) # Hcor(l=0.0, angle=0.0, eid='CUX.2238.SA1')
+cux_2244_sa1 = Drift(l=0.) # Hcor(l=0.0, angle=0.0, eid='CUX.2244.SA1')
 cax_2248_sa1 = Hcor(l=0.0, angle=0.0, eid='CAX.2248.SA1')
 cay_2248_sa1 = Vcor(l=0.0, angle=0.0, eid='CAY.2248.SA1')
 cbx_2253_sa1 = Hcor(l=0.0, angle=0.0, eid='CBX.2253.SA1')
@@ -288,6 +297,10 @@ cay_2456_sa1 = Vcor(l=0.0, angle=0.0, eid='CAY.2456.SA1')
 cbx_2460_sa1 = Hcor(l=0.0, angle=0.0, eid='CBX.2460.SA1')
 cby_2460_sa1 = Vcor(l=0.0, angle=0.0, eid='CBY.2460.SA1')
 
+
+
+
+
 # markers 
 stsub_1980_tl = Marker(eid='STSUB.1980.TL')
 ensub_1997_tl = Marker(eid='ENSUB.1997.TL')
@@ -307,6 +320,7 @@ ensec_2235_t2 = Marker(eid='ENSEC.2235.T2')
 stsec_2235_sa1 = Marker(eid='STSEC.2235.SA1')
 match_2247_sa1 = Marker(eid='MATCH.2247.SA1')
 ensec_2461_sa1 = Marker(eid='ENSEC.2461.SA1')
+
 
 # monitor 
 bpma_1995_tl = Monitor(eid='BPMA.1995.TL')
@@ -365,47 +379,48 @@ bpme_2448_sa1 = Monitor(eid='BPME.2448.SA1')
 bpme_2454_sa1 = Monitor(eid='BPME.2454.SA1')
 bpme_2461_sa1 = Monitor(eid='BPME.2461.SA1')
 
-# sextupoles 
 
 # octupole 
 
-# undulator 
-u40s_2232_t2 = Undulator(lperiod=0.04, nperiods=3, Kx=0.0, Ky=0.0, eid='U40S.2232.T2')
-u40_2250_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2250.SA1')
-u40_2256_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2256.SA1')
-u40_2262_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2262.SA1')
-u40_2269_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2269.SA1')
-u40_2275_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2275.SA1')
-u40_2281_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2281.SA1')
-u40_2287_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2287.SA1')
-u40_2293_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2293.SA1')
-u40_2299_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2299.SA1')
-u40_2305_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2305.SA1')
-u40_2311_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2311.SA1')
-u40_2317_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2317.SA1')
-u40_2323_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2323.SA1')
-u40_2330_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2330.SA1')
-u40_2336_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2336.SA1')
-u40_2342_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2342.SA1')
-u40_2348_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2348.SA1')
-u40_2354_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2354.SA1')
-u40_2360_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2360.SA1')
-u40_2366_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2366.SA1')
-u40_2372_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2372.SA1')
-u40_2378_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2378.SA1')
-u40_2384_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2384.SA1')
-u40_2391_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2391.SA1')
-u40_2397_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2397.SA1')
-u40_2403_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2403.SA1')
-u40_2409_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2409.SA1')
-u40_2415_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2415.SA1')
-u40_2421_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2421.SA1')
-u40_2427_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2427.SA1')
-u40_2433_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2433.SA1')
-u40_2439_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2439.SA1')
-u40_2445_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2445.SA1')
-u40_2452_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2452.SA1')
-u40_2458_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.2458.SA1')
+# undulator
+Kx = 2.9
+u40s_2232_t2 = Undulator(lperiod=0.04, nperiods=3, Kx=Kx, Ky=0.0, eid='U40S.2232.T2')
+u40_2250_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2250.SA1')
+u40_2256_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2256.SA1')
+u40_2262_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2262.SA1')
+u40_2269_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2269.SA1')
+u40_2275_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2275.SA1')
+u40_2281_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2281.SA1')
+u40_2287_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2287.SA1')
+u40_2293_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2293.SA1')
+u40_2299_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2299.SA1')
+u40_2305_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2305.SA1')
+u40_2311_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2311.SA1')
+u40_2317_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2317.SA1')
+u40_2323_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2323.SA1')
+u40_2330_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2330.SA1')
+u40_2336_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2336.SA1')
+u40_2342_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2342.SA1')
+u40_2348_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2348.SA1')
+u40_2354_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2354.SA1')
+u40_2360_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2360.SA1')
+u40_2366_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2366.SA1')
+u40_2372_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2372.SA1')
+u40_2378_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2378.SA1')
+u40_2384_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2384.SA1')
+u40_2391_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2391.SA1')
+u40_2397_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2397.SA1')
+u40_2403_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2403.SA1')
+u40_2409_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2409.SA1')
+u40_2415_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2415.SA1')
+u40_2421_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2421.SA1')
+u40_2427_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2427.SA1')
+u40_2433_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2433.SA1')
+u40_2439_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2439.SA1')
+u40_2445_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2445.SA1')
+u40_2452_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2452.SA1')
+u40_2458_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=Kx, Ky=0.0, eid='U40.2458.SA1')
+#u40s_2797_t4 = Undulator(lperiod=0.04, nperiods=3, Kx=Kx, Ky=0.0, eid='U40S.2797.T4')
 
 # cavity 
 
@@ -416,7 +431,7 @@ u40_2458_sa1 = Undulator(lperiod=0.04, nperiods=125, Kx=0.0, Ky=0.0, eid='U40.24
 # Solenoids 
 
 # lattice 
-cell_sase1 = (stsub_1980_tl, d_1, qk_1982_tl, d_2, bpma_1995_tl, d_3, qf_1997_tl,
+cell = (stsub_1980_tl, d_1, qk_1982_tl, d_2, bpma_1995_tl, d_3, qf_1997_tl,
 d_4, chy_1997_tl, ensub_1997_tl, stsub_1997_tl, d_5, chy_2004_tl, d_6, cfy_2010_tl, 
 d_7, tora_2011_tl, d_8, bpma_2011_tl, d_9, qf_2012_tl, d_10, chx_2012_tl, 
 d_11, chy_2012_tl, d_12, cnx_2021_tl, d_13, cny_2021_tl, d_14, bpmd_2022_tl, 
@@ -435,61 +450,65 @@ qf_2207_t2, d_4, cfy_2207_t2, d_59, otrb_2212_t2, d_60, bpma_2218_t2, d_27,
 qf_2218_t2, d_4, cfx_2219_t2, d_63, tora_2228_t2, d_64, bpme_2229_t2, d_65, 
 qa_2229_t2, d_66, cny_2229_t2, d_67, cex_2230_t2, d_68, u40s_2232_t2, d_69, 
 cny_2234_t2, d_70, cex_2234_t2, d_71, bpme_2235_t2, d_72, qa_2235_t2, d_73, 
-ensec_2235_t2, stsec_2235_sa1, d_74, bpme_2241_sa1, d_72, qa_2241_sa1, d_76, bpme_2247_sa1, 
-d_72, qa_2247_sa1, d_73, match_2247_sa1, d_79, cax_2248_sa1, cay_2248_sa1, d_80, 
-u40_2250_sa1, d_81, cbx_2253_sa1, cby_2253_sa1, d_82, bpme_2253_sa1, d_72, qa_2253_sa1, 
-d_84, cax_2254_sa1, cay_2254_sa1, d_80, u40_2256_sa1, d_81, cbx_2259_sa1, cby_2259_sa1, 
-d_82, bpme_2259_sa1, d_72, qa_2259_sa1, d_84, cax_2260_sa1, cay_2260_sa1, d_80, 
-u40_2262_sa1, d_81, cbx_2265_sa1, cby_2265_sa1, d_82, bpme_2265_sa1, d_72, qa_2266_sa1, 
-d_84, cax_2267_sa1, cay_2267_sa1, d_80, u40_2269_sa1, d_81, cbx_2271_sa1, cby_2271_sa1, 
-d_82, bpme_2271_sa1, d_72, qa_2272_sa1, d_84, cax_2273_sa1, cay_2273_sa1, d_80, 
-u40_2275_sa1, d_81, cbx_2277_sa1, cby_2277_sa1, d_82, bpme_2278_sa1, d_72, qa_2278_sa1, 
-d_84, cax_2279_sa1, cay_2279_sa1, d_80, u40_2281_sa1, d_81, cbx_2283_sa1, cby_2283_sa1, 
-d_82, bpme_2284_sa1, d_72, qa_2284_sa1, d_84, cax_2285_sa1, cay_2285_sa1, d_80, 
-u40_2287_sa1, d_81, cbx_2289_sa1, cby_2289_sa1, d_82, bpme_2290_sa1, d_72, qa_2290_sa1, 
-d_84, cax_2291_sa1, cay_2291_sa1, d_80, u40_2293_sa1, d_81, cbx_2296_sa1, cby_2296_sa1, 
-d_82, bpme_2296_sa1, d_72, qa_2296_sa1, d_84, cax_2297_sa1, cay_2297_sa1, d_80, 
-u40_2299_sa1, d_81, cbx_2302_sa1, cby_2302_sa1, d_82, bpme_2302_sa1, d_72, qa_2302_sa1, 
-d_84, cax_2303_sa1, cay_2303_sa1, d_80, u40_2305_sa1, d_81, cbx_2308_sa1, cby_2308_sa1, 
-d_82, bpme_2308_sa1, d_72, qa_2308_sa1, d_84, cax_2309_sa1, cay_2309_sa1, d_80, 
-u40_2311_sa1, d_81, cbx_2314_sa1, cby_2314_sa1, d_82, bpme_2314_sa1, d_72, qa_2314_sa1, 
-d_84, cax_2315_sa1, cay_2315_sa1, d_80, u40_2317_sa1, d_81, cbx_2320_sa1, cby_2320_sa1, 
-d_82, bpme_2320_sa1, d_72, qa_2320_sa1, d_84, cax_2321_sa1, cay_2321_sa1, d_80, 
-u40_2323_sa1, d_81, cbx_2326_sa1, cby_2326_sa1, d_82, bpme_2326_sa1, d_72, qa_2327_sa1, 
-d_84, cax_2328_sa1, cay_2328_sa1, d_80, u40_2330_sa1, d_81, cbx_2332_sa1, cby_2332_sa1, 
-d_82, bpme_2332_sa1, d_72, qa_2333_sa1, d_84, cax_2334_sa1, cay_2334_sa1, d_80, 
-u40_2336_sa1, d_81, cbx_2338_sa1, cby_2338_sa1, d_82, bpme_2339_sa1, d_72, qa_2339_sa1, 
-d_84, cax_2340_sa1, cay_2340_sa1, d_80, u40_2342_sa1, d_81, cbx_2344_sa1, cby_2344_sa1, 
-d_82, bpme_2345_sa1, d_72, qa_2345_sa1, d_84, cax_2346_sa1, cay_2346_sa1, d_80, 
-u40_2348_sa1, d_81, cbx_2350_sa1, cby_2350_sa1, d_82, bpme_2351_sa1, d_72, qa_2351_sa1, 
-d_84, cax_2352_sa1, cay_2352_sa1, d_80, u40_2354_sa1, d_81, cbx_2357_sa1, cby_2357_sa1, 
-d_82, bpme_2357_sa1, d_72, qa_2357_sa1, d_84, cax_2358_sa1, cay_2358_sa1, d_80, 
-u40_2360_sa1, d_81, cbx_2363_sa1, cby_2363_sa1, d_82, bpme_2363_sa1, d_72, qa_2363_sa1, 
-d_84, cax_2364_sa1, cay_2364_sa1, d_80, u40_2366_sa1, d_81, cbx_2369_sa1, cby_2369_sa1, 
-d_82, bpme_2369_sa1, d_72, qa_2369_sa1, d_84, cax_2370_sa1, cay_2370_sa1, d_80, 
-u40_2372_sa1, d_81, cbx_2375_sa1, cby_2375_sa1, d_82, bpme_2375_sa1, d_72, qa_2375_sa1, 
-d_84, cax_2376_sa1, cay_2376_sa1, d_80, u40_2378_sa1, d_81, cbx_2381_sa1, cby_2381_sa1, 
-d_82, bpme_2381_sa1, d_72, qa_2381_sa1, d_84, cax_2382_sa1, cay_2382_sa1, d_80, 
-u40_2384_sa1, d_81, cbx_2387_sa1, cby_2387_sa1, d_82, bpme_2387_sa1, d_72, qa_2388_sa1, 
-d_84, cax_2389_sa1, cay_2389_sa1, d_80, u40_2391_sa1, d_81, cbx_2393_sa1, cby_2393_sa1, 
-d_82, bpme_2393_sa1, d_72, qa_2394_sa1, d_84, cax_2395_sa1, cay_2395_sa1, d_80, 
-u40_2397_sa1, d_81, cbx_2399_sa1, cby_2399_sa1, d_82, bpme_2400_sa1, d_72, qa_2400_sa1, 
-d_84, cax_2401_sa1, cay_2401_sa1, d_80, u40_2403_sa1, d_81, cbx_2405_sa1, cby_2405_sa1, 
-d_82, bpme_2406_sa1, d_72, qa_2406_sa1, d_84, cax_2407_sa1, cay_2407_sa1, d_80, 
-u40_2409_sa1, d_81, cbx_2411_sa1, cby_2411_sa1, d_82, bpme_2412_sa1, d_72, qa_2412_sa1, 
-d_84, cax_2413_sa1, cay_2413_sa1, d_80, u40_2415_sa1, d_81, cbx_2418_sa1, cby_2418_sa1, 
-d_82, bpme_2418_sa1, d_72, qa_2418_sa1, d_84, cax_2419_sa1, cay_2419_sa1, d_80, 
-u40_2421_sa1, d_81, cbx_2424_sa1, cby_2424_sa1, d_82, bpme_2424_sa1, d_72, qa_2424_sa1, 
-d_84, cax_2425_sa1, cay_2425_sa1, d_80, u40_2427_sa1, d_81, cbx_2430_sa1, cby_2430_sa1, 
-d_82, bpme_2430_sa1, d_72, qa_2430_sa1, d_84, cax_2431_sa1, cay_2431_sa1, d_80, 
-u40_2433_sa1, d_81, cbx_2436_sa1, cby_2436_sa1, d_82, bpme_2436_sa1, d_72, qa_2436_sa1, 
-d_84, cax_2437_sa1, cay_2437_sa1, d_80, u40_2439_sa1, d_81, cbx_2442_sa1, cby_2442_sa1, 
-d_82, bpme_2442_sa1, d_72, qa_2442_sa1, d_84, cax_2443_sa1, cay_2443_sa1, d_80, 
-u40_2445_sa1, d_81, cbx_2448_sa1, cby_2448_sa1, d_82, bpme_2448_sa1, d_72, qa_2449_sa1, 
-d_84, cax_2450_sa1, cay_2450_sa1, d_80, u40_2452_sa1, d_81, cbx_2454_sa1, cby_2454_sa1, 
-d_82, bpme_2454_sa1, d_72, qa_2455_sa1, d_84, cax_2456_sa1, cay_2456_sa1, d_80, 
-u40_2458_sa1, d_81, cbx_2460_sa1, cby_2460_sa1, d_82, bpme_2461_sa1, d_72, qa_2461_sa1, 
-d_73, ensec_2461_sa1)
+ensec_2235_t2, stsec_2235_sa1, d_74, cux_2238_sa1, d_75, bpme_2241_sa1, d_72, qa_2241_sa1, 
+d_77, cux_2244_sa1, d_75, bpme_2247_sa1, d_72, qa_2247_sa1, d_73, match_2247_sa1, 
+d_81, cax_2248_sa1, cay_2248_sa1, d_82, u40_2250_sa1, d_83, cbx_2253_sa1, cby_2253_sa1, 
+d_84, bpme_2253_sa1, d_72, qa_2253_sa1, d_86, cax_2254_sa1, cay_2254_sa1, d_82, 
+u40_2256_sa1, d_83, cbx_2259_sa1, cby_2259_sa1, d_84, bpme_2259_sa1, d_72, qa_2259_sa1, 
+d_86, cax_2260_sa1, cay_2260_sa1, d_82, u40_2262_sa1, d_83, cbx_2265_sa1, cby_2265_sa1, 
+d_84, bpme_2265_sa1, d_72, qa_2266_sa1, d_86, cax_2267_sa1, cay_2267_sa1, d_82, 
+u40_2269_sa1, d_83, cbx_2271_sa1, cby_2271_sa1, d_84, bpme_2271_sa1, d_72, qa_2272_sa1, 
+d_86, cax_2273_sa1, cay_2273_sa1, d_82, u40_2275_sa1, d_83, cbx_2277_sa1, cby_2277_sa1, 
+d_84, bpme_2278_sa1, d_72, qa_2278_sa1, d_86, cax_2279_sa1, cay_2279_sa1, d_82, 
+u40_2281_sa1, d_83, cbx_2283_sa1, cby_2283_sa1, d_84, bpme_2284_sa1, d_72, qa_2284_sa1, 
+d_86, cax_2285_sa1, cay_2285_sa1, d_82, u40_2287_sa1, d_83, cbx_2289_sa1, cby_2289_sa1, 
+d_84, bpme_2290_sa1, d_72, qa_2290_sa1, d_86, cax_2291_sa1, cay_2291_sa1, d_82, 
+u40_2293_sa1, d_83, cbx_2296_sa1, cby_2296_sa1, d_84, bpme_2296_sa1, d_72, qa_2296_sa1, 
+d_86, cax_2297_sa1, cay_2297_sa1, d_82, u40_2299_sa1, d_83, cbx_2302_sa1, cby_2302_sa1, 
+d_84, bpme_2302_sa1, d_72, qa_2302_sa1, d_86, cax_2303_sa1, cay_2303_sa1, d_82, 
+u40_2305_sa1, d_83, cbx_2308_sa1, cby_2308_sa1, d_84, bpme_2308_sa1, d_72, qa_2308_sa1, 
+d_86, cax_2309_sa1, cay_2309_sa1, d_82, u40_2311_sa1, d_83, cbx_2314_sa1, cby_2314_sa1, 
+d_84, bpme_2314_sa1, d_72, qa_2314_sa1, d_86, cax_2315_sa1, cay_2315_sa1, d_82, 
+u40_2317_sa1, d_83, cbx_2320_sa1, cby_2320_sa1, d_84, bpme_2320_sa1, d_72, qa_2320_sa1, 
+d_86, cax_2321_sa1, cay_2321_sa1, d_82, u40_2323_sa1, d_83, cbx_2326_sa1, cby_2326_sa1, 
+d_84, bpme_2326_sa1, d_72, qa_2327_sa1, d_86, cax_2328_sa1, cay_2328_sa1, d_82, 
+u40_2330_sa1, d_83, cbx_2332_sa1, cby_2332_sa1, d_84, bpme_2332_sa1, d_72, qa_2333_sa1, 
+d_86, cax_2334_sa1, cay_2334_sa1, d_82, u40_2336_sa1, d_83, cbx_2338_sa1, cby_2338_sa1, 
+d_84, bpme_2339_sa1, d_72, qa_2339_sa1, d_86, cax_2340_sa1, cay_2340_sa1, d_82, 
+u40_2342_sa1, d_83, cbx_2344_sa1, cby_2344_sa1, d_84, bpme_2345_sa1, d_72, qa_2345_sa1, 
+d_86, cax_2346_sa1, cay_2346_sa1, d_82, u40_2348_sa1, d_83, cbx_2350_sa1, cby_2350_sa1, 
+d_84, bpme_2351_sa1, d_72, qa_2351_sa1, d_86, cax_2352_sa1, cay_2352_sa1, d_82, 
+u40_2354_sa1, d_83, cbx_2357_sa1, cby_2357_sa1, d_84, bpme_2357_sa1, d_72, qa_2357_sa1, 
+d_86, cax_2358_sa1, cay_2358_sa1, d_82, u40_2360_sa1, d_83, cbx_2363_sa1, cby_2363_sa1, 
+d_84, bpme_2363_sa1, d_72, qa_2363_sa1, d_86, cax_2364_sa1, cay_2364_sa1, d_82, 
+u40_2366_sa1, d_83, cbx_2369_sa1, cby_2369_sa1, d_84, bpme_2369_sa1, d_72, qa_2369_sa1, 
+d_86, cax_2370_sa1, cay_2370_sa1, d_82, u40_2372_sa1, d_83, cbx_2375_sa1, cby_2375_sa1, 
+d_84, bpme_2375_sa1, d_72, qa_2375_sa1, d_86, cax_2376_sa1, cay_2376_sa1, d_82, 
+u40_2378_sa1, d_83, cbx_2381_sa1, cby_2381_sa1, d_84, bpme_2381_sa1, d_72, qa_2381_sa1, 
+d_86, cax_2382_sa1, cay_2382_sa1, d_82, u40_2384_sa1, d_83, cbx_2387_sa1, cby_2387_sa1, 
+d_84, bpme_2387_sa1, d_72, qa_2388_sa1, d_86, cax_2389_sa1, cay_2389_sa1, d_82, 
+u40_2391_sa1, d_83, cbx_2393_sa1, cby_2393_sa1, d_84, bpme_2393_sa1, d_72, qa_2394_sa1, 
+d_86, cax_2395_sa1, cay_2395_sa1, d_82, u40_2397_sa1, d_83, cbx_2399_sa1, cby_2399_sa1, 
+d_84, bpme_2400_sa1, d_72, qa_2400_sa1, d_86, cax_2401_sa1, cay_2401_sa1, d_82, 
+u40_2403_sa1, d_83, cbx_2405_sa1, cby_2405_sa1, d_84, bpme_2406_sa1, d_72, qa_2406_sa1, 
+d_86, cax_2407_sa1, cay_2407_sa1, d_82, u40_2409_sa1, d_83, cbx_2411_sa1, cby_2411_sa1, 
+d_84, bpme_2412_sa1, d_72, qa_2412_sa1, d_86, cax_2413_sa1, cay_2413_sa1, d_82, 
+u40_2415_sa1, d_83, cbx_2418_sa1, cby_2418_sa1, d_84, bpme_2418_sa1, d_72, qa_2418_sa1, 
+d_86, cax_2419_sa1, cay_2419_sa1, d_82, u40_2421_sa1, d_83, cbx_2424_sa1, cby_2424_sa1, 
+d_84, bpme_2424_sa1, d_72, qa_2424_sa1, d_86, cax_2425_sa1, cay_2425_sa1, d_82, 
+u40_2427_sa1, d_83, cbx_2430_sa1, cby_2430_sa1, d_84, bpme_2430_sa1, d_72, qa_2430_sa1, 
+d_86, cax_2431_sa1, cay_2431_sa1, d_82, u40_2433_sa1, d_83, cbx_2436_sa1, cby_2436_sa1, 
+d_84, bpme_2436_sa1, d_72, qa_2436_sa1, d_86, cax_2437_sa1, cay_2437_sa1, d_82, 
+u40_2439_sa1, d_83, cbx_2442_sa1, cby_2442_sa1, d_84, bpme_2442_sa1, d_72, qa_2442_sa1, 
+d_86, cax_2443_sa1, cay_2443_sa1, d_82, u40_2445_sa1, d_83, cbx_2448_sa1, cby_2448_sa1, 
+d_84, bpme_2448_sa1, d_72, qa_2449_sa1, d_86, cax_2450_sa1, cay_2450_sa1, d_82, 
+u40_2452_sa1, d_83, cbx_2454_sa1, cby_2454_sa1, d_84, bpme_2454_sa1, d_72, qa_2455_sa1, 
+d_86, cax_2456_sa1, cay_2456_sa1, d_82, u40_2458_sa1, d_83, cbx_2460_sa1, cby_2460_sa1, 
+d_84, bpme_2461_sa1, d_72, qa_2461_sa1, d_73, ensec_2461_sa1)
+
+
+
+
 # power supplies 
 
 #  
@@ -550,7 +569,6 @@ qa_2449_sa1.ps_id = 'QA.1.SA1'
 qa_2455_sa1.ps_id = 'QA.2.SA1'
 qa_2461_sa1.ps_id = 'QA.1.SA1'
 
-#  
 
 #  
 
@@ -558,3 +576,4 @@ qa_2461_sa1.ps_id = 'QA.1.SA1'
 
 #  
 bd_2079_t2.ps_id = 'BD.10.T2'
+

@@ -19,22 +19,21 @@ class LatSection:
 
 
 
-
 class XFELLattice:
     def __init__(self, path="lattices.phase_advance_5pi"):
         self.lat_zi = 23.2 # start position of the lattice in [m]
-        self.config = {"I1":    path + ".xfel_i1_mad",
-                       "L1":    path + ".xfel_l1_mad",
-                       "L2":    path + ".xfel_l2_mad",
-                       "L3":    path + ".xfel_l3_no_cl_mode_B",
-                       "CL":    path + ".xfel_cl_mode_B",
-                       "SASE1": path + ".xfel_sase1_mode_B",
-                       "T4":    path + ".xfel_t4",
-                       "SASE3": path + ".xfel_sase3_mode_B",
+        self.config = {"I1":    path + ".i1",
+                       "L1":    path + ".l1",
+                       "L2":    path + ".l2",
+                       "L3":    path + ".l3",
+                       "CL":    path + ".cl",
+                       "SASE1": path + ".sase1",
+                       "T4":    path + ".t4",
+                       "SASE3": path + ".sase3",
                        "I1D":   path + ".i1d",
                        "B1D":   path + ".b1d",
                        "B2D":   path + ".b2d",
-                       "TLD":   path + ".xfel_tld_892"}
+                       "TLD":   path + ".tld"}
 
         self.lats = {}
         self.load()

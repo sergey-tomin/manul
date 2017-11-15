@@ -88,7 +88,7 @@ class ManulInterfaceWindow(QMainWindow):
         # initialize
         QFrame.__init__(self)
 
-        self.logbook = "xfellog"
+        #self.logbook = "xfellog"
         self.settings = None
         #self.mi = XFELMachineInterface()
         self.mi = TestMachineInterface()
@@ -103,27 +103,8 @@ class ManulInterfaceWindow(QMainWindow):
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispersionInterface(parent=self)
 
-        self.xfel_lattice = lattice_manager.XFELLattice()
+        self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
 
-        #self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
-#
-        #lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
-        #self.cl_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
-        #self.l3_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
-        #self.sase1_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
-        #self.sase3_copy = deepcopy(lat.sequence)
-#
-        #self.copy_cells = deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
-        #                                 cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
-#
-        #self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
-        #                           cell_cl + cell_sase1 + cell_t4 + cell_sase3))
 
         self.online_calc = True
 
@@ -148,23 +129,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.initTable()
         #print("quads", self.quads)
         self.add_plot()
-        #self.ui.cb_lattice.addItem("Arbitrary")
-        #self.ui.cb_lattice.addItem("I1D")
-        #self.ui.cb_lattice.addItem("B1D")
-        #self.ui.cb_lattice.addItem("B2D")
-        #self.ui.cb_lattice.addItem("TLD")
-        #self.ui.cb_lattice.addItem("I1")
-        #self.ui.cb_lattice.addItem("L1")
-        #self.ui.cb_lattice.addItem("L2")
-        #self.ui.cb_lattice.addItem("L3")
-        #self.ui.cb_lattice.addItem("CL")
-        #self.ui.cb_lattice.addItem("SASE1")
-        #self.ui.cb_lattice.addItem("T4")
-        #self.ui.cb_lattice.addItem("SASE3")
-        #self.ui.cb_lattice.addItem("up to B1")
-        #self.ui.cb_lattice.addItem("up to B2")
-        #self.ui.cb_lattice.addItem("up to TL")
-        #self.ui.cb_lattice.addItem("up to SASE3")
+
+
         #self.ui.cb_lattice.setCurrentIndex(0)
 
         #self.correctors_list(seq=self.big_sequence, energy=130)
@@ -183,11 +149,6 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
         #self.ui.pb_write.clicked.connect(self.match)
         #self.ui.pb_reload.clicked.connect(self.reload_lat)
-
-        #self.ui.sb_lat_from.editingFinished.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_to.editingFinished.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_from.valueChanged.connect(self.arbitrary_lattice)
-        #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
 
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
         self.ui.action_Parameters.triggered.connect(self.run_settings_window)
@@ -233,6 +194,8 @@ class ManulInterfaceWindow(QMainWindow):
         self.single_shot_flag = table["single_shot"]
 
         self.co_nlast_bpms = table["co_nlast"]
+        self.logbook = table["logbook"]
+        self.path2lattice = table["lattice"]
         logger.debug("load settings ... OK")
 
     def update_table(self):

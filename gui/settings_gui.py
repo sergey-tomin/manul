@@ -22,7 +22,6 @@ class ManulSettings(QWidget):
         self.loadStyleSheet()
         #self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
 
-
         self.ui.pb_apply.clicked.connect(self.apply_settings)
         self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
         self.ui.pb_cancel.clicked.connect(self.close)
@@ -56,6 +55,7 @@ class ManulSettings(QWidget):
         table["nlast"] = self.ui.sb_nlast.value()
         table["nreadings"] = self.ui.sb_nreadings.value()
         table["lattice"] = self.ui.le_lattice.text()
+        table["logbook"] = self.ui.le_logbook.text()
         table["epsilon_x"] = self.ui.sb_epsilon_x.value()
         table["epsilon_y"] = self.ui.sb_epsilon_y.value()
         table["uncheck_corrs"] = self.string2list(self.ui.te_corrs.toPlainText())
@@ -91,6 +91,7 @@ class ManulSettings(QWidget):
         self.ui.sb_nlast.setValue(table["nlast"])
         self.ui.sb_nreadings.setValue(table["nreadings"])
         self.ui.le_lattice.setText(table["lattice"])
+        if "logbook" in table.keys():  self.ui.le_logbook.setText(table["logbook"])
 
         if "epsilon_x" in table.keys():  self.ui.sb_epsilon_x.setValue(table["epsilon_x"])
         if "epsilon_y" in table.keys():  self.ui.sb_epsilon_y.setValue(table["epsilon_y"])
@@ -104,6 +105,8 @@ class ManulSettings(QWidget):
         if "le_i1_energy" in table.keys(): self.ui.le_i1_energy.setText(table["le_i1_energy"])
 
         if "co_nlast" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
+
+        #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")
 #        a = [text.replace(" ", "") for text in a]
