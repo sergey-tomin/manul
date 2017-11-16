@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>581</width>
-    <height>590</height>
+    <height>603</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -325,7 +325,7 @@
               <item row="0" column="0">
                <widget class="QCheckBox" name="cb_single_shot">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>

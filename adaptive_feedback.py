@@ -17,6 +17,7 @@ from threading import Thread, Event
 from ocelot.cpbd.magnetic_lattice import *
 from ocelot.optimizer.mint.xfel_interface import *
 import logging
+import numbers
 # filename="logs/afb.log",
 #logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -162,15 +163,18 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.save_state(self.configs_dir+ self.cb_load_settings.currentText()+".json")
 
     def load_presettings(self):
-        if self.cb_load_settings.currentText() == "SASE1 launch":
-            if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
-                logger.error("Config file does not exist.")
-                self.error_box("Config file does not exist.")
+        #if self.cb_load_settings.currentText() == "SASE1 launch":
+        if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
+            logger.error("Config file does not exist.")
+            self.error_box("Config file does not exist.")
 
-                return
+            return
+        try:
             active_corrs, active_bpms = self.load_state(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json")
-
-
+        except Exception as e:
+            logger.error("load_presettings: " +str(e))
+            raise
+            
         for cor in self.orbit_class.corrs:
             if cor.id not in active_corrs:
                 cor.ui.uncheck()
@@ -185,7 +189,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         beam_on = self.read_data()
         if not beam_on:
             self.counter -= 1
-            logger.info(" loop: beam OFF. counter -= 1")
+            logger.debug(" loop: beam OFF. counter -= 1")
         bpm_delay = self.sb_time_delay.value()
         go_delay = self.sb_go_recalc_delay.value()
         #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
@@ -451,7 +455,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         if not beam_on and not self.debug_mode:
             return beam_on
         target = self.read_objective_function()
-        logger.debug("read data, target: " + str(target))
+        if not isinstance(target, numbers.Number):
+            logger.warning("read data, target is not number: " + str(target))
         if target == None:
             self.stop_statistics()
             return None

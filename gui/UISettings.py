@@ -11,10 +11,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(581, 590)
+        Form.resize(581, 603)
         Form.setMinimumSize(QtCore.QSize(0, 0))
         Form.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        Form.setStyleSheet("background-color: white")
+        #Form.setStyleSheet("background-color: white")
         self.gridLayout_2 = QtWidgets.QGridLayout(Form)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tabWidget = QtWidgets.QTabWidget(Form)
@@ -190,7 +190,7 @@ class Ui_Form(object):
         self.sb_nlast.setObjectName("sb_nlast")
         self.gridLayout_5.addWidget(self.sb_nlast, 2, 1, 1, 1)
         self.cb_single_shot = QtWidgets.QCheckBox(self.groupBox_2)
-        self.cb_single_shot.setEnabled(False)
+        self.cb_single_shot.setEnabled(True)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.cb_single_shot.setFont(font)

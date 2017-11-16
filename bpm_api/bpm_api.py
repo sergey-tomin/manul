@@ -6,6 +6,7 @@ Created on Thu Nov  2 16:00:50 2017
 @author: S.Tomin and D.Lipka 
 """
 import pydoocs as pyd
+import os
 from PyQt5 import QtGui
 
 class BPMDoocsInterface:
@@ -78,7 +79,10 @@ class ButtonBPM:
     def __init__(self, mi=None):
         if mi == None:
             self.mi = BPMDoocsInterface()
-        self.filename = "BPMDAMC02_locations.txt"
+        # "BPMDAMC02_locations.txt"
+        path = os.path.realpath(__name__)
+        indx = path.find("bpm_api")
+        self.filename = path[:indx] +"bpm_api" + os.sep + "BPMDAMC02_locations.txt"
         self.bpm_addresses = self.get_BPM_addresses_from_file()
 
     def activate(self, max_charge_value, max_pos_value):
@@ -149,7 +153,9 @@ class CavityBPM:
     def __init__(self, mi=None):
         if mi == None:
             self.mi = BPMDoocsInterface()
-        self.filename = "BPMDAMC02_locations.txt"
+        path = os.path.realpath(__name__)
+        indx = path.find("bpm_api")
+        self.filename = path[:indx] +"bpm_api" + os.sep + "BPMDAMC02_locations.txt"
         self.bpm_addresses = self.get_BPM_addresses_from_file()
         
     def activate(self, attenuation):
