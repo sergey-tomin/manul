@@ -8,7 +8,7 @@ Created on Thu Nov  2 16:00:50 2017
 import pydoocs as pyd
 from PyQt5 import QtGui
 
-class MachineInterface:
+class BPMDoocsInterface:
     def __init__(self, ui_textbox=None):
         self.textbox = ui_textbox
 
@@ -55,7 +55,7 @@ class MachineInterface:
             #print(address_single)
             try:
                 pyd.write(address_single,value[i])
-                i=i+1
+                i = i + 1
             except:
                 message = "Following address does not allow to set a doocs value"
                 message += address_single 
@@ -75,8 +75,9 @@ class ButtonBPM:
     BPM_addresses - Cavity BPM addresses
     """
     
-    def __init__(self, mi):
-        self.mi = mi
+    def __init__(self, mi=None):
+        if mi == None:
+            self.mi = BPMDoocsInterface()
         self.filename = "BPMDAMC02_locations.txt"
         self.bpm_addresses = self.get_BPM_addresses_from_file()
 
@@ -145,8 +146,9 @@ class CavityBPM:
     BPM_addresses - Cavity BPM addresses
     """
     
-    def __init__(self, mi):
-        self.mi = mi
+    def __init__(self, mi=None):
+        if mi == None:
+            self.mi = BPMDoocsInterface()
         self.filename = "BPMDAMC02_locations.txt"
         self.bpm_addresses = self.get_BPM_addresses_from_file()
         

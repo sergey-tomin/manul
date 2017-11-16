@@ -16,7 +16,15 @@ from devices import *
 from golden_orbit import GoldenOrbit
 from adaptive_feedback import UIAFeedBack
 from ocelot.optimizer.mint.xfel_interface import *
+
 logger = logging.getLogger(__name__)
+
+try:
+    from bpm_api import bpm_api
+except Exception as e:
+    logger.warning("Import bpm_api: " + str(e))
+
+
 
 
 class ResponseMatrixCalculator(Thread):
@@ -171,6 +179,14 @@ class OrbitInterface:
         
         self.ui.actionSave_corrs.triggered.connect(self.save_correctors)
         self.ui.actionLoad_corrs.triggered.connect(self.restore_correctors)
+        self.button_bpm = None
+        self.cavity_bpm = None
+        try:
+            self.button_bpm = bpm_api.ButtonBPM()
+            self.cavity_bpm = bpm_api.CavityBPM()
+        except Exception as e:
+            logger.warning("Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: " + str(e))
+
 
     def reset_undo_database(self):
         self.undo_data_base = []
@@ -566,14 +582,45 @@ class OrbitInterface:
         self.online_calc = True
         self.calc_orbit()
 
-    def read_bpms(self):
+    def single_shot_read_bpms(self):
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+        self.button_bpm.activate(max_charge_value=0.5, max_pos_value=5.)
+        self.cavity_bpm.activate(attenuation=10)
+        time.sleep(0.1)
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+
+        try:
+            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        except Exception as e:
+            logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
+            raise
+        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.calculate_correction()
+
+    def multi_shot_read_bpms(self):
+
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
         
         self.read_correctors()
-        self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
+
+        try:
+            self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
+        except Exception as e:
+            logger.error("read_bpms: mi_orbit.read_and_average()" + str(e))
+            raise
+
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
         self.calculate_correction()
+
+
+    def read_bpms(self):
+        if self.parent.single_shot_flag and (self.button_bpm != None and self.cavity_bpm != None):
+            self.single_shot_read_bpms()
+        else:
+            self.multi_shot_read_bpms()
 
     def calculate_correction(self):
         logger.debug("calculate_correction: .. ")
