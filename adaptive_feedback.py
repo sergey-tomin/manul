@@ -439,7 +439,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                 #elem.ui.uncheck()
                 self.le_warn.clear()
                 self.le_warn.setText("beam OFF")
-                logger.info("read_bpms: beam OFF")
+                #logger.info("read_bpms: beam OFF")
                 beam_on = False
         #print(beam_on)
         return beam_on, np.array(orbit_x), np.array(orbit_y), np.array(orbit_s)
