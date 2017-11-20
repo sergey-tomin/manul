@@ -124,7 +124,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         with open(filename, 'w') as f:
             json.dump(table, f)
         # pickle.dump(table, filename)
-        logger.info("SAVE State")
+        logger.info("Save State")
 
     def load_state(self, filename):
         # pvs = self.ui.widget.pvs
@@ -150,7 +150,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         if "le_c" in table.keys(): self.le_c.setText(table["le_c"])
         if "le_of" in table.keys(): self.le_of.setText(table["le_of"])
 
-        logger.info("LOAD State")
+        logger.info("Load State")
         return corrs, bpms
 
     def save_presettings(self):
@@ -199,10 +199,11 @@ class UIAFeedBack(QWidget, Ui_Form):
                 self.first_go_x = go_x
                 self.first_go_y = go_y
 
+                self.pb_start_feedback.setStyleSheet("color: rgb(85, 255, 127);")
+                self.pb_start_feedback.setText("Start Feedback")
+
     def closeEvent(self, QCloseEvent):
-        self.feedback_timer.stop()
-        self.pb_start_feedback.setStyleSheet("color: rgb(85, 255, 127);")
-        self.pb_start_feedback.setText("Start Feedback")
+        self.stop_feedback()
         self.stop_statistics()
 
     def start_stop_statistics(self):
@@ -214,6 +215,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         :return:
         """
         #print("I am here")
+
+        self.pb_start_feedback.setText("Statistics collection")
+        self.pb_start_feedback.setStyleSheet("color: yellow")
 
         self.counter = 0
         delay = self.sb_time_delay.value()*1000
@@ -245,12 +249,14 @@ class UIAFeedBack(QWidget, Ui_Form):
                 return None
 
             self.statistics_timer.start(delay)
-            self.statistics_timer.start()
+            #self.statistics_timer.start()
+            logger.info("Start Statistics")
             self.pb_start_statistics.setText("Statistics Accum Off")
             self.pb_start_statistics.setStyleSheet("color: red")
 
     def stop_feedback(self):
         self.feedback_timer.stop()
+        logger.info("Stop Feedback")
         self.pb_start_feedback.setStyleSheet("color: rgb(85, 255, 127);")
         self.pb_start_feedback.setText("Start Feedback")
 
@@ -272,16 +278,19 @@ class UIAFeedBack(QWidget, Ui_Form):
         delay = self.sb_feedback_rep.value()*1000
         if self.pb_start_feedback.text() == "Stop Feedback":
             self.stop_feedback()
-        else:
+        elif self.pb_start_feedback.text() == "Start Feedback":
             self.feedback_timer.start(delay)
+            logger.info("Start Feedback")
             self.pb_start_feedback.setText("Stop Feedback")
             self.pb_start_feedback.setStyleSheet("color: red")
+        else:
+            logger.warning("start_stop_feedback: To early")
 
 
     def auto_correction(self):
         """
         Method repeats correction in a loop.
-        repetation rate is defined by spinBox - sb_feedback_sec
+        repetition rate is defined by spinBox - sb_feedback_sec
         feedback_timer - QTimer to repats correction oin different thread
 
         :return:
@@ -289,7 +298,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         #beam_on = self.read_orbit()
         #time.sleep(0.01)
         #if beam_on:
-        self.ref_orbit_calc()
+        is_nan = self.ref_orbit_calc()
+        if is_nan:
+            logger.warning("auto_correction: nan in the ref orbit")
+            self.stop_feedback()
+            self.parent.error_box("auto_correction: nan in the ref orbit")
         stop_flag = self.correct()
         time.sleep(0.01)
         if not stop_flag:
@@ -297,11 +310,14 @@ class UIAFeedBack(QWidget, Ui_Form):
             time.sleep(0.5)
             self.le_warn.clear()
         else:
-            logger.info("Exceed limits of correctors")
+            logger.warning("auto_correction: Exceed limits of correctors")
+            self.stop_feedback()
             self.le_warn.clear()
             self.le_warn.setText("Stop flag. Kicks are not applied")
             self.le_warn.setStyleSheet("color: red")
-            time.sleep(1)
+            self.parent.error_box("Exceed limits of correctors")
+
+            #time.sleep(1)
 
     def correct(self):
         """
@@ -363,7 +379,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.calc_correction[cor.id] = cor.angle
 
         alpha = 0.#self.ui.sb_alpha.value()
-        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=1e-3, epsilon_y=1e-3)
+
+        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.parent.svd_epsilon_x,
+                              epsilon_y=self.parent.svd_epsilon_y, print_log=False)
 
         for cor in self.orbit.corrs:
             self.calc_correction[cor.id] = cor.angle
@@ -427,9 +445,9 @@ class UIAFeedBack(QWidget, Ui_Form):
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
-                    logger.info("charge < charge_thresh" + str(charge < charge_thresh))
+                    logger.info("charge < charge_thresh: " + str(charge < charge_thresh))
                     self.le_warn.clear()
-                    self.le_warn.setText(elem.id+" charge < charge_thresh")
+                    self.le_warn.setText(elem.id + " charge < charge_thresh")
                     self.le_warn.setStyleSheet("color: red")
                     beam_on = False
                 x = x_mm / 1000.
@@ -455,11 +473,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         if not beam_on and not self.debug_mode:
             return beam_on
         target = self.read_objective_function()
-        if not isinstance(target, numbers.Number):
-            logger.warning("read data, target is not number: " + str(target))
         if target == None:
             self.stop_statistics()
             return None
+
+        if not isinstance(target, numbers.Number):
+            logger.warning("read data, target is not number: " + str(target))
 
         if len(self.target_values) >= self.nreadings:
             self.target_values = self.target_values[1:]
@@ -505,6 +524,7 @@ class UIAFeedBack(QWidget, Ui_Form):
     def stop_statistics(self):
         self.stop_feedback()
         self.statistics_timer.stop()
+        logger.info("Stop Statistics")
         self.pb_start_statistics.setStyleSheet("color: rgb(85, 255, 127);")
         self.pb_start_statistics.setText("Statistics Accum On")
 
@@ -575,7 +595,12 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.ref_aver_x = np.mean(ref_orbits_x, axis=0)
         self.ref_aver_y = np.mean(ref_orbits_y, axis=0)
-
+        x_nan_check = len(np.where(np.isnan(self.ref_aver_x) == True)[0])
+        y_nan_check = len(np.where(np.isnan(self.ref_aver_y) == True)[0])
+        #print(np.where(np.isnan(self.ref_aver_x) == True)[0])
+        #print(np.where(np.isnan(self.ref_aver_y) == True)[0])
+        if x_nan_check > 0 or y_nan_check > 0:
+            return True
         self.new_ref_orbit = {}
         for i, name in enumerate(self.bpms_name):
             self.new_ref_orbit[name] = [self.ref_aver_x[i], self.ref_aver_y[i]]
@@ -589,6 +614,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.orb_y.setData(x=self.orbit_s, y=delta_ro_x*1000)
         self.orb_x.setData(x=self.orbit_s, y=delta_ro_y*1000)
+        return False
 
 
     def set_obj_fun(self):

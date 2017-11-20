@@ -1,0 +1,91 @@
+2017-11-16 13:47:13,875 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 13:47:14,106 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 13:49:07,097 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 13:49:07,337 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 13:49:17,775 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 13:49:18,006 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 13:49:57,090 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 13:49:57,332 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 13:50:03,099 - devices - CRITICAL - read_positions: names_x = [data['str'] for data in orbit_x]'numpy.float64' object is not iterable
+2017-11-16 13:50:03,099 - orbit - ERROR - read_bpms: mi_orbit.read_and_average()'numpy.float64' object is not iterable
+2017-11-16 18:15:37,036 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 18:15:37,486 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 18:17:29,740 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 18:17:29,970 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-16 18:17:59,363 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-16 18:17:59,607 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 22:01:27,144 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 22:01:27,523 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 22:01:47,995 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 22:01:48,243 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 22:01:54,567 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 22:01:56,928 - adaptive_feedback - INFO - LOAD State
+2017-11-17 22:01:58,378 - adaptive_feedback - ERROR - read_objective_function: Wrong Objective Function
+2017-11-17 22:34:31,384 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 22:34:31,940 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:22:57,114 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 23:22:57,380 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:23:00,391 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 23:23:03,892 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-17 23:23:14,946 - adaptive_feedback - INFO - LOAD State
+2017-11-17 23:23:16,717 - adaptive_feedback - ERROR - read_objective_function: Wrong Objective Function
+2017-11-17 23:23:28,959 - adaptive_feedback - WARNING - auto_correction: nan in the ref orbit
+2017-11-17 23:23:44,308 - adaptive_feedback - WARNING - auto_correction: nan in the ref orbit
+2017-11-17 23:26:53,586 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 23:26:53,858 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:27:01,707 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 23:27:05,206 - adaptive_feedback - INFO - LOAD State
+2017-11-17 23:27:06,931 - adaptive_feedback - ERROR - read_objective_function: Wrong Objective Function
+2017-11-17 23:27:18,596 - adaptive_feedback - WARNING - auto_correction: nan in the ref orbit
+2017-11-17 23:28:04,440 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 23:28:04,680 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:28:22,325 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 23:28:25,496 - adaptive_feedback - INFO - LOAD State
+2017-11-17 23:28:35,657 - adaptive_feedback - WARNING - auto_correction: nan in the ref orbit
+2017-11-17 23:37:41,574 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 23:37:41,825 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:37:44,544 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 23:37:47,007 - adaptive_feedback - INFO - LOAD State
+2017-11-17 23:38:01,502 - adaptive_feedback - WARNING - auto_correction: nan in the ref orbit
+2017-11-17 23:38:48,043 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-17 23:38:48,306 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-17 23:38:52,791 - adaptive_feedback - INFO - debug_mode = True
+2017-11-17 23:38:55,567 - adaptive_feedback - INFO - LOAD State
+2017-11-17 23:38:57,205 - adaptive_feedback - ERROR - read_objective_function: Wrong Objective Function
+2017-11-17 23:39:03,740 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-17 23:39:03,967 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-17 23:39:04,587 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-17 23:39:05,097 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 09:59:55,983 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 09:59:56,553 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 09:59:59,897 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 10:00:01,235 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:00:10,159 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:00:10,159 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:00:11,898 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:00:17,177 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:00:17,178 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:00:19,371 - adaptive_feedback - INFO - Load State
+2017-11-20 10:00:23,994 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:00:24,819 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:25,322 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:25,609 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:26,243 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:26,443 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:26,661 - adaptive_feedback - WARNING - start_stop_feedback: To early
+2017-11-20 10:00:28,286 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 10:00:37,507 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:00:38,890 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:00:38,891 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:03:37,135 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:03:41,524 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:03:41,524 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:03:58,099 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:04:04,061 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:04:04,061 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:21:21,957 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:21:24,152 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:21:24,152 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 10:21:28,162 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 10:21:32,307 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 10:21:32,307 - adaptive_feedback - INFO - Stop Statistics

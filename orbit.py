@@ -113,7 +113,7 @@ class OrbitInterface:
         self.corrs4remove = self.parent.uncheck_corrs #["CBB.98.I1", "CBB.100.I1", "CBB.101.I1","CBB.191.B1", "CBB.193.B1", "CBB.202.B1",
            # 'CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
         self.svd_epsilon_x = self.parent.svd_epsilon_x
-        self.svd_epsilon_y =self.parent.svd_epsilon_y
+        self.svd_epsilon_y = self.parent.svd_epsilon_y
         self.ui = parent.ui
         self.online_calc = True
         self.reset_undo_database()
@@ -345,11 +345,12 @@ class OrbitInterface:
 
         :return:
         """
-
+        logger.info("Apply Kicks")
         corrs = self.get_dev_from_cb_state(self.corrs)
 
         for cor in corrs:
             if cor.ui.alarm:
+                logger.info("apply_kicks: kick exceeds limits. Stop applying")
                 self.parent.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 return 0
 
@@ -583,6 +584,7 @@ class OrbitInterface:
         self.calc_orbit()
 
     def single_shot_read_bpms(self):
+        logger.info("Single Shot reading")
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
         self.button_bpm.activate(max_charge_value=0.5, max_pos_value=5.)
@@ -600,7 +602,7 @@ class OrbitInterface:
         self.calculate_correction()
 
     def multi_shot_read_bpms(self):
-
+        logger.info("Multi Shot reading")
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
         self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
         
@@ -668,7 +670,7 @@ class OrbitInterface:
 
         :return:
         """
-        logger.debug("correct: ... ")
+        logger.info("correct: ... ")
         #self.read_correctors()
 
 
@@ -702,7 +704,7 @@ class OrbitInterface:
 
         self.set_values2correctors()
 
-        logger.debug("correct: ... OK")
+        logger.info("correct: ... OK")
 
     def start_stop_feedback(self):
         """
@@ -1025,46 +1027,7 @@ class OrbitInterface:
         #bc2_pos = 392 + 23.2
         #l3_pos = 1435 + 23.2
         #cl_pos = 1830 + 23.2
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =i1_pos,  angle=90, movable=False), ignoreBounds=True)
-        #lh_t = pg.TextItem("I1", anchor=(0, 0))
-        #lh_t.setPos(i1_pos, 0)
-        #self.plot_cor.addItem(lh_t, ignoreBounds=True)
 
-
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc0_pos,  angle=90, movable=False), ignoreBounds=True)
-        #bc0_t = pg.TextItem("BC0", anchor=(0, 0))
-        #bc0_t.setPos(bc0_pos, 0)
-        #self.plot_cor.addItem(bc0_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =l1_pos,  angle=90, movable=False), ignoreBounds=True)
-        #l1_t = pg.TextItem("L1", anchor=(0, 0))
-        #l1_t.setPos(l1_pos, 0)
-        #self.plot_cor.addItem(l1_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc1_pos,  angle=90, movable=False), ignoreBounds=True)
-        #bc1_t = pg.TextItem("BC1", anchor=(0, 0))
-        #bc1_t.setPos(bc1_pos, 0)
-        #self.plot_cor.addItem(bc1_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =l2_pos,  angle=90, movable=False), ignoreBounds=True)
-        #l2_t = pg.TextItem("L2", anchor=(0, 0))
-        #l2_t.setPos(l2_pos, 0)
-        #self.plot_cor.addItem(l2_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =bc2_pos,  angle=90, movable=False), ignoreBounds=True)
-        #bc2_t = pg.TextItem("BC2", anchor=(0, 0))
-        #bc2_t.setPos(bc2_pos, 0)
-        #self.plot_cor.addItem(bc2_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =l3_pos,  angle=90, movable=False), ignoreBounds=True)
-        #l3_t = pg.TextItem("L3", anchor=(0, 0))
-        #l3_t.setPos(l3_pos, 0)
-        #self.plot_cor.addItem(l3_t, ignoreBounds=True)
-        #
-        #self.plot_cor.addItem(pg.InfiniteLine(pos =cl_pos,  angle=90, movable=False), ignoreBounds=True)
-        #cl_t = pg.TextItem("CL", anchor=(0, 0))
-        #cl_t.setPos(cl_pos, 0)
-        #self.plot_cor.addItem(cl_t, ignoreBounds=True)
 
         self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)

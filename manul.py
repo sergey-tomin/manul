@@ -18,7 +18,7 @@ import importlib
 import logging
 
 # filename="logs/afb.log",
-ilename="logs/manul.log"
+#filename="logs/manul.log"
 logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 path = os.path.realpath(__file__)
@@ -29,7 +29,7 @@ sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
 
 
 from ocelot import *
-from ocelot.gui.accelerator import *
+#from ocelot.gui.accelerator import *
 from ocelot.cpbd.track import *
 
 #from ocelot.optimizer.mint.opt_objects import Device
@@ -78,8 +78,8 @@ class ManulInterfaceWindow(QMainWindow):
 
         #self.logbook = "xfellog"
         self.settings = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
