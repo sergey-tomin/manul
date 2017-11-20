@@ -89,3 +89,89 @@
 2017-11-20 10:21:28,162 - adaptive_feedback - INFO - Start Statistics
 2017-11-20 10:21:32,307 - adaptive_feedback - INFO - Stop Feedback
 2017-11-20 10:21:32,307 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 11:08:51,385 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 11:08:57,001 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 11:09:09,854 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 11:09:09,854 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:42:23,915 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:42:23,916 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:42:23,916 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:43:01,741 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 13:43:01,985 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 13:43:05,204 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 13:43:06,594 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 13:43:10,533 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 13:43:17,339 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:18,671 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:18,671 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:43:20,497 - adaptive_feedback - INFO - Load State
+2017-11-20 13:43:20,498 - orbit - INFO - correct: ... 
+2017-11-20 13:43:20,641 - orbit - INFO - correct: ... OK
+2017-11-20 13:43:24,313 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 13:43:28,281 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 13:43:53,646 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:54,587 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:54,588 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:43:55,516 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:55,516 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:43:55,516 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:44:05,692 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 13:44:05,939 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 13:44:10,934 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 13:44:13,898 - adaptive_feedback - INFO - Load State
+2017-11-20 13:44:13,899 - orbit - INFO - correct: ... 
+2017-11-20 13:44:14,010 - orbit - INFO - correct: ... OK
+2017-11-20 13:44:18,087 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 13:44:22,945 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 13:44:30,228 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:44:31,064 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:44:31,064 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 13:44:31,782 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:44:31,782 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 13:44:31,783 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:06:04,708 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 14:06:04,990 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 14:06:08,379 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 14:06:11,392 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 14:06:15,183 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 14:06:26,956 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:06:27,723 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:06:27,723 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:06:28,570 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:06:28,571 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:06:28,571 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:09:04,869 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 14:09:05,119 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 14:09:07,710 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 14:09:10,854 - adaptive_feedback - INFO - Load State
+2017-11-20 14:09:10,854 - orbit - INFO - correct: ... 
+2017-11-20 14:09:10,979 - orbit - INFO - correct: ... OK
+2017-11-20 14:09:15,446 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 14:09:15,553 - adaptive_feedback - ERROR - read_objective_function: Wrong Objective Function
+2017-11-20 14:09:17,167 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:09:17,169 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:09:20,382 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 14:09:25,877 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 14:10:03,285 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:10:03,957 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:10:03,958 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:12:05,289 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 14:12:09,123 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 14:12:32,328 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:12:32,328 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:13:07,755 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-20 14:13:08,009 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-20 14:13:11,415 - adaptive_feedback - INFO - debug_mode = True
+2017-11-20 14:13:14,438 - adaptive_feedback - INFO - Load State
+2017-11-20 14:13:14,439 - orbit - INFO - correct: ... 
+2017-11-20 14:13:14,574 - orbit - INFO - correct: ... OK
+2017-11-20 14:13:18,322 - adaptive_feedback - INFO - Start Statistics
+2017-11-20 14:13:23,714 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 14:13:45,238 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:13:47,644 - adaptive_feedback - INFO - Start Feedback
+2017-11-20 14:13:54,982 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:13:56,034 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:13:56,034 - adaptive_feedback - INFO - Stop Statistics
+2017-11-20 14:13:56,782 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:13:56,783 - adaptive_feedback - INFO - Stop Feedback
+2017-11-20 14:13:56,783 - adaptive_feedback - INFO - Stop Statistics

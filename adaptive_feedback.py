@@ -298,26 +298,31 @@ class UIAFeedBack(QWidget, Ui_Form):
         #beam_on = self.read_orbit()
         #time.sleep(0.01)
         #if beam_on:
+        start = time.time()
+        #print("ref time", time.time())
         is_nan = self.ref_orbit_calc()
         if is_nan:
-            logger.warning("auto_correction: nan in the ref orbit")
-            self.stop_feedback()
-            self.parent.error_box("auto_correction: nan in the ref orbit")
+            logger.warning("auto_correction: nan in the ref orbit. Pause 1 sec")
+            time.sleep(1)
+            return
+            #self.stop_feedback()
+            #self.parent.error_box("auto_correction: nan in the ref orbit")
         stop_flag = self.correct()
         time.sleep(0.01)
         if not stop_flag:
+            #print("apply time = ", time.time())
             self.apply_kicks()
-            time.sleep(0.5)
+            #time.sleep(0.5)
             self.le_warn.clear()
         else:
-            logger.warning("auto_correction: Exceed limits of correctors")
-            self.stop_feedback()
+            logger.warning("auto_correction: stop_flag = True. Pause 1 sec")
+            #self.stop_feedback()
             self.le_warn.clear()
             self.le_warn.setText("Stop flag. Kicks are not applied")
             self.le_warn.setStyleSheet("color: red")
-            self.parent.error_box("Exceed limits of correctors")
+            #self.parent.error_box("Exceed limits of correctors")
 
-            #time.sleep(1)
+            time.sleep(1)
 
     def correct(self):
         """
@@ -340,12 +345,14 @@ class UIAFeedBack(QWidget, Ui_Form):
             elem.transfer_map = self.parent.lat.method.create_tm(elem)
             if elem.ui.alarm:
                 stop_flag = True
+                logger.warning("correct - STOP: corrector shows alarm: " + elem.id)
 
 
         #self.parent.lat.update_transfer_maps()
 
         for elem in self.orbit.bpms:
             if elem.id not in self.new_ref_orbit.keys():
+                logger.warning("correct - STOP: BPM is not in new ref orbit: " + elem.id)
                 stop_flag = True
                 return stop_flag
             elem.x = self.new_ref_orbit[elem.id][0]
@@ -353,6 +360,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             elem.ui.set_value((elem.x*1000., elem.y*1000.))
             #print(elem.id, (elem.x*1000., elem.y*1000.))
             if elem.ui.alarm:
+                logger.warning("correct - STOP: BPM shows alarm: " + elem.id)
                 stop_flag = True
         if stop_flag:
             return stop_flag
