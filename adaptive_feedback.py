@@ -101,6 +101,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
 
+
     def save_state(self, filename):
         # pvs = self.ui.widget.pvs
         table = {}
@@ -298,7 +299,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #beam_on = self.read_orbit()
         #time.sleep(0.01)
         #if beam_on:
-        start = time.time()
+        #start = time.time()
         #print("ref time", time.time())
         is_nan = self.ref_orbit_calc()
         if is_nan:
