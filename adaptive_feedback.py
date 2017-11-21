@@ -116,6 +116,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         table["go_recalc_delay"] = self.sb_go_recalc_delay.value()
         table["ref_orbit_nread"] = self.sb_ref_orbit_nread.value()
         table["averaging"] = self.sb_averaging.value()
+        table["apply_fraction"] = self.sb_afeed_fraction.value()
 
         table["le_a"] = self.le_a.text()
         table["le_b"] = self.le_b.text()
@@ -150,6 +151,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         if "le_b" in table.keys(): self.le_b.setText(table["le_b"])
         if "le_c" in table.keys(): self.le_c.setText(table["le_c"])
         if "le_of" in table.keys(): self.le_of.setText(table["le_of"])
+        
+        if "apply_fraction" in table.keys(): self.sb_afeed_fraction.setValue(table["apply_fraction"])
 
         logger.info("Load State")
         return corrs, bpms
