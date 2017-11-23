@@ -489,8 +489,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.stop_statistics()
             return None
 
-        if not isinstance(target, numbers.Number):
-            logger.warning("read data, target is not number: " + str(target))
+        if not isinstance(target, numbers.Number) or np.isnan(target) or np.isinf(target):
+            logger.warning("read data, target is not number or NaN or inf: " + str(target))
+            return False
 
         if len(self.target_values) >= self.nreadings:
             self.target_values = self.target_values[1:]

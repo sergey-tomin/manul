@@ -222,3 +222,5 @@
 2017-11-20 16:14:36,192 - adaptive_feedback - INFO - Stop Feedback
 2017-11-20 16:14:36,192 - adaptive_feedback - INFO - Stop Feedback
 2017-11-20 16:14:36,193 - adaptive_feedback - INFO - Stop Statistics
+2017-11-23 11:23:21,860 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-23 11:23:22,301 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
