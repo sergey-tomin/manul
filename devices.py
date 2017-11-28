@@ -296,3 +296,74 @@ class MIOrbit(Device):
             bpm.charge = self.mean_charge[inx] # nC
         return True
 
+class MIAdviser(Device):
+    def __init__(self, eid=None, subtrain="SA1"):
+        super(MIAdviser, self).__init__(eid=eid)
+        self.bpm_server = "BPM"  # "ORBIT"     # or "BPM"
+        self.subtrain = subtrain
+
+
+    def get_x(self):
+        try:
+            self.orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+        except Exception as e:
+            logger.critical("get_x: self.mi.get_value: " + str(e))
+            raise e
+
+    def get_y(self):
+        try:
+            self.orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+        except Exception as e:
+            logger.critical("get_y: self.mi.get_value: " + str(e))
+            raise e
+
+    def get_kicks(self):
+        #"XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        try:
+            self.kicks = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/KICK.SP")
+        except Exception as e:
+            logger.critical("get_kicks: self.mi.get_value: " + str(e))
+            raise e
+
+    def get_momentums(self):
+        #"XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        try:
+            self.moments = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/MOMENTUM.SP")
+        except Exception as e:
+            logger.critical("get_momentums: self.mi.get_value: " + str(e))
+            raise e
+
+    def get_corrs(self, ref_names):
+
+        self.get_kicks()
+        self.get_momentums()
+
+        names = [x["str"] for x in self.kicks]
+        kicks = np.array([x["float"] for x in self.kicks])
+        moments = np.array([x["float"] for x in self.moments])
+        indxs = []
+        for name in ref_names:
+            indxs.append(names.index(name))
+        return kicks[indxs], moments[indxs]
+
+    def get_bpm_x(self, ref_names):
+
+        self.get_x()
+
+        names = [x["str"] for x in self.orbit_x]
+        pos = np.array([x["float"] for x in self.orbit_x])
+        indxs = []
+        for name in ref_names:
+            indxs.append(names.index(name))
+        return pos[indxs]
+
+    def get_bpm_y(self, ref_names):
+
+        self.get_y()
+
+        names = [x["str"] for x in self.orbit_y]
+        pos = np.array([x["float"] for x in self.orbit_y])
+        indxs = []
+        for name in ref_names:
+            indxs.append(names.index(name))
+        return pos[indxs]

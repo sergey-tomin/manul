@@ -12,7 +12,7 @@ from gui.UIAdviser import Ui_Form
 from ml.adviser import Adviser
 import json
 import numpy as np
-
+from devices import MIAdviser
 
 class ManulAdviser(QWidget):
     def __init__(self, parent=None):
@@ -25,6 +25,8 @@ class ManulAdviser(QWidget):
         self.loadStyleSheet()
         # self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
 
+        self.mi_adv = MIAdviser()
+        self.mi_adv.mi = self.master.mi
         self.adviser = Adviser(cor_file="./ml/cor_essence.json", bpm_file="./ml/bpm_essence.json")
         self.set_slider()
         self.update_min_sase()
@@ -32,6 +34,7 @@ class ManulAdviser(QWidget):
 
         self.ui.pb_find_go.clicked.connect(self.find_go)
         self.ui.pb_show.clicked.connect(self.show_diff)
+        self.ui.pb_get_state.clicked.connect(self.get_current_state)
         #self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
         #self.ui.pb_cancel.clicked.connect(self.close)
         #
@@ -91,13 +94,19 @@ class ManulAdviser(QWidget):
             print(file)
 
     def get_current_state(self):
+        #self.adviser.cor_ref_names
+
+        ckicks, cmoments = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
+        cx = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
+        cy = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
+
         if self.ui.rb_energy_prof.isChecked():
-            fit_array = self.adviser.cor_moments
+            fit_array = cmoments
         else:# self.ui.rb_cor_kick.isChecked():
-            fit_array = self.adviser.cor_kicks
-        print(self.indxs_above_thr)
-        fit_array = fit_array[self.indxs_above_thr]
-        return fit_array[0]
+            fit_array = ckicks
+        #print(self.indxs_above_thr)
+        #fit_array = fit_array[self.indxs_above_thr]
+        return fit_array
 
     def seve_set(self):
         update = self.question_box("Rewrite Settings?")
