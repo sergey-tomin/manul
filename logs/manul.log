@@ -224,3 +224,131 @@
 2017-11-20 16:14:36,193 - adaptive_feedback - INFO - Stop Statistics
 2017-11-23 11:23:21,860 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
 2017-11-23 11:23:22,301 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-23 15:43:20,252 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-23 15:43:20,613 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-24 16:43:34,502 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-24 16:43:34,949 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-24 16:48:53,457 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-24 16:48:53,703 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 10:41:56,902 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 10:41:58,585 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 10:45:17,598 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 10:45:18,830 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 10:45:56,528 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 10:45:57,703 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 10:48:23,886 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 10:48:25,082 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:07:01,472 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:07:02,949 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:08:04,288 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:08:05,507 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:09:09,773 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:09:11,016 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:11:24,547 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:11:25,701 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:13:58,416 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:13:59,660 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:15:23,420 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:15:24,747 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:15:43,476 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:15:44,636 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 11:17:05,113 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 11:17:06,271 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:04:09,491 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:04:11,248 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:06:17,679 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:06:19,028 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:07:09,697 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:10:06,305 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:10:24,612 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:10:26,043 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:12:59,801 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:13:01,224 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:14:21,467 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:14:22,862 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:14:26,450 - adaptive_feedback - INFO - debug_mode = True
+2017-11-27 14:14:32,736 - adaptive_feedback - INFO - Load State
+2017-11-27 14:14:32,738 - orbit - INFO - correct: ... 
+2017-11-27 14:14:32,904 - orbit - INFO - correct: ... OK
+2017-11-27 14:14:34,588 - adaptive_feedback - INFO - Stop Feedback
+2017-11-27 14:14:34,588 - adaptive_feedback - INFO - Stop Feedback
+2017-11-27 14:14:34,589 - adaptive_feedback - INFO - Stop Statistics
+2017-11-27 14:15:08,824 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:15:10,197 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:28:34,489 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:28:35,742 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:29:01,189 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:29:02,399 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:30:24,205 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:30:25,254 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:32:00,257 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:32:01,510 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:32:44,268 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:32:45,546 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:38:33,197 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:38:34,403 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:40:24,990 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:40:26,170 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:40:44,805 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:40:45,850 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:43:00,813 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:43:02,035 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:43:57,542 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:43:58,664 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:46:20,166 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:46:21,438 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:46:47,570 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:46:48,785 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:48:04,571 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:48:05,635 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:51:28,244 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:51:29,431 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 14:51:58,409 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 14:51:59,511 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 15:20:49,591 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 15:20:50,923 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:10:23,772 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:10:25,346 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:10:46,853 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:10:48,021 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:13:10,880 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:13:12,093 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:37:09,321 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:37:23,523 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:37:24,751 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:39:40,254 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:39:41,485 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 16:46:27,364 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 16:46:28,551 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:14:02,876 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:14:04,161 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:14:24,521 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:14:25,565 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:15:03,846 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:15:05,014 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:15:53,655 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:15:54,788 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:16:07,150 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:16:08,304 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:16:36,812 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:16:37,973 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:16:50,524 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:16:51,727 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:17:27,731 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:17:28,891 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:17:42,649 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:17:43,850 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:18:36,863 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:18:38,087 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:18:44,943 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:18:46,189 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:19:28,724 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:19:29,946 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:19:45,831 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:19:46,934 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:21:12,528 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:21:13,720 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 17:22:32,843 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 17:22:34,113 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2017-11-27 19:06:05,425 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2017-11-27 19:06:06,578 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined

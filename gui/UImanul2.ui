@@ -1678,6 +1678,8 @@
     <addaction name="actionLoad_Golden_Orbit"/>
     <addaction name="actionSave_Golden_Orbit"/>
     <addaction name="actionLoad_GO_from_Orbit_Display"/>
+    <addaction name="separator"/>
+    <addaction name="actionGO_Adviser"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -1754,6 +1756,11 @@
   <action name="actionUncheck_Red">
    <property name="text">
     <string>Uncheck Red</string>
+   </property>
+  </action>
+  <action name="actionGO_Adviser">
+   <property name="text">
+    <string>GO Adviser</string>
    </property>
   </action>
  </widget>

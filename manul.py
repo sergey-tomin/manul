@@ -41,6 +41,7 @@ from devices import *
 from dispersion import *
 from gui.gui_main import *
 from gui.settings_gui import *
+from ml.adviser_gui import *
 from lattices import lattice_manager
 logger = logging.getLogger(__name__)
 
@@ -78,8 +79,9 @@ class ManulInterfaceWindow(QMainWindow):
 
         #self.logbook = "xfellog"
         self.settings = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        self.adviser = None
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -141,6 +143,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
         self.ui.action_Parameters.triggered.connect(self.run_settings_window)
 
+        self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
 
     def load_lattice_files(self):
         names = [sec.name for sec in self.xfel_lattice.sections]
@@ -158,6 +161,11 @@ class ManulInterfaceWindow(QMainWindow):
         if self.settings is None:
             self.settings = ManulSettings(parent=self)
         self.settings.show()
+
+    def run_adviser_window(self):
+        if self.adviser is None:
+            self.adviser = ManulAdviser(parent=self)
+        self.adviser.show()
 
     def load_settings(self):
         logger.debug("load settings ... ")

@@ -295,3 +295,4 @@ class MIOrbit(Device):
             bpm.y = self.mean_y[inx]/1000      # [mm] -> [m]
             bpm.charge = self.mean_charge[inx] # nC
         return True
+

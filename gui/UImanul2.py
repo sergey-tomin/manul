@@ -824,6 +824,8 @@ class Ui_MainWindow(object):
         self.actionLoad_corrs.setObjectName("actionLoad_corrs")
         self.actionUncheck_Red = QtWidgets.QAction(MainWindow)
         self.actionUncheck_Red.setObjectName("actionUncheck_Red")
+        self.actionGO_Adviser = QtWidgets.QAction(MainWindow)
+        self.actionGO_Adviser.setObjectName("actionGO_Adviser")
         self.menu_File.addAction(self.action_Parameters)
         self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
@@ -832,6 +834,8 @@ class Ui_MainWindow(object):
         self.menuGolden_Orbit.addAction(self.actionLoad_Golden_Orbit)
         self.menuGolden_Orbit.addAction(self.actionSave_Golden_Orbit)
         self.menuGolden_Orbit.addAction(self.actionLoad_GO_from_Orbit_Display)
+        self.menuGolden_Orbit.addSeparator()
+        self.menuGolden_Orbit.addAction(self.actionGO_Adviser)
         self.menuFile.addAction(self.actionSave_corrs)
         self.menuFile.addAction(self.actionLoad_corrs)
         self.menuFile.addSeparator()
@@ -927,4 +931,5 @@ class Ui_MainWindow(object):
         self.actionSave_corrs.setText(_translate("MainWindow", "Save"))
         self.actionLoad_corrs.setText(_translate("MainWindow", "Load"))
         self.actionUncheck_Red.setText(_translate("MainWindow", "Uncheck Red"))
+        self.actionGO_Adviser.setText(_translate("MainWindow", "GO Adviser"))
 
