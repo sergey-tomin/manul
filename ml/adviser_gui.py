@@ -69,8 +69,24 @@ class ManulAdviser(QWidget):
         go_bpm_x = self.adviser.bpm_X[indx][0]
         #print(go_bpm_x)
         go_bpm_y = self.adviser.bpm_Y[indx][0]
+        x_indx = []
+        y_indx = []
+        for i, name in enumerate(self.adviser.cor_ref_names):
+            if "X" in name:
+                x_indx.append(i)
+            else:
+                y_indx.append(i)
+                
+        delta_kick = (go_kick-self.ckicks)*1000
+        if self.ui.rb_x_plane.isChecked():
+            delta = delta_kick[x_indx]
+        else:
+            delta = delta_kick[y_indx]
+        big_diff_indx = np.where(np.abs(delta_kick) > 0.5)[0]
+        
+        print(np.array(self.adviser.cor_ref_names)[big_diff_indx])
         self.ui.plot_widget.update_plot(sx=np.arange(len(go_bpm_x)), delta_x=go_bpm_x,
-                                        sk=np.arange(len(go_kick)), delta_k=go_kick)
+                                        sk=np.arange(len(delta)), delta_k=delta)
 
 
     def find_go(self):
@@ -96,19 +112,19 @@ class ManulAdviser(QWidget):
     def get_current_state(self):
         #self.adviser.cor_ref_names
 
-        ckicks, cmoments = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
-        cx = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
-        cy = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
+        self.ckicks, self.cmoments = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
+        #cx = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
+        #cy = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
 
         if self.ui.rb_energy_prof.isChecked():
-            fit_array = cmoments
+            fit_array = self.cmoments
         else:# self.ui.rb_cor_kick.isChecked():
-            fit_array = ckicks
+            fit_array = self.ckicks
         #print(self.indxs_above_thr)
         #fit_array = fit_array[self.indxs_above_thr]
         return fit_array
 
-    def seve_set(self):
+    def save_set(self):
         update = self.question_box("Rewrite Settings?")
         if update:
             if not os.path.exists(self.master.config_dir):
