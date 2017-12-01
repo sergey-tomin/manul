@@ -13,6 +13,8 @@ from ml.adviser import Adviser
 import json
 import numpy as np
 from devices import MIAdviser
+import logging 
+logger = logging.getLogger(__name__)
 
 class ManulAdviser(QWidget):
     def __init__(self, parent=None):
@@ -53,7 +55,69 @@ class ManulAdviser(QWidget):
 
         self.indxs_above_thr = self.adviser.get_indices(min_sase=val)
         self.ui.lab_nfiles.setText(str(len(self.indxs_above_thr)))
+        
+    
+    def show_cor_plot(self, indx):
+        go_kick = self.adviser.cor_kicks[indx][0]
+        
+        #delta_kick = (go_kick-self.ckicks)*1000
+        
+        x_indx = []
+        y_indx = []
+        for i, name in enumerate(self.adviser.cor_ref_names):
+            if "X" in name:
+                x_indx.append(i)
+            else:
+                y_indx.append(i)
+        
+        if self.ui.rb_current_state.isChecked():
+            y = self.ckicks # rad
+        elif self.ui.rb_from_mf.isChecked():
+            y = go_kick # rad 
+        else:
+            y = (go_kick-self.ckicks)  # rad 
+        
+        if self.ui.rb_x_plane.isChecked():
+            delta = y[x_indx]
+            #delta_pos = delta_x
+            cor_z_pos = self.cor_z_pos[x_indx]
+        else:
+            delta = y[y_indx]
+            #delta_pos = delta_y
+            cor_z_pos = self.cor_z_pos[y_indx]
+            
+            
+        cor_sort_indx = np.argsort(cor_z_pos)
+        
+        return cor_z_pos[cor_sort_indx], delta[cor_sort_indx]
+    
+    def show_bpm_plot(self, indx):
+        go_bpm_x = self.adviser.bpm_X[indx][0]
+        go_bpm_y = self.adviser.bpm_Y[indx][0]
 
+        
+        if self.ui.rb_current_state.isChecked():
+            fx = self.cx
+            fy = self.cy
+        elif self.ui.rb_from_mf.isChecked():
+            fx = go_bpm_x
+            fy = go_bpm_y
+        else:
+            fx = go_bpm_x - self.cx
+            fy = go_bpm_y - self.cy
+        
+        if self.ui.rb_x_plane.isChecked():
+            delta = fx
+            #delta_pos = delta_x
+            #cor_z_pos = self.cor_z_pos[x_indx]
+        else:
+            delta = fy
+            #delta_pos = delta_y
+            #cor_z_pos = self.cor_z_pos[y_indx]
+        bpm_sort_indx = np.argsort(self.bpm_z_pos)
+        return self.bpm_z_pos[bpm_sort_indx], delta[bpm_sort_indx]/1000.
+        
+        
     def show_diff(self):
         if self.ui.mf_table.ui.tableWidget.last_row == None:
             return
@@ -63,30 +127,52 @@ class ManulAdviser(QWidget):
         mf = self.m_files[n]
         mf_id = float(mf["id"])
         indx = np.where(self.adviser.cor_ids == mf_id)[0]
-        print(self.adviser.sases[indx])
-        go_kick = self.adviser.cor_kicks[indx][0]
-        #print(go_kick)
-        go_bpm_x = self.adviser.bpm_X[indx][0]
-        #print(go_bpm_x)
-        go_bpm_y = self.adviser.bpm_Y[indx][0]
-        x_indx = []
-        y_indx = []
-        for i, name in enumerate(self.adviser.cor_ref_names):
-            if "X" in name:
-                x_indx.append(i)
-            else:
-                y_indx.append(i)
-                
-        delta_kick = (go_kick-self.ckicks)*1000
-        if self.ui.rb_x_plane.isChecked():
-            delta = delta_kick[x_indx]
-        else:
-            delta = delta_kick[y_indx]
-        big_diff_indx = np.where(np.abs(delta_kick) > 0.5)[0]
+        cor_z, cor_f = self.show_cor_plot(indx)
+        bpm_z, bpm_f = self.show_bpm_plot(indx)
         
-        print(np.array(self.adviser.cor_ref_names)[big_diff_indx])
-        self.ui.plot_widget.update_plot(sx=np.arange(len(go_bpm_x)), delta_x=go_bpm_x,
-                                        sk=np.arange(len(delta)), delta_k=delta)
+        print(self.adviser.sases[indx])
+#        go_kick = self.adviser.cor_kicks[indx][0]
+#        #print(go_kick)
+#        go_bpm_x = self.adviser.bpm_X[indx][0]
+#        #print(go_bpm_x)
+#        go_bpm_y = self.adviser.bpm_Y[indx][0]
+#        if self.cx == None or self.cy == None:
+#            delta_x = go_bpm_x
+#            delta_y = go_bpm_y
+#        else:
+#            delta_x = go_bpm_x - self.cx
+#            delta_y = go_bpm_y - self.cy
+#        x_indx = []
+#        y_indx = []
+#        for i, name in enumerate(self.adviser.cor_ref_names):
+#            if "X" in name:
+#                x_indx.append(i)
+#            else:
+#                y_indx.append(i)
+#                
+#        delta_kick = (go_kick-self.ckicks)*1000
+#        if self.ui.rb_x_plane.isChecked():
+#            delta = delta_kick[x_indx]
+#            delta_pos = delta_x
+#            cor_z_pos = self.cor_z_pos[x_indx]
+#        else:
+#            delta = delta_kick[y_indx]
+#            delta_pos = delta_y
+#            cor_z_pos = self.cor_z_pos[y_indx]
+#        big_diff_indx = np.where(np.abs(delta_kick) > 0.5)[0]
+#        
+#        print(np.array(self.adviser.cor_ref_names)[big_diff_indx])
+#        print(np.array(go_kick)[big_diff_indx])
+#        print(np.array(self.ckicks)[big_diff_indx])
+#        
+#        big_pos_diff_indx = np.where(np.abs(delta_pos) > 1)[0]
+#        print(np.array(self.adviser.bpm_ref_names)[big_pos_diff_indx])
+#        print(self.adviser.bpm_ref_names)
+#        print(self.bpm_z_pos)
+#        bpm_sort_indx = np.argsort(self.bpm_z_pos)
+#        cor_sort_indx = np.argsort(cor_z_pos)
+        self.ui.plot_widget.update_plot(sx=bpm_z, delta_x=bpm_f,
+                                        sk=cor_z, delta_k=cor_f)
 
 
     def find_go(self):
@@ -112,10 +198,12 @@ class ManulAdviser(QWidget):
     def get_current_state(self):
         #self.adviser.cor_ref_names
 
-        self.ckicks, self.cmoments = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
-        #cx = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
-        #cy = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
-
+        self.ckicks, self.cmoments, self.cor_z_pos = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
+        self.cx, self.bpm_z_pos = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
+        self.cy, self.bpm_z_pos = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
+        if self.cx == None or self.cy == None:
+            print("NO BEAM")
+            logger.warning("get_current_state: no beam")
         if self.ui.rb_energy_prof.isChecked():
             fit_array = self.cmoments
         else:# self.ui.rb_cor_kick.isChecked():

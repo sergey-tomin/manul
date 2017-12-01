@@ -307,20 +307,28 @@ class MIAdviser(Device):
         try:
             self.orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
         except Exception as e:
-            logger.critical("get_x: self.mi.get_value: " + str(e))
-            raise e
+            logger.info("get_x: self.mi.get_value: " + str(e))
+            self.orbit_x = []
 
     def get_y(self):
         try:
             self.orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
         except Exception as e:
-            logger.critical("get_y: self.mi.get_value: " + str(e))
-            raise e
+            logger.info("get_y: self.mi.get_value: " + str(e))
+            self.orbit_y = []
+        
+    def get_bpm_z_pos(self):
+        try:
+            self.bpm_z_pos = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Z_POS")
+        except Exception as e:
+            logger.info("get_bpm_z_pos: self.mi.get_value: " + str(e))
+            self.bpm_z_pos = []
+        #print(self.bpm_z_pos)
 
     def get_kicks(self):
         #"XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         try:
-            self.kicks = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/KICK.SP")
+            self.kicks = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/KICK_MRAD.SP")
         except Exception as e:
             logger.critical("get_kicks: self.mi.get_value: " + str(e))
             raise e
@@ -333,37 +341,67 @@ class MIAdviser(Device):
             logger.critical("get_momentums: self.mi.get_value: " + str(e))
             raise e
 
+    def get_cor_z_pos(self):
+        try:
+            self.cor_z_pos = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/Z_POS")
+        except Exception as e:
+            logger.info("get_cor_z_pos: self.mi.get_value: " + str(e))
+            self.cor_z_pos = []
+
     def get_corrs(self, ref_names):
 
         self.get_kicks()
         self.get_momentums()
-
+        self.get_cor_z_pos()
         names = [x["str"] for x in self.kicks]
-        kicks = np.array([x["float"] for x in self.kicks])
+        kicks = np.array([x["float"] for x in self.kicks])/1000.
         moments = np.array([x["float"] for x in self.moments])
+        z_poss = np.array([x["float"] for x in self.cor_z_pos])
         indxs = []
         for name in ref_names:
             indxs.append(names.index(name))
-        return kicks[indxs], moments[indxs]
+        return kicks[indxs], moments[indxs], z_poss[indxs]
 
+    def get_bpm_z_from_ref(self, ref_names):
+        self.get_bpm_z_pos()
+        names = [x["str"] for x in self.bpm_z_pos]
+        z_poss = np.array([x["float"] for x in self.bpm_z_pos])
+        indxs = []
+        for name in ref_names:
+            indxs.append(names.index(name))
+        
+        return z_poss[indxs]
+        
     def get_bpm_x(self, ref_names):
 
         self.get_x()
-
+        if len(self.orbit_x) == 0:
+            return None
         names = [x["str"] for x in self.orbit_x]
         pos = np.array([x["float"] for x in self.orbit_x])
+
         indxs = []
         for name in ref_names:
             indxs.append(names.index(name))
-        return pos[indxs]
+        
+        z_pos = self.get_bpm_z_from_ref(ref_names)
+        return pos[indxs], z_pos
 
     def get_bpm_y(self, ref_names):
 
         self.get_y()
+        #self.get_bpm_z_pos()
+
+        if len(self.orbit_y) == 0:
+            return None
 
         names = [x["str"] for x in self.orbit_y]
         pos = np.array([x["float"] for x in self.orbit_y])
+        #z_poss = np.array([x["float"] for x in self.bpm_z_pos])
+
         indxs = []
         for name in ref_names:
             indxs.append(names.index(name))
-        return pos[indxs]
+            
+        z_pos = self.get_bpm_z_from_ref(ref_names)
+        return pos[indxs], z_pos

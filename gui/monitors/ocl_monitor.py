@@ -61,18 +61,16 @@ class OclMonitor(QWidget):
         self.delta_x.setData(x=sx, y=delta_x)
         self.bpm_plot.update()
         self.delta_k.setData(x=sk, y=delta_k)
+        #self.delta_k  = pg.BarGraphItem(x=sk, height=delta_k, width=0.6, brush='r')
+
+        #self.delta_k.opts.update(sk, delta_k)
         self.cor_plot.update()
 
-    #def update_plot_track(self, s, bx, by, E):
-    #    # Line
-    #    s = np.array(s) #+ self.lat_zi
-    #    self.delta_x.setData(x=s, y=bx)
-    #    #self.beta_y.setData(x=s, y=by)
-    #    self.bpm_plot.update()
-    #    #self.plot1.setYRange(-5, 200)
-    #    #self.plot2.update()
-    #    self.cor_plot.removeItem(self.delta_k)
-    #    self.cor_plot.update()
+
+    def callback(self, evt):
+        mousePoint = p.vb.mapSceneToView(evt[0])
+        print(mousePoint.x(), mousePoint.y())
+        #label.setText("<span style='font-size: 14pt; color: white'> x = %0.2f, <span style='color: white'> y = %0.2f</span>" % (mousePoint.x(), mousePoint.y()))
 
     def add_plot(self):
         win = pg.GraphicsLayoutWidget()
@@ -82,47 +80,35 @@ class OclMonitor(QWidget):
         self.bpm_plot = win.addPlot(row=1, col=0)
         self.cor_plot.setXLink(self.bpm_plot)
         self.bpm_plot.showGrid(1, 1, 1)
-        self.bpm_plot.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
+        self.bpm_plot.getAxis('left').enableAutoSIPrefix(enable=True)  # stop the auto unit scaling on y axes
         layout = QtGui.QGridLayout()
         layout.setContentsMargins(0,0,0,0)
         self.ui.w_monitor.setLayout(layout)
         layout.addWidget(win, 0, 0)
         self.bpm_plot.setAutoVisible(y=True)
         self.bpm_plot.addLegend()
+        
         color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen(color, width=3)
-        self.delta_x = pg.PlotCurveItem(x=[], y=[], pen=pen, name='dX', antialias=True)
+        pen = pg.mkPen(color, width=1)
+        self.delta_x = pg.PlotDataItem(x=[], y=[], pen=pen,  symbol='o',symbolBrush=(255, 0, 0), name='dX', antialias=True)
         self.bpm_plot.addItem(self.delta_x)
+        self.bpm_plot.setLabel('left', 'BPM diff', 'm')
 
-        #pen = pg.mkPen(color, width=1)
-        #self.beta_x_des = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_x', antialias=True)
-        #self.bpm_plot.addItem(self.beta_x_des)
 
-        #color = QtGui.QColor(255, 0, 0)
-        #pen = pg.mkPen(color, width=3)
-        #self.beta_y = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_y', antialias=True)
-        #self.bpm_plot.addItem(self.beta_y)
-        #color = QtGui.QColor(255, 0, 0)
-        #pen = pg.mkPen(color, width=1)
-        #self.beta_y_des = pg.PlotCurveItem(x=[], y=[], pen=pen, name='beta_y', antialias=True)
-        #self.bpm_plot.addItem(self.beta_y_des)
-
-        #self.plot2 = win.addPlot(row=2, col=0)
-        #win.ci.layout.setRowMaximumHeight(2, 150)
-        #self.plot2.setXLink(self.plot1)
-        #self.plot2.showGrid(1, 1, 1)
 
         self.cor_plot.addLegend()
         color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen(color, width=3)
-        self.delta_k = pg.PlotCurveItem(x=[], y=[], pen=pen, name='delta_kick', antialias=True)
-        self.cor_plot.addItem(self.delta_k)
+        pen = pg.mkPen(color, width=1)
+        #pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o'
+        self.delta_k = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o',symbolBrush=(255, 0, 0), name='delta_kick', antialias=True)
 
-        #color = QtGui.QColor(255, 0, 0)
-        #pen = pg.mkPen(color, width=3)
-        #self.Dy = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Dy', antialias=True)
-        #self.cor_plot.addItem(self.Dy)
-        #self.plot2.sigRangeChanged.connect(self.zoom_signal)
+        #self.delta_k = pg.PlotCurveItem(x=[], y=[], pen=pen, symbolBrush=(255, 0, 0), symbolPen ="w", name='delta_kick', antialias=True)
+        #self.delta_k  = pg.BarGraphItem(x=[], height=[], width=0.6, brush='r')
+        self.cor_plot.addItem(self.delta_k)
+        self.cor_plot.setLabel('left', 'Cors diff', 'rad')
+        
+        #proxy = pg.SignalProxy(self.cor_plot.scene().sigMouseMoved, rateLimit=60, slot=self.callback)
+
 
     #@pyqtSlot()
     #def on_click(self):
