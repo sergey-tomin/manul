@@ -18,6 +18,7 @@ from ocelot.cpbd.magnetic_lattice import *
 from ocelot.optimizer.mint.xfel_interface import *
 import logging
 import numbers
+from devices import *
 # filename="logs/afb.log",
 #logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -59,7 +60,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         #print("load style")
         self.configs_dir = "./configs/"
         self.golden_orbit = {}
-
+        self.mi_standard_fb = MIStandardFeedback()
+        self.mi_standard_fb.mi = self.parent.mi
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
 
         self.pb_start_statistics.clicked.connect(self.start_stop_statistics)
@@ -87,9 +89,10 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.bpms_name = []
         self.counter = 0
-        self.debug_mode = False
-        if self.parent.mi.__class__ == TestMachineInterface:
-            self.debug_mode = True
+        #self.debug_mode = False
+        #if self.parent.mi.__class__ == TestMachineInterface:
+        #    self.debug_mode = True
+        self.debug_mode = self.parent.debug_mode
         logger.info("debug_mode = " + str(self.debug_mode))
         self.first_go_x = []
         self.first_go_y = []
@@ -276,7 +279,10 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
-
+        if self.mi_standard_fb.is_running():
+            self.error_box("Standard FeedBack is runinning!")
+            logger.info("start_stop_feedback: St.FB is running")
+            return 0
         #self.orbit = self.orbit_class.create_Orbit_obj()
 
         delay = self.sb_feedback_rep.value()*1000
@@ -304,6 +310,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         #if beam_on:
         #start = time.time()
         #print("ref time", time.time())
+        
+        if self.mi_standard_fb.is_running():
+            #self.error_box("Standard FeedBack is runinning!")
+            logger.info("auto_correction: St.FB is running. Stop Ad. FB")
+            self.stop_feedback()
+            return 0
+        
         is_nan = self.ref_orbit_calc()
         if is_nan:
             logger.warning("auto_correction: nan in the ref orbit. Pause 1 sec")
@@ -421,7 +434,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         for cor in self.orbit.corrs:
             kick_mrad = cor.ui.get_value()
             logger.debug(cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
-            cor.mi.set_value(kick_mrad)
+            try:
+                cor.mi.set_value(kick_mrad)
+            except Exception as e:
+                logger.error(cor.id + " apply_kicks Error: " + str(e))
+        
 
     def set_values2correctors(self):
 

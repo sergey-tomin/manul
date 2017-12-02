@@ -405,3 +405,12 @@ class MIAdviser(Device):
             
         z_pos = self.get_bpm_z_from_ref(ref_names)
         return pos[indxs], z_pos
+
+class MIStandardFeedback(Device):
+    def __init__(self, eid=None):
+        super(MIStandardFeedback, self).__init__(eid=eid)
+
+    def is_running(self):
+        status = self.mi.get_value("XFEL.FEEDBACK/ORBIT.SA1/ORBITFEEDBACK/ACTIVATE_FB")
+        return status
+        

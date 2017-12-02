@@ -14,21 +14,26 @@ def read_json(filename):
 
 
 class Adviser:
-    def __init__(self, cor_file="cor_essence.json", bpm_file="bpm_essence.json"):
+    def __init__(self, cor_file="cor_essence.json", bpm_file="bpm_essence.json", dump=True):
         self.cor_table = read_json(filename=cor_file)
         self.bpm_table = read_json(filename=bpm_file)
 
         self.get_atrb_from_cors_table()
-        self.get_atrb_from_bpm_table()
+        self.get_atrb_from_bpm_table(dump=dump)
 
 
     def find_mfiles(self, n_files, min_sase, cur_state, fit_db="kick"):
         db_indxs = self.get_indices(min_sase)
         if fit_db == "kick":
             fitting_data = self.cor_kicks[db_indxs]
-        else:
+        elif fit_db == "moment":
             fitting_data = self.cor_moments[db_indxs]
-
+        elif fit_db == "orbit_x":
+            fitting_data = self.bpm_X[db_indxs]
+        elif fit_db == "orbit_y":
+            fitting_data = self.bpm_Y[db_indxs]
+        else:
+            print("adviser error")
         indices = self.find_nearest_neighbors(n_neighbors=n_files, fitting_data=fitting_data, ref_data=cur_state)
 
         mf_list = self.get_info(indices, db_indxs)
@@ -77,7 +82,7 @@ class Adviser:
         self.authors = np.array(self.cor_table["author"])
         self.comments = np.array(self.cor_table["comment"])
 
-    def get_atrb_from_bpm_table(self):
+    def get_atrb_from_bpm_table(self, dump=True):
         """
         bpm_ids - array, id of the machine file, must be equal to self.cor_ids
         bpm_X   - list of lists, one list for each machine file
@@ -85,11 +90,32 @@ class Adviser:
         :return:
         """
         self.bpm_ids = np.array([float(x) for x in self.bpm_table["ids"]])
-        self.bpm_X = np.array(self.bpm_table["X"])
-        self.bpm_Y = np.array(self.bpm_table["Y"])
+        bpm_X = np.array(self.bpm_table["X"])
+        bpm_Y = np.array(self.bpm_table["Y"])
         self.bpm_ref_names = self.bpm_table["bpm_names"]
-
-
+        print("len", len(bpm_X))
+        self.not_dump_indx = []
+        if not dump:
+            for name in self.bpm_ref_names:
+                suff = name.split(".")[-1]
+                if "D" not in suff:
+                    self.not_dump_indx.append(True)
+                else:
+                    self.not_dump_indx.append(False)
+        else:
+            self.not_dump_indx = [True] * len(self.bpm_ref_names)
+        self.bpm_X = []
+        self.bpm_Y = []
+        for i in range(len(bpm_X)):
+            #print(self.bpm_X[i])
+            self.bpm_X.append(bpm_X[i][self.not_dump_indx])
+            self.bpm_Y.append(bpm_Y[i][self.not_dump_indx])
+        
+        self.bpm_X = np.array(self.bpm_X)
+        self.bpm_Y = np.array(self.bpm_Y)
+        #print(len(self.bpm_X ))
+        self.bpm_ref_names = np.array(self.bpm_ref_names)[self.not_dump_indx]
+        print("get_atrb_from_bpm_table: ", dump, len(self.bpm_ref_names ))
 
 
 

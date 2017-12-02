@@ -29,7 +29,8 @@ class ManulAdviser(QWidget):
 
         self.mi_adv = MIAdviser()
         self.mi_adv.mi = self.master.mi
-        self.adviser = Adviser(cor_file="./ml/cor_essence.json", bpm_file="./ml/bpm_essence.json")
+        self.flag_dump_bpm = self.ui.cb_remove_dump_bpm.isChecked()
+        self.adviser = Adviser(cor_file="./ml/cor_essence.json", bpm_file="./ml/bpm_essence.json", dump=not(self.flag_dump_bpm))
         self.set_slider()
         self.update_min_sase()
         self.ui.horizontalSlider.valueChanged.connect(self.update_min_sase)
@@ -37,10 +38,30 @@ class ManulAdviser(QWidget):
         self.ui.pb_find_go.clicked.connect(self.find_go)
         self.ui.pb_show.clicked.connect(self.show_diff)
         self.ui.pb_get_state.clicked.connect(self.get_current_state)
+        self.ui.pb_use_it.clicked.connect(self.set_golden_orbit)
+        self.is_beam_on = True
+        self.not_dump_indx = []
+        self.ui.cb_remove_dump_bpm.stateChanged.connect(self.remove_dump_bpm)
         #self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
         #self.ui.pb_cancel.clicked.connect(self.close)
         #
         #self.load_state(filename=self.master.config_dir + "settings.json")
+
+    def remove_dump_bpm(self):
+        self.flag_dump_bpm = self.ui.cb_remove_dump_bpm.isChecked()
+        self.adviser.get_atrb_from_bpm_table(dump=not(self.flag_dump_bpm))
+        self.get_current_state()
+        self.show_diff()
+
+    def set_golden_orbit(self):
+        ok = self.show_diff()
+        if not ok:
+            self.master.error_box("Select one Machine File")
+            
+        golden_orbit = self.master.orbit.golden_orbit.golden_orbit
+        #print(type(golden_orbit), golden_orbit)
+        for i, name in enumerate(self.adviser.bpm_ref_names):
+            golden_orbit[name] = [self.go_bpm_x[i]/1000, self.go_bpm_y[i]/1000] # mm -> m
 
     def set_slider(self):
         min_sase = np.min(self.adviser.sases)
@@ -92,19 +113,19 @@ class ManulAdviser(QWidget):
         return cor_z_pos[cor_sort_indx], delta[cor_sort_indx]
     
     def show_bpm_plot(self, indx):
-        go_bpm_x = self.adviser.bpm_X[indx][0]
-        go_bpm_y = self.adviser.bpm_Y[indx][0]
+        self.go_bpm_x = self.adviser.bpm_X[indx][0]
+        self.go_bpm_y = self.adviser.bpm_Y[indx][0]
 
         
         if self.ui.rb_current_state.isChecked():
             fx = self.cx
             fy = self.cy
         elif self.ui.rb_from_mf.isChecked():
-            fx = go_bpm_x
-            fy = go_bpm_y
+            fx = self.go_bpm_x
+            fy = self.go_bpm_y
         else:
-            fx = go_bpm_x - self.cx
-            fy = go_bpm_y - self.cy
+            fx = self.go_bpm_x - self.cx
+            fy = self.go_bpm_y - self.cy
         
         if self.ui.rb_x_plane.isChecked():
             delta = fx
@@ -120,7 +141,7 @@ class ManulAdviser(QWidget):
         
     def show_diff(self):
         if self.ui.mf_table.ui.tableWidget.last_row == None:
-            return
+            return False
 
         n = self.ui.mf_table.ui.tableWidget.last_row
 
@@ -173,6 +194,7 @@ class ManulAdviser(QWidget):
 #        cor_sort_indx = np.argsort(cor_z_pos)
         self.ui.plot_widget.update_plot(sx=bpm_z, delta_x=bpm_f,
                                         sk=cor_z, delta_k=cor_f)
+        return True
 
 
     def find_go(self):
@@ -182,12 +204,20 @@ class ManulAdviser(QWidget):
             n_files = len(self.indxs_above_thr)
         min_sase = self.ui.horizontalSlider.value()
         cur_state = self.get_current_state()
+        
+        
         if self.ui.rb_energy_prof.isChecked():
             fit_db = "moment"
         elif self.ui.rb_cor_kick.isChecked():
             fit_db = "kick"
+        elif self.ui.rb_orbit_x.isChecked():
+            fit_db = "orbit_x"
+        elif self.ui.rb_orbit_y.isChecked():
+            fit_db = "orbit_y"
         else:
-            print("error")
+            logger.critical("find_go: error radiobutton")
+            return 
+        
 
         self.m_files = self.adviser.find_mfiles(n_files, min_sase, cur_state, fit_db=fit_db)
         self.ui.mf_table.init_table(self.m_files)
@@ -197,17 +227,37 @@ class ManulAdviser(QWidget):
 
     def get_current_state(self):
         #self.adviser.cor_ref_names
-
+        self.is_beam_on = True
         self.ckicks, self.cmoments, self.cor_z_pos = self.mi_adv.get_corrs(ref_names=self.adviser.cor_ref_names)
+
+        
+        
         self.cx, self.bpm_z_pos = self.mi_adv.get_bpm_x(ref_names=self.adviser.bpm_ref_names)
         self.cy, self.bpm_z_pos = self.mi_adv.get_bpm_y(ref_names=self.adviser.bpm_ref_names)
         if self.cx == None or self.cy == None:
             print("NO BEAM")
-            logger.warning("get_current_state: no beam")
+            self.is_beam_on = False
+            logger.info("get_current_state: no beam")
+            #return None
+            
+        if (self.ui.rb_orbit_x.isChecked() or self.ui.rb_orbit_y.isChecked()) and not self.is_beam_on:
+            self.ui.rb_cor_kick.setChecked(True)
+        
         if self.ui.rb_energy_prof.isChecked():
             fit_array = self.cmoments
-        else:# self.ui.rb_cor_kick.isChecked():
+        elif self.ui.rb_cor_kick.isChecked():
             fit_array = self.ckicks
+        elif self.ui.rb_orbit_x.isChecked() and self.is_beam_on:
+            
+            fit_array = self.cx
+        elif self.ui.rb_orbit_y.isChecked() and self.is_beam_on:
+            fit_array = self.cy
+        else:
+            logger.critical("find_go: error radiobutton")
+            return None
+        
+        
+        
         #print(self.indxs_above_thr)
         #fit_array = fit_array[self.indxs_above_thr]
         return fit_array
