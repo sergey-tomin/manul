@@ -237,8 +237,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.set_golden_orbit()
 
         self.orbit = self.orbit_class.create_Orbit_obj()
-
-
+        
+        if self.orbit == None:
+            logger.warning("start_stop_statistics: self.orbit is None. Stop Statistics")
+            
+            self.stop_statistics()
+            self.error_box("Check BPMs or Load/reload settings and try again" )
+            
         if self.pb_start_statistics.text() == "Statistics Accum Off":
             self.stop_statistics()
 
@@ -310,8 +315,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         #if beam_on:
         #start = time.time()
         #print("ref time", time.time())
-        
-        if self.mi_standard_fb.is_running():
+        try: 
+            is_st_fb_running = self.mi_standard_fb.is_running()
+        except Exception as e:
+            logger.warning("error during status of st. FB reading: " + str(e))
+            is_st_fb_running = False
+            
+        if is_st_fb_running:
             #self.error_box("Standard FeedBack is runinning!")
             logger.info("auto_correction: St.FB is running. Stop Ad. FB")
             self.stop_feedback()
@@ -353,7 +363,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.online_calc = False
         # read orbit devs
         for elem in self.orbit.corrs:
-            elem.kick_mrad = elem.mi.get_value()
+            try:
+                elem.kick_mrad = elem.mi.get_value()
+            except Exception as e:
+                stop_flag = True
+                logger.warning(ele.id + " reading error: " + str(e))
+                return stop_flag
+                
             elem.angle_read = elem.kick_mrad*1e-3
             elem.i_kick = elem.kick_mrad
             elem.ui.set_init_value(elem.kick_mrad)
@@ -507,7 +523,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             return None
 
         if not isinstance(target, numbers.Number) or np.isnan(target) or np.isinf(target):
-            logger.warning("read data, target is not number or NaN or inf: " + str(target))
+            logger.warning("read data: target is not number/NaN/inf: " + str(target))
             return False
 
         if len(self.target_values) >= self.nreadings:
