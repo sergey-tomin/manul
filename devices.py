@@ -9,38 +9,81 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Corrector(Device):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+        super(Corrector, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
 
     def set_value(self, val):
         #self.values.append(val)
         #self.times.append(time.time())
-        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = self.server + ".MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = "XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = self.server + ".MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         val = self.mi.get_value(ch)
         return val
 
     def get_limits(self):
-        ch_min = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
+        ch_min = self.server+ ".MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
         min_kick = self.mi.get_value(ch_min)
-        ch_max = "XFEL.MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
+        ch_max = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
         max_kick = self.mi.get_value(ch_max)
         return [min_kick*1000, max_kick*1000]
 
+class MITwiss(Device):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+        super(MITwiss, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
+
+    def get_tws(self, section):
+        ch_beta_x =  self.server + ".UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.BETA." + self.subtrain
+        ch_alpha_x = self.server + ".UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ALPHA." + self.subtrain
+        ch_beta_y =  self.server + ".UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.BETA." + self.subtrain
+        ch_alpha_y = self.server + ".UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.ALPHA." + self.subtrain
+        #ch_energy =  "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ENERGY.SA1"
+        tws_dict = {}
+        tws_dict['beta_x'] = self.mi.get_value(ch_beta_x)
+        tws_dict['beta_y'] = self.mi.get_value(ch_beta_y)
+        tws_dict['alpha_x']  = self.mi.get_value(ch_alpha_x)
+        tws_dict['alpha_y']  = self.mi.get_value(ch_alpha_y)
+        return tws_dict
+
+class MPS(Device):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+        super(MPS, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
+
+    def beam_off(self):
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+
+    def beam_on(self):
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+
+    def num_bunches_requested(self, num_bunches=1):
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", num_bunches)
+
+
 class CavityA1(Device):
-    def __init__(self, eid):
+    def __init__(self, eid, server="XFEL", subtrain="SA1"):
         super(CavityA1, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
 
     def set_value(self, val):
-        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = self.server + ".RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)
         logger.debug("CavityA1, ch: " + ch + " V = " + str(val))
 
     def get_value(self):
-        ch = "XFEL.RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
+        ch = self.server + ".RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         val = self.mi.get_value(ch)
         return val
+
+
 
 
 class BPMUI:
@@ -106,13 +149,14 @@ class BPMUI:
 
 
 class BPM(Device):
-    def __init__(self, eid, subtrain="SA1"):
+    def __init__(self, eid, server="XFEL", subtrain="SA1"):
         super(BPM, self).__init__(eid=eid)
         self.subtrain = subtrain
+        self.server = server
 
     def get_pos(self):
-        ch_x = "XFEL.DIAG/BPM/" + self.eid + "/X." + self.subtrain
-        ch_y = "XFEL.DIAG/BPM/" + self.eid + "/Y." + self.subtrain
+        ch_x = self.server + ".DIAG/BPM/" + self.eid + "/X." + self.subtrain
+        ch_y = self.server + ".DIAG/BPM/" + self.eid + "/Y." + self.subtrain
         #print(ch_x, ch_y)
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
@@ -120,7 +164,7 @@ class BPM(Device):
         return x, y
 
     def get_charge(self):
-        x = self.mi.get_value("XFEL.DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
+        x = self.mi.get_value(self.server + ".DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
 class DeviceUI:
@@ -175,22 +219,26 @@ class DeviceUI:
         self.tableWidget.setRowHidden(self.row, hide)
 
 class MICavity(Device):
-    def __init__(self, eid=None, subtrain="SA1"):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MICavity, self).__init__(eid=eid)
         self.subtrain = subtrain
+        self.server = server
+
     def get_value(self):
         #C.A3.1.1.L2
         #M4.A4.L2
         parts = self.eid.split(".")
         eid = "M"+parts[2]+"."+parts[1]+"."+parts[4]
-        ch = "XFEL.RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN." + self.subtrain
+        ch = self.server + ".RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN." + self.subtrain
         val = self.mi.get_value(ch)/8.
         return val
 
 
 class MIOrbit(Device):
-    def __init__(self, eid=None, subtrain="SA1"):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MIOrbit, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
         self.bpm_server = "BPM" # "ORBIT"     # or "BPM"
         self.time_delay = 0.1         # sec
         self.charge_threshold = 0.005 # nC
@@ -205,8 +253,8 @@ class MIOrbit(Device):
 
     def read_positions(self):
         try:
-            orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
-            orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+            orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+            orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
         except Exception as e:
             logger.critical("read_positions: self.mi.get_value: " + e)
             raise e
@@ -228,7 +276,7 @@ class MIOrbit(Device):
 
     def read_charge(self):
         #try:
-        charge = self.mi.get_value("XFEL.DIAG/BPM/*/CHARGE." + self.subtrain)
+        charge = self.mi.get_value(self.server + ".DIAG/BPM/*/CHARGE." + self.subtrain)
         #except:
         #    print("ERROR: reading from DOOCS")
         #    return False
@@ -297,29 +345,29 @@ class MIOrbit(Device):
         return True
 
 class MIAdviser(Device):
-    def __init__(self, eid=None, subtrain="SA1"):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MIAdviser, self).__init__(eid=eid)
         self.bpm_server = "BPM"  # "ORBIT"     # or "BPM"
         self.subtrain = subtrain
-
+        self.server = server
 
     def get_x(self):
         try:
-            self.orbit_x = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+            self.orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
         except Exception as e:
             logger.info("get_x: self.mi.get_value: " + str(e))
             self.orbit_x = []
 
     def get_y(self):
         try:
-            self.orbit_y = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+            self.orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
         except Exception as e:
             logger.info("get_y: self.mi.get_value: " + str(e))
             self.orbit_y = []
         
     def get_bpm_z_pos(self):
         try:
-            self.bpm_z_pos = self.mi.get_value("XFEL.DIAG/" + self.bpm_server + "/*/Z_POS")
+            self.bpm_z_pos = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Z_POS")
         except Exception as e:
             logger.info("get_bpm_z_pos: self.mi.get_value: " + str(e))
             self.bpm_z_pos = []
@@ -328,7 +376,7 @@ class MIAdviser(Device):
     def get_kicks(self):
         #"XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         try:
-            self.kicks = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/KICK_MRAD.SP")
+            self.kicks = self.mi.get_value(self.server + ".MAGNETS/MAGNET.ML/*/KICK_MRAD.SP")
         except Exception as e:
             logger.critical("get_kicks: self.mi.get_value: " + str(e))
             raise e
@@ -336,7 +384,7 @@ class MIAdviser(Device):
     def get_momentums(self):
         #"XFEL.MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
         try:
-            self.moments = self.mi.get_value("XFEL.MAGNETS/MAGNET.ML/*/MOMENTUM.SP")
+            self.moments = self.mi.get_value(self.server + ".MAGNETS/MAGNET.ML/*/MOMENTUM.SP")
         except Exception as e:
             logger.critical("get_momentums: self.mi.get_value: " + str(e))
             raise e
@@ -407,10 +455,12 @@ class MIAdviser(Device):
         return pos[indxs], z_pos
 
 class MIStandardFeedback(Device):
-    def __init__(self, eid=None):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MIStandardFeedback, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
 
     def is_running(self):
-        status = self.mi.get_value("XFEL.FEEDBACK/ORBIT.SA1/ORBITFEEDBACK/ACTIVATE_FB")
+        status = self.mi.get_value(self.server + ".FEEDBACK/ORBIT.SA1/ORBITFEEDBACK/ACTIVATE_FB")
         return status
         

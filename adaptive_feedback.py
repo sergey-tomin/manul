@@ -367,7 +367,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                 elem.kick_mrad = elem.mi.get_value()
             except Exception as e:
                 stop_flag = True
-                logger.warning(ele.id + " reading error: " + str(e))
+                logger.warning(elem.id + " reading error: " + str(e))
                 return stop_flag
                 
             elem.angle_read = elem.kick_mrad*1e-3

@@ -109,7 +109,7 @@ class DispersionInterface:
 
         current_cav = self.ui.cb_cav_list.currentText()
         cav_id = "CTRL." + current_cav
-        self.cavity = CavityA1(eid=cav_id)
+        self.cavity = CavityA1(eid=cav_id, server=self.parent.server, subtrain=self.parent.subtrain)
         self.cavity.mi = self.parent.mi
 
         V_init = self.cavity.get_value()

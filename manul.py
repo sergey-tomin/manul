@@ -80,21 +80,30 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
         self.ui = MainWindow(self)
 
         self.show_correction_result = True
+
+
+        self.subtrain = self.ui.combo_subtrain.currentText()
         self.load_settings()
+        self.server = "XFEL"
+        #self.subtrain = "SA1"
 
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispersionInterface(parent=self)
 
-        self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
-
+        self.ui.action_Parameters.triggered.connect(self.run_settings_window)
+        try:
+            self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
+        except:
+            self.error_box("Could not load lattice files. Check path in settings and try again.")
+            return
 
         self.online_calc = True
 
@@ -107,12 +116,6 @@ class ManulInterfaceWindow(QMainWindow):
         self.loadStyleSheet()
 
 
-        self.timer_live = pg.QtCore.QTimer()
-        self.timer_live.timeout.connect(self.orbit.live_orbit)
-
-        self.feedback_timer = pg.QtCore.QTimer()
-        self.feedback_timer.timeout.connect(self.orbit.auto_correction)
-
         #timer for plots, starts when scan starts
         self.multiPvTimer = QtCore.QTimer()
         #self.multiPvTimer.timeout.connect(self.getPlotData)
@@ -124,6 +127,13 @@ class ManulInterfaceWindow(QMainWindow):
         #self.ui.cb_lattice.setCurrentIndex(0)
 
         #self.correctors_list(seq=self.big_sequence, energy=130)
+        #self.change_subtrain()
+        self.timer_live = pg.QtCore.QTimer()
+        self.timer_live.timeout.connect(self.orbit.live_orbit)
+
+        self.feedback_timer = pg.QtCore.QTimer()
+        self.feedback_timer.timeout.connect(self.orbit.auto_correction)
+
         self.load_lattice_files()
         self.lat = self.return_lat()
         #self.tws0 = self.return_tws()
@@ -141,9 +151,21 @@ class ManulInterfaceWindow(QMainWindow):
         #self.ui.pb_reload.clicked.connect(self.reload_lat)
 
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
-        self.ui.action_Parameters.triggered.connect(self.run_settings_window)
+
 
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
+        self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
+
+    def change_subtrain(self):
+        #for name in ["ALL", "SA1", "SA2", "SA3", "DUD"]:
+        #    self.ui.combo_subtrain.addItem(name)
+        #self.ui.combo_subtrain.setCurrentIndex(0)
+        self.subtrain = self.ui.combo_subtrain.currentText()
+        #self.orbit = OrbitInterface(parent=self)
+        #self.dispersion = DispersionInterface(parent=self)
+        #self.load_lattice_files()
+        #self.lat = self.return_lat()
+        self.arbitrary_lattice()
 
     def load_lattice_files(self):
         names = [sec.name for sec in self.xfel_lattice.sections]
@@ -192,6 +214,17 @@ class ManulInterfaceWindow(QMainWindow):
         self.co_nlast_bpms = table["co_nlast"]
         self.logbook = table["logbook"]
         self.path2lattice = table["lattice"]
+
+        subtrain_list = table["subtrain_list"]
+        for name in subtrain_list:
+            self.ui.combo_subtrain.addItem(name)
+        if "subtrain" in table.keys():
+            indx = table["subtrain_list"].index(table["subtrain"])
+        else:
+            indx = 0
+        self.ui.combo_subtrain.setCurrentIndex(indx)
+        self.subtrain = self.ui.combo_subtrain.currentText()
+
         logger.debug("load settings ... OK")
 
     def update_table(self):
@@ -265,8 +298,10 @@ class ManulInterfaceWindow(QMainWindow):
 
         section = self.xfel_lattice.return_lat("up to TL")
         cell_back_track = section.seq
+
         if self.ui.cb_design_tws.isChecked():
             return self.tws_des
+
         if self.ui.cb_otr218.isChecked():
             stop = 'OTRB.218.B1'
 
@@ -319,18 +354,23 @@ class ManulInterfaceWindow(QMainWindow):
             self.ui.cb_otr55.setChecked(True)
             section = "I1"
             tws.E = 0.130
+        mi_tws = MITwiss(server=self.server, subtrain=self.subtrain)
+        mi_tws.mi = self.mi
+        tws_dict = mi_tws.get_tws(section=section)
+        for key in tws_dict.keys():
+            tws.__dict__[key] = tws_dict[key]
 
-        ch_beta_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.BETA.SA1"
-        ch_alpha_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ALPHA.SA1"
-        ch_beta_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.BETA.SA1"
-        ch_alpha_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.ALPHA.SA1"
-        ch_energy = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ENERGY.SA1"
+        #ch_beta_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.BETA.SA1"
+        #ch_alpha_x = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ALPHA.SA1"
+        #ch_beta_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.BETA.SA1"
+        #ch_alpha_y = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_Y.ALPHA.SA1"
+        #ch_energy = "XFEL.UTIL/BEAM_PARAMETER/" + section + "/PROJECTED_X.ENERGY.SA1"
 
-        tws.beta_x = self.mi.get_value(ch_beta_x)
-        tws.beta_y = self.mi.get_value(ch_beta_y)
-        tws.alpha_x = self.mi.get_value(ch_alpha_x)
-        tws.alpha_y = self.mi.get_value(ch_alpha_y)
-        #tws.E = self.mi.get_value(ch_energy)*0.001
+        #tws.beta_x = self.mi.get_value(ch_beta_x)
+        #tws.beta_y = self.mi.get_value(ch_beta_y)
+        #tws.alpha_x = self.mi.get_value(ch_alpha_x)
+        #tws.alpha_y = self.mi.get_value(ch_alpha_y)
+        ##tws.E = self.mi.get_value(ch_energy)*0.001
         logger.debug(tws)
         return tws
 
@@ -507,7 +547,7 @@ class ManulInterfaceWindow(QMainWindow):
                 elem.kick_mrad = elem.k1 * elem.l * 1000.
                 elem.i_kick = elem.kick_mrad
                 devices.append(elem)
-                mi_dev = Device(eid="XFEL.MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
+                mi_dev = Device(eid=self.server + ".MAGNETS/MAGNET.ML/" + elem.id + "/KICK_MRAD.SP")
                 mi_dev.mi = self.mi
                 elem.mi = mi_dev
         return devices
@@ -516,7 +556,7 @@ class ManulInterfaceWindow(QMainWindow):
         devices = []
         for elem in self.lat.sequence:
             if elem.__class__ == Cavity and ("L1" in elem.id or "L2" in elem.id or "L3" in elem.id):
-                mi_dev = MICavity(eid=elem.id)
+                mi_dev = MICavity(eid=elem.id, server=self.server, subtrain=self.subtrain)
 
                 mi_dev.mi = self.mi
                 elem.mi = mi_dev

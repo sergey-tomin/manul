@@ -69,6 +69,12 @@ class ManulSettings(QWidget):
 
         table["co_nlast"] = self.ui.sb_co_nlast.value()
 
+        table["server_list"] = self.string2list(self.ui.le_server.text())
+        table["server"] = self.ui.combo_server.currentText()
+
+        table["subtrain_list"] = self.string2list(self.ui.le_subtrain.text())
+        table["subtrain"] = self.ui.combo_subtrain.currentText()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -106,6 +112,27 @@ class ManulSettings(QWidget):
 
         if "co_nlast" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
+        if "server_list" in table.keys():
+            self.ui.le_server.setText(self.list2string(table["server_list"]))
+            for name in table["server_list"]:
+                self.ui.combo_server.addItem(name)
+            if "server" in table.keys():
+                indx = table["server_list"].index(table["server"])
+            else:
+                indx = 0
+            self.ui.combo_server.setCurrentIndex(indx)
+
+        if "subtrain_list" in table.keys():
+            self.ui.le_subtrain.setText(self.list2string(table["subtrain_list"]))
+            for name in table["subtrain_list"]:
+                self.ui.combo_subtrain.addItem(name)
+
+            if "subtrain" in table.keys():
+                indx = table["subtrain_list"].index(table["subtrain"])
+            else:
+                indx = 0
+
+            self.ui.combo_subtrain.setCurrentIndex(indx)
         #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")

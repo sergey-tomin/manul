@@ -17,23 +17,31 @@ class LatSection:
         self.tw = tw
 
 
-
-
 class XFELLattice:
-    def __init__(self, path="lattices.phase_advance_5pi"):
+    def __init__(self, path="lattices.phase_advance_5pi_sase2"):
         self.lat_zi = 23.2 # start position of the lattice in [m]
-        self.config = {"I1":    path + ".i1",
-                       "L1":    path + ".l1",
-                       "L2":    path + ".l2",
-                       "L3":    path + ".l3",
-                       "CL":    path + ".cl",
-                       "SASE1": path + ".sase1",
+        self.config = {"I1":       path + ".i1",
+                       "L1":       path + ".l1",
+                       "L2":       path + ".l2",
+                       "L3":       path + ".l3",
+                       "CL":       path + ".cl",
+                       "TL34":     path + ".tl34",
+                       "TL34_SA2": path + ".sase2_branch.tl34",
+                       "SASE1":    path + ".sase1",
+                       "SASE2":    path + ".sase2_branch.xfel_sase2",
+                       "T1":       path + ".sase2_branch.xfel_t1",
+                       "T3":       path + ".sase2_branch.xfel_t3",
+                       "T5":       path + ".sase2_branch.xfel_t5",
+                       "T5D":      path + ".sase2_branch.xfel_t5d",
+
                        "T4":    path + ".t4",
                        "SASE3": path + ".sase3",
                        "I1D":   path + ".i1d",
                        "B1D":   path + ".b1d",
                        "B2D":   path + ".b2d",
-                       "TLD":   path + ".tld"}
+                       "TLD":   path + ".tld",
+                       "T4D":   path + ".t4d"
+                       }
 
         self.lats = {}
         self.load()
@@ -63,29 +71,37 @@ class XFELLattice:
         tws_cl.E = 15.2349999889
 
         self.sections = [
-            LatSection("Arbitrary", str_cells=["I1", "L1", "L2", "L3", "CL", "SASE1", "T4", "SASE3"]),
-            LatSection("I1D", str_cells=["I1", "I1D"]),
-            LatSection("B1D", str_cells=["I1", "L1", "B1D"]),
-            LatSection("B2D", str_cells = ["I1", "L1", "L2", "B2D"]),
-            LatSection("TLD", str_cells = ["I1", "L1", "L2", "L3", "CL", "TLD"]),
+            LatSection("Arbitrary", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"]),
             LatSection("I1", str_cells = ["I1"]),
             LatSection("L1", str_cells = ["L1"], z0=62.1),
             LatSection("L2", str_cells=["L2"], z0=229.30),
-
             LatSection("L3", str_cells=["L2", "L3", "CL"], start=self.lats["L2"].engrd_419_b2,
                                stop=self.lats["CL"].mpbpmi_1693_cl, z0=396.22, tw=tws_L3),
 
-            LatSection("CL", str_cells=["L3", "CL", "SASE1"], start=self.lats["L3"].bpmr_1307_l3,
+            LatSection("CL", str_cells=["L3", "CL", "TL34", "SASE1"], start=self.lats["L3"].bpmr_1307_l3,
                                stop=self.lats["SASE1"].qa_2253_sa1, z0=1359.637 + 23.2, tw=tws_cl),
-
-            LatSection("SASE1", str_cells=["SASE1", "T4"],stop=self.lats["T4"].ensub_2583_t4, z0=1957.18564),
+#
+            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].ensub_2583_t4, z0=1957.18564),
             LatSection("T4", str_cells=["T4"], z0=2438.517),
-
+#
             LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].ensub_2583_t4,
                        z0=2560.45, tw=tws_sase3),
+
+            LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564),
+
             LatSection("up to B1", str_cells=["I1", "L1"]),
             LatSection("up to B2", str_cells=["I1", "L1", "L2"]),
+            LatSection("up to CL", str_cells=["I1", "L1", "L2", "L3"]),
             LatSection("up to TL", str_cells=["I1", "L1", "L2", "L3", "CL"]),
+            LatSection("up to SASE1", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1"]),
+            LatSection("I1D", str_cells=["I1", "I1D"]),
+            LatSection("B1D", str_cells=["I1", "L1", "B1D"]),
+            LatSection("B2D", str_cells=["I1", "L1", "L2", "B2D"]),
+            LatSection("TLD", str_cells=["I1", "L1", "L2", "L3", "CL", "TLD"]),
+            LatSection("T4D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"]),
+
+            LatSection("T5D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "T1",
+                                               "SASE2", "T3", "T5", "T5D"]),
             LatSection("up to SASE3", str_cells=["I1", "L1", "L2", "L3", "CL", "SASE1", "T4", "SASE3"])
         ]
 
@@ -155,7 +171,6 @@ class XFELLattice:
         return tws[-1]
 
 
-
     def return_lat(self, current_lat, start=None, stop=None): #qt_currentIndex=None, start=None, stop=None):
         logger.debug("return_lat: ... ")
 
@@ -205,5 +220,5 @@ if __name__ == "__main__":
     xfel_lat = XFELLattice()
     for sec in xfel_lat.sections:
         print(sec.name)
-    xfel_lat.return_lat("I1D")
+    xfel_lat.return_lat("I1")
     #print(xfel_lat.sections.keys())

@@ -123,8 +123,13 @@ class OrbitInterface:
         self.s_bpm = []
         self.x_bpm = []
         self.y_bpm = []
-        self.mi_orbit = MIOrbit()
-        self.mi_orbit.mi = self.parent.mi
+        #self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
+        #self.mi_orbit.mi = self.parent.mi
+        #
+        #self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
+        #self.xfel_mps.mi = self.parent.mi
+        self.update_machine_interface()
+
         self.calc_correction = {}
         self.p_init = None
         self.add_orbit_plot()
@@ -187,6 +192,12 @@ class OrbitInterface:
         except Exception as e:
             logger.warning("Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: " + str(e))
 
+    def update_machine_interface(self):
+        self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
+        self.mi_orbit.mi = self.parent.mi
+
+        self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
+        self.xfel_mps.mi = self.parent.mi
 
     def reset_undo_database(self):
         self.undo_data_base = []
@@ -226,7 +237,7 @@ class OrbitInterface:
 
         for cor in self.corrs:
             #print(cor.id, upstream, downstream)
-            if ".SA1" in cor.id or (".SA3" in cor.id):
+            if ".SA1" in cor.id or (".SA3" in cor.id) or (".SA2" in cor.id):
                 if not upstream:
                     if ("CAX." in cor.id) or ("CAY." in cor.id):
                         cor.ui.uncheck()
@@ -585,28 +596,29 @@ class OrbitInterface:
 
     def single_shot_read_bpms(self):
         logger.info("Single Shot reading")
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+        self.xfel_mps.num_bunches_requested(num_bunches=1)
+
         self.button_bpm.activate(max_charge_value=0.5, max_pos_value=5.)
         self.cavity_bpm.activate(attenuation=10)
         time.sleep(0.1)
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
-
+        self.xfel_mps.beam_on()
         try:
             self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         except Exception as e:
             logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
             raise
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.xfel_mps.beam_off()
+        self.button_bpm.deactivate()
+        self.cavity_bpm.deactivate()
         self.calculate_correction()
 
     def multi_shot_read_bpms(self):
         logger.info("Multi Shot reading")
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", 1)
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
-        
         self.read_correctors()
+
+        self.xfel_mps.num_bunches_requested(num_bunches=1)
+        self.xfel_mps.beam_on()
+
 
         try:
             self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
@@ -614,7 +626,7 @@ class OrbitInterface:
             logger.error("read_bpms: mi_orbit.read_and_average()" + str(e))
             raise
 
-        self.parent.mi.set_value("XFEL.UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.xfel_mps.beam_off()
         self.calculate_correction()
 
 
@@ -849,7 +861,7 @@ class OrbitInterface:
                 elem.s = L - elem.l/2.
                 devices.append(elem)
 
-                mi_dev = BPM(eid=elem.id)
+                mi_dev = BPM(eid=elem.id, server=self.parent.server, subtrain=self.parent.subtrain)
                 mi_dev.mi = self.parent.mi
                 elem.mi = mi_dev
                 elem.lat_inx = i
@@ -941,14 +953,14 @@ class OrbitInterface:
 
                 if "ps_id" in elem.__dict__:
                     if elem.ps_id not in mi_devs.keys():
-                        mi_dev = Corrector(eid=elem.id)
+                        mi_dev = Corrector(eid=elem.id, server=self.parent.server, subtrain=self.parent.subtrain)
                         mi_dev.mi = self.parent.mi
                         elem.mi = mi_dev
                         mi_devs[elem.ps_id] = mi_dev
                     else:
                         elem.mi = mi_devs[elem.ps_id]
                 else:
-                    mi_dev = Corrector(eid=elem.id)
+                    mi_dev = Corrector(eid=elem.id, server=self.parent.server, subtrain=self.parent.subtrain)
                     mi_dev.mi = self.parent.mi
                     elem.mi = mi_dev
 
