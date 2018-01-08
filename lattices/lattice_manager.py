@@ -171,10 +171,19 @@ class XFELLattice:
         return tws[-1]
 
 
-    def return_lat(self, current_lat, start=None, stop=None): #qt_currentIndex=None, start=None, stop=None):
+    def return_lat_section(self, current_lat_section, start=None, stop=None): #qt_currentIndex=None, start=None, stop=None):
+        """
+        Method modifies an introduced LatSection object (arg: current_lat_section) taking into account
+        "start" and "stop" elements and returns that object.
+
+        :param current_lat_section: LatSection object
+        :param start: start Element object (ocelot.cpbd.elements)
+        :param stop: stop Element object (ocelot.cpbd.elements)
+        :return: LatSection
+        """
         logger.debug("return_lat: ... ")
 
-        section = self.get_section(current_lat)
+        section = self.get_section(current_lat_section)
         section.seq = self.get_sequence(section)
 
         section.tws_des = self.return_twiss_des(section)
@@ -220,5 +229,5 @@ if __name__ == "__main__":
     xfel_lat = XFELLattice()
     for sec in xfel_lat.sections:
         print(sec.name)
-    xfel_lat.return_lat("I1")
+    xfel_lat.return_lat_section("I1")
     #print(xfel_lat.sections.keys())

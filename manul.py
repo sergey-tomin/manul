@@ -473,7 +473,7 @@ class ManulInterfaceWindow(QMainWindow):
             stop = cell[-1]
             
         try:
-            section = self.xfel_lattice.return_lat(current_lat, start=start, stop=stop)
+            section = self.xfel_lattice.return_lat_section(current_lat, start=start, stop=stop)
         except Exception as e:
             logger.error("return_lat: xfel_lattice.return_lat()" +str(e))
             raise
