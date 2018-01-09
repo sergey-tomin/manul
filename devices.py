@@ -6,7 +6,9 @@ from PyQt5 import QtGui, QtCore
 import numpy as np
 import time
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class Corrector(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
@@ -32,6 +34,7 @@ class Corrector(Device):
         max_kick = self.mi.get_value(ch_max)
         return [min_kick*1000, max_kick*1000]
 
+
 class MITwiss(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MITwiss, self).__init__(eid=eid)
@@ -50,6 +53,7 @@ class MITwiss(Device):
         tws_dict['alpha_x']  = self.mi.get_value(ch_alpha_x)
         tws_dict['alpha_y']  = self.mi.get_value(ch_alpha_y)
         return tws_dict
+
 
 class MPS(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
