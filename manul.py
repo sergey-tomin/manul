@@ -92,7 +92,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.subtrain = self.ui.combo_subtrain.currentText()
         self.load_settings()
-        self.server = "XFEL"
+        #self.server = "XFEL"
         #self.subtrain = "SA1"
 
         self.orbit = OrbitInterface(parent=self)
@@ -215,15 +215,26 @@ class ManulInterfaceWindow(QMainWindow):
         self.logbook = table["logbook"]
         self.path2lattice = table["lattice"]
 
-        subtrain_list = table["subtrain_list"]
+        if "subtrain_list" in table.keys():
+            subtrain_list = table["subtrain_list"]
+        else:
+            subtrain_list = ["ALL"]
+            
         for name in subtrain_list:
             self.ui.combo_subtrain.addItem(name)
-        if "subtrain" in table.keys():
-            indx = table["subtrain_list"].index(table["subtrain"])
+        
+        if "subtrain" in table.keys() and table["subtrain"] in subtrain_list:
+            indx = subtrain_list.index(table["subtrain"])
         else:
             indx = 0
+            logger.warning("load_settings: 'subtrain' not in table.keys() or table['subtrain'] not in subtrain_list")
         self.ui.combo_subtrain.setCurrentIndex(indx)
         self.subtrain = self.ui.combo_subtrain.currentText()
+        
+        if "server" in table.keys():
+            self.server = table["server"]
+        else:
+            self.server = "XFEL"
 
         logger.debug("load settings ... OK")
 
@@ -296,7 +307,7 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("back_tracking: ... ")
         tws0 = self.read_twiss()
 
-        section = self.xfel_lattice.return_lat("up to TL")
+        section = self.xfel_lattice.return_lat_section("up to TL")
         cell_back_track = section.seq
 
         if self.ui.cb_design_tws.isChecked():

@@ -38,7 +38,7 @@ class Corrector(Device):
 class MITwiss(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MITwiss, self).__init__(eid=eid)
-        self.subtrain = subtrain
+        self.subtrain = "SA1"
         self.server = server
 
     def get_tws(self, section):
@@ -54,7 +54,6 @@ class MITwiss(Device):
         tws_dict['alpha_y']  = self.mi.get_value(ch_alpha_y)
         return tws_dict
 
-
 class MPS(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MPS, self).__init__(eid=eid)
@@ -62,13 +61,17 @@ class MPS(Device):
         self.server = server
 
     def beam_off(self):
-        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 0)
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/BEAM_ALLOWED", 0)
 
     def beam_on(self):
-        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/BEAM_ALLOWED", 1)
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/BEAM_ALLOWED", 1)
 
     def num_bunches_requested(self, num_bunches=1):
-        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/SA1/NUM_BUNCHES_REQUESTED", num_bunches)
+        self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/NUM_BUNCHES_REQUESTED_1", num_bunches)
+    
+    def is_beam_on(self):
+        val = self.mi.get_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/BEAM_ALLOWED")
+        return val
 
 
 class CavityA1(Device):
@@ -274,8 +277,8 @@ class MIOrbit(Device):
 
         if not np.array_equal(names_x, names_y):
             logger.warning(" MIOrbit: read_positions: X and Y orbits are not equal")
-        self.x = np.array([data["float"] for data in orbit_x])
-        self.y = np.array([data["float"] for data in orbit_y])
+        self.x = np.array([data["float1"] for data in orbit_x])
+        self.y = np.array([data["float1"] for data in orbit_y])
         return [names_x, self.x, self.y]
 
     def read_charge(self):
@@ -285,7 +288,7 @@ class MIOrbit(Device):
         #    print("ERROR: reading from DOOCS")
         #    return False
         names = [data["str"] for data in charge]
-        values = np.array([data["float"] for data in charge])
+        values = np.array([data["float1"] for data in charge])
         return names, values
 
     def read_orbit(self):
@@ -417,7 +420,7 @@ class MIAdviser(Device):
     def get_bpm_z_from_ref(self, ref_names):
         self.get_bpm_z_pos()
         names = [x["str"] for x in self.bpm_z_pos]
-        z_poss = np.array([x["float"] for x in self.bpm_z_pos])
+        z_poss = np.array([x["float1"] for x in self.bpm_z_pos])
         indxs = []
         for name in ref_names:
             indxs.append(names.index(name))
@@ -430,7 +433,7 @@ class MIAdviser(Device):
         if len(self.orbit_x) == 0:
             return None
         names = [x["str"] for x in self.orbit_x]
-        pos = np.array([x["float"] for x in self.orbit_x])
+        pos = np.array([x["float1"] for x in self.orbit_x])
 
         indxs = []
         for name in ref_names:
@@ -448,7 +451,7 @@ class MIAdviser(Device):
             return None
 
         names = [x["str"] for x in self.orbit_y]
-        pos = np.array([x["float"] for x in self.orbit_y])
+        pos = np.array([x["float1"] for x in self.orbit_y])
         #z_poss = np.array([x["float"] for x in self.bpm_z_pos])
 
         indxs = []

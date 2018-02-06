@@ -490,6 +490,8 @@ class UIAFeedBack(QWidget, Ui_Form):
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
+                    # TODO: add a checking for beam on/off
+                    #if self.orbit_class.xfel_mps.is_orbit_on():
                     logger.info("charge < charge_thresh: " + str(charge < charge_thresh))
                     self.le_warn.clear()
                     self.le_warn.setText(elem.id + " charge < charge_thresh")

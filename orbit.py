@@ -602,10 +602,13 @@ class OrbitInterface:
         self.cavity_bpm.activate(attenuation=10)
         time.sleep(0.1)
         self.xfel_mps.beam_on()
+        time.sleep(0.1)
         try:
             self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         except Exception as e:
             logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
+            self.button_bpm.deactivate()
+            self.cavity_bpm.deactivate()
             raise
         self.xfel_mps.beam_off()
         self.button_bpm.deactivate()
@@ -623,7 +626,7 @@ class OrbitInterface:
         try:
             self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
         except Exception as e:
-            logger.error("read_bpms: mi_orbit.read_and_average()" + str(e))
+            logger.error("read_bpms: mi_orbit.read_and_average() " + str(e))
             raise
 
         self.xfel_mps.beam_off()
