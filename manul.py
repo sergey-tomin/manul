@@ -19,7 +19,8 @@ import logging
 
 # filename="logs/afb.log",
 #filename="logs/manul.log"
-logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+#logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig( format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 path = os.path.realpath(__file__)
 indx = path.find("manul")

@@ -49,27 +49,30 @@ class ResponseMatrixCalculator(Thread):
         try:
             self.rm.load(self.rm_filename)
         except:
-            logger.error("ResponseMatrixCalculator: No Response Matrix")
+            logger.warning("ResponseMatrixCalculator: Could not load RM. Dumping...")
+            self.rm.dump(filename=self.rm_filename)
             return False
             
         if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
-            logger.debug("ResponseMatrixCalculator: dump calculated ORM")
+            logger.info("ResponseMatrixCalculator: dump calculated ORM")
             self.rm.cor_names = cor_names
             self.rm.bpm_names = bpm_names
             self.rm.matrix = inj_matrix
             self.rm.dump(filename=self.rm_filename)
         else:
-            logger.debug("ResponseMatrixCalculator: inject calculated ORM")
+            logger.info("ResponseMatrixCalculator: inject calculated ORM")
             self.rm.inject(cor_names, bpm_names, inj_matrix)
 
-        if self.rm_filename != None:
-            self.rm.dump(filename=self.rm_filename)
+        #if self.rm_filename != None:
+        #    self.rm.dump(filename=self.rm_filename)
 
         if self.do_DRM_calc:
             if self.drm != None:
+                logger.info("ResponseMatrixCalculator: DRM calculation ... ")
                 self.drm.calculate(tw_init=self.tw_init)
             if self.drm_filename != None:
                 self.rm.dump(filename=self.drm_filename)
+                logger.info("ResponseMatrixCalculator: DRM dumping > " + self.drm_filename)
 
 
 class AutoCorrection(Thread):
@@ -527,7 +530,8 @@ class OrbitInterface:
         try:
             self.orbit.disp_response_matrix.load(self.parent.rm_files_dir + "DRM_" + self.ui.cb_lattice.currentText() + ".json")
         except:
-            logger.error("load_response_matrices: No Dispersion Response Matrix")
+            logger.error("load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None")
+            self.orbit.disp_response_matrix = None
             return True
 
         return True
