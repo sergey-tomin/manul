@@ -9,7 +9,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
 from gui.UISettings import Ui_Form
 import json
-
+#import logging
+#logger = logging.getLogger(__name__)
 
 class ManulSettings(QWidget):
     def __init__(self, parent=None):
@@ -116,7 +117,7 @@ class ManulSettings(QWidget):
             self.ui.le_server.setText(self.list2string(table["server_list"]))
             for name in table["server_list"]:
                 self.ui.combo_server.addItem(name)
-            if "server" in table.keys():
+            if "server" in table.keys() and table["server"] in table["server_list"]:
                 indx = table["server_list"].index(table["server"])
             else:
                 indx = 0
@@ -127,7 +128,7 @@ class ManulSettings(QWidget):
             for name in table["subtrain_list"]:
                 self.ui.combo_subtrain.addItem(name)
 
-            if "subtrain" in table.keys():
+            if "subtrain" in table.keys() and table["subtrain"] in table["subtrain_list"]:
                 indx = table["subtrain_list"].index(table["subtrain"])
             else:
                 indx = 0

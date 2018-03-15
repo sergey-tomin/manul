@@ -92,7 +92,7 @@ class ButtonBPM:
         max_charge_value - in [pC]
         max_pos_value - in [mm]
         """
-
+        print("Button activate")
         self.mi.write_doocs_values(self.bpm_addresses,'/AUTO_GAIN_CTRL_MA_C',max_charge_value)
         
         self.mi.write_doocs_values(self.bpm_addresses,'/AUTO_GAIN_CTRL_MA_P',max_pos_value)
@@ -105,7 +105,7 @@ class ButtonBPM:
         
         """
         
-        #print("Deactivate Button BPM Amplitude Mode")
+        print("Deactivate Button BPM Amplitude Mode")
         
         self.mi.write_doocs_values(self.bpm_addresses,'/AUTO_GAIN_CTRL_MA_C',1010)
         self.mi.write_doocs_values(self.bpm_addresses,'/AUTO_GAIN_CTRL_MA_P',2.0)
@@ -164,7 +164,7 @@ class CavityBPM:
         
         attenuation - in [db]
         """
-
+        print("Cavity activate")
         attenuator_setting_Q = self.mi.read_doocs_values(self.bpm_addresses,'/R_DSA')
 
         attenuator_setting_X = self.mi.read_doocs_values(self.bpm_addresses,'/X_DSA')
@@ -172,13 +172,17 @@ class CavityBPM:
         attenuator_setting_Y = self.mi.read_doocs_values(self.bpm_addresses,'/Y_DSA')
 
         for i in range(0,len(attenuator_setting_Q)):
-            attenuator_setting_Q[i] = attenuator_setting_Q[i] + attenuation*2
+            #attenuator_setting_Q[i] = attenuator_setting_Q[i] + attenuation*2
+            attenuator_setting_Q[i] = 20 + attenuation*2
         
         for i in range(0,len(attenuator_setting_X)):
-            attenuator_setting_X[i] = attenuator_setting_X[i] + attenuation*2
+            #attenuator_setting_X[i] = attenuator_setting_X[i] + attenuation*2
+            attenuator_setting_X[i] = 0 + attenuation*2
 
         for i in range(0,len(attenuator_setting_Y)):
-            attenuator_setting_Y[i] = attenuator_setting_Y[i] + attenuation*2
+            #attenuator_setting_Y[i] = attenuator_setting_Y[i] + attenuation*2
+            attenuator_setting_Y[i] = 0 + attenuation*2
+
 
         self.mi.write_doocs_values(self.bpm_addresses,'/REF_GAIN_FB_ON',0)
         self.mi.write_doocs_values(self.bpm_addresses,'/X_GAIN_FB_ON',0)
@@ -193,7 +197,7 @@ class CavityBPM:
         Method to deactivate "freeze" mode of the cavity BPMs
         
         """
-        #print("AGC on")
+        print("AGC on")
         self.mi.write_doocs_values(self.bpm_addresses,'/REF_GAIN_FB_ON',1)
         self.mi.write_doocs_values(self.bpm_addresses,'/X_GAIN_FB_ON',1)
         self.mi.write_doocs_values(self.bpm_addresses,'/Y_GAIN_FB_ON',1)

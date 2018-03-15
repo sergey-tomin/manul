@@ -258,12 +258,26 @@ class MIOrbit(Device):
         self.mean_charge = []
         #self.charge = []
 
-    def read_positions(self):
+    def read_positions(self, reliable_reading=False):
+        if reliable_reading:
+            nreadings = 30
+            time_delay = 0.05
+        else:
+            nreadings = 1
+            time_delay = 0
         try:
-            orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
-            orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+            for i in range(nreadings):
+                orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+                orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+                print("attemt:", i, orbit_x[0]["float1"], orbit_y[0]["float1"] )
+                time.sleep(time_delay)
+                if orbit_x[0]["float1"] != 0 and orbit_y[0]["float1"] != 0:
+                #if not(np.isnan(orbit_x[0]["float1"])) and not(np.isnan(orbit_y[0]["float1"])):
+                    print("OK")
+                    break
+            #print(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain, orbit_x[0])
         except Exception as e:
-            logger.critical("read_positions: self.mi.get_value: " + e)
+            logger.critical("read_positions: self.mi.get_value: " + str(e))
             raise e
         #    print("ERROR: reading from DOOCS")
         #    return False
@@ -282,17 +296,17 @@ class MIOrbit(Device):
         return [names_x, self.x, self.y]
 
     def read_charge(self):
-        #try:
-        charge = self.mi.get_value(self.server + ".DIAG/BPM/*/CHARGE." + self.subtrain)
-        #except:
-        #    print("ERROR: reading from DOOCS")
-        #    return False
+        try:
+            charge = self.mi.get_value(self.server + ".DIAG/BPM/*/CHARGE." + self.subtrain)
+        except Exception as e:
+            logger.critical("read_charge: self.mi.get_value: " + str(e))
+            raise e
         names = [data["str"] for data in charge]
         values = np.array([data["float1"] for data in charge])
         return names, values
 
-    def read_orbit(self):
-        names_xy, x, y = self.read_positions()
+    def read_orbit(self, reliable_reading):
+        names_xy, x, y = self.read_positions(reliable_reading)
         names_charge, charge = self.read_charge()
         #print(names_xy)
         #print(names_charge)
@@ -302,13 +316,15 @@ class MIOrbit(Device):
         return names_xy, x, y, charge
 
 
-    def read_and_average(self, nreadings, take_last_n):
+    def read_and_average(self, nreadings, take_last_n, reliable_reading=False):
+        start = time.time()
+        print("Read and average")
         orbits_x = []
         orbits_y = []
         orbits_charge = []
         saved_names = []
         for i in range(nreadings):
-            names, x, y, charge = self.read_orbit()
+            names, x, y, charge = self.read_orbit(reliable_reading=reliable_reading)
             orbits_x.append(x)
             orbits_y.append(y)
             orbits_charge.append(charge)
@@ -317,6 +333,7 @@ class MIOrbit(Device):
                     logger.warning(" MIOrbit: read_and_average: error: arrays are different ")
             saved_names = names
             time.sleep(self.time_delay)
+        print("Read and average time: ", time.time() - start, "sec")
         self.bpm_names = saved_names
         self.mean_x = np.mean(orbits_x[-take_last_n:], axis=0)
         self.mean_y = np.mean(orbits_y[-take_last_n:], axis=0)
@@ -409,9 +426,10 @@ class MIAdviser(Device):
         self.get_momentums()
         self.get_cor_z_pos()
         names = [x["str"] for x in self.kicks]
-        kicks = np.array([x["float"] for x in self.kicks])/1000.
-        moments = np.array([x["float"] for x in self.moments])
-        z_poss = np.array([x["float"] for x in self.cor_z_pos])
+        #print(self.kicks)
+        kicks = np.array([x["float1"] for x in self.kicks])/1000.
+        moments = np.array([x["float1"] for x in self.moments])
+        z_poss = np.array([x["float1"] for x in self.cor_z_pos])
         indxs = []
         for name in ref_names:
             indxs.append(names.index(name))
@@ -437,7 +455,8 @@ class MIAdviser(Device):
 
         indxs = []
         for name in ref_names:
-            indxs.append(names.index(name))
+            if name in names:
+            	indxs.append(names.index(name))
         
         z_pos = self.get_bpm_z_from_ref(ref_names)
         return pos[indxs], z_pos
@@ -461,6 +480,7 @@ class MIAdviser(Device):
         z_pos = self.get_bpm_z_from_ref(ref_names)
         return pos[indxs], z_pos
 
+
 class MIStandardFeedback(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
         super(MIStandardFeedback, self).__init__(eid=eid)
@@ -469,5 +489,16 @@ class MIStandardFeedback(Device):
 
     def is_running(self):
         status = self.mi.get_value(self.server + ".FEEDBACK/ORBIT.SA1/ORBITFEEDBACK/ACTIVATE_FB")
+        return status
+
+
+class MISASE3Feedback(Device):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+        super(MISASE3Feedback, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
+
+    def is_running(self):
+        status = self.mi.get_value(self.server + ".FEEDBACK/ORBIT.SA3/ORBITFEEDBACK/ACTIVATE_FB")
         return status
         

@@ -114,21 +114,21 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
             sase = pydoocs.read("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")["data"]
             sase = np.mean(sase)
             if self.cb_energy_ch.currentText() == "CL":
-                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")["data"]
+                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.ALL")["data"]
             elif self.cb_energy_ch.currentText() == "T4D":
-                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/T4D/ENERGY.SA1")["data"]
+                energy_ch = pydoocs.read("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/T4D/ENERGY.ALL")["data"]
             else:
                 print("Wrong Energy Channel")
 
-            orbit_x = pydoocs.read("XFEL.DIAG/ORBIT/*/X.SA1")
-            orbit_y = pydoocs.read("XFEL.DIAG/ORBIT/*/Y.SA1")
+            orbit_x = pydoocs.read("XFEL.DIAG/ORBIT/*/X.ALL")
+            orbit_y = pydoocs.read("XFEL.DIAG/ORBIT/*/Y.ALL")
         except:
             print("bad readings")
             return 
         self.sase_array[i] = sase
         self.energy_array[i] = energy_ch
-        values_x = np.array([data["float"] for data in orbit_x["data"]])
-        values_y = np.array([data["float"] for data in orbit_y["data"]])
+        values_x = np.array([data["float1"] for data in orbit_x["data"]])
+        values_y = np.array([data["float1"] for data in orbit_y["data"]])
         #names = [data["str"] for data in orbit["data"]]
         self.bpms_x[:,i] = values_x[:]
         self.bpms_y[:,i] = values_y[:]
@@ -222,8 +222,8 @@ class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
         self.counter = 0
         self.n_real_readings = 0
         #delay = self.sb_update_rate.value()*1000
-        orbit = pydoocs.read("XFEL.DIAG/ORBIT/*/X.SA1")
-        values = np.array([data["float"] for data in orbit["data"]])
+        orbit = pydoocs.read("XFEL.DIAG/ORBIT/*/X.ALL")
+        values = np.array([data["float1"] for data in orbit["data"]])
         names = [data["str"] for data in orbit["data"]]
 
         indx_bpma_2591 = names.index("BPMA.2591.T4")

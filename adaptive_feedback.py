@@ -60,8 +60,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #print("load style")
         self.configs_dir = "./configs/"
         self.golden_orbit = {}
-        self.mi_standard_fb = MIStandardFeedback()
-        self.mi_standard_fb.mi = self.parent.mi
+        self.mi_standard_fb = None
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
 
         self.pb_start_statistics.clicked.connect(self.start_stop_statistics)
@@ -99,7 +98,10 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cur_go_x = []
         self.cur_go_y = []
         self.cb_load_settings.addItem("SASE1 launch")
+        self.cb_load_settings.addItem("SASE3 launch")
         self.cb_load_settings.addItem("SASE1 aircoils")
+        
+        self.cb_load_settings.addItem("test")
         self.cb_load_settings.setCurrentIndex(0)
         self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
@@ -181,7 +183,17 @@ class UIAFeedBack(QWidget, Ui_Form):
         except Exception as e:
             logger.error("load_presettings: " +str(e))
             raise
-            
+        if self.cb_load_settings.currentText() == "SASE3 launch":
+        
+            self.mi_standard_fb = MISASE3Feedback()
+            self.mi_standard_fb.mi = self.parent.mi
+        elif self.cb_load_settings.currentText() == "SASE1 launch":
+            self.mi_standard_fb = MIStandardFeedback()
+            self.mi_standard_fb.mi = self.parent.mi   
+        else:
+            self.mi_standard_fb = None
+        
+        
         for cor in self.orbit_class.corrs:
             if cor.id not in active_corrs:
                 cor.ui.uncheck()
@@ -284,7 +296,8 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
-        if self.mi_standard_fb.is_running():
+        print(self.mi_standard_fb.__class__, self.mi_standard_fb.is_running())
+        if self.mi_standard_fb != None and self.mi_standard_fb.is_running():
             self.error_box("Standard FeedBack is runinning!")
             logger.info("start_stop_feedback: St.FB is running")
             return 0
@@ -315,11 +328,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         #if beam_on:
         #start = time.time()
         #print("ref time", time.time())
-        try: 
-            is_st_fb_running = self.mi_standard_fb.is_running()
-        except Exception as e:
-            logger.warning("error during status of st. FB reading: " + str(e))
-            is_st_fb_running = False
+        if self.mi_standard_fb != None:
+            try: 
+                is_st_fb_running = self.mi_standard_fb.is_running()
+            except Exception as e:
+                logger.warning("error during status of st. FB reading: " + str(e))
+                is_st_fb_running = False
             
         if is_st_fb_running:
             #self.error_box("Standard FeedBack is runinning!")
@@ -491,8 +505,8 @@ class UIAFeedBack(QWidget, Ui_Form):
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
                     # TODO: add a checking for beam on/off
-                    #if self.orbit_class.xfel_mps.is_orbit_on():
-                    logger.info("charge < charge_thresh: " + str(charge < charge_thresh))
+                    if self.orbit_class.xfel_mps.is_orbit_on():
+                        logger.info("charge < charge_thresh: " + str(charge < charge_thresh))
                     self.le_warn.clear()
                     self.le_warn.setText(elem.id + " charge < charge_thresh")
                     self.le_warn.setStyleSheet("color: red")

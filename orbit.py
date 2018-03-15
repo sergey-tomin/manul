@@ -41,6 +41,36 @@ class ResponseMatrixCalculator(Thread):
         self.rm_filename = None
         self.drm_filename = None
 
+    def run_old(self):
+        self.rm.calculate(tw_init=self.tw_init)
+        cor_names = self.rm.cor_names
+        bpm_names = self.rm.bpm_names
+        inj_matrix = self.rm.matrix
+        try:
+            self.rm.load(self.rm_filename)
+        except:
+            logger.error("ResponseMatrixCalculator: No Response Matrix")
+            return False
+            
+        if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
+            logger.debug("ResponseMatrixCalculator: dump calculated ORM")
+            self.rm.cor_names = cor_names
+            self.rm.bpm_names = bpm_names
+            self.rm.matrix = inj_matrix
+            self.rm.dump(filename=self.rm_filename)
+        else:
+            logger.debug("ResponseMatrixCalculator: inject calculated ORM")
+            self.rm.inject(cor_names, bpm_names, inj_matrix)
+
+        if self.rm_filename != None:
+            self.rm.dump(filename=self.rm_filename)
+
+        if self.do_DRM_calc:
+            if self.drm != None:
+                self.drm.calculate(tw_init=self.tw_init)
+            if self.drm_filename != None:
+                self.rm.dump(filename=self.drm_filename)
+                
     def run(self):
         self.rm.calculate(tw_init=self.tw_init)
         cor_names = self.rm.cor_names
@@ -49,10 +79,12 @@ class ResponseMatrixCalculator(Thread):
         try:
             self.rm.load(self.rm_filename)
         except:
-            logger.warning("ResponseMatrixCalculator: Could not load RM. Dumping...")
-            self.rm.dump(filename=self.rm_filename)
+            logger.warning("ResponseMatrixCalculator: Could not load RM.")
+            if self.rm_filename != None:
+                logger.warning("ResponseMatrixCalculator: Dumping RM >" + str(self.rm_filename))
+                self.rm.dump(filename=self.rm_filename)
             return False
-            
+        
         if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
             logger.info("ResponseMatrixCalculator: dump calculated ORM")
             self.rm.cor_names = cor_names
@@ -115,6 +147,7 @@ class OrbitInterface:
         self.bpms4remove = self.parent.uncheck_bpms #["BPMS.99.I1", "BPMS.192.B1"]
         self.corrs4remove = self.parent.uncheck_corrs #["CBB.98.I1", "CBB.100.I1", "CBB.101.I1","CBB.191.B1", "CBB.193.B1", "CBB.202.B1",
            # 'CBL.73.I1', 'CBL.78.I1', 'CBL.83.I1', 'CBL.88.I1', 'CBL.90.I1', 'CBB.403.B2', 'CBB.405.B2', 'CBB.414.B2']
+        #print("corrs unchecked:", self.corrs4remove)
         self.svd_epsilon_x = self.parent.svd_epsilon_x
         self.svd_epsilon_y = self.parent.svd_epsilon_y
         self.ui = parent.ui
@@ -371,7 +404,12 @@ class OrbitInterface:
         for cor in corrs:
             kick_mrad = cor.ui.get_value()
             logger.debug("Apply kicks: " + cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
-            cor.mi.set_value(kick_mrad)
+            try:
+                cor.mi.set_value(kick_mrad)
+            except:
+                logger.error("Apply kick: mi.set_value cause error - corrector.id = "+ str(cor.id) + ", kick_mrad = " + str(kick_mrad))
+                self.parent.error_box("Error during writing in DOOCS. Repeat APPLY KICKS. Corrector: " + str(cor.id) + " kick = " + str(kick_mrad))
+
 
         self.write_old_kicks(corrs)
 
@@ -514,6 +552,27 @@ class OrbitInterface:
         return self.orbit
 
 
+    def load_response_matrices_old(self):
+        """
+        Method to load ORM and DRM from the file.
+
+        :return: True if the corresponding file exists and False if not
+        """
+
+        logger.debug("load_response_matrices: path: " + self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
+        try:
+            self.orbit.response_matrix.load(self.parent.rm_files_dir + "RM_" + self.ui.cb_lattice.currentText() + ".json")
+        except:
+            logger.error("load_response_matrices: No Response Matrix")
+            return False
+        try:
+            self.orbit.disp_response_matrix.load(self.parent.rm_files_dir + "DRM_" + self.ui.cb_lattice.currentText() + ".json")
+        except:
+            logger.error("load_response_matrices: No Dispersion Response Matrix")
+            return True
+
+        return True
+        
     def load_response_matrices(self):
         """
         Method to load ORM and DRM from the file.
@@ -600,20 +659,29 @@ class OrbitInterface:
 
     def single_shot_read_bpms(self):
         logger.info("Single Shot reading")
+        print("Single Shot reading")
+        try:
+            self.read_correctors()
+        except Exception as e:
+            logger.critical("single_shot_read: read_correctors ERROR: " + str(e))
+            self.parent.error_box("Error in DOOCS during correctors reading")
         self.xfel_mps.num_bunches_requested(num_bunches=1)
 
-        self.button_bpm.activate(max_charge_value=0.5, max_pos_value=5.)
+        self.button_bpm.activate(max_charge_value=500, max_pos_value=5.)
         self.cavity_bpm.activate(attenuation=10)
-        time.sleep(0.1)
+        time.sleep(2)
+        # first idle reading before real one.
+        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         self.xfel_mps.beam_on()
-        time.sleep(0.1)
+        #
         try:
-            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1, reliable_reading=True)
         except Exception as e:
             logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
             self.button_bpm.deactivate()
             self.cavity_bpm.deactivate()
             raise
+        #time.sleep(0.1)
         self.xfel_mps.beam_off()
         self.button_bpm.deactivate()
         self.cavity_bpm.deactivate()
@@ -621,9 +689,18 @@ class OrbitInterface:
 
     def multi_shot_read_bpms(self):
         logger.info("Multi Shot reading")
-        self.read_correctors()
+        print("Multi Shot reading")
+        try:
+            self.read_correctors()
+        except Exception as e:
+            logger.critical("multi_shot_read: read_correctors ERROR: " + str(e))
+            self.parent.error_box("Error in DOOCS during correctors reading")
 
         self.xfel_mps.num_bunches_requested(num_bunches=1)
+        
+        # first idle reading before real one.  
+        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        
         self.xfel_mps.beam_on()
 
 
