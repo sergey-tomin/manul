@@ -25,10 +25,21 @@ class ManulSettings(QWidget):
 
         self.ui.pb_apply.clicked.connect(self.apply_settings)
         self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
+
+        self.ui.cb_charge_doocs.stateChanged.connect(self.read_charge_from_doocs)
+
         self.ui.pb_cancel.clicked.connect(self.close)
 
         self.load_state(filename=self.master.config_dir + "settings.json")
 
+
+    def read_charge_from_doocs(self):
+        if self.ui.cb_charge_doocs.isChecked():
+            self.ui.sb_bunch_charge.setEnabled(False)
+            self.ui.label_17.setEnabled(False)
+        else:
+            self.ui.sb_bunch_charge.setEnabled(True)
+            self.ui.label_17.setEnabled(True)
 
     def single_shot_set(self):
         if self.ui.cb_single_shot.isChecked():
@@ -76,6 +87,9 @@ class ManulSettings(QWidget):
         table["subtrain_list"] = self.string2list(self.ui.le_subtrain.text())
         table["subtrain"] = self.ui.combo_subtrain.currentText()
 
+        table["charge_tol"] = self.ui.sb_charge_tol.value()
+        table["bunch_charge"] = self.ui.sb_bunch_charge.value()
+        table["charge_doocs"] = self.ui.cb_charge_doocs.checkState()
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -134,6 +148,11 @@ class ManulSettings(QWidget):
                 indx = 0
 
             self.ui.combo_subtrain.setCurrentIndex(indx)
+
+        if "charge_tol" in table.keys(): self.ui.sb_charge_tol.setValue(table["charge_tol"])
+        if "bunch_charge" in table.keys(): self.ui.sb_bunch_charge.setValue(table["bunch_charge"])
+        if "charge_doocs" in table.keys(): self.ui.cb_charge_doocs.setCheckState(table["charge_doocs"])
+
         #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")
@@ -148,6 +167,7 @@ class ManulSettings(QWidget):
             if not os.path.exists(self.master.configs_dir):
                 os.makedirs(self.master.configs_dir)
             self.save_state(self.master.configs_dir + "settings.json")
+            self.parent.load_settings()
 
 
     def question_box(self, message):

@@ -18,7 +18,7 @@ from ocelot.cpbd.magnetic_lattice import *
 from ocelot.optimizer.mint.xfel_interface import *
 import logging
 import numbers
-from devices import *
+from mint.devices import *
 # filename="logs/afb.log",
 #logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

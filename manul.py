@@ -20,7 +20,7 @@ import logging
 # filename="logs/afb.log",
 #filename="logs/manul.log"
 logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
+#logging.basicConfig(level=logging.INFO)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH to main file: " + os.path.realpath(__file__) + " path to folder"+ path[:indx])
@@ -37,7 +37,7 @@ from ocelot.optimizer.mint.xfel_interface import *
 
 
 from orbit import OrbitInterface
-from devices import *
+from mint.devices import *
 from dispersion import *
 from gui.gui_main import *
 from gui.settings_gui import *
@@ -156,15 +156,17 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
         self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
 
+    def get_charge_bunch(self):
+        if self.charge_from_doocs:
+            charge = ChargeDoocs()
+            self.bunch_charge = charge.get_value()
+
+
+
     def change_subtrain(self):
-        #for name in ["ALL", "SA1", "SA2", "SA3", "DUD"]:
-        #    self.ui.combo_subtrain.addItem(name)
-        #self.ui.combo_subtrain.setCurrentIndex(0)
+
         self.subtrain = self.ui.combo_subtrain.currentText()
-        #self.orbit = OrbitInterface(parent=self)
-        #self.dispersion = DispersionInterface(parent=self)
-        #self.load_lattice_files()
-        #self.lat = self.return_lat()
+
         self.arbitrary_lattice()
 
     def load_lattice_files(self):
@@ -228,6 +230,22 @@ class ManulInterfaceWindow(QMainWindow):
         else:
             indx = 0
             logger.warning("load_settings: 'subtrain' not in table.keys() or table['subtrain'] not in subtrain_list")
+
+        if "charge_tol" in table.keys():
+            self.charge_tol = table["charge_tol"]
+        else:
+            self.charge_tol = 0.
+
+        if "bunch_charge" in table.keys():
+            self.bunch_charge = table["bunch_charge"]
+        else:
+            self.bunch_charge = 0.5 #nC
+
+        if "charge_doocs" in table.keys():
+            self.charge_from_doocs = table["charge_doocs"]
+        else:
+            self.charge_from_doocs = False
+
         self.ui.combo_subtrain.setCurrentIndex(indx)
         self.subtrain = self.ui.combo_subtrain.currentText()
         
@@ -455,6 +473,9 @@ class ManulInterfaceWindow(QMainWindow):
         #current_lat = self.ui.cb_lattice.currentText()
         #if current_lat != "Arbitrary":
         #    return 0
+
+        self.get_charge_bunch()
+
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
         if lat_to - 30 < lat_from:
@@ -472,6 +493,8 @@ class ManulInterfaceWindow(QMainWindow):
         # end changing of the code
         # start /stop elements should be correctors !!!
         self.return_lat(start=self.corr_list[idx_frm], stop=self.corr_list[idx_to])
+
+        self.orbit.choose_plane()
 
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
         logger.debug("return_lat: ... ")

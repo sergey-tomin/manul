@@ -2,7 +2,7 @@
 Sergey Tomin, XFEL/DESY, 2017
 """
 import numpy as np
-from devices import *
+from mint.devices import *
 import time
 import pyqtgraph as pg
 from PyQt5 import QtGui, QtCore

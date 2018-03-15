@@ -12,7 +12,7 @@ from ocelot.cpbd.track import *
 import time
 from ocelot.cpbd.orbit_correction import NewOrbit, OrbitSVD
 from ocelot.cpbd.response_matrix import *
-from devices import *
+from mint.devices import *
 from golden_orbit import GoldenOrbit
 from adaptive_feedback import UIAFeedBack
 from ocelot.optimizer.mint.xfel_interface import *
@@ -476,6 +476,10 @@ class OrbitInterface:
                 charge = elem.mi.get_charge()
                 if charge < charge_thresh:
                     beam_on = False
+                #print(elem.id, "bunch charge: ", self.parent.bunch_charge, "   charge_tol:", self.parent.charge_tol, "charge: ", charge, np.abs(charge/self.parent.bunch_charge) < self.parent.charge_tol/100)
+                if np.abs(charge/self.parent.bunch_charge) < self.parent.charge_tol/100:
+                    logger.info(" BPM:" + elem.id + " unchecked -> " +str(np.round(charge, 2)) + "/" + str(np.round(self.parent.bunch_charge, 2)) + " < " + str(self.parent.charge_tol/100))
+                    elem.ui.uncheck()
                 elem.x = x_mm/1000.
                 elem.y = y_mm/1000.
                 elem.ui.set_value((x_mm, y_mm))

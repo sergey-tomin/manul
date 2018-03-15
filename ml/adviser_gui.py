@@ -12,7 +12,7 @@ from gui.UIAdviser import Ui_Form
 from ml.adviser import Adviser
 import json
 import numpy as np
-from devices import MIAdviser
+from mint.devices import MIAdviser
 import logging 
 logger = logging.getLogger(__name__)
 

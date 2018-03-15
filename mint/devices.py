@@ -1,7 +1,7 @@
 """
 Sergey Tomin, XFEL/DESY, 2017
 """
-from ocelot.optimizer.mint.opt_objects import Device
+from mint.interface import Device
 from PyQt5 import QtGui, QtCore
 import numpy as np
 import time
@@ -53,6 +53,11 @@ class MITwiss(Device):
         tws_dict['alpha_x']  = self.mi.get_value(ch_alpha_x)
         tws_dict['alpha_y']  = self.mi.get_value(ch_alpha_y)
         return tws_dict
+
+class ChargeDoocs(Device):
+    def __init__(self, eid="XFEL.FEEDBACK/LONGITUDINAL/MONITOR1/TARGET", server="XFEL", subtrain="SA1"):
+        super(ChargeDoocs, self).__init__(eid=eid)
+
 
 class MPS(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
@@ -164,10 +169,8 @@ class BPM(Device):
     def get_pos(self):
         ch_x = self.server + ".DIAG/BPM/" + self.eid + "/X." + self.subtrain
         ch_y = self.server + ".DIAG/BPM/" + self.eid + "/Y." + self.subtrain
-        #print(ch_x, ch_y)
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
-        #print(x, y)
         return x, y
 
     def get_charge(self):
