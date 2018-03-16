@@ -67,6 +67,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.optimizer_path = self.path2ocelot + "ocelot" + os.sep + "optimizer" + os.sep
         self.config_dir = self.path2manul + "manul" + os.sep + "configs" + os.sep
+        self.config_file = self.config_dir + "settings.json"
         self.gui_dir = self.path2manul + "manul" + os.sep + "gui" + os.sep
         self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
@@ -80,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -156,6 +157,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
         self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
 
+
     def get_charge_bunch(self):
         if self.charge_from_doocs:
             charge = ChargeDoocs()
@@ -193,8 +195,7 @@ class ManulInterfaceWindow(QMainWindow):
 
     def load_settings(self):
         logger.debug("load settings ... ")
-        filename = self.config_dir + "settings.json"
-        with open(filename, 'r') as f:
+        with open(self.config_file, 'r') as f:
             table = json.load(f)
 
         self.show_correction_result = table["show_correction_result"]
@@ -852,10 +853,10 @@ def main():
 
 
     #show app
-    #window.setWindowIcon(QtGui.QIcon('gui/manul.png'))
+    #window.setWindowIcon(QtGui.QIcon('gui/angry_manul.png'))
     # setting the path variable for icon
-    #path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'gui/manul.png')
-    #app.setWindowIcon(QtGui.QIcon(path))
+    path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'gui/manul.png')
+    app.setWindowIcon(QtGui.QIcon(path))
     window.show()
     window.raise_()
     #Build documentaiton if source files have changed

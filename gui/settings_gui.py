@@ -20,7 +20,6 @@ class ManulSettings(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         #self.setStyleSheet("background-color:black;")
-        self.loadStyleSheet()
         #self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
 
         self.ui.pb_apply.clicked.connect(self.apply_settings)
@@ -29,8 +28,10 @@ class ManulSettings(QWidget):
         self.ui.cb_charge_doocs.stateChanged.connect(self.read_charge_from_doocs)
 
         self.ui.pb_cancel.clicked.connect(self.close)
-
-        self.load_state(filename=self.master.config_dir + "settings.json")
+        self.ui.cb_style_def.addItem("colinDark.css")
+        self.ui.cb_style_def.addItem("dark.css")
+        self.load_state(filename=self.master.config_file)
+        self.loadStyleSheet(filename=self.style_file)
 
 
     def read_charge_from_doocs(self):
@@ -58,7 +59,7 @@ class ManulSettings(QWidget):
         if update:
             if not os.path.exists(self.master.config_dir):
                 os.makedirs(self.master.config_dir)
-            self.save_state(self.master.config_dir + "settings.json")
+            self.save_state(self.master.config_file)
         self.master.load_settings()
 
     def save_state(self, filename):
@@ -90,6 +91,11 @@ class ManulSettings(QWidget):
         table["charge_tol"] = self.ui.sb_charge_tol.value()
         table["bunch_charge"] = self.ui.sb_bunch_charge.value()
         table["charge_doocs"] = self.ui.cb_charge_doocs.checkState()
+
+        table["show_cor_panel"] = self.ui.cb_show_cor_panel.checkState()
+        table["style"] = self.ui.cb_style_def.currentIndex()
+        table["style_file"] = self.ui.cb_style_def.currentText()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -153,6 +159,9 @@ class ManulSettings(QWidget):
         if "bunch_charge" in table.keys(): self.ui.sb_bunch_charge.setValue(table["bunch_charge"])
         if "charge_doocs" in table.keys(): self.ui.cb_charge_doocs.setCheckState(table["charge_doocs"])
 
+        if "show_cor_panel" in table.keys(): self.ui.cb_show_cor_panel.setCheckState(table["show_cor_panel"])
+        if "style" in table.keys(): self.ui.cb_style_def.setCurrentIndex(table["style"])
+        self.style_file = self.ui.cb_style_def.currentText()
         #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")
@@ -180,10 +189,10 @@ class ManulSettings(QWidget):
 
         return False
 
-    def loadStyleSheet(self):
+    def loadStyleSheet(self, filename):
         """ Load in the dark theme style sheet. """
         try:
-            self.cssfile = self.master.gui_dir +"style.css"
+            self.cssfile = self.master.gui_dir + filename
             print(self.cssfile)
             with open(self.cssfile, "r") as f:
                 #print(f)

@@ -45,7 +45,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #self.paren = main_parent
         #self.ui = self.parent.ui
         self.setupUi(self)
-        self.loadStyleSheet()
+        self.loadStyleSheet(filename=orbit.parent.ui.style_file)
         self.orbit_class = orbit
         self.parent = self.orbit_class.parent
         self.mi = self.parent.mi
@@ -847,13 +847,13 @@ class UIAFeedBack(QWidget, Ui_Form):
             line_edit.setStyleSheet("color: red")
         return state
 
-    def loadStyleSheet(self):
+    def loadStyleSheet(self, filename):
         """
         Sets the dark GUI theme from a css file.
         :return:
         """
         try:
-            self.cssfile = "gui/style.css"
+            self.cssfile = "gui/" + filename
             with open(self.cssfile, "r") as f:
                 self.setStyleSheet(f.read())
         except IOError:

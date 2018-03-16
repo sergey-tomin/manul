@@ -99,45 +99,32 @@ class MainWindow(Ui_MainWindow):
         self.mainToolBar.setVisible(False)
         self.Form = Form
         # load in the dark theme style sheet
-        self.loadStyleSheet()
-        #self.widget.set_parent(Form)
-        #self.pb_save_as.clicked.connect(self.save_state_as)
-        #self.pb_load.clicked.connect(self.load_state_from)
-        #self.pb_rewrite.clicked.connect(self.rewrite_default)
-        #self.cb_use_isim.stateChanged.connect(self.change_state_scipy_setup)
-        #self.pb_hyper_file.clicked.connect(self.get_hyper_file)
-        #self.pb_read.clicked.connect(self.read_quads)
+        self.restore_state(self.Form.config_file)
+        self.loadStyleSheet(filename=self.style_file)
 
-        #self.le_a.textChanged.connect(self.check_address)
-        #self.le_b.textChanged.connect(self.check_address)
-        #self.le_c.textChanged.connect(self.check_address)
-        #self.le_d.textChanged.connect(self.check_address)
-        #self.le_e.textChanged.connect(self.check_address)
-        #self.le_alarm.textChanged.connect(self.check_address)
-
-        #self.sb_tdelay.valueChanged.connect(self.set_cycle)
-        #self.sb_ddelay.valueChanged.connect(self.set_cycle)
-        #self.sb_nreadings.valueChanged.connect(self.set_cycle)
-        #self.cb_select_alg.currentIndexChanged.connect(self.change_state_scipy_setup)
-        #self.read_alarm = QtCore.QTimer()
-        #self.read_alarm.timeout.connect(self.alarm_value)
-        #self.read_alarm.start(1000)
         self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
         self.table_bpm = self.add_table(widget=self.w_bpm, headers=["BPM", "       X       ", "       Y       ", "Act."])
-        #self.add_cor_table()
+        if self.show_cor_panel:
+            self.tabWidget_3.show()
+            self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
+            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
+        else:
+            self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
+            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
+            self.tabWidget_3.hide()
+        #self.hide_show_divece_panel()
+        self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_divece_panel)
 
-        #self.pb_save_ref.connect(self.save_ref_as)
-        #self.pb_load_ref.connect(self.load_ref_from)
-        # self.horizontalLayout_2.setStyleSheet("color: red")
-
-        # font = self.pb_hyper_file.font()
-        # font.setPointSize(16)
-        # self.pb_hyper_file.setFont(font)
-        # self.pb_hyper_file.setText("test")
-        # self.pb_hyper_file.setStyleSheet("font: 16px, color: red")
-
-        # self.window = window
+    def hide_show_divece_panel(self):
+        if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
+            self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
+            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
+            self.tabWidget_3.hide()
+        else:
+            self.tabWidget_3.show()
+            self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
+            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
 
 
     def add_table(self, widget, headers):
@@ -293,61 +280,12 @@ class MainWindow(Ui_MainWindow):
         with open(filename, 'r') as f:
             # data_new = pickle.load(f)
             table = json.load(f)
-
-        # Build the PV list from dev PVs or selected source
-        pvs = table["id"]
-        self.widget.set_machine_interface(self.Form.mi, self.Form.dp)
-        self.widget.getPvList(pvs)
-        # set checkbot status
-        self.widget.uncheckBoxes()
-        self.widget.set_state(table)
-
+        self.style_file = ""
+        self.show_cor_panel = False
         try:
+            self.style_file = table["style_file"]
+            self.show_cor_panel = table["show_cor_panel"]
 
-            max_pen = table["max_pen"]
-            timeout = table["timeout"]
-            max_iter = table["max_iter"]
-            fun_a = table["fun_a"]
-            fun_b = table["fun_b"]
-            fun_c = table["fun_c"]
-            obj_fun = table["obj_fun"]
-
-            if "use_predef" in table.keys(): self.cb_use_predef.setCheckState(table["use_predef"])
-            self.sb_max_pen.setValue(max_pen)
-            self.sb_tdelay.setValue(timeout)
-            self.sb_nreadings.setValue(table["nreadings"])
-            self.sb_ddelay.setValue(table["interval"])
-
-            self.sb_num_iter.setValue(max_iter)
-            self.le_a.setText(fun_a)
-            self.le_b.setText(fun_b)
-            self.le_c.setText(fun_c)
-            self.le_d.setText(table["fun_d"])
-            self.le_e.setText(table["fun_e"])
-            self.le_obf.setText(obj_fun)
-
-            self.le_alarm.setText(table["alarm_dev"])
-            self.sb_alarm_min.setValue(table["alarm_min"])
-            self.sb_alarm_max.setValue(table["alarm_max"])
-            self.sb_alarm_timeout.setValue(table["alarm_timeout"])
-
-            self.sb_seed_iter.setValue(table["seed_iter"])
-            self.cb_use_live_seed.setCheckState(table["use_live_seed"])
-
-            self.sb_isim_rel_step.setValue(table["isim_rel_step"])
-            self.cb_use_isim.setCheckState(table["use_isim"])
-            self.change_state_scipy_setup()
-
-            self.Form.hyper_file = table["hyper_file"]
-            self.pb_hyper_file.setText(self.Form.hyper_file)
-
-            self.cb_set_best_sol.setCheckState(table["set_best_sol"])
-
-            if "algorithm" in table.keys():
-                index = self.cb_select_alg.findText(table["algorithm"], QtCore.Qt.MatchFixedString)
-
-                if index >= 0:
-                    self.cb_select_alg.setCurrentIndex(index)
             print("RESTORE STATE: OK")
         except:
             print("RESTORE STATE: ERROR")
@@ -433,13 +371,14 @@ class MainWindow(Ui_MainWindow):
         # save again a small image to use for the logbook thumbnail
         p.save(str(s[:-4]) + "_sm.png", 'png')
 
-    def loadStyleSheet(self):
+    def loadStyleSheet(self, filename="dark.css"):
         """
         Sets the dark GUI theme from a css file.
         :return:
         """
         try:
-            self.cssfile = "gui/style.css"
+
+            self.cssfile = self.Form.gui_dir + filename
             with open(self.cssfile, "r") as f:
                 self.Form.setStyleSheet(f.read())
         except IOError:

@@ -24,7 +24,7 @@ class ManulAdviser(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         # self.setStyleSheet("background-color:black;")
-        self.loadStyleSheet()
+        self.loadStyleSheet(filename=self.master.ui.style_file)
         # self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
 
         self.mi_adv = MIAdviser()
@@ -352,10 +352,10 @@ class ManulAdviser(QWidget):
 
         return False
 
-    def loadStyleSheet(self):
+    def loadStyleSheet(self, filename):
         """ Load in the dark theme style sheet. """
         try:
-            self.cssfile = self.master.gui_dir + "style.css"
+            self.cssfile = self.master.gui_dir + filename
             print(self.cssfile)
             with open(self.cssfile, "r") as f:
                 # print(f)
