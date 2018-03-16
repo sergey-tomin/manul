@@ -255,6 +255,11 @@ class ManulInterfaceWindow(QMainWindow):
         else:
             self.server = "XFEL"
 
+        if "beta" in table.keys():
+            self.svd_beta = table["beta"]
+        else:
+            self.svd_beta = 0
+
         logger.debug("load settings ... OK")
 
     def update_table(self):

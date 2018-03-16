@@ -96,6 +96,8 @@ class ManulSettings(QWidget):
         table["style"] = self.ui.cb_style_def.currentIndex()
         table["style_file"] = self.ui.cb_style_def.currentText()
 
+        table["beta"] = self.ui.sb_beta.value()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -162,6 +164,8 @@ class ManulSettings(QWidget):
         if "show_cor_panel" in table.keys(): self.ui.cb_show_cor_panel.setCheckState(table["show_cor_panel"])
         if "style" in table.keys(): self.ui.cb_style_def.setCurrentIndex(table["style"])
         self.style_file = self.ui.cb_style_def.currentText()
+
+        if "beta" in table.keys(): self.ui.sb_beta.setValue(table["beta"])
         #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")

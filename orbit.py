@@ -449,8 +449,6 @@ class OrbitInterface:
         self.online_calc = True
         self.parent.lat.update_transfer_maps()
 
-
-
     def read_orbit(self):
         """
         Method to readw from MI: correctors (angles: mrad->rad) and
@@ -490,7 +488,6 @@ class OrbitInterface:
         #self.update_cors_plot()
         self.update_plot()
         return beam_on
-
 
     def calc_orbit(self):
         """
@@ -554,7 +551,6 @@ class OrbitInterface:
         self.orbit.setup_disp_response_matrix()
 
         return self.orbit
-
 
     def load_response_matrices_old(self):
         """
@@ -663,7 +659,6 @@ class OrbitInterface:
 
     def single_shot_read_bpms(self):
         logger.info("Single Shot reading")
-        print("Single Shot reading")
         try:
             self.read_correctors()
         except Exception as e:
@@ -693,7 +688,6 @@ class OrbitInterface:
 
     def multi_shot_read_bpms(self):
         logger.info("Multi Shot reading")
-        print("Multi Shot reading")
         try:
             self.read_correctors()
         except Exception as e:
@@ -797,7 +791,7 @@ class OrbitInterface:
         
         alpha = self.ui.sb_alpha.value()
         self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.svd_epsilon_x,
-                              epsilon_y=self.svd_epsilon_y, print_log=False)
+                              epsilon_y=self.svd_epsilon_y, beta=self.parent.svd_beta, print_log=False)
 
         for cor in self.corrs:
             self.calc_correction[cor.id] = cor.angle
@@ -812,6 +806,7 @@ class OrbitInterface:
         sb_feedback_sec - spinBox - set seconds for timer
         pb_feedback - pushBatton Off/On
         feedback_timer - timer
+
         :return:
         """
         delay = self.ui.sb_feedback_sec.value()*1000
@@ -1018,10 +1013,6 @@ class OrbitInterface:
         self.load_correctors()
 
         self.uncheck_corrs(self.corrs, self.corrs4remove)
-
-
-        #self.r_items = self.parent.plot_lat(plot_wdg=self.plot_cor, types=[Hcor, Vcor], x_scale=2)
-
 
     def load_devices(self, types, load_all=False):
         devices = []

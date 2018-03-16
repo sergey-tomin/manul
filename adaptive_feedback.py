@@ -434,9 +434,8 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.calc_correction[cor.id] = cor.angle
 
         alpha = 0.#self.ui.sb_alpha.value()
-
         self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.parent.svd_epsilon_x,
-                              epsilon_y=self.parent.svd_epsilon_y, print_log=False)
+                              epsilon_y=self.parent.svd_epsilon_y, beta=0, print_log=False)
 
         for cor in self.orbit.corrs:
             self.calc_correction[cor.id] = cor.angle

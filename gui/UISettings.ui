@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>607</width>
-    <height>731</height>
+    <height>754</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -56,6 +56,32 @@
          <layout class="QGridLayout" name="gridLayout_7">
           <item row="0" column="1">
            <layout class="QGridLayout" name="gridLayout_8">
+            <item row="1" column="2">
+             <widget class="QDoubleSpinBox" name="sb_epsilon_y">
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="locale">
+               <locale language="English" country="UnitedStates"/>
+              </property>
+              <property name="decimals">
+               <number>3</number>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.001000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.010000000000000</double>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_10">
               <property name="sizePolicy">
@@ -70,25 +96,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Y plane</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>X plane</string>
+               <string>epsilon Y plane to cut singular values</string>
               </property>
              </widget>
             </item>
@@ -118,8 +126,26 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QDoubleSpinBox" name="sb_epsilon_y">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>epsilon X plane to cut singular values</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QDoubleSpinBox" name="sb_beta">
               <property name="font">
                <font>
                 <pointsize>12</pointsize>
@@ -131,16 +157,34 @@
                <locale language="English" country="UnitedStates"/>
               </property>
               <property name="decimals">
-               <number>3</number>
+               <number>1</number>
               </property>
               <property name="maximum">
-               <double>1.000000000000000</double>
+               <double>10000.000000000000000</double>
               </property>
               <property name="singleStep">
-               <double>0.001000000000000</double>
+               <double>50.000000000000000</double>
               </property>
               <property name="value">
-               <double>0.010000000000000</double>
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_19">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>beta - coefficient to suppress large kicks</string>
               </property>
              </widget>
             </item>
@@ -533,7 +577,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Charge tolerance [%]</string>
+             <string>Charge tolerance [%], 0 - ignorance</string>
             </property>
            </widget>
           </item>
