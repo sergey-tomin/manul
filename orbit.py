@@ -40,36 +40,6 @@ class ResponseMatrixCalculator(Thread):
         self.tw_init = None
         self.rm_filename = None
         self.drm_filename = None
-
-    def run_old(self):
-        self.rm.calculate(tw_init=self.tw_init)
-        cor_names = self.rm.cor_names
-        bpm_names = self.rm.bpm_names
-        inj_matrix = self.rm.matrix
-        try:
-            self.rm.load(self.rm_filename)
-        except:
-            logger.error("ResponseMatrixCalculator: No Response Matrix")
-            return False
-            
-        if len(cor_names) > len(self.rm.cor_names) or len(bpm_names) > len(self.rm.bpm_names):
-            logger.debug("ResponseMatrixCalculator: dump calculated ORM")
-            self.rm.cor_names = cor_names
-            self.rm.bpm_names = bpm_names
-            self.rm.matrix = inj_matrix
-            self.rm.dump(filename=self.rm_filename)
-        else:
-            logger.debug("ResponseMatrixCalculator: inject calculated ORM")
-            self.rm.inject(cor_names, bpm_names, inj_matrix)
-
-        if self.rm_filename != None:
-            self.rm.dump(filename=self.rm_filename)
-
-        if self.do_DRM_calc:
-            if self.drm != None:
-                self.drm.calculate(tw_init=self.tw_init)
-            if self.drm_filename != None:
-                self.rm.dump(filename=self.drm_filename)
                 
     def run(self):
         self.rm.calculate(tw_init=self.tw_init)
@@ -107,9 +77,10 @@ class ResponseMatrixCalculator(Thread):
                 logger.info("ResponseMatrixCalculator: DRM dumping > " + self.drm_filename)
 
 
-class AutoCorrection(Thread):
+
+class OrbitKeeper(Thread):
     def __init__(self, orbit_class):
-        super(AutoCorrection, self).__init__()
+        super(OrbitKeeper, self).__init__()
         self.orbit_class = orbit_class
         self._stop_event = Event()
         self.do = None
@@ -210,12 +181,11 @@ class OrbitInterface:
         self.ui.sb_apply_fraction.valueChanged.connect(self.set_values2correctors)
         #self.ui.cb_correction_result.stateChanged.connect(self.update_plot)
 
-        
+        self.orbit_keeper = OrbitKeeper(orbit_class=self)
 
         self.ui.actionAdaptive_Feedback.triggered.connect(self.run_awindow)
         self.adaptive_feedback = None
         #self.adaptive_feedback = None
-        #self.auto_correction = AutoCorrection(orbit_class=self)
         self.debug_mode = self.parent.debug_mode
         
         self.ui.actionSave_corrs.triggered.connect(self.save_correctors)
@@ -830,15 +800,15 @@ class OrbitInterface:
         """
         delay = self.ui.sb_feedback_sec.value()
         if self.ui.pb_feedback.text() == "Orbit Keeper Off":
-            self.auto_correction.stop_event = True
-            self.auto_correction.stop()
+            self.orbit_keeper.stop_event = True
+            self.orbit_keeper.stop()
             self.ui.pb_feedback.setStyleSheet("color: rgb(85, 255, 127);")
             self.ui.pb_feedback.setText("Orbit Keeper On")
         else:
-            self.auto_correction = AutoCorrection(orbit_class=self)
-            self.auto_correction.delay = delay
-            self.auto_correction.stop_event = False
-            self.auto_correction.start()
+
+            self.orbit_keeper.delay = delay
+            self.orbit_keeper.stop_event = False
+            self.orbit_keeper.start()
             self.ui.pb_feedback.setText("Orbit Keeper Off")
             self.ui.pb_feedback.setStyleSheet("color: red")
 
@@ -1196,7 +1166,7 @@ class OrbitInterface:
             self.plot_y.legend.removeItem(self.orb_y_live.name())
 
         else:
-            self.parent.timer_live.start(1000)
+            self.parent.timer_live.start(500)
             self.ui.pb_online_orbit.setText("Live Orbit Off")
             self.ui.pb_online_orbit.setStyleSheet("color: rgb(85, 255, 127);")
             self.plot_x.addItem(self.orb_x_live)

@@ -835,6 +835,8 @@ class Ui_MainWindow(object):
         self.menuGolden_Orbit.setObjectName("menuGolden_Orbit")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
+        self.menuLogbook = QtWidgets.QMenu(self.menuBar)
+        self.menuLogbook.setObjectName("menuLogbook")
         MainWindow.setMenuBar(self.menuBar)
         self.mainToolBar = QtWidgets.QToolBar(MainWindow)
         self.mainToolBar.setObjectName("mainToolBar")
@@ -863,6 +865,8 @@ class Ui_MainWindow(object):
         self.actionUncheck_Red.setObjectName("actionUncheck_Red")
         self.actionGO_Adviser = QtWidgets.QAction(MainWindow)
         self.actionGO_Adviser.setObjectName("actionGO_Adviser")
+        self.actionSend_to_logbook = QtWidgets.QAction(MainWindow)
+        self.actionSend_to_logbook.setObjectName("actionSend_to_logbook")
         self.menu_File.addAction(self.action_Parameters)
         self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
@@ -878,9 +882,11 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionLoad_corrs)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionUncheck_Red)
+        self.menuLogbook.addAction(self.actionSend_to_logbook)
         self.menuBar.addAction(self.menu_File.menuAction())
         self.menuBar.addAction(self.menuGolden_Orbit.menuAction())
         self.menuBar.addAction(self.menuFile.menuAction())
+        self.menuBar.addAction(self.menuLogbook.menuAction())
         self.mainToolBar.addSeparator()
 
         self.retranslateUi(MainWindow)
@@ -959,6 +965,7 @@ class Ui_MainWindow(object):
         self.menu_File.setTitle(_translate("MainWindow", "&Expert Panel"))
         self.menuGolden_Orbit.setTitle(_translate("MainWindow", "Golden Orbit"))
         self.menuFile.setTitle(_translate("MainWindow", "Correctors"))
+        self.menuLogbook.setTitle(_translate("MainWindow", "Logbook"))
         self.action_Parameters.setText(_translate("MainWindow", "Settings"))
         self.actionLoad_Golden_Orbit.setText(_translate("MainWindow", "Load Golden Orbit"))
         self.actionSave_Golden_Orbit.setText(_translate("MainWindow", "Save Golden Orbit"))
@@ -971,6 +978,7 @@ class Ui_MainWindow(object):
         self.actionLoad_corrs.setText(_translate("MainWindow", "Load"))
         self.actionUncheck_Red.setText(_translate("MainWindow", "Uncheck Red"))
         self.actionGO_Adviser.setText(_translate("MainWindow", "GO Adviser"))
+        self.actionSend_to_logbook.setText(_translate("MainWindow", "Send to logbook"))
 
 
 if __name__ == "__main__":

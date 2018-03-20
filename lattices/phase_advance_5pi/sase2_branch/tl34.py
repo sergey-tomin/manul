@@ -1,15 +1,10 @@
 from ocelot import * 
 tws = Twiss()
-#tws.beta_x  = 42.548281572
-#tws.beta_y  = 11.0277770725
-#tws.alpha_x = -2.18143348313
-#tws.alpha_y = 0.703868806111
-#tws.E       = 17.4999999889
-tws.beta_x  = 41.1972615158
-tws.beta_y  = 10.890146781
-tws.alpha_x = -2.09844507389
-tws.alpha_y = 0.678055361512
-tws.E = 14
+tws.beta_x  = 42.548281572
+tws.beta_y  = 11.0277770725
+tws.alpha_x = -2.18143348313
+tws.alpha_y = 0.703868806111
+tws.E       = 17.4999999889
 #tws_sase1.s        = 1957.1856390000232
 # drifts 
 d_1 = Drift(l=1.472401, eid='D_1')

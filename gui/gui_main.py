@@ -6,7 +6,8 @@ S.Tomin, 2017
 #from ocelot.optimizer.UIOcelotInterface_gen import *
 import json
 import scipy
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QScreen
+from PyQt5 import QtWidgets
 from PIL import Image
 import subprocess
 import base64
@@ -115,6 +116,7 @@ class MainWindow(Ui_MainWindow):
             self.tabWidget_3.hide()
         #self.hide_show_divece_panel()
         self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_divece_panel)
+        self.actionSend_to_logbook.triggered.connect(self.logbook)
 
     def hide_show_divece_panel(self):
         if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
@@ -314,44 +316,27 @@ class MainWindow(Ui_MainWindow):
         filename = "screenshot"
         filetype = "png"
         self.screenShot(filename, filetype)
-        table = self.Form.scan_params
 
         # curr_time = datetime.now()
         # timeString = curr_time.strftime("%Y-%m-%dT%H:%M:%S")
         text = ""
 
-        if not self.cb_use_predef.checkState():
-            text += "obj func: A   : " + str(self.le_a.text()).split("/")[-2]  + "/"+ str(self.le_a.text()).split("/")[-1] + "\n"
-            if str(self.le_b.text()) != "":
-                text += "obj func: B   : " + str(self.le_b.text()).split("/")[-2] + "/" + str(self.le_b.text()).split("/")[-1] + "\n"
-            if str(self.le_c.text()) != "":
-                text += "obj func: C   : " + str(self.le_c.text()).split("/")[-2] + "/" + str(self.le_c.text()).split("/")[-1] + "\n"
-            if str(self.le_d.text()) != "":
-                text += "obj func: D   : " + str(self.le_d.text()).split("/")[-2] + "/" + str(self.le_d.text()).split("/")[-1] + "\n"
-            if str(self.le_e.text()) != "":
-                text += "obj func: E   : " + str(self.le_e.text()).split("/")[-2] + "/" + str(self.le_e.text()).split("/")[-1] + "\n"
-            text += "obj func: expr: " + str(self.le_obf.text()) + "\n"
-        else:
-            text += "obj func: A   : predefined  " + self.Form.objective_func.eid + "\n"
-        if table != None:
-            for i, dev in enumerate(table["devs"]):
-                # print(dev.split("/"))
-                text += "dev           : " + dev.split("/")[-2] + "/" + dev.split("/")[-1] + "   " + str(table["currents"][i][0]) + " --> " + str(
-                    table["currents"][i][1]) + "\n"
 
-            text += "iterations    : " + str(table["iter"]) + "\n"
-            text += "delay         : " + str(self.Form.total_delay) + "\n"
-            text += "START-->STOP  : " + str(table["sase"][0]) + " --> " + str(table["sase"][1]) + "\n"
-            text += "Method        : " + str(table["method"]) + "\n"
-        #print("table", table)
-        #print(text)
         screenshot = open(self.Form.optimizer_path + filename + "." + filetype, 'rb')
-        #print(screenshot)
-        res = send_to_desy_elog(author="", title="OCELOT Optimization", severity="INFO", text=text, elog=self.Form.logbook,
+        res = send_to_desy_elog(author="", title="OCELOT Correction tool", severity="INFO", text=text, elog=self.Form.logbook,
                           image=screenshot.read())
 
         if not res:
             self.Form.error_box("error during eLogBook sending")
+
+    def get_screenshot(self, window_widget):
+        screenshot_tmp = QtCore.QbyteArray()
+        screeshot_buffer = QtCore.QBuffer(screenshot_tmp)
+        screeshot_buffer.open(QtCore.QIODevice.WriteOnly)
+        widget = QtWidgets.QWidget.grab(window_widget)
+        widget.save(screeshot_buffer, "png")
+        return screenshot_tmp.toBase64().data().decode()
+
 
     def screenShot(self, filename, filetype):
 
@@ -363,7 +348,7 @@ class MainWindow(Ui_MainWindow):
         """
 
         s = str(filename) + "." + str(filetype)
-        p = QPixmap.grabWindow(self.Form.winId())
+        p = QScreen.grabWindow(self.Form.winId())
         p.save(s, 'png')
         # im = Image.open(s)
         # im.save(s[:-4]+".ps")

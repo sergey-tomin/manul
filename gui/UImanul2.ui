@@ -1778,9 +1778,16 @@
     <addaction name="separator"/>
     <addaction name="actionUncheck_Red"/>
    </widget>
+   <widget class="QMenu" name="menuLogbook">
+    <property name="title">
+     <string>Logbook</string>
+    </property>
+    <addaction name="actionSend_to_logbook"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuGolden_Orbit"/>
    <addaction name="menuFile"/>
+   <addaction name="menuLogbook"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1849,6 +1856,11 @@
   <action name="actionGO_Adviser">
    <property name="text">
     <string>GO Adviser</string>
+   </property>
+  </action>
+  <action name="actionSend_to_logbook">
+   <property name="text">
+    <string>Send to logbook</string>
    </property>
   </action>
  </widget>
