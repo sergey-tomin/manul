@@ -38,6 +38,58 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
+def send_to_desy_elog_old(author, title, severity, text, elog, image=None):
+    """
+    Send information to a supplied electronic logbook.
+    Author: Christopher Behrens (DESY)
+    """
+
+    # The DOOCS elog expects an XML string in a particular format. This string
+    # is beeing generated in the following as an initial list of strings.
+    succeded = True  # indicator for a completely successful job
+    # list beginning
+    elogXMLStringList = ['<?xml version="1.0" encoding="ISO-8859-1"?>', '<entry>']
+
+    # author information
+    elogXMLStringList.append('<author>')
+    elogXMLStringList.append(author)
+    elogXMLStringList.append('</author>')
+    # title information
+    elogXMLStringList.append('<title>')
+    elogXMLStringList.append(title)
+    elogXMLStringList.append('</title>')
+    # severity information
+    elogXMLStringList.append('<severity>')
+    elogXMLStringList.append(severity)
+    elogXMLStringList.append('</severity>')
+    # text information
+    elogXMLStringList.append('<text>')
+    elogXMLStringList.append(text)
+    elogXMLStringList.append('</text>')
+    # image information
+    if image:
+        try:
+            #encodedImage = base64.b64encode(image)
+            elogXMLStringList.append('<image>')
+            elogXMLStringList.append(image)
+            elogXMLStringList.append('</image>')
+        except:  # make elog entry anyway, but return error (succeded = False)
+            succeded = False
+    # list end
+    elogXMLStringList.append('</entry>')
+    # join list to the final string
+    elogXMLString = '\n'.join(elogXMLStringList)
+    # open printer process
+    try:
+        lpr = subprocess.Popen(['/usr/bin/lp', '-o', 'raw', '-d', elog],
+                               stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        # send printer job
+        lpr.communicate(elogXMLString.encode('utf-8'))
+    except:
+        succeded = False
+    return succeded
+
+
 def send_to_desy_elog(author, title, severity, text, elog, image=None):
     """
     Send information to a supplied electronic logbook.
@@ -69,9 +121,9 @@ def send_to_desy_elog(author, title, severity, text, elog, image=None):
     # image information
     if image:
         try:
-            encodedImage = base64.b64encode(image)
+            #encodedImage = base64.b64encode(image)
             elogXMLStringList.append('<image>')
-            elogXMLStringList.append(encodedImage.decode())
+            elogXMLStringList.append(image)
             elogXMLStringList.append('</image>')
         except:  # make elog entry anyway, but return error (succeded = False)
             succeded = False
@@ -88,7 +140,6 @@ def send_to_desy_elog(author, title, severity, text, elog, image=None):
     except:
         succeded = False
     return succeded
-
 
 
 
@@ -116,7 +167,9 @@ class MainWindow(Ui_MainWindow):
             self.tabWidget_3.hide()
         #self.hide_show_divece_panel()
         self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_divece_panel)
-        self.actionSend_to_logbook.triggered.connect(self.logbook)
+        self.actionSend_orbit.triggered.connect(lambda: self.logbook(self.w_orbit))
+        self.actionSend_all.triggered.connect(lambda: self.logbook(self.Form))
+
 
     def hide_show_divece_panel(self):
         if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
@@ -307,7 +360,7 @@ class MainWindow(Ui_MainWindow):
         #self.Form.set_file = "default.json"
         self.save_state(self.Form.set_file)
 
-    def logbook(self):
+    def logbook(self, widget):
         """
         Method to send Optimization parameters + screenshot to eLogboob
         :return:
@@ -315,22 +368,27 @@ class MainWindow(Ui_MainWindow):
 
         filename = "screenshot"
         filetype = "png"
-        self.screenShot(filename, filetype)
+        #self.screenShot(filename, filetype)
 
         # curr_time = datetime.now()
         # timeString = curr_time.strftime("%Y-%m-%dT%H:%M:%S")
         text = ""
 
 
-        screenshot = open(self.Form.optimizer_path + filename + "." + filetype, 'rb')
+        #screenshot = open(self.Form.optimizer_path + filename + "." + filetype, 'rb')
+        
+        screenshot = self.get_screenshot(widget)
+        #res = send_to_desy_elog(author="", title="OCELOT Correction tool", severity="INFO", text=text, elog=self.Form.logbook,
+        #                  image=screenshot.read())
+        
         res = send_to_desy_elog(author="", title="OCELOT Correction tool", severity="INFO", text=text, elog=self.Form.logbook,
-                          image=screenshot.read())
+                          image=screenshot)
 
         if not res:
             self.Form.error_box("error during eLogBook sending")
 
     def get_screenshot(self, window_widget):
-        screenshot_tmp = QtCore.QbyteArray()
+        screenshot_tmp = QtCore.QByteArray()
         screeshot_buffer = QtCore.QBuffer(screenshot_tmp)
         screeshot_buffer.open(QtCore.QIODevice.WriteOnly)
         widget = QtWidgets.QWidget.grab(window_widget)

@@ -865,8 +865,10 @@ class Ui_MainWindow(object):
         self.actionUncheck_Red.setObjectName("actionUncheck_Red")
         self.actionGO_Adviser = QtWidgets.QAction(MainWindow)
         self.actionGO_Adviser.setObjectName("actionGO_Adviser")
-        self.actionSend_to_logbook = QtWidgets.QAction(MainWindow)
-        self.actionSend_to_logbook.setObjectName("actionSend_to_logbook")
+        self.actionSend_orbit = QtWidgets.QAction(MainWindow)
+        self.actionSend_orbit.setObjectName("actionSend_orbit")
+        self.actionSend_all = QtWidgets.QAction(MainWindow)
+        self.actionSend_all.setObjectName("actionSend_all")
         self.menu_File.addAction(self.action_Parameters)
         self.menu_File.addAction(self.actionCalculate_ORM)
         self.menu_File.addAction(self.actionCalculate_RM)
@@ -882,7 +884,8 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionLoad_corrs)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionUncheck_Red)
-        self.menuLogbook.addAction(self.actionSend_to_logbook)
+        self.menuLogbook.addAction(self.actionSend_orbit)
+        self.menuLogbook.addAction(self.actionSend_all)
         self.menuBar.addAction(self.menu_File.menuAction())
         self.menuBar.addAction(self.menuGolden_Orbit.menuAction())
         self.menuBar.addAction(self.menuFile.menuAction())
@@ -978,7 +981,8 @@ class Ui_MainWindow(object):
         self.actionLoad_corrs.setText(_translate("MainWindow", "Load"))
         self.actionUncheck_Red.setText(_translate("MainWindow", "Uncheck Red"))
         self.actionGO_Adviser.setText(_translate("MainWindow", "GO Adviser"))
-        self.actionSend_to_logbook.setText(_translate("MainWindow", "Send to logbook"))
+        self.actionSend_orbit.setText(_translate("MainWindow", "Send only orbit"))
+        self.actionSend_all.setText(_translate("MainWindow", "Send all"))
 
 
 if __name__ == "__main__":

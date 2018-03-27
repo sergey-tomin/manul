@@ -1,0 +1,1227 @@
+2018-03-15 12:04:01,878 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:04:03,712 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:21:23,497 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:21:24,916 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:25:20,113 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:25:21,478 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:48:53,907 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:48:55,319 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:55:08,759 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:55:10,098 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:55:15,325 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,325 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,325 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,325 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,325 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,326 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,326 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,326 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,326 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,326 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:15,351 - orbit - INFO - correct: ... 
+2018-03-15 12:55:22,322 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,322 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,323 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:22,348 - orbit - INFO - correct: ... 
+2018-03-15 12:55:48,957 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:55:50,425 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:55:52,011 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,011 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,011 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,011 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,012 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 12:55:52,039 - orbit - INFO - correct: ... 
+2018-03-15 12:57:19,995 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:57:21,411 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:57:23,149 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,150 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 12:57:23,176 - orbit - INFO - correct: ... 
+2018-03-15 12:58:21,915 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 12:58:23,264 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 12:58:24,980 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,980 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,980 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:24,981 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 12:58:25,007 - orbit - INFO - correct: ... 
+2018-03-15 13:00:21,448 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:00:22,909 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:00:27,888 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,888 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,888 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,888 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,888 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,889 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,889 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,889 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,889 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,889 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 13:00:27,914 - orbit - INFO - correct: ... 
+2018-03-15 13:00:57,660 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:00:58,996 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:01:01,233 - orbit - ERROR - read bpm: BPMG.24.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMG.25I.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMC.38I.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMR.38II.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMF.47.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMF.48.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMF.52.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMA.55.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMA.57.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,234 - orbit - ERROR - read bpm: BPMA.59.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:01,260 - orbit - INFO - correct: ... 
+2018-03-15 13:01:09,926 - orbit - ERROR - read bpm: BPMA.63.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.72.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.75.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.77.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.80.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.82.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.85.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.87.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,927 - orbit - ERROR - read bpm: BPMA.90.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.92.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMF.95.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMF.103.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.103.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.105.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.107.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.110.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.112.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,928 - orbit - ERROR - read bpm: BPMA.115.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMA.117.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMA.119.I1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMC.134.L1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMR.146.L1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMC.158.L1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMR.170.L1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMA.175.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMA.179.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,929 - orbit - ERROR - read bpm: BPMF.181.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMF.203.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.206.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.210.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.213.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.215.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.217.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.219.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.221.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,930 - orbit - ERROR - read bpm: BPMA.223.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,931 - orbit - ERROR - read bpm: BPMA.226.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,931 - orbit - ERROR - read bpm: BPMA.227.B1ERROR during reading -> was unchecked 
+2018-03-15 13:01:09,998 - orbit - INFO - correct: ... 
+2018-03-15 13:25:23,336 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:25:24,782 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:25:26,748 - orbit - INFO - correct: ... 
+2018-03-15 13:25:26,792 - orbit - INFO - correct: ... OK
+2018-03-15 13:26:07,357 - orbit - INFO -  BPM:BPMG.24.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,366 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,367 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,367 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,367 - orbit - INFO -  BPM:BPMF.47.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,367 - orbit - INFO -  BPM:BPMF.48.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,368 - orbit - INFO -  BPM:BPMF.52.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,368 - orbit - INFO -  BPM:BPMA.55.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,368 - orbit - INFO -  BPM:BPMA.57.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,369 - orbit - INFO -  BPM:BPMA.59.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:26:07,396 - orbit - INFO - correct: ... 
+2018-03-15 13:26:51,736 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:26:53,125 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:27:02,792 - orbit - INFO - correct: ... 
+2018-03-15 13:27:02,838 - orbit - INFO - correct: ... OK
+2018-03-15 13:27:10,868 - orbit - INFO - correct: ... 
+2018-03-15 13:27:10,896 - orbit - INFO - correct: ... OK
+2018-03-15 13:29:31,614 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:29:33,054 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:29:37,502 - orbit - INFO - correct: ... 
+2018-03-15 13:29:37,554 - orbit - INFO - correct: ... OK
+2018-03-15 13:30:13,218 - orbit - INFO -  BPM:BPMF.47.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:30:13,245 - orbit - INFO - correct: ... 
+2018-03-15 13:30:13,283 - orbit - INFO - correct: ... OK
+2018-03-15 13:30:30,774 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:30:32,117 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:30:39,994 - orbit - INFO -  BPM:BPMF.48.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:30:39,994 - orbit - INFO -  BPM:BPMF.52.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:30:39,994 - orbit - INFO -  BPM:BPMA.59.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:30:40,021 - orbit - INFO - correct: ... 
+2018-03-15 13:30:40,074 - orbit - INFO - correct: ... OK
+2018-03-15 13:31:25,552 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:31:26,975 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:31:29,270 - orbit - INFO -  BPM:BPMF.52.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:31:29,270 - orbit - INFO -  BPM:BPMA.55.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:31:29,299 - orbit - INFO - correct: ... 
+2018-03-15 13:31:29,344 - orbit - INFO - correct: ... OK
+2018-03-15 13:32:13,704 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:32:15,011 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:32:20,479 - orbit - INFO -  BPM:BPMG.24.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,480 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,480 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,480 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,481 - orbit - INFO -  BPM:BPMF.52.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,481 - orbit - INFO -  BPM:BPMA.55.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,481 - orbit - INFO -  BPM:BPMA.57.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,481 - orbit - INFO -  BPM:BPMA.59.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:32:20,508 - orbit - INFO - correct: ... 
+2018-03-15 13:32:20,557 - orbit - INFO - correct: ... OK
+2018-03-15 13:42:23,763 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:42:25,101 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:42:53,418 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 13:42:54,882 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 13:43:00,039 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:43:00,040 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:43:00,040 - orbit - INFO -  BPM:BPMF.47.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:43:00,040 - orbit - INFO -  BPM:BPMF.48.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:43:00,041 - orbit - INFO -  BPM:BPMA.59.I1 unchecked. charge less that charge_tol.
+2018-03-15 13:43:00,067 - orbit - INFO - correct: ... 
+2018-03-15 13:43:00,115 - orbit - INFO - correct: ... OK
+2018-03-15 19:03:04,883 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:03:06,665 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:03:23,251 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:03:24,674 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:07:19,215 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:07:20,845 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:08:20,398 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:08:21,760 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:10:16,197 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:10:17,812 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:51:37,018 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:51:38,742 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:55:48,139 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:55:49,488 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 19:57:37,699 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 19:57:39,053 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:05:02,148 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:05:03,527 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:05:31,735 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:05:33,225 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:06:55,874 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:06:57,249 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:08:28,629 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:08:30,005 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:09:05,289 - orbit - INFO -  BPM:BPMG.24.I1 unchecked -> -0.23/0.5 < 0.5
+2018-03-15 20:09:05,290 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked -> -0.02/0.5 < 0.5
+2018-03-15 20:09:05,290 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> -0.21/0.5 < 0.5
+2018-03-15 20:09:05,290 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> -0.09/0.5 < 0.5
+2018-03-15 20:09:05,290 - orbit - INFO -  BPM:BPMF.52.I1 unchecked -> 0.01/0.5 < 0.5
+2018-03-15 20:09:05,290 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> 0.21/0.5 < 0.5
+2018-03-15 20:09:05,317 - orbit - INFO - correct: ... 
+2018-03-15 20:09:05,417 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:11,082 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:11,092 - orbit - INFO -  BPM:BPMF.47.I1 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:09:11,093 - orbit - INFO -  BPM:BPMA.57.I1 unchecked -> -0.09/0.5 < 0.5
+2018-03-15 20:09:11,120 - orbit - INFO - correct: ... 
+2018-03-15 20:09:11,151 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:12,245 - orbit - INFO - correct: ... 
+2018-03-15 20:09:12,272 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:12,987 - orbit - INFO - correct: ... 
+2018-03-15 20:09:13,014 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:13,402 - orbit - INFO - correct: ... 
+2018-03-15 20:09:13,428 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:16,715 - orbit - INFO -  BPM:BPMA.2601.T4 unchecked -> -0.23/0.5 < 0.5
+2018-03-15 20:09:16,716 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:09:16,716 - orbit - INFO -  BPM:BPMA.2621.T4 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:09:16,716 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> -0.02/0.5 < 0.5
+2018-03-15 20:09:16,716 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:16,717 - orbit - INFO -  BPM:BPMA.2728.T4 unchecked -> -0.0/0.5 < 0.5
+2018-03-15 20:09:16,717 - orbit - INFO -  BPM:BPMA.2749.T4 unchecked -> -0.06/0.5 < 0.5
+2018-03-15 20:09:16,717 - orbit - INFO -  BPM:BPMA.2773.T4 unchecked -> 0.21/0.5 < 0.5
+2018-03-15 20:09:16,717 - orbit - INFO -  BPM:BPMA.2785.T4 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:16,718 - orbit - INFO -  BPM:BPME.2800.T4 unchecked -> 0.16/0.5 < 0.5
+2018-03-15 20:09:16,718 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> 0.23/0.5 < 0.5
+2018-03-15 20:09:16,718 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> -0.1/0.5 < 0.5
+2018-03-15 20:09:16,719 - orbit - INFO -  BPM:BPME.2849.SA3 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:16,719 - orbit - INFO -  BPM:BPME.2855.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:09:16,719 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> -0.01/0.5 < 0.5
+2018-03-15 20:09:16,719 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:09:16,720 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> 0.17/0.5 < 0.5
+2018-03-15 20:09:16,720 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> 0.24/0.5 < 0.5
+2018-03-15 20:09:16,720 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.24/0.5 < 0.5
+2018-03-15 20:09:16,720 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> 0.0/0.5 < 0.5
+2018-03-15 20:09:16,720 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> 0.25/0.5 < 0.5
+2018-03-15 20:09:16,721 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> -0.25/0.5 < 0.5
+2018-03-15 20:09:16,721 - orbit - INFO -  BPM:BPME.2934.SA3 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:09:16,763 - orbit - INFO - correct: ... 
+2018-03-15 20:09:16,900 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:17,468 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> -0.25/0.5 < 0.5
+2018-03-15 20:09:17,468 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:09:17,469 - orbit - INFO -  BPM:BPME.2794.T4 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:09:17,469 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> 0.1/0.5 < 0.5
+2018-03-15 20:09:17,469 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:09:17,469 - orbit - INFO -  BPM:BPME.2940.SA3 unchecked -> 0.05/0.5 < 0.5
+2018-03-15 20:09:17,509 - orbit - INFO - correct: ... 
+2018-03-15 20:09:17,571 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:18,132 - orbit - INFO -  BPM:BPMA.2618.T4 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:09:18,132 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> -0.09/0.5 < 0.5
+2018-03-15 20:09:18,132 - orbit - INFO -  BPM:BPME.2806.SA3 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:09:18,132 - orbit - INFO -  BPM:BPME.2812.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-15 20:09:18,133 - orbit - INFO -  BPM:BPME.2830.SA3 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:09:18,133 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:09:18,171 - orbit - INFO - correct: ... 
+2018-03-15 20:09:18,233 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:18,807 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:09:18,807 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> -0.18/0.5 < 0.5
+2018-03-15 20:09:18,846 - orbit - INFO - correct: ... 
+2018-03-15 20:09:18,909 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:19,484 - orbit - INFO - correct: ... 
+2018-03-15 20:09:19,543 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:20,162 - orbit - INFO - correct: ... 
+2018-03-15 20:09:20,223 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:41,988 - orbit - INFO -  BPM:BPMA.1995.TL unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:09:41,988 - orbit - INFO -  BPM:BPMA.2011.TL unchecked -> 0.08/0.5 < 0.5
+2018-03-15 20:09:41,989 - orbit - INFO -  BPM:BPMA.2040.T1 unchecked -> -0.17/0.5 < 0.5
+2018-03-15 20:09:41,989 - orbit - INFO -  BPM:BPMA.2044.T1 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:41,989 - orbit - INFO -  BPM:BPMA.2062.T1 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:09:41,989 - orbit - INFO -  BPM:BPMA.2068.T1 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:41,990 - orbit - INFO -  BPM:BPMA.2092.T1 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:41,990 - orbit - INFO -  BPM:BPMA.2124.T1 unchecked -> 0.08/0.5 < 0.5
+2018-03-15 20:09:41,990 - orbit - INFO -  BPM:BPMA.2167.T1 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:09:41,990 - orbit - INFO -  BPM:BPMA.2179.T1 unchecked -> 0.1/0.5 < 0.5
+2018-03-15 20:09:41,991 - orbit - INFO -  BPM:BPME.2191.T1 unchecked -> -0.02/0.5 < 0.5
+2018-03-15 20:09:41,991 - orbit - INFO -  BPM:BPME.2209.SA2 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:09:41,991 - orbit - INFO -  BPM:BPME.2221.SA2 unchecked -> -0.02/0.5 < 0.5
+2018-03-15 20:09:41,992 - orbit - INFO -  BPM:BPME.2239.SA2 unchecked -> 0.04/0.5 < 0.5
+2018-03-15 20:09:41,992 - orbit - INFO -  BPM:BPME.2245.SA2 unchecked -> 0.2/0.5 < 0.5
+2018-03-15 20:09:41,992 - orbit - INFO -  BPM:BPME.2264.SA2 unchecked -> -0.14/0.5 < 0.5
+2018-03-15 20:09:41,992 - orbit - INFO -  BPM:BPME.2270.SA2 unchecked -> -0.09/0.5 < 0.5
+2018-03-15 20:09:41,993 - orbit - INFO -  BPM:BPME.2288.SA2 unchecked -> -0.04/0.5 < 0.5
+2018-03-15 20:09:41,993 - orbit - INFO -  BPM:BPME.2294.SA2 unchecked -> -0.11/0.5 < 0.5
+2018-03-15 20:09:41,993 - orbit - INFO -  BPM:BPME.2300.SA2 unchecked -> 0.1/0.5 < 0.5
+2018-03-15 20:09:41,993 - orbit - INFO -  BPM:BPME.2313.SA2 unchecked -> 0.09/0.5 < 0.5
+2018-03-15 20:09:41,994 - orbit - INFO -  BPM:BPME.2319.SA2 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:09:41,994 - orbit - INFO -  BPM:BPME.2337.SA2 unchecked -> -0.17/0.5 < 0.5
+2018-03-15 20:09:41,994 - orbit - INFO -  BPM:BPME.2343.SA2 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:41,995 - orbit - INFO -  BPM:BPME.2392.SA2 unchecked -> 0.08/0.5 < 0.5
+2018-03-15 20:09:41,995 - orbit - INFO -  BPM:BPME.2404.SA2 unchecked -> 0.25/0.5 < 0.5
+2018-03-15 20:09:41,995 - orbit - INFO -  BPM:BPME.2410.SA2 unchecked -> -0.23/0.5 < 0.5
+2018-03-15 20:09:41,995 - orbit - INFO -  BPM:BPME.2422.SA2 unchecked -> 0.02/0.5 < 0.5
+2018-03-15 20:09:41,996 - orbit - INFO -  BPM:BPMA.2430.T3 unchecked -> -0.04/0.5 < 0.5
+2018-03-15 20:09:41,996 - orbit - INFO -  BPM:BPMA.2509.T3 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:09:41,996 - orbit - INFO -  BPM:BPMA.2528.T3 unchecked -> -0.06/0.5 < 0.5
+2018-03-15 20:09:41,996 - orbit - INFO -  BPM:BPMA.2531.T3 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:09:41,997 - orbit - INFO -  BPM:BPMA.2563.T3 unchecked -> -0.02/0.5 < 0.5
+2018-03-15 20:09:41,997 - orbit - INFO -  BPM:BPMA.2568.T3 unchecked -> 0.03/0.5 < 0.5
+2018-03-15 20:09:41,997 - orbit - INFO -  BPM:BPMA.2579.T3 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:09:41,997 - orbit - INFO -  BPM:BPMA.2582.T3 unchecked -> -0.21/0.5 < 0.5
+2018-03-15 20:09:41,998 - orbit - INFO -  BPM:BPMA.2603.T3 unchecked -> -0.11/0.5 < 0.5
+2018-03-15 20:09:41,998 - orbit - INFO -  BPM:BPMA.2646.T3 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:09:41,998 - orbit - INFO -  BPM:BPMA.2690.UN1 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:41,998 - orbit - INFO -  BPM:BPMA.2733.UN1 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:41,999 - orbit - INFO -  BPM:BPMA.2766.T5 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:09:41,999 - orbit - INFO -  BPM:BPMA.2776.T5 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:09:41,999 - orbit - INFO -  BPM:BPMA.2804.T5 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:41,999 - orbit - INFO -  BPM:BPMA.2828.T5 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:09:42,000 - orbit - INFO -  BPM:BPMA.2833.T5 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:42,000 - orbit - INFO -  BPM:BPMA.2838.T5 unchecked -> 0.21/0.5 < 0.5
+2018-03-15 20:09:42,000 - orbit - INFO -  BPM:BPMA.2858.T5 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:09:42,000 - orbit - INFO -  BPM:BPMA.2900.T5 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:42,001 - orbit - INFO -  BPM:BPMA.2943.T5 unchecked -> -0.15/0.5 < 0.5
+2018-03-15 20:09:42,001 - orbit - INFO -  BPM:BPMA.2965.T5 unchecked -> 0.17/0.5 < 0.5
+2018-03-15 20:09:42,001 - orbit - INFO -  BPM:BPMA.2985.UN2 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:09:42,001 - orbit - INFO -  BPM:BPMA.3007.UN2 unchecked -> -0.17/0.5 < 0.5
+2018-03-15 20:09:42,001 - orbit - INFO -  BPM:BPMA.3028.UN2 unchecked -> 0.17/0.5 < 0.5
+2018-03-15 20:09:42,102 - orbit - INFO - correct: ... 
+2018-03-15 20:09:42,120 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-15 20:09:42,298 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:43,289 - orbit - INFO -  BPM:BPMA.2109.T1 unchecked -> 0.05/0.5 < 0.5
+2018-03-15 20:09:43,289 - orbit - INFO -  BPM:BPMA.2138.T1 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:43,289 - orbit - INFO -  BPM:BPMA.2153.T1 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:09:43,289 - orbit - INFO -  BPM:BPME.2197.T1 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:43,289 - orbit - INFO -  BPM:BPME.2203.SA2 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:09:43,290 - orbit - INFO -  BPM:BPME.2215.SA2 unchecked -> 0.11/0.5 < 0.5
+2018-03-15 20:09:43,290 - orbit - INFO -  BPM:BPME.2252.SA2 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:09:43,290 - orbit - INFO -  BPM:BPME.2276.SA2 unchecked -> -0.1/0.5 < 0.5
+2018-03-15 20:09:43,290 - orbit - INFO -  BPM:BPME.2306.SA2 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:43,290 - orbit - INFO -  BPM:BPME.2325.SA2 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:09:43,291 - orbit - INFO -  BPM:BPME.2331.SA2 unchecked -> 0.14/0.5 < 0.5
+2018-03-15 20:09:43,291 - orbit - INFO -  BPM:BPME.2349.SA2 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:09:43,291 - orbit - INFO -  BPM:BPME.2355.SA2 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:09:43,291 - orbit - INFO -  BPM:BPME.2361.SA2 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:09:43,292 - orbit - INFO -  BPM:BPMA.2467.T3 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:43,292 - orbit - INFO -  BPM:BPMA.2487.T3 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:43,292 - orbit - INFO -  BPM:BPMA.2543.T3 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:09:43,292 - orbit - INFO -  BPM:BPMA.2558.T3 unchecked -> 0.08/0.5 < 0.5
+2018-03-15 20:09:43,293 - orbit - INFO -  BPM:BPMA.2786.T5 unchecked -> 0.11/0.5 < 0.5
+2018-03-15 20:09:43,293 - orbit - INFO -  BPM:BPMA.2818.T5 unchecked -> 0.09/0.5 < 0.5
+2018-03-15 20:09:43,293 - orbit - INFO -  BPM:BPMA.2855.T5 unchecked -> 0.07/0.5 < 0.5
+2018-03-15 20:09:43,384 - orbit - INFO - correct: ... 
+2018-03-15 20:09:43,392 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-15 20:09:43,541 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:44,656 - orbit - INFO -  BPM:BPMD.2022.TL unchecked -> 0.14/0.5 < 0.5
+2018-03-15 20:09:44,656 - orbit - INFO -  BPM:BPMA.2055.T1 unchecked -> -0.15/0.5 < 0.5
+2018-03-15 20:09:44,657 - orbit - INFO -  BPM:BPMA.2088.T1 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:44,657 - orbit - INFO -  BPM:BPME.2233.SA2 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:09:44,657 - orbit - INFO -  BPM:BPME.2282.SA2 unchecked -> 0.02/0.5 < 0.5
+2018-03-15 20:09:44,657 - orbit - INFO -  BPM:BPME.2367.SA2 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:44,658 - orbit - INFO -  BPM:BPMA.2442.T3 unchecked -> -0.24/0.5 < 0.5
+2018-03-15 20:09:44,658 - orbit - INFO -  BPM:BPMA.2553.T3 unchecked -> 0.05/0.5 < 0.5
+2018-03-15 20:09:44,658 - orbit - INFO -  BPM:BPMA.2624.T3 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:09:44,659 - orbit - INFO -  BPM:BPMA.2756.T5 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:09:44,659 - orbit - INFO -  BPM:BPMA.2878.T5 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:44,756 - orbit - INFO - correct: ... 
+2018-03-15 20:09:44,764 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-15 20:09:44,902 - orbit - INFO - correct: ... OK
+2018-03-15 20:09:47,113 - orbit - INFO -  BPM:BPMA.2082.T1 unchecked -> -0.21/0.5 < 0.5
+2018-03-15 20:09:47,113 - orbit - INFO -  BPM:BPMA.2097.T1 unchecked -> -0.21/0.5 < 0.5
+2018-03-15 20:09:47,114 - orbit - INFO -  BPM:BPME.2258.SA2 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:09:47,114 - orbit - INFO -  BPM:BPME.2373.SA2 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:09:47,114 - orbit - INFO -  BPM:BPME.2386.SA2 unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:09:47,114 - orbit - INFO -  BPM:BPMA.2455.T3 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:09:47,115 - orbit - INFO -  BPM:BPMA.2668.T3 unchecked -> 0.23/0.5 < 0.5
+2018-03-15 20:09:47,212 - orbit - INFO - correct: ... 
+2018-03-15 20:09:47,220 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-15 20:09:47,398 - orbit - INFO - correct: ... OK
+2018-03-15 20:10:24,025 - orbit - INFO -  BPM:BPMA.2591.T4 unchecked -> 0.25/0.5 < 0.5
+2018-03-15 20:10:24,025 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:10:24,025 - orbit - INFO -  BPM:BPMA.2621.T4 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:10:24,026 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:10:24,026 - orbit - INFO -  BPM:BPMA.2728.T4 unchecked -> -0.25/0.5 < 0.5
+2018-03-15 20:10:24,026 - orbit - INFO -  BPM:BPMA.2773.T4 unchecked -> 0.16/0.5 < 0.5
+2018-03-15 20:10:24,027 - orbit - INFO -  BPM:BPMA.2785.T4 unchecked -> 0.03/0.5 < 0.5
+2018-03-15 20:10:24,027 - orbit - INFO -  BPM:BPME.2794.T4 unchecked -> -0.24/0.5 < 0.5
+2018-03-15 20:10:24,027 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> -0.24/0.5 < 0.5
+2018-03-15 20:10:24,027 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> 0.19/0.5 < 0.5
+2018-03-15 20:10:24,027 - orbit - INFO -  BPM:BPME.2830.SA3 unchecked -> 0.2/0.5 < 0.5
+2018-03-15 20:10:24,028 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:10:24,028 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:10:24,028 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:10:24,028 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> 0.21/0.5 < 0.5
+2018-03-15 20:10:24,029 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:10:24,029 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.16/0.5 < 0.5
+2018-03-15 20:10:24,029 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:10:24,029 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:10:24,029 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:10:24,030 - orbit - INFO -  BPM:BPME.2934.SA3 unchecked -> -0.15/0.5 < 0.5
+2018-03-15 20:10:24,030 - orbit - INFO -  BPM:BPME.2940.SA3 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:10:24,070 - orbit - INFO - correct: ... 
+2018-03-15 20:10:24,138 - orbit - INFO - correct: ... OK
+2018-03-15 20:12:09,900 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:12:11,557 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:16:35,285 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:16:36,835 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:17:28,022 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:17:29,640 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:19:00,358 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:19:01,699 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:21:24,222 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:21:25,784 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:21:47,043 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:21:48,480 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:22:11,155 - orbit - INFO -  BPM:BPMA.2011.TL unchecked -> -0.16/0.5 < 0.5
+2018-03-15 20:22:11,155 - orbit - INFO -  BPM:BPMD.2022.TL unchecked -> 0.12/0.5 < 0.5
+2018-03-15 20:22:11,155 - orbit - INFO -  BPM:BPMA.2055.T1 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:22:11,155 - orbit - INFO -  BPM:BPMA.2062.T1 unchecked -> -0.19/0.5 < 0.5
+2018-03-15 20:22:11,156 - orbit - INFO -  BPM:BPMA.2068.T1 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:22:11,156 - orbit - INFO -  BPM:BPMA.2082.T1 unchecked -> -0.1/0.5 < 0.5
+2018-03-15 20:22:11,156 - orbit - INFO -  BPM:BPMA.2088.T1 unchecked -> -0.25/0.5 < 0.5
+2018-03-15 20:22:11,156 - orbit - INFO -  BPM:BPMA.2092.T1 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:22:11,156 - orbit - INFO -  BPM:BPMA.2124.T1 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:22:11,157 - orbit - INFO -  BPM:BPMA.2179.T1 unchecked -> -0.2/0.5 < 0.5
+2018-03-15 20:22:11,157 - orbit - INFO -  BPM:BPME.2191.T1 unchecked -> -0.23/0.5 < 0.5
+2018-03-15 20:22:11,157 - orbit - INFO -  BPM:BPME.2197.T1 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:22:11,157 - orbit - INFO -  BPM:BPME.2203.SA2 unchecked -> -0.03/0.5 < 0.5
+2018-03-15 20:22:11,157 - orbit - INFO -  BPM:BPME.2209.SA2 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:22:11,158 - orbit - INFO -  BPM:BPME.2221.SA2 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:22:11,158 - orbit - INFO -  BPM:BPME.2227.SA2 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:22:11,158 - orbit - INFO -  BPM:BPME.2233.SA2 unchecked -> 0.11/0.5 < 0.5
+2018-03-15 20:22:11,158 - orbit - INFO -  BPM:BPME.2239.SA2 unchecked -> 0.16/0.5 < 0.5
+2018-03-15 20:22:11,158 - orbit - INFO -  BPM:BPME.2245.SA2 unchecked -> -0.17/0.5 < 0.5
+2018-03-15 20:22:11,159 - orbit - INFO -  BPM:BPME.2276.SA2 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:22:11,159 - orbit - INFO -  BPM:BPME.2282.SA2 unchecked -> 0.05/0.5 < 0.5
+2018-03-15 20:22:11,159 - orbit - INFO -  BPM:BPME.2288.SA2 unchecked -> -0.06/0.5 < 0.5
+2018-03-15 20:22:11,160 - orbit - INFO -  BPM:BPME.2319.SA2 unchecked -> -0.24/0.5 < 0.5
+2018-03-15 20:22:11,160 - orbit - INFO -  BPM:BPME.2337.SA2 unchecked -> -0.09/0.5 < 0.5
+2018-03-15 20:22:11,160 - orbit - INFO -  BPM:BPME.2349.SA2 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:22:11,160 - orbit - INFO -  BPM:BPME.2361.SA2 unchecked -> 0.16/0.5 < 0.5
+2018-03-15 20:22:11,161 - orbit - INFO -  BPM:BPME.2386.SA2 unchecked -> -0.0/0.5 < 0.5
+2018-03-15 20:22:11,161 - orbit - INFO -  BPM:BPME.2398.SA2 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:22:11,161 - orbit - INFO -  BPM:BPME.2404.SA2 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:22:11,161 - orbit - INFO -  BPM:BPMA.2442.T3 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:22:11,162 - orbit - INFO -  BPM:BPMA.2467.T3 unchecked -> -0.23/0.5 < 0.5
+2018-03-15 20:22:11,162 - orbit - INFO -  BPM:BPMA.2487.T3 unchecked -> -0.07/0.5 < 0.5
+2018-03-15 20:22:11,162 - orbit - INFO -  BPM:BPMA.2528.T3 unchecked -> 0.04/0.5 < 0.5
+2018-03-15 20:22:11,162 - orbit - INFO -  BPM:BPMA.2543.T3 unchecked -> -0.05/0.5 < 0.5
+2018-03-15 20:22:11,162 - orbit - INFO -  BPM:BPMA.2563.T3 unchecked -> -0.22/0.5 < 0.5
+2018-03-15 20:22:11,163 - orbit - INFO -  BPM:BPMA.2568.T3 unchecked -> -0.24/0.5 < 0.5
+2018-03-15 20:22:11,163 - orbit - INFO -  BPM:BPMA.2579.T3 unchecked -> 0.18/0.5 < 0.5
+2018-03-15 20:22:11,163 - orbit - INFO -  BPM:BPMA.2582.T3 unchecked -> 0.15/0.5 < 0.5
+2018-03-15 20:22:11,163 - orbit - INFO -  BPM:BPMA.2603.T3 unchecked -> -0.01/0.5 < 0.5
+2018-03-15 20:22:11,163 - orbit - INFO -  BPM:BPMA.2668.T3 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:22:11,164 - orbit - INFO -  BPM:BPMA.2690.UN1 unchecked -> -0.14/0.5 < 0.5
+2018-03-15 20:22:11,164 - orbit - INFO -  BPM:BPMA.2711.UN1 unchecked -> 0.23/0.5 < 0.5
+2018-03-15 20:22:11,164 - orbit - INFO -  BPM:BPMA.2786.T5 unchecked -> 0.11/0.5 < 0.5
+2018-03-15 20:22:11,164 - orbit - INFO -  BPM:BPMA.2828.T5 unchecked -> -0.12/0.5 < 0.5
+2018-03-15 20:22:11,165 - orbit - INFO -  BPM:BPMA.2833.T5 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:22:11,165 - orbit - INFO -  BPM:BPMA.2858.T5 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:22:11,165 - orbit - INFO -  BPM:BPMA.2943.T5 unchecked -> -0.16/0.5 < 0.5
+2018-03-15 20:22:11,165 - orbit - INFO -  BPM:BPMA.2965.T5 unchecked -> 0.0/0.5 < 0.5
+2018-03-15 20:22:11,265 - orbit - INFO - correct: ... 
+2018-03-15 20:22:11,274 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-15 20:22:11,540 - orbit - INFO - correct: ... OK
+2018-03-15 20:23:51,618 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:23:53,244 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:26:17,999 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:26:19,706 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:27:17,054 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:27:18,473 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:27:26,835 - orbit - INFO -  BPM:BPMG.24.I1 unchecked -> 0.06/0.5 < 0.5
+2018-03-15 20:27:26,835 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked -> 0.07/0.5 < 0.5
+2018-03-15 20:27:26,836 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> 0.09/0.5 < 0.5
+2018-03-15 20:27:26,836 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> 0.22/0.5 < 0.5
+2018-03-15 20:27:26,836 - orbit - INFO -  BPM:BPMF.52.I1 unchecked -> -0.13/0.5 < 0.5
+2018-03-15 20:27:26,836 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> -0.08/0.5 < 0.5
+2018-03-15 20:27:26,862 - orbit - INFO - correct: ... 
+2018-03-15 20:27:26,903 - orbit - INFO - correct: ... OK
+2018-03-15 20:28:20,647 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:28:22,352 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:31:01,587 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:31:03,232 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:40:41,592 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:40:43,333 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:44:46,099 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:44:47,817 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:57:43,225 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:57:44,589 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:58:08,132 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:58:09,539 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:58:21,434 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:58:22,775 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:58:33,426 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:58:34,847 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:59:02,395 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:59:03,722 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 20:59:53,406 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 20:59:54,787 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:01:33,090 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:01:34,476 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:01:58,651 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:02:00,040 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:02:22,143 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:02:23,505 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:03:36,036 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:03:37,396 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:05:38,258 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:05:39,652 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:06:14,012 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:06:15,394 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:06:51,849 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:06:53,225 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:10:19,029 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:10:20,428 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:14:17,021 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:14:18,408 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-15 21:16:37,911 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-15 21:16:39,253 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:02:21,703 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:02:23,567 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:02:53,189 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> 0.09/0.5 < 0.5
+2018-03-16 08:02:53,189 - orbit - INFO -  BPM:BPMA.2618.T4 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:02:53,189 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> 0.15/0.5 < 0.5
+2018-03-16 08:02:53,190 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> 0.05/0.5 < 0.5
+2018-03-16 08:02:53,190 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> -0.23/0.5 < 0.5
+2018-03-16 08:02:53,190 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 08:02:53,191 - orbit - INFO -  BPM:BPME.2794.T4 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:02:53,191 - orbit - INFO -  BPM:BPME.2800.T4 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 08:02:53,191 - orbit - INFO -  BPM:BPME.2806.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:02:53,191 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 08:02:53,191 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 08:02:53,192 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> -0.03/0.5 < 0.5
+2018-03-16 08:02:53,192 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> 0.13/0.5 < 0.5
+2018-03-16 08:02:53,192 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:02:53,193 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 08:02:53,193 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> -0.19/0.5 < 0.5
+2018-03-16 08:02:53,193 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 08:02:53,193 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:02:53,193 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 08:02:53,241 - orbit - INFO - correct: ... 
+2018-03-16 08:02:53,352 - orbit - INFO - correct: ... OK
+2018-03-16 08:03:06,159 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:03:06,160 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 08:03:06,160 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> 0.0/0.5 < 0.5
+2018-03-16 08:03:06,160 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 08:03:06,161 - orbit - INFO -  BPM:BPMA.2728.T4 unchecked -> 0.21/0.5 < 0.5
+2018-03-16 08:03:06,161 - orbit - INFO -  BPM:BPME.2800.T4 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 08:03:06,161 - orbit - INFO -  BPM:BPME.2806.SA3 unchecked -> -0.17/0.5 < 0.5
+2018-03-16 08:03:06,161 - orbit - INFO -  BPM:BPME.2812.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 08:03:06,162 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> 0.19/0.5 < 0.5
+2018-03-16 08:03:06,162 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 08:03:06,162 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:03:06,162 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 08:03:06,163 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 08:03:06,163 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> -0.02/0.5 < 0.5
+2018-03-16 08:03:06,163 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 08:03:06,163 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> 0.01/0.5 < 0.5
+2018-03-16 08:03:06,163 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 08:03:06,164 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 08:03:06,164 - orbit - INFO -  BPM:BPME.2934.SA3 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 08:03:06,203 - orbit - INFO - correct: ... 
+2018-03-16 08:03:06,300 - orbit - INFO - correct: ... OK
+2018-03-16 08:03:12,039 - orbit - INFO -  BPM:BPMA.2601.T4 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:03:12,039 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> 0.0/0.5 < 0.5
+2018-03-16 08:03:12,040 - orbit - INFO -  BPM:BPMA.2749.T4 unchecked -> 0.25/0.5 < 0.5
+2018-03-16 08:03:12,040 - orbit - INFO -  BPM:BPMA.2785.T4 unchecked -> -0.07/0.5 < 0.5
+2018-03-16 08:03:12,040 - orbit - INFO -  BPM:BPME.2855.SA3 unchecked -> 0.0/0.5 < 0.5
+2018-03-16 08:03:12,040 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 08:03:12,041 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 08:03:12,041 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:03:12,079 - orbit - INFO - correct: ... 
+2018-03-16 08:03:12,149 - orbit - INFO - correct: ... OK
+2018-03-16 08:03:18,285 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 08:03:18,285 - orbit - INFO -  BPM:BPMA.2601.T4 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:03:18,285 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.01/0.5 < 0.5
+2018-03-16 08:03:18,286 - orbit - INFO -  BPM:BPMA.2618.T4 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 08:03:18,286 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 08:03:18,286 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> 0.14/0.5 < 0.5
+2018-03-16 08:03:18,286 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> -0.17/0.5 < 0.5
+2018-03-16 08:03:18,286 - orbit - INFO -  BPM:BPMA.2749.T4 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 08:03:18,287 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 08:03:18,287 - orbit - INFO -  BPM:BPME.2806.SA3 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 08:03:18,287 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.24/0.5 < 0.5
+2018-03-16 08:03:18,288 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> -0.03/0.5 < 0.5
+2018-03-16 08:03:18,288 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> 0.21/0.5 < 0.5
+2018-03-16 08:03:18,288 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:03:18,288 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2897.SA3 unchecked -> -0.07/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> -0.1/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.17/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> -0.24/0.5 < 0.5
+2018-03-16 08:03:18,289 - orbit - INFO -  BPM:BPME.2934.SA3 unchecked -> 0.01/0.5 < 0.5
+2018-03-16 08:03:18,332 - orbit - INFO - correct: ... 
+2018-03-16 08:03:18,392 - orbit - INFO - correct: ... OK
+2018-03-16 08:03:21,113 - orbit - INFO -  BPM:BPMA.2601.T4 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 08:03:21,113 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:03:21,113 - orbit - INFO -  BPM:BPMA.2621.T4 unchecked -> -0.02/0.5 < 0.5
+2018-03-16 08:03:21,114 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 08:03:21,114 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> -0.25/0.5 < 0.5
+2018-03-16 08:03:21,114 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 08:03:21,114 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:03:21,115 - orbit - INFO -  BPM:BPMA.2773.T4 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 08:03:21,115 - orbit - INFO -  BPM:BPME.2794.T4 unchecked -> -0.03/0.5 < 0.5
+2018-03-16 08:03:21,115 - orbit - INFO -  BPM:BPME.2800.T4 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:03:21,115 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.0/0.5 < 0.5
+2018-03-16 08:03:21,116 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:03:21,116 - orbit - INFO -  BPM:BPME.2855.SA3 unchecked -> -0.08/0.5 < 0.5
+2018-03-16 08:03:21,116 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 08:03:21,117 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 08:03:21,117 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 08:03:21,117 - orbit - INFO -  BPM:BPME.2897.SA3 unchecked -> 0.14/0.5 < 0.5
+2018-03-16 08:03:21,117 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.19/0.5 < 0.5
+2018-03-16 08:03:21,117 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> -0.19/0.5 < 0.5
+2018-03-16 08:03:21,118 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> -0.01/0.5 < 0.5
+2018-03-16 08:03:21,159 - orbit - INFO - correct: ... 
+2018-03-16 08:03:21,217 - orbit - INFO - correct: ... OK
+2018-03-16 08:09:47,287 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:09:48,959 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:10:07,293 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:10:08,645 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:11:17,232 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:11:18,620 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:11:27,130 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:11:28,553 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:12:44,422 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:12:45,785 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:13:04,616 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 08:13:04,616 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> -0.02/0.5 < 0.5
+2018-03-16 08:13:04,617 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:13:04,617 - orbit - INFO -  BPM:BPMA.57.I1 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 08:13:04,640 - orbit - INFO - correct: ... 
+2018-03-16 08:13:04,687 - orbit - INFO - correct: ... OK
+2018-03-16 08:13:05,819 - orbit - INFO -  BPM:BPMG.24.I1 unchecked -> -0.03/0.5 < 0.5
+2018-03-16 08:13:05,820 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 08:13:05,820 - orbit - INFO -  BPM:BPMF.47.I1 unchecked -> 0.0/0.5 < 0.5
+2018-03-16 08:13:05,843 - orbit - INFO - correct: ... 
+2018-03-16 08:13:05,872 - orbit - INFO - correct: ... OK
+2018-03-16 08:13:12,276 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:13:12,276 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked -> -0.19/0.5 < 0.5
+2018-03-16 08:13:12,276 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> -0.07/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.59.I1 unchecked -> -0.09/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.63.I1 unchecked -> 0.15/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.72.I1 unchecked -> -0.07/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.77.I1 unchecked -> 0.13/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.82.I1 unchecked -> 0.01/0.5 < 0.5
+2018-03-16 08:13:12,277 - orbit - INFO -  BPM:BPMA.85.I1 unchecked -> -0.16/0.5 < 0.5
+2018-03-16 08:13:12,278 - orbit - INFO -  BPM:BPMA.87.I1 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 08:13:12,278 - orbit - INFO -  BPM:BPMA.92.I1 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:13:12,278 - orbit - INFO -  BPM:BPMF.95.I1 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 08:13:12,278 - orbit - INFO -  BPM:BPMA.110.I1 unchecked -> 0.03/0.5 < 0.5
+2018-03-16 08:13:12,279 - orbit - INFO -  BPM:BPMA.112.I1 unchecked -> 0.23/0.5 < 0.5
+2018-03-16 08:13:12,279 - orbit - INFO -  BPM:BPMA.115.I1 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 08:13:12,279 - orbit - INFO -  BPM:BPMC.134.L1 unchecked -> 0.09/0.5 < 0.5
+2018-03-16 08:13:12,279 - orbit - INFO -  BPM:BPMA.179.B1 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 08:13:12,279 - orbit - INFO -  BPM:BPMF.181.B1 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 08:13:12,280 - orbit - INFO -  BPM:BPMF.203.B1 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 08:13:12,280 - orbit - INFO -  BPM:BPMA.206.B1 unchecked -> 0.0/0.5 < 0.5
+2018-03-16 08:13:12,280 - orbit - INFO -  BPM:BPMA.210.B1 unchecked -> 0.21/0.5 < 0.5
+2018-03-16 08:13:12,280 - orbit - INFO -  BPM:BPMA.213.B1 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:13:12,280 - orbit - INFO -  BPM:BPMA.215.B1 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 08:13:12,281 - orbit - INFO -  BPM:BPMA.221.B1 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 08:13:12,281 - orbit - INFO -  BPM:BPMA.226.B1 unchecked -> 0.08/0.5 < 0.5
+2018-03-16 08:13:12,281 - orbit - INFO -  BPM:BPMA.227.B1 unchecked -> -0.03/0.5 < 0.5
+2018-03-16 08:13:12,369 - orbit - INFO - correct: ... 
+2018-03-16 08:13:12,551 - orbit - INFO - correct: ... OK
+2018-03-16 08:13:15,178 - orbit - INFO -  BPM:BPMG.24.I1 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 08:13:15,179 - orbit - INFO -  BPM:BPMF.47.I1 unchecked -> -0.19/0.5 < 0.5
+2018-03-16 08:13:15,179 - orbit - INFO -  BPM:BPMF.52.I1 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 08:13:15,179 - orbit - INFO -  BPM:BPMA.57.I1 unchecked -> 0.22/0.5 < 0.5
+2018-03-16 08:13:15,179 - orbit - INFO -  BPM:BPMA.75.I1 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 08:13:15,180 - orbit - INFO -  BPM:BPMA.90.I1 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 08:13:15,180 - orbit - INFO -  BPM:BPMF.103.I1 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 08:13:15,180 - orbit - INFO -  BPM:BPMR.170.L1 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 08:13:15,181 - orbit - INFO -  BPM:BPMA.217.B1 unchecked -> 0.09/0.5 < 0.5
+2018-03-16 08:13:15,181 - orbit - INFO -  BPM:BPMA.219.B1 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:13:15,181 - orbit - INFO -  BPM:BPMA.223.B1 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 08:13:15,274 - orbit - INFO - correct: ... 
+2018-03-16 08:13:15,388 - orbit - INFO - correct: ... OK
+2018-03-16 08:13:16,011 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 08:13:16,012 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:13:16,012 - orbit - INFO -  BPM:BPMA.107.I1 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 08:13:16,012 - orbit - INFO -  BPM:BPMR.146.L1 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 08:13:16,013 - orbit - INFO -  BPM:BPMA.175.B1 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 08:13:16,102 - orbit - INFO - correct: ... 
+2018-03-16 08:13:16,254 - orbit - INFO - correct: ... OK
+2018-03-16 08:13:16,775 - orbit - INFO -  BPM:BPMA.80.I1 unchecked -> 0.25/0.5 < 0.5
+2018-03-16 08:13:16,776 - orbit - INFO -  BPM:BPMA.119.I1 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 08:13:16,870 - orbit - INFO - correct: ... 
+2018-03-16 08:13:16,984 - orbit - INFO - correct: ... OK
+2018-03-16 08:15:02,968 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:15:04,360 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:15:13,457 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:15:14,801 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:15:58,215 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:15:59,615 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:16:31,829 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:16:33,246 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:17:08,533 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:17:09,937 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 08:30:52,363 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 08:30:53,759 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:40:17,798 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:40:19,238 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:44:36,217 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:44:37,582 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:45:31,393 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:45:32,707 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:46:07,009 - adaptive_feedback - INFO - debug_mode = True
+2018-03-16 09:46:15,211 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 09:46:15,211 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 09:46:15,212 - adaptive_feedback - INFO - Stop Statistics
+2018-03-16 09:48:41,590 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:48:42,936 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:54:45,023 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:54:46,454 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:55:45,290 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:55:46,597 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:56:32,249 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:56:33,633 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:58:30,920 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:58:32,387 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 09:59:21,403 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 09:59:22,849 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:02:40,429 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:02:41,779 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:06:54,796 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:06:56,230 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:07:55,682 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:07:57,011 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:09:45,327 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:09:46,646 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:10:17,743 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:10:19,075 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:13:50,014 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:13:51,351 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:14:18,343 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:14:19,669 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:14:39,058 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:14:40,471 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:15:33,583 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:15:34,908 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:18:26,306 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:18:27,708 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:19:00,343 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:19:01,694 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:19:32,179 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:19:33,528 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:21:04,276 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:21:05,584 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:21:50,748 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:21:52,127 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:22:47,966 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:22:49,315 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:23:39,697 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:23:41,025 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:25:49,629 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:25:51,145 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:28:00,793 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:28:02,295 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:31:24,188 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:31:25,705 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:33:29,292 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:33:30,767 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:40:33,169 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:40:34,628 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:41:01,462 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 10:41:02,825 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 10:41:22,459 - orbit - INFO -  BPM:BPMG.25I.I1 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 10:41:22,460 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 10:41:22,460 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 10:41:22,460 - orbit - INFO -  BPM:BPMA.63.I1 unchecked -> 0.23/0.5 < 0.5
+2018-03-16 10:41:22,461 - orbit - INFO -  BPM:BPMA.72.I1 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 10:41:22,461 - orbit - INFO -  BPM:BPMA.75.I1 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 10:41:22,461 - orbit - INFO -  BPM:BPMA.77.I1 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 10:41:22,461 - orbit - INFO -  BPM:BPMA.80.I1 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 10:41:22,462 - orbit - INFO -  BPM:BPMA.85.I1 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 10:41:22,462 - orbit - INFO -  BPM:BPMA.87.I1 unchecked -> 0.23/0.5 < 0.5
+2018-03-16 10:41:22,462 - orbit - INFO -  BPM:BPMA.92.I1 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 10:41:22,462 - orbit - INFO -  BPM:BPMA.103.I1 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 10:41:22,463 - orbit - INFO -  BPM:BPMA.110.I1 unchecked -> -0.24/0.5 < 0.5
+2018-03-16 10:41:22,463 - orbit - INFO -  BPM:BPMA.115.I1 unchecked -> -0.0/0.5 < 0.5
+2018-03-16 10:41:22,463 - orbit - INFO -  BPM:BPMA.117.I1 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 10:41:22,464 - orbit - INFO -  BPM:BPMA.179.B1 unchecked -> -0.01/0.5 < 0.5
+2018-03-16 10:41:22,464 - orbit - INFO -  BPM:BPMF.181.B1 unchecked -> -0.18/0.5 < 0.5
+2018-03-16 10:41:22,465 - orbit - INFO -  BPM:BPMA.219.B1 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 10:41:22,465 - orbit - INFO -  BPM:BPMA.226.B1 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 10:41:22,465 - orbit - INFO -  BPM:BPMA.227.B1 unchecked -> -0.25/0.5 < 0.5
+2018-03-16 10:41:22,571 - orbit - INFO - correct: ... 
+2018-03-16 10:41:22,735 - orbit - INFO - correct: ... OK
+2018-03-16 11:10:08,262 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:10:09,871 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:24:38,860 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:24:40,464 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:25:26,794 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:25:28,210 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:26:01,522 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:26:02,864 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:26:18,576 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:26:19,913 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:26:46,402 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:26:47,892 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:27:04,011 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:27:05,395 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:43:47,241 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:43:48,596 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:43:48,658 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:44:40,495 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:44:41,813 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:44:41,879 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:44:58,378 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:44:59,695 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:44:59,768 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:45:13,633 - adaptive_feedback - ERROR - No style sheet found!
+2018-03-16 11:45:13,711 - adaptive_feedback - INFO - debug_mode = True
+2018-03-16 11:45:15,026 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 11:45:15,026 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 11:45:15,026 - adaptive_feedback - INFO - Stop Statistics
+2018-03-16 11:50:20,047 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:50:35,216 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:50:53,266 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:51:08,571 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:51:34,820 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:51:36,202 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:51:36,296 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:58:26,976 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:59:01,137 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:59:10,017 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:59:11,340 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:59:11,408 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:59:26,583 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:59:27,900 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:59:27,965 - __main__ - ERROR - No style sheet found!
+2018-03-16 11:59:58,191 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 11:59:59,545 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 11:59:59,611 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:02:04,407 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:02:05,793 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:02:05,866 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:02:51,349 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:02:52,710 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:02:52,783 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:03:10,784 - adaptive_feedback - ERROR - No style sheet found!
+2018-03-16 12:03:10,830 - adaptive_feedback - INFO - debug_mode = True
+2018-03-16 12:03:12,233 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:03:12,233 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:03:12,233 - adaptive_feedback - INFO - Stop Statistics
+2018-03-16 12:05:29,755 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:05:31,092 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:05:31,154 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:07:44,582 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:07:46,001 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:07:46,072 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:08:00,441 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:08:01,859 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:08:01,919 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:08:26,268 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:08:27,587 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:08:27,649 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:09:31,473 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:09:32,828 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:09:32,891 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:09:37,887 - adaptive_feedback - INFO - debug_mode = True
+2018-03-16 12:09:39,745 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:09:39,746 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:09:39,746 - adaptive_feedback - INFO - Stop Statistics
+2018-03-16 12:11:14,543 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:11:15,890 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:11:15,957 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:11:35,007 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:11:36,434 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:11:36,504 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:11:42,267 - adaptive_feedback - INFO - debug_mode = True
+2018-03-16 12:11:43,642 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:11:43,643 - adaptive_feedback - INFO - Stop Feedback
+2018-03-16 12:11:43,643 - adaptive_feedback - INFO - Stop Statistics
+2018-03-16 12:18:33,092 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:18:34,738 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:18:34,853 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:18:48,629 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:18:49,961 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:18:50,035 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:19:03,753 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:19:05,065 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:19:05,130 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:19:29,123 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:19:30,495 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:19:30,567 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:27:49,446 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:27:50,926 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:27:50,996 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:28:07,121 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:28:08,513 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:28:08,576 - __main__ - ERROR - No style sheet found!
+2018-03-16 12:28:48,790 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 12:28:50,125 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 12:28:50,192 - __main__ - ERROR - No style sheet found!
+2018-03-16 15:27:08,170 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 15:27:09,934 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 15:27:10,048 - __main__ - ERROR - No style sheet found!
+2018-03-16 15:37:57,992 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 15:37:59,399 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 15:37:59,473 - __main__ - ERROR - No style sheet found!
+2018-03-16 15:38:22,130 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 15:38:23,513 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 15:38:23,586 - __main__ - ERROR - No style sheet found!
+2018-03-16 15:39:21,369 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 15:39:22,788 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 15:39:22,863 - __main__ - ERROR - No style sheet found!
+2018-03-16 15:42:49,882 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 15:42:51,201 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 15:42:51,265 - __main__ - ERROR - No style sheet found!
+2018-03-16 18:01:24,609 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 18:01:26,550 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 18:01:26,658 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:04:10,059 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:04:11,491 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:04:11,565 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:04:22,966 - orbit - INFO -  BPM:BPMA.2591.T4 unchecked -> -0.16/0.5 < 0.5
+2018-03-16 19:04:22,966 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> 0.15/0.5 < 0.5
+2018-03-16 19:04:22,967 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> -0.19/0.5 < 0.5
+2018-03-16 19:04:22,967 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 19:04:22,967 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> 0.22/0.5 < 0.5
+2018-03-16 19:04:22,968 - orbit - INFO -  BPM:BPMA.2773.T4 unchecked -> -0.23/0.5 < 0.5
+2018-03-16 19:04:22,968 - orbit - INFO -  BPM:BPMA.2785.T4 unchecked -> -0.08/0.5 < 0.5
+2018-03-16 19:04:22,968 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:04:22,968 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 19:04:22,969 - orbit - INFO -  BPM:BPME.2830.SA3 unchecked -> 0.17/0.5 < 0.5
+2018-03-16 19:04:22,969 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> 0.2/0.5 < 0.5
+2018-03-16 19:04:22,969 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 19:04:22,969 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> -0.24/0.5 < 0.5
+2018-03-16 19:04:22,970 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> 0.03/0.5 < 0.5
+2018-03-16 19:04:22,970 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 19:04:22,970 - orbit - INFO -  BPM:BPME.2897.SA3 unchecked -> -0.17/0.5 < 0.5
+2018-03-16 19:04:22,970 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 19:04:22,971 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> 0.13/0.5 < 0.5
+2018-03-16 19:04:22,971 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 19:04:22,971 - orbit - INFO -  BPM:BPME.2934.SA3 unchecked -> -0.08/0.5 < 0.5
+2018-03-16 19:04:22,971 - orbit - INFO -  BPM:BPME.2940.SA3 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 19:04:23,012 - orbit - INFO - correct: ... 
+2018-03-16 19:06:07,817 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:06:09,287 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:06:09,359 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:06:13,763 - orbit - INFO -  BPM:BPMR.1307.L3 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 19:06:13,764 - orbit - INFO -  BPM:BPMC.1355.L3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 19:06:13,764 - orbit - INFO -  BPM:BPMC.1394.L3 unchecked -> -0.01/0.5 < 0.5
+2018-03-16 19:06:13,764 - orbit - INFO -  BPM:BPMA.1499.L3 unchecked -> -0.08/0.5 < 0.5
+2018-03-16 19:06:13,765 - orbit - INFO -  BPM:BPMA.1628.L3 unchecked -> -0.07/0.5 < 0.5
+2018-03-16 19:06:13,765 - orbit - INFO -  BPM:BPMA.1669.CL unchecked -> 0.05/0.5 < 0.5
+2018-03-16 19:06:13,765 - orbit - INFO -  BPM:BPMA.1684.CL unchecked -> 0.12/0.5 < 0.5
+2018-03-16 19:06:13,766 - orbit - INFO -  BPM:BPMI.1693.CL unchecked -> -0.23/0.5 < 0.5
+2018-03-16 19:06:13,766 - orbit - INFO -  BPM:BPMA.1702.CL unchecked -> -0.2/0.5 < 0.5
+2018-03-16 19:06:13,766 - orbit - INFO -  BPM:BPMI.1729.CL unchecked -> -0.04/0.5 < 0.5
+2018-03-16 19:06:13,766 - orbit - INFO -  BPM:BPMA.1738.CL unchecked -> 0.11/0.5 < 0.5
+2018-03-16 19:06:13,766 - orbit - INFO -  BPM:BPMA.1746.CL unchecked -> -0.12/0.5 < 0.5
+2018-03-16 19:06:13,767 - orbit - INFO -  BPM:BPMA.1750.CL unchecked -> -0.22/0.5 < 0.5
+2018-03-16 19:06:13,767 - orbit - INFO -  BPM:BPMA.1756.CL unchecked -> 0.09/0.5 < 0.5
+2018-03-16 19:06:13,767 - orbit - INFO -  BPM:BPMA.1765.CL unchecked -> 0.21/0.5 < 0.5
+2018-03-16 19:06:13,767 - orbit - INFO -  BPM:BPMA.1769.CL unchecked -> 0.18/0.5 < 0.5
+2018-03-16 19:06:13,768 - orbit - INFO -  BPM:BPMA.1801.CL unchecked -> -0.12/0.5 < 0.5
+2018-03-16 19:06:13,768 - orbit - INFO -  BPM:BPMA.1819.CL unchecked -> -0.16/0.5 < 0.5
+2018-03-16 19:06:13,768 - orbit - INFO -  BPM:BPMA.1828.CL unchecked -> 0.18/0.5 < 0.5
+2018-03-16 19:06:13,768 - orbit - INFO -  BPM:BPMI.1837.CL unchecked -> 0.04/0.5 < 0.5
+2018-03-16 19:06:13,769 - orbit - INFO -  BPM:BPMA.1868.TL unchecked -> 0.19/0.5 < 0.5
+2018-03-16 19:06:13,769 - orbit - INFO -  BPM:BPMI.1889.TL unchecked -> -0.08/0.5 < 0.5
+2018-03-16 19:06:13,769 - orbit - INFO -  BPM:BPMI.1925.TL unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:06:13,769 - orbit - INFO -  BPM:BPMI.1930.TL unchecked -> -0.13/0.5 < 0.5
+2018-03-16 19:06:13,770 - orbit - INFO -  BPM:BPMA.2011.TL unchecked -> 0.11/0.5 < 0.5
+2018-03-16 19:06:13,770 - orbit - INFO -  BPM:BPMA.2071.T2 unchecked -> -0.02/0.5 < 0.5
+2018-03-16 19:06:13,770 - orbit - INFO -  BPM:BPMA.2101.T2 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:06:13,770 - orbit - INFO -  BPM:BPMA.2116.T2 unchecked -> 0.08/0.5 < 0.5
+2018-03-16 19:06:13,771 - orbit - INFO -  BPM:BPMA.2132.T2 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:06:13,771 - orbit - INFO -  BPM:BPMA.2145.T2 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:06:13,771 - orbit - INFO -  BPM:BPMA.2176.T2 unchecked -> 0.22/0.5 < 0.5
+2018-03-16 19:06:13,771 - orbit - INFO -  BPM:BPMA.2191.T2 unchecked -> 0.21/0.5 < 0.5
+2018-03-16 19:06:13,772 - orbit - INFO -  BPM:BPME.2229.T2 unchecked -> -0.1/0.5 < 0.5
+2018-03-16 19:06:13,873 - orbit - INFO - correct: ... 
+2018-03-16 19:06:32,258 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:06:33,754 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:06:33,819 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:06:35,631 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> 0.22/0.5 < 0.5
+2018-03-16 19:06:35,632 - orbit - INFO -  BPM:BPMF.48.I1 unchecked -> 0.24/0.5 < 0.5
+2018-03-16 19:06:35,632 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 19:06:35,658 - orbit - INFO - correct: ... 
+2018-03-16 19:06:35,737 - orbit - INFO - correct: ... OK
+2018-03-16 19:06:45,775 - orbit - INFO -  BPM:BPMA.2591.T4 unchecked -> -0.21/0.5 < 0.5
+2018-03-16 19:06:45,775 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> 0.22/0.5 < 0.5
+2018-03-16 19:06:45,775 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.16/0.5 < 0.5
+2018-03-16 19:06:45,776 - orbit - INFO -  BPM:BPMA.2621.T4 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 19:06:45,776 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> -0.16/0.5 < 0.5
+2018-03-16 19:06:45,776 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> 0.19/0.5 < 0.5
+2018-03-16 19:06:45,776 - orbit - INFO -  BPM:BPMA.2728.T4 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:06:45,777 - orbit - INFO -  BPM:BPMA.2749.T4 unchecked -> -0.17/0.5 < 0.5
+2018-03-16 19:06:45,777 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> 0.17/0.5 < 0.5
+2018-03-16 19:06:45,777 - orbit - INFO -  BPM:BPME.2812.SA3 unchecked -> 0.01/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2818.SA3 unchecked -> -0.23/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2830.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> 0.13/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:06:45,778 - orbit - INFO -  BPM:BPME.2849.SA3 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 19:06:45,779 - orbit - INFO -  BPM:BPME.2855.SA3 unchecked -> 0.08/0.5 < 0.5
+2018-03-16 19:06:45,779 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:06:45,779 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:06:45,779 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> 0.04/0.5 < 0.5
+2018-03-16 19:06:45,779 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 19:06:45,780 - orbit - INFO -  BPM:BPME.2897.SA3 unchecked -> 0.2/0.5 < 0.5
+2018-03-16 19:06:45,780 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 19:06:45,780 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.23/0.5 < 0.5
+2018-03-16 19:06:45,780 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 19:06:45,820 - orbit - INFO - correct: ... 
+2018-03-16 19:06:45,915 - orbit - INFO - correct: ... OK
+2018-03-16 19:07:23,574 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:07:24,960 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:07:25,029 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:07:52,525 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:07:54,091 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:07:54,168 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:07:56,418 - orbit - INFO -  BPM:BPMC.38I.I1 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:07:56,419 - orbit - INFO -  BPM:BPMR.38II.I1 unchecked -> 0.07/0.5 < 0.5
+2018-03-16 19:07:56,419 - orbit - INFO -  BPM:BPMF.47.I1 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 19:07:56,419 - orbit - INFO -  BPM:BPMF.52.I1 unchecked -> 0.05/0.5 < 0.5
+2018-03-16 19:07:56,419 - orbit - INFO -  BPM:BPMA.55.I1 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 19:07:56,419 - orbit - INFO -  BPM:BPMA.57.I1 unchecked -> -0.12/0.5 < 0.5
+2018-03-16 19:07:56,445 - orbit - INFO - correct: ... 
+2018-03-16 19:07:56,496 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:04,267 - orbit - INFO -  BPM:BPMA.2591.T4 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 19:08:04,268 - orbit - INFO -  BPM:BPMA.2601.T4 unchecked -> 0.2/0.5 < 0.5
+2018-03-16 19:08:04,268 - orbit - INFO -  BPM:BPMA.2606.T4 unchecked -> -0.24/0.5 < 0.5
+2018-03-16 19:08:04,268 - orbit - INFO -  BPM:BPMA.2618.T4 unchecked -> 0.21/0.5 < 0.5
+2018-03-16 19:08:04,268 - orbit - INFO -  BPM:BPMA.2641.T4 unchecked -> 0.05/0.5 < 0.5
+2018-03-16 19:08:04,269 - orbit - INFO -  BPM:BPMA.2728.T4 unchecked -> 0.1/0.5 < 0.5
+2018-03-16 19:08:04,269 - orbit - INFO -  BPM:BPME.2800.T4 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:08:04,269 - orbit - INFO -  BPM:BPME.2806.SA3 unchecked -> -0.15/0.5 < 0.5
+2018-03-16 19:08:04,270 - orbit - INFO -  BPM:BPME.2842.SA3 unchecked -> -0.01/0.5 < 0.5
+2018-03-16 19:08:04,270 - orbit - INFO -  BPM:BPME.2855.SA3 unchecked -> -0.2/0.5 < 0.5
+2018-03-16 19:08:04,271 - orbit - INFO -  BPM:BPME.2867.SA3 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 19:08:04,271 - orbit - INFO -  BPM:BPME.2873.SA3 unchecked -> 0.09/0.5 < 0.5
+2018-03-16 19:08:04,271 - orbit - INFO -  BPM:BPME.2879.SA3 unchecked -> -0.06/0.5 < 0.5
+2018-03-16 19:08:04,271 - orbit - INFO -  BPM:BPME.2903.SA3 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 19:08:04,272 - orbit - INFO -  BPM:BPME.2910.SA3 unchecked -> 0.02/0.5 < 0.5
+2018-03-16 19:08:04,272 - orbit - INFO -  BPM:BPME.2916.SA3 unchecked -> 0.08/0.5 < 0.5
+2018-03-16 19:08:04,272 - orbit - INFO -  BPM:BPME.2922.SA3 unchecked -> 0.12/0.5 < 0.5
+2018-03-16 19:08:04,272 - orbit - INFO -  BPM:BPME.2940.SA3 unchecked -> -0.14/0.5 < 0.5
+2018-03-16 19:08:04,314 - orbit - INFO - correct: ... 
+2018-03-16 19:08:04,406 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:11,624 - orbit - INFO -  BPM:BPMA.2684.T4 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 19:08:11,625 - orbit - INFO -  BPM:BPMA.2706.T4 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 19:08:11,625 - orbit - INFO -  BPM:BPMA.2749.T4 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 19:08:11,625 - orbit - INFO -  BPM:BPMA.2761.T4 unchecked -> -0.05/0.5 < 0.5
+2018-03-16 19:08:11,625 - orbit - INFO -  BPM:BPMA.2773.T4 unchecked -> 0.16/0.5 < 0.5
+2018-03-16 19:08:11,625 - orbit - INFO -  BPM:BPME.2794.T4 unchecked -> 0.11/0.5 < 0.5
+2018-03-16 19:08:11,626 - orbit - INFO -  BPM:BPME.2812.SA3 unchecked -> 0.08/0.5 < 0.5
+2018-03-16 19:08:11,626 - orbit - INFO -  BPM:BPME.2824.SA3 unchecked -> -0.13/0.5 < 0.5
+2018-03-16 19:08:11,626 - orbit - INFO -  BPM:BPME.2830.SA3 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 19:08:11,626 - orbit - INFO -  BPM:BPME.2836.SA3 unchecked -> 0.01/0.5 < 0.5
+2018-03-16 19:08:11,626 - orbit - INFO -  BPM:BPME.2849.SA3 unchecked -> -0.11/0.5 < 0.5
+2018-03-16 19:08:11,627 - orbit - INFO -  BPM:BPME.2861.SA3 unchecked -> 0.06/0.5 < 0.5
+2018-03-16 19:08:11,627 - orbit - INFO -  BPM:BPME.2885.SA3 unchecked -> 0.15/0.5 < 0.5
+2018-03-16 19:08:11,627 - orbit - INFO -  BPM:BPME.2891.SA3 unchecked -> -0.02/0.5 < 0.5
+2018-03-16 19:08:11,670 - orbit - INFO - correct: ... 
+2018-03-16 19:08:11,738 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:12,536 - orbit - INFO -  BPM:BPMA.2596.T4 unchecked -> 0.18/0.5 < 0.5
+2018-03-16 19:08:12,536 - orbit - INFO -  BPM:BPMA.2621.T4 unchecked -> 0.2/0.5 < 0.5
+2018-03-16 19:08:12,536 - orbit - INFO -  BPM:BPMA.2663.T4 unchecked -> -0.04/0.5 < 0.5
+2018-03-16 19:08:12,536 - orbit - INFO -  BPM:BPMA.2785.T4 unchecked -> -0.25/0.5 < 0.5
+2018-03-16 19:08:12,537 - orbit - INFO -  BPM:BPME.2897.SA3 unchecked -> 0.13/0.5 < 0.5
+2018-03-16 19:08:12,537 - orbit - INFO -  BPM:BPME.2928.SA3 unchecked -> 0.24/0.5 < 0.5
+2018-03-16 19:08:12,580 - orbit - INFO - correct: ... 
+2018-03-16 19:08:12,673 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:37,231 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:08:38,877 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:08:38,955 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:08:40,349 - orbit - INFO - correct: ... 
+2018-03-16 19:08:40,395 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:41,028 - orbit - INFO - correct: ... 
+2018-03-16 19:08:41,056 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:41,604 - orbit - INFO - correct: ... 
+2018-03-16 19:08:41,632 - orbit - INFO - correct: ... OK
+2018-03-16 19:08:49,767 - orbit - INFO - correct: ... 
+2018-03-16 19:08:49,808 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-16 19:08:51,974 - orbit - INFO - correct: ... OK
+2018-03-16 19:10:15,517 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:10:17,110 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:10:17,171 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:11:52,862 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:11:54,264 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:11:54,331 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:17:01,206 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:17:02,653 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:17:02,720 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:17:04,382 - orbit - INFO - correct: ... 
+2018-03-16 19:17:04,426 - orbit - INFO - correct: ... OK
+2018-03-16 19:17:59,376 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 19:18:00,786 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 19:18:00,855 - __main__ - ERROR - No style sheet found!
+2018-03-16 19:18:04,232 - orbit - INFO - correct: ... 
+2018-03-16 19:18:04,277 - orbit - INFO - correct: ... OK
+2018-03-16 21:42:12,801 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 21:42:14,684 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 21:42:14,797 - __main__ - ERROR - No style sheet found!
+2018-03-16 21:42:49,705 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-16 21:42:51,305 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-16 21:42:51,376 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:16:48,085 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:16:49,950 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:16:50,014 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:17:23,631 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:25,711 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:27,719 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:29,736 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:31,787 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:33,737 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:38,009 - orbit - INFO - correct: ... 
+2018-03-17 08:17:38,319 - orbit - INFO - correct: ... OK
+2018-03-17 08:17:39,697 - orbit - INFO - correct: ... 
+2018-03-17 08:17:39,889 - orbit - INFO - correct: ... OK
+2018-03-17 08:17:44,165 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:46,271 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:48,221 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:50,222 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:52,227 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:54,282 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:56,225 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:17:58,222 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:18:00,231 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:18:02,283 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:18:21,083 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:18:22,442 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:18:22,508 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:18:25,141 - orbit - INFO - correct: ... 
+2018-03-17 08:18:25,195 - orbit - INFO - correct: ... OK
+2018-03-17 08:23:35,005 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:23:36,415 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:23:36,488 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:24:45,975 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:24:47,402 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:24:47,473 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:24:50,078 - orbit - INFO - correct: ... 
+2018-03-17 08:24:50,122 - orbit - INFO - correct: ... OK
+2018-03-17 08:31:35,286 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:31:36,719 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:31:36,783 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:31:41,559 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:43,658 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:45,659 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:47,658 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:49,661 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:51,660 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:53,659 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:55,659 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:31:58,496 - orbit - INFO - correct: ... 
+2018-03-17 08:31:58,542 - orbit - INFO - correct: ... OK
+2018-03-17 08:32:05,161 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:07,159 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:09,160 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:11,160 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:13,160 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:15,160 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:20,250 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:21,316 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:22,384 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:23,453 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:24,524 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:25,641 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:26,710 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:32:27,774 - orbit - INFO - auto_correction: no beam
+2018-03-17 08:33:49,392 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 08:33:50,777 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 08:33:50,843 - __main__ - ERROR - No style sheet found!
+2018-03-17 08:34:22,527 - orbit - INFO - correct: ... 
+2018-03-17 08:34:22,576 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-17 08:34:25,779 - orbit - INFO - correct: ... OK
+2018-03-17 10:14:14,240 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 10:14:16,110 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 10:14:16,181 - __main__ - ERROR - No style sheet found!
+2018-03-17 10:14:39,416 - orbit - INFO - correct: ... 
+2018-03-17 10:14:39,465 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-17 10:14:42,601 - orbit - INFO - correct: ... OK
+2018-03-17 10:14:53,137 - orbit - INFO - correct: ... 
+2018-03-17 10:14:53,197 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-17 10:14:56,422 - orbit - INFO - correct: ... OK
+2018-03-17 10:15:00,787 - orbit - INFO - correct: ... 
+2018-03-17 10:15:00,855 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-17 10:15:04,015 - orbit - INFO - correct: ... OK
+2018-03-17 10:15:12,770 - orbit - INFO - correct: ... 
+2018-03-17 10:15:12,830 - orbit - ERROR - load_response_matrices: No Dispersion Response Matrix. Setting: self.orbit.disp_response_matrix = None
+2018-03-17 10:15:15,969 - orbit - INFO - correct: ... OK
+2018-03-17 10:27:29,458 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-17 10:27:31,078 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-17 10:27:31,148 - __main__ - ERROR - No style sheet found!
+2018-03-20 10:19:28,749 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-20 10:19:30,714 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-20 10:19:30,809 - __main__ - ERROR - No style sheet found!
+2018-03-20 10:19:51,415 - adaptive_feedback - INFO - debug_mode = True
+2018-03-20 10:19:53,072 - adaptive_feedback - INFO - Stop Feedback
+2018-03-20 10:19:53,072 - adaptive_feedback - INFO - Stop Feedback
+2018-03-20 10:19:53,073 - adaptive_feedback - INFO - Stop Statistics
+2018-03-20 10:46:53,750 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-20 10:46:55,031 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-20 10:46:55,098 - __main__ - ERROR - No style sheet found!
+2018-03-20 16:50:00,114 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-20 16:50:01,556 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-20 16:50:01,626 - __main__ - ERROR - No style sheet found!
+2018-03-20 16:50:10,607 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-20 16:50:13,870 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-20 16:50:15,219 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-20 16:50:15,295 - __main__ - ERROR - No style sheet found!
