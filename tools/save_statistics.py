@@ -10,15 +10,15 @@ class Write10Hz(Thread):
     def __init__(self, mi):
         super(Write10Hz, self).__init__()
         self.indx = 0
-        self.nentries = 10
+        self.nentries = 1000
         self.delay = 0.1
         self.kill = False
         self.mi = mi
-        self.filename_con = "data_10Hz"
+        self.filename_con = "data_10Hz_screen"
         self.filename = self.filename_con + "_0"
         self.clean_data()
         self.n_subfile = 0
-        self.ndata_max = 100
+        self.ndata_max = 10000
 
     def clean_data(self):
         self.pointing = []
@@ -78,9 +78,10 @@ class Write10Hz(Thread):
 
         # print("indx = ", self.indx)
         if self.indx > 0 and self.indx % self.nentries == 0:
-            print("save", len(self.x_orbits))
+            print("save", len(self.x_orbits), "dT = ", time.time() - self.start)
             np.savez(self.filename + ".npz", orbit_x=self.x_orbits, orbit_y=self.y_orbits,
-                     orbit_time=self.orb_times, pointing=self.pointing, bpm_names=names, fb_status=self.fb)
+                     orbit_time=self.orb_times, pointing=self.pointing, bpm_names=names, fb_status=self.fb, energy=self.energy)
+            self.start = time.time()
 
         if self.indx > 0 and self.indx % self.ndata_max == 0:
             self.n_subfile += 1
@@ -90,6 +91,7 @@ class Write10Hz(Thread):
 
     def run(self):
         print("run")
+        self.start = time.time()
         while not self.kill:
             # print("here")
             self.read()

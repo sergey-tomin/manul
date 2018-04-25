@@ -19,8 +19,8 @@ import logging
 
 # filename="logs/afb.log",
 #filename="logs/manul.log"
-logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-#logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH to main file: " + os.path.realpath(__file__) + " path to folder"+ path[:indx])
@@ -69,7 +69,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.config_dir = self.path2manul + "manul" + os.sep + "configs" + os.sep
         self.config_file = self.config_dir + "settings.json"
         self.gui_dir = self.path2manul + "manul" + os.sep + "gui" + os.sep
-        self.gold_orbits_dir = self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
+        self.gold_orbits_dir = "/home/xfeloper/data/golden_orbits/" # self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
         self.set_file = self.config_dir + "default.json" # ./parameters/default.json"
@@ -81,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -161,9 +161,8 @@ class ManulInterfaceWindow(QMainWindow):
     def get_charge_bunch(self):
         if self.charge_from_doocs:
             charge = ChargeDoocs()
+            charge.mi = self.mi
             self.bunch_charge = charge.get_value()
-
-
 
     def change_subtrain(self):
 
@@ -480,8 +479,6 @@ class ManulInterfaceWindow(QMainWindow):
         #if current_lat != "Arbitrary":
         #    return 0
 
-        self.get_charge_bunch()
-
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
         if lat_to - 30 < lat_from:
@@ -503,6 +500,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.orbit.choose_plane()
 
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
+        self.get_charge_bunch()
         logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
         current_lat = self.ui.cb_lattice.currentText()

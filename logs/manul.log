@@ -1225,3 +1225,37 @@
 2018-03-20 16:50:13,870 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
 2018-03-20 16:50:15,219 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
 2018-03-20 16:50:15,295 - __main__ - ERROR - No style sheet found!
+2018-03-27 11:21:05,956 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-03-27 11:21:07,838 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-03-27 11:21:07,927 - __main__ - ERROR - No style sheet found!
+2018-04-09 13:29:27,562 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-04-09 13:29:29,472 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-04-09 13:29:29,552 - __main__ - ERROR - No style sheet found!
+2018-04-09 13:29:56,141 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-04-09 13:29:57,397 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-04-09 13:29:57,460 - __main__ - ERROR - No style sheet found!
+2018-04-09 14:24:44,234 - orbit - INFO - Apply Kicks
+2018-04-09 14:24:46,539 - orbit - INFO - correct: ... 
+2018-04-09 14:24:46,654 - orbit - INFO - correct: ... OK
+2018-04-09 14:24:47,205 - orbit - INFO - Apply Kicks
+2018-04-09 14:24:48,539 - orbit - INFO - correct: ... 
+2018-04-09 14:24:48,569 - orbit - INFO - correct: ... OK
+2018-04-09 14:24:49,061 - orbit - INFO - Apply Kicks
+2018-04-09 14:24:49,821 - orbit - INFO - correct: ... 
+2018-04-09 14:24:49,852 - orbit - INFO - correct: ... OK
+2018-04-09 14:24:50,321 - orbit - INFO - Apply Kicks
+2018-04-09 15:07:40,271 - adaptive_feedback - INFO - debug_mode = True
+2018-04-09 15:09:38,371 - adaptive_feedback - INFO - Load State
+2018-04-09 15:09:38,372 - orbit - INFO - correct: ... 
+2018-04-09 15:09:38,478 - orbit - INFO - correct: ... OK
+2018-04-09 15:36:06,548 - adaptive_feedback - INFO - Stop Feedback
+2018-04-09 15:36:06,550 - adaptive_feedback - INFO - Stop Feedback
+2018-04-09 15:36:06,550 - adaptive_feedback - INFO - Stop Statistics
+2018-04-10 08:58:26,086 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-04-10 08:58:27,560 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-04-10 08:58:27,642 - __main__ - ERROR - No style sheet found!
+2018-04-10 09:14:43,819 - orbit - INFO - correct: ... 
+2018-04-10 09:14:43,919 - orbit - INFO - correct: ... OK
+2018-04-25 13:36:57,528 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-04-25 13:36:59,169 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-04-25 13:36:59,272 - __main__ - ERROR - No style sheet found!

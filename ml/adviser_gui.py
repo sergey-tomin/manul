@@ -28,6 +28,7 @@ class ManulAdviser(QWidget):
         # self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
 
         self.mi_adv = MIAdviser()
+        self.mi_adv.bpm_server = "ORBIT" #"BPM" #
         self.mi_adv.mi = self.master.mi
         self.flag_dump_bpm = self.ui.cb_remove_dump_bpm.isChecked()
         self.adviser = Adviser(cor_file="./ml/cor_essence.json", bpm_file="./ml/bpm_essence.json", dump=not(self.flag_dump_bpm))
@@ -64,8 +65,10 @@ class ManulAdviser(QWidget):
             golden_orbit[name] = [self.go_bpm_x[i]/1000, self.go_bpm_y[i]/1000] # mm -> m
 
     def set_slider(self):
+        
         min_sase = np.min(self.adviser.sases)
         max_sase = np.max(self.adviser.sases)
+        print("SASE = ", min_sase, max_sase, self.adviser.sases)
         self.ui.horizontalSlider.setMinimum(min_sase)
         self.ui.horizontalSlider.setMaximum(max_sase)
         self.ui.lab_sase_max.setText(str(max_sase))
