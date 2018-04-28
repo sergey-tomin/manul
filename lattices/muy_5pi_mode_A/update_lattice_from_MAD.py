@@ -1,24 +1,24 @@
 from ocelot import *
 from ocelot.gui.accelerator import *
 import i1
-import l1
-import l2
-import l3
-import cl
+import l1_full
+import l2_full
+import l3_full
+import cl_full
 import sase1
 import b2d
 #from ocelot.test.xfel_lat.I1 import *
 import numpy as np
 from copy import deepcopy
 
-c_lat = i1
+c_lat = cl_full
 
 #undu_49_i1.lperiod = 0.074
 #undu_49_i1.nperiods = 10
 #undu_49_i1.Kx = 1.935248
 #undu_49_i1.l = 0.74
 # Undulator(lperiod=0.074, nperiods=10, Kx=1.935248*2, Ky=0.0, eid='UNDU.49.I1')
-lat = MagneticLattice( c_lat.cell + l1.cell + l2.cell + l3.cell + cl.cell)# + l1.cell + l2.cell + b2d.cell) #+cell_l1 + cell_l2 + cell_l3)
+lat = MagneticLattice( c_lat.cell )# + l1.cell + l2.cell + b2d.cell) #+cell_l1 + cell_l2 + cell_l3)
 
 #lat.update_transfer_maps()
 for elem in lat.sequence:
@@ -55,15 +55,15 @@ for line in f:
             params[parts[0]] = [float(p) for p in parts[1:]]
         #print(parts)
     #print(line)
-marker_imp = ["OTR", "TORA"]
+marker_imp = ["OTR", "TORA", 'ENGRD.419.B2', 'MPBPMI.1693.CL', 'BPMR.1307.L3']
 L = 0
 elems = []
 for elem in lat.sequence:
     L += elem.l
     if elem.__class__ == Drift:
         continue
-    #if elem.__class__ == Marker and len([mark for mark in marker_imp if mark in elem.id]) == 0 and elem not in [lat.sequence[0], lat.sequence[-1]] :
-    #    continue
+    if elem.__class__ == Marker and len([mark for mark in marker_imp if mark in elem.id]) == 0 and elem not in [lat.sequence[0], lat.sequence[-1]] :
+        continue
     elems.append([elem, L-elem.l/2.])
     if "ps_id" in dir(elem):
 
@@ -102,19 +102,19 @@ for elem in lat.sequence:
             #if ".L1" in elem.id:
             #    elem.v =14.6875*0.001
 
-#from ocelot.cpbd.magnetic_lattice import lattice_format_converter as lconvector
+from ocelot.cpbd.magnetic_lattice import lattice_format_converter as lconvector
+
+cell = lconvector(elems)
+#for elem in cell:
+#    print(elem.id, elem.l)
+
+lat = MagneticLattice(cell)
+write_lattice(lat, file_name="cl.py", power_supply=True)
 #
-#cell = lconvector(elems)
-##for elem in cell:
-##    print(elem.id, elem.l)
-#
-#lat = MagneticLattice(cell)
-#write_lattice(lat, file_name="cl_full.py", power_supply=True)
-##
-#import cl_full
-#lat = MagneticLattice(cl_full.cell)
+import cl
+lat = MagneticLattice(cl.cell)
 ##undu_49_i1.Kx = 0
-lat.update_transfer_maps()
+#lat.update_transfer_maps()
 
 #tws0 = Twiss()
 #tws0.E = 0.005000000

@@ -24,51 +24,53 @@ d_21 = Drift(l=4.2, eid='D_21')
 d_22 = Drift(l=0.45, eid='D_22')
 d_23 = Drift(l=1.6918, eid='D_23')
 d_24 = Drift(l=0.42575, eid='D_24')
-d_28 = Drift(l=1.7, eid='D_28')
-d_29 = Drift(l=4.6418, eid='D_29')
-d_32 = Drift(l=0.93, eid='D_32')
-d_33 = Drift(l=1.550002, eid='D_33')
-d_34 = Drift(l=2.491802, eid='D_34')
-d_60 = Drift(l=0.38, eid='D_60')
-d_61 = Drift(l=0.675, eid='D_61')
-d_68 = Drift(l=1.31895, eid='D_68')
-d_71 = Drift(l=3.28395, eid='D_71')
-d_74 = Drift(l=2.28395, eid='D_74')
-d_77 = Drift(l=0.4343, eid='D_77')
-d_78 = Drift(l=1.849647, eid='D_78')
-d_84 = Drift(l=0.685, eid='D_84')
-d_91 = Drift(l=1.30895, eid='D_91')
-d_137 = Drift(l=0.2168, eid='D_137')
-d_140 = Drift(l=0.69, eid='D_140')
-d_143 = Drift(l=0.5709, eid='D_143')
-d_145 = Drift(l=0.41295, eid='D_145')
-d_146 = Drift(l=0.3975, eid='D_146')
-d_147 = Drift(l=2.1825, eid='D_147')
-d_148 = Drift(l=0.33645, eid='D_148')
-d_151 = Drift(l=2.425, eid='D_151')
-d_154 = Drift(l=3.855, eid='D_154')
-d_157 = Drift(l=4.8525, eid='D_157')
-d_158 = Drift(l=2.71145, eid='D_158')
-d_159 = Drift(l=2.50395, eid='D_159')
-d_160 = Drift(l=4.3525, eid='D_160')
-d_162 = Drift(l=2.53395, eid='D_162')
-d_163 = Drift(l=4.1, eid='D_163')
-d_164 = Drift(l=7.73395, eid='D_164')
-d_167 = Drift(l=3.525, eid='D_167')
-d_172 = Drift(l=1.2775, eid='D_172')
-d_173 = Drift(l=6.45645, eid='D_173')
-d_175 = Drift(l=1.5025, eid='D_175')
-d_176 = Drift(l=0.5775, eid='D_176')
-d_177 = Drift(l=11.933951, eid='D_177')
-d_179 = Drift(l=0.64, eid='D_179')
-d_180 = Drift(l=1.285, eid='D_180')
-d_181 = Drift(l=0.208951, eid='D_181')
-d_182 = Drift(l=0.153951, eid='D_182')
-d_183 = Drift(l=0.2, eid='D_183')
-d_184 = Drift(l=9.0692, eid='D_184')
-d_185 = Drift(l=0.1, eid='D_185')
-d_186 = Drift(l=0.15, eid='D_186')
-d_188 = Drift(l=1.86074, eid='D_188')
+d_28 = Drift(l=0.096, eid='D_28')
+d_29 = Drift(l=1.604, eid='D_29')
+d_30 = Drift(l=4.6418, eid='D_30')
+d_33 = Drift(l=0.93, eid='D_33')
+d_34 = Drift(l=1.550002, eid='D_34')
+d_35 = Drift(l=2.491802, eid='D_35')
+d_52 = Drift(l=1.7, eid='D_52')
+d_61 = Drift(l=0.38, eid='D_61')
+d_62 = Drift(l=0.675, eid='D_62')
+d_69 = Drift(l=1.31895, eid='D_69')
+d_72 = Drift(l=3.28395, eid='D_72')
+d_75 = Drift(l=2.28395, eid='D_75')
+d_78 = Drift(l=0.4343, eid='D_78')
+d_79 = Drift(l=1.849647, eid='D_79')
+d_85 = Drift(l=0.685, eid='D_85')
+d_92 = Drift(l=1.30895, eid='D_92')
+d_138 = Drift(l=0.2168, eid='D_138')
+d_141 = Drift(l=0.69, eid='D_141')
+d_144 = Drift(l=0.5709, eid='D_144')
+d_146 = Drift(l=0.41295, eid='D_146')
+d_147 = Drift(l=0.3975, eid='D_147')
+d_148 = Drift(l=2.1825, eid='D_148')
+d_149 = Drift(l=0.33645, eid='D_149')
+d_152 = Drift(l=2.425, eid='D_152')
+d_155 = Drift(l=3.855, eid='D_155')
+d_158 = Drift(l=4.8525, eid='D_158')
+d_159 = Drift(l=2.71145, eid='D_159')
+d_160 = Drift(l=2.50395, eid='D_160')
+d_161 = Drift(l=4.3525, eid='D_161')
+d_163 = Drift(l=2.53395, eid='D_163')
+d_164 = Drift(l=4.1, eid='D_164')
+d_165 = Drift(l=7.73395, eid='D_165')
+d_168 = Drift(l=3.525, eid='D_168')
+d_173 = Drift(l=1.2775, eid='D_173')
+d_174 = Drift(l=6.45645, eid='D_174')
+d_176 = Drift(l=1.5025, eid='D_176')
+d_177 = Drift(l=0.5775, eid='D_177')
+d_178 = Drift(l=11.933951, eid='D_178')
+d_180 = Drift(l=0.64, eid='D_180')
+d_181 = Drift(l=1.285, eid='D_181')
+d_182 = Drift(l=0.208951, eid='D_182')
+d_183 = Drift(l=0.153951, eid='D_183')
+d_184 = Drift(l=0.2, eid='D_184')
+d_185 = Drift(l=9.0692, eid='D_185')
+d_186 = Drift(l=0.1, eid='D_186')
+d_187 = Drift(l=0.15, eid='D_187')
+d_189 = Drift(l=1.86074, eid='D_189')
 
 # quadrupoles 
 qf_1660_cl = Quadrupole(l=0.5321, k1=0.1781886453, tilt=0.0, eid='QF.1660.CL')
@@ -193,6 +195,7 @@ cny_1977_tl = Vcor(l=0.3, angle=0.0, eid='CNY.1977.TL')
 stblock_1652_cl = Marker(eid='STBLOCK.1652.CL')
 tora_1658_cl = Marker(eid='TORA.1658.CL')
 otrb_1689_cl = Marker(eid='OTRB.1689.CL')
+mpbpmi_1693_cl = Marker(eid='MPBPMI.1693.CL')
 otrb_1725_cl = Marker(eid='OTRB.1725.CL')
 tora_1765_cl = Marker(eid='TORA.1765.CL')
 otrb_1797_cl = Marker(eid='OTRB.1797.CL')
@@ -293,47 +296,47 @@ d_12, qf_1673_cl, d_4, cfy_1674_cl, d_14, sa_1674_cl, d_15, bpmi_1675_cl,
 d_16, be_1678_cl, d_17, qf_1682_cl, d_4, cfx_1683_cl, d_14, sa_1683_cl, 
 d_15, bpma_1684_cl, d_21, bl_1688_cl, d_22, otrb_1689_cl, d_23, sa_1691_cl, 
 d_24, qf_1691_cl, d_4, cfy_1692_cl, d_14, sa_1692_cl, d_15, bpmi_1693_cl, 
-d_28, bl_1695_cl, d_29, sa_1700_cl, d_24, qf_1700_cl, d_4, cfx_1701_cl, 
-d_32, bpma_1702_cl, d_33, be_1705_cl, d_34, sa_1708_cl, d_24, qf_1709_cl, 
-d_4, cfy_1710_cl, d_14, sa_1710_cl, d_15, bpma_1711_cl, d_16, be_1714_cl, 
-d_17, qf_1718_cl, d_4, cfx_1719_cl, d_14, sa_1719_cl, d_15, bpma_1720_cl, 
-d_21, bl_1724_cl, d_22, otrb_1725_cl, d_23, sa_1726_cl, d_24, qf_1727_cl, 
-d_4, cfy_1728_cl, d_14, sa_1728_cl, d_15, bpmi_1729_cl, d_28, bl_1731_cl, 
-d_29, sa_1736_cl, d_24, qf_1736_cl, d_4, cfx_1737_cl, d_32, bpma_1738_cl, 
-d_33, be_1741_cl, d_34, sa_1744_cl, d_24, qf_1745_cl, d_4, cfy_1746_cl, 
-d_60, bpma_1746_cl, d_61, chx_1747_cl, d_6, qh_1748_cl, d_7, qh_1749_cl, 
-d_8, bpma_1750_cl, d_9, qh_1751_cl, d_7, qh_1752_cl, d_6, chy_1753_cl, 
-d_68, qf_1754_cl, d_4, cfx_1755_cl, d_32, bpma_1756_cl, d_71, qf_1759_cl, 
-d_4, cfy_1760_cl, d_32, bpma_1761_cl, d_74, qf_1763_cl, d_4, cfx_1764_cl, 
-d_32, bpma_1765_cl, d_77, tora_1765_cl, d_78, qf_1767_cl, d_4, cfy_1768_cl, 
-d_32, bpma_1769_cl, d_71, qf_1772_cl, d_4, cfx_1773_cl, d_60, bpma_1773_cl, 
-d_84, chy_1774_cl, d_6, qh_1775_cl, d_7, qh_1776_cl, d_8, bpma_1777_cl, 
-d_9, qh_1778_cl, d_7, qh_1779_cl, d_6, chx_1780_cl, d_91, qf_1781_cl, 
-d_4, cfy_1782_cl, d_14, sa_1782_cl, d_15, bpma_1783_cl, d_16, be_1786_cl, 
-d_17, qf_1790_cl, d_4, cfx_1791_cl, d_14, sa_1791_cl, d_15, bpma_1792_cl, 
-d_21, bl_1796_cl, d_22, otrb_1797_cl, d_23, sa_1798_cl, d_24, qf_1799_cl, 
-d_4, cfy_1800_cl, d_14, sa_1800_cl, d_15, bpma_1801_cl, d_28, bl_1803_cl, 
-d_29, sa_1808_cl, d_24, qf_1808_cl, d_4, cfx_1809_cl, d_32, bpma_1810_cl, 
-d_33, be_1813_cl, d_34, sa_1816_cl, d_24, qf_1817_cl, d_4, cfy_1818_cl, 
-d_14, sa_1818_cl, d_15, bpma_1819_cl, d_16, be_1822_cl, d_17, qf_1826_cl, 
-d_4, cfx_1827_cl, d_14, sa_1827_cl, d_15, bpma_1828_cl, d_21, bl_1832_cl, 
-d_22, otrb_1833_cl, d_23, sa_1834_cl, d_24, qf_1835_cl, d_4, cfy_1836_cl, 
-d_14, sa_1836_cl, d_15, bpmi_1837_cl, d_28, bl_1839_cl, d_29, sa_1844_cl, 
-d_24, qf_1844_cl, d_4, cfx_1845_cl, d_32, bpma_1846_cl, d_33, be_1849_cl, 
-d_34, sa_1852_cl, d_137, bpma_1853_cl, d_3, qf_1853_cl, d_4, cfy_1854_tl, 
-d_140, chx_1855_tl, d_6, qh_1855_tl, d_7, qh_1857_tl, d_143, qh_1858_tl, 
-d_7, qh_1859_tl, d_145, bpmi_1860_tl, d_146, chy_1861_tl, d_147, bpmi_1863_tl, 
-d_148, qf_1864_tl, d_4, cfx_1864_tl, d_32, tora_1865_tl, d_151, bpma_1868_tl, 
-d_3, qf_1868_tl, d_4, cfy_1869_tl, d_154, bpma_1873_tl, d_3, qf_1873_tl, 
-d_4, cfx_1873_tl, d_157, bpmi_1878_tl, d_158, qf_1881_tl, d_159, cfy_1884_tl, 
-d_160, bpmi_1889_tl, d_158, qf_1892_tl, d_162, cfx_1894_tl, d_163, otrbw_1899_tl, 
-d_164, qf_1907_tl, d_158, bpmi_1910_tl, d_146, cfy_1910_tl, d_167, otrbw_1914_tl, 
-d_164, qf_1922_tl, d_158, bpmi_1925_tl, d_146, cfx_1925_tl, d_167, otrbw_1929_tl, 
-d_172, bpmi_1930_tl, d_173, qf_1937_tl, d_4, cfy_1937_tl, d_175, bpmi_1939_tl, 
-d_176, bl_1939_tl, d_177, qf_1952_tl, d_177, bl_1964_tl, d_179, chx_1965_tl, 
-d_180, bpma_1966_tl, d_181, qf_1967_tl, d_182, chx_1967_tl, d_183, chy_1967_tl, 
-d_184, cnx_1977_tl, d_185, cny_1977_tl, d_186, bpmd_1977_tl, d_183, otre_1978_tl, 
-d_188, ensub_1980_tl)
+d_28, mpbpmi_1693_cl, d_29, bl_1695_cl, d_30, sa_1700_cl, d_24, qf_1700_cl, 
+d_4, cfx_1701_cl, d_33, bpma_1702_cl, d_34, be_1705_cl, d_35, sa_1708_cl, 
+d_24, qf_1709_cl, d_4, cfy_1710_cl, d_14, sa_1710_cl, d_15, bpma_1711_cl, 
+d_16, be_1714_cl, d_17, qf_1718_cl, d_4, cfx_1719_cl, d_14, sa_1719_cl, 
+d_15, bpma_1720_cl, d_21, bl_1724_cl, d_22, otrb_1725_cl, d_23, sa_1726_cl, 
+d_24, qf_1727_cl, d_4, cfy_1728_cl, d_14, sa_1728_cl, d_15, bpmi_1729_cl, 
+d_52, bl_1731_cl, d_30, sa_1736_cl, d_24, qf_1736_cl, d_4, cfx_1737_cl, 
+d_33, bpma_1738_cl, d_34, be_1741_cl, d_35, sa_1744_cl, d_24, qf_1745_cl, 
+d_4, cfy_1746_cl, d_61, bpma_1746_cl, d_62, chx_1747_cl, d_6, qh_1748_cl, 
+d_7, qh_1749_cl, d_8, bpma_1750_cl, d_9, qh_1751_cl, d_7, qh_1752_cl, 
+d_6, chy_1753_cl, d_69, qf_1754_cl, d_4, cfx_1755_cl, d_33, bpma_1756_cl, 
+d_72, qf_1759_cl, d_4, cfy_1760_cl, d_33, bpma_1761_cl, d_75, qf_1763_cl, 
+d_4, cfx_1764_cl, d_33, bpma_1765_cl, d_78, tora_1765_cl, d_79, qf_1767_cl, 
+d_4, cfy_1768_cl, d_33, bpma_1769_cl, d_72, qf_1772_cl, d_4, cfx_1773_cl, 
+d_61, bpma_1773_cl, d_85, chy_1774_cl, d_6, qh_1775_cl, d_7, qh_1776_cl, 
+d_8, bpma_1777_cl, d_9, qh_1778_cl, d_7, qh_1779_cl, d_6, chx_1780_cl, 
+d_92, qf_1781_cl, d_4, cfy_1782_cl, d_14, sa_1782_cl, d_15, bpma_1783_cl, 
+d_16, be_1786_cl, d_17, qf_1790_cl, d_4, cfx_1791_cl, d_14, sa_1791_cl, 
+d_15, bpma_1792_cl, d_21, bl_1796_cl, d_22, otrb_1797_cl, d_23, sa_1798_cl, 
+d_24, qf_1799_cl, d_4, cfy_1800_cl, d_14, sa_1800_cl, d_15, bpma_1801_cl, 
+d_52, bl_1803_cl, d_30, sa_1808_cl, d_24, qf_1808_cl, d_4, cfx_1809_cl, 
+d_33, bpma_1810_cl, d_34, be_1813_cl, d_35, sa_1816_cl, d_24, qf_1817_cl, 
+d_4, cfy_1818_cl, d_14, sa_1818_cl, d_15, bpma_1819_cl, d_16, be_1822_cl, 
+d_17, qf_1826_cl, d_4, cfx_1827_cl, d_14, sa_1827_cl, d_15, bpma_1828_cl, 
+d_21, bl_1832_cl, d_22, otrb_1833_cl, d_23, sa_1834_cl, d_24, qf_1835_cl, 
+d_4, cfy_1836_cl, d_14, sa_1836_cl, d_15, bpmi_1837_cl, d_52, bl_1839_cl, 
+d_30, sa_1844_cl, d_24, qf_1844_cl, d_4, cfx_1845_cl, d_33, bpma_1846_cl, 
+d_34, be_1849_cl, d_35, sa_1852_cl, d_138, bpma_1853_cl, d_3, qf_1853_cl, 
+d_4, cfy_1854_tl, d_141, chx_1855_tl, d_6, qh_1855_tl, d_7, qh_1857_tl, 
+d_144, qh_1858_tl, d_7, qh_1859_tl, d_146, bpmi_1860_tl, d_147, chy_1861_tl, 
+d_148, bpmi_1863_tl, d_149, qf_1864_tl, d_4, cfx_1864_tl, d_33, tora_1865_tl, 
+d_152, bpma_1868_tl, d_3, qf_1868_tl, d_4, cfy_1869_tl, d_155, bpma_1873_tl, 
+d_3, qf_1873_tl, d_4, cfx_1873_tl, d_158, bpmi_1878_tl, d_159, qf_1881_tl, 
+d_160, cfy_1884_tl, d_161, bpmi_1889_tl, d_159, qf_1892_tl, d_163, cfx_1894_tl, 
+d_164, otrbw_1899_tl, d_165, qf_1907_tl, d_159, bpmi_1910_tl, d_147, cfy_1910_tl, 
+d_168, otrbw_1914_tl, d_165, qf_1922_tl, d_159, bpmi_1925_tl, d_147, cfx_1925_tl, 
+d_168, otrbw_1929_tl, d_173, bpmi_1930_tl, d_174, qf_1937_tl, d_4, cfy_1937_tl, 
+d_176, bpmi_1939_tl, d_177, bl_1939_tl, d_178, qf_1952_tl, d_178, bl_1964_tl, 
+d_180, chx_1965_tl, d_181, bpma_1966_tl, d_182, qf_1967_tl, d_183, chx_1967_tl, 
+d_184, chy_1967_tl, d_185, cnx_1977_tl, d_186, cny_1977_tl, d_187, bpmd_1977_tl, 
+d_184, otre_1978_tl, d_189, ensub_1980_tl)
 # power supplies 
 
 #  
