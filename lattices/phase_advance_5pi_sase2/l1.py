@@ -489,7 +489,7 @@ c_a2_4_5_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000000.0, phi=0.0, eid='C.A
 c_a2_4_6_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000000.0, phi=0.0, eid='C.A2.4.6.L1')
 c_a2_4_7_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000000.0, phi=0.0, eid='C.A2.4.7.L1')
 c_a2_4_8_l1 = Cavity(l=1.0377, v=0.0178125, freq=1300000000.0, phi=0.0, eid='C.A2.4.8.L1')
-tdsb_208_b1 = Cavity(l=1.5, v=0.0, freq=2800000.0, phi=0.0, eid='TDSB.208.B1')
+tdsb_208_b1 = TDCavity(l=1.5, v=0.0, freq=2997000.0, phi=0.0, eid='TDSB.208.B1')
 
 # UnknowElement 
 

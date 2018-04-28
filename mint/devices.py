@@ -177,6 +177,34 @@ class BPM(Device):
         x = self.mi.get_value(self.server + ".DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
+    def get_ref_pos(self):
+        """
+        Ref orbit only exists in ORBIT server not BPM
+        channel ../POS.ALL.REF returns list [validation, x, y, z_pos, bpm_name]
+        where validation = 0 - valid readings,
+              x and y - ref beam position
+              z_pos - position of BPM and
+
+        :return:
+        """
+        ch = self.server + ".DIAG/ORBIT/" + self.eid + "/POS." + self.subtrain + ".REF"
+        valid, x, y, z_pos, name = self.mi.get_value(ch)[0]
+        return valid, x, y
+
+    def get_gold_pos(self):
+        """
+        Ref orbit only exists in ORBIT server not BPM
+        channel ../POS.ALL.REF returns list [validation, x, y, z_pos, bpm_name]
+        where validation = 0 - valid readings,
+              x and y - ref beam position
+              z_pos - position of BPM and
+
+        :return:
+        """
+        ch = self.server + ".DIAG/ORBIT/" + self.eid + "/POS." + self.subtrain + ".GOLD"
+        valid, x, y, z_pos, name = self.mi.get_value(ch)[0]
+        return valid, x, y
+
 class DeviceUI:
     def __init__(self, ui=None):
         self.tableWidget = None
@@ -370,6 +398,32 @@ class MIOrbit(Device):
             bpm.y = self.mean_y[inx]/1000      # [mm] -> [m]
             bpm.charge = self.mean_charge[inx] # nC
         return True
+
+    def read_doocs_ref_orbit(self):
+        """
+        Ref orbit only exists in ORBIT server not BPM
+        channel ../POS.ALL.REF returns list [validation, x, y, z_pos, bpm_name]
+        where validation = 0 - valid readings,
+              x and y - ref beam position
+              z_pos - position of BPM and
+
+        :return:
+        """
+        ref_orbit = self.mi.get_value(self.server + ".DIAG/" + "ORBIT" + "/*/POS." + self.subtrain + ".REF")
+        return ref_orbit
+
+    def read_doocs_gold_orbit(self):
+        """
+        Golden orbit only exists in ORBIT server not BPM
+        channel ../POS.ALL.REF returns list [validation, x, y, z_pos, bpm_name]
+        where validation = 0 - valid readings,
+              x and y - ref beam position
+              z_pos - position of BPM and
+
+        :return:
+        """
+        gold_orbit = self.mi.get_value(self.server + ".DIAG/" + "ORBIT" + "/*/POS." + self.subtrain + ".GOLD")
+        return gold_orbit
 
 class MIAdviser(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):

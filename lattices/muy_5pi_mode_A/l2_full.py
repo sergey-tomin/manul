@@ -1,10 +1,10 @@
 from ocelot import * 
 tws = Twiss()
-tws.beta_x  = 7.47960745573
-tws.beta_y  = 8.62195025642
-tws.alpha_x = -0.726528847426
-tws.alpha_y = -1.27890295717
-tws.E       = 0.6999999892
+tws.beta_x  = 7.48319123649
+tws.beta_y  = 8.79758475319
+tws.alpha_x = -0.721071482665
+tws.alpha_y = -1.31392272539
+tws.E = 0.7
 # drifts 
 d_1 = Drift(l=2.702746, eid='D_1')
 d_2 = Drift(l=0.03165, eid='D_2')
@@ -45,62 +45,62 @@ d_178 = Drift(l=0.15962, eid='D_178')
 d_179 = Drift(l=0.3, eid='D_179')
 d_180 = Drift(l=0.100073, eid='D_180')
 d_181 = Drift(l=8.507518, eid='D_181')
-d_182 = Drift(l=7.2e-05, eid='D_182')
-d_183 = Drift(l=0.865, eid='D_183')
-d_184 = Drift(l=0.31, eid='D_184')
-d_185 = Drift(l=0.325073, eid='D_185')
-d_187 = Drift(l=1.053189, eid='D_187')
-d_188 = Drift(l=7.454257, eid='D_188')
-d_191 = Drift(l=0.17, eid='D_191')
-d_192 = Drift(l=0.15198, eid='D_192')
-d_195 = Drift(l=0.3068, eid='D_195')
-d_196 = Drift(l=0.15735, eid='D_196')
-d_197 = Drift(l=0.14465, eid='D_197')
-d_198 = Drift(l=0.15002, eid='D_198')
-d_199 = Drift(l=0.34888, eid='D_199')
-d_200 = Drift(l=0.58277, eid='D_200')
-d_201 = Drift(l=0.78165, eid='D_201')
-d_203 = Drift(l=0.17888, eid='D_203')
-d_206 = Drift(l=4.0, eid='D_206')
-d_207 = Drift(l=2.39998, eid='D_207')
-d_208 = Drift(l=0.17165, eid='D_208')
-d_209 = Drift(l=0.19165, eid='D_209')
-d_210 = Drift(l=0.3899, eid='D_210')
-d_211 = Drift(l=0.247, eid='D_211')
-d_212 = Drift(l=0.43477, eid='D_212')
-d_213 = Drift(l=0.09165, eid='D_213')
-d_214 = Drift(l=0.2, eid='D_214')
-d_215 = Drift(l=0.09428, eid='D_215')
-d_216 = Drift(l=0.4, eid='D_216')
-d_217 = Drift(l=0.1467, eid='D_217')
-d_219 = Drift(l=0.09065, eid='D_219')
-d_220 = Drift(l=0.3223, eid='D_220')
-d_221 = Drift(l=0.17772, eid='D_221')
-d_223 = Drift(l=1.53165, eid='D_223')
-d_225 = Drift(l=2.23165, eid='D_225')
-d_228 = Drift(l=1.44988, eid='D_228')
-d_229 = Drift(l=1.629, eid='D_229')
-d_232 = Drift(l=0.9, eid='D_232')
-d_234 = Drift(l=2.07888, eid='D_234')
-d_236 = Drift(l=1.78153, eid='D_236')
-d_237 = Drift(l=0.35012, eid='D_237')
-d_239 = Drift(l=0.35, eid='D_239')
-d_240 = Drift(l=0.62888, eid='D_240')
-d_243 = Drift(l=1.54988, eid='D_243')
-d_244 = Drift(l=1.35012, eid='D_244')
-d_246 = Drift(l=0.10488, eid='D_246')
-d_247 = Drift(l=0.15285, eid='D_247')
-d_248 = Drift(l=1.75545, eid='D_248')
-d_249 = Drift(l=0.3501, eid='D_249')
-d_250 = Drift(l=1.1789, eid='D_250')
-d_255 = Drift(l=1.24988, eid='D_255')
-d_259 = Drift(l=1.1, eid='D_259')
-d_261 = Drift(l=0.24988, eid='D_261')
-d_262 = Drift(l=1.079, eid='D_262')
-d_263 = Drift(l=0.15275, eid='D_263')
-d_264 = Drift(l=0.37055, eid='D_264')
-d_265 = Drift(l=0.46112, eid='D_265')
-d_266 = Drift(l=0.33165, eid='D_266')
+d_182 = Drift(l=0.865072, eid='D_182')
+d_183 = Drift(l=0.31, eid='D_183')
+d_184 = Drift(l=0.325073, eid='D_184')
+d_185 = Drift(l=1.053261, eid='D_185')
+d_186 = Drift(l=7.454257, eid='D_186')
+d_187 = Drift(l=0.100072, eid='D_187')
+d_188 = Drift(l=0.17, eid='D_188')
+d_189 = Drift(l=0.15198, eid='D_189')
+d_192 = Drift(l=0.3068, eid='D_192')
+d_193 = Drift(l=0.15735, eid='D_193')
+d_194 = Drift(l=0.14465, eid='D_194')
+d_195 = Drift(l=0.15002, eid='D_195')
+d_196 = Drift(l=0.34888, eid='D_196')
+d_197 = Drift(l=0.58277, eid='D_197')
+d_198 = Drift(l=0.78165, eid='D_198')
+d_200 = Drift(l=0.17888, eid='D_200')
+d_203 = Drift(l=4.0, eid='D_203')
+d_204 = Drift(l=2.39998, eid='D_204')
+d_205 = Drift(l=0.17165, eid='D_205')
+d_206 = Drift(l=0.19165, eid='D_206')
+d_207 = Drift(l=0.3899, eid='D_207')
+d_208 = Drift(l=0.247, eid='D_208')
+d_209 = Drift(l=0.43477, eid='D_209')
+d_210 = Drift(l=0.09165, eid='D_210')
+d_211 = Drift(l=0.2, eid='D_211')
+d_212 = Drift(l=0.09428, eid='D_212')
+d_213 = Drift(l=0.4, eid='D_213')
+d_214 = Drift(l=0.1467, eid='D_214')
+d_216 = Drift(l=0.09065, eid='D_216')
+d_217 = Drift(l=0.3223, eid='D_217')
+d_218 = Drift(l=0.17772, eid='D_218')
+d_220 = Drift(l=1.53165, eid='D_220')
+d_222 = Drift(l=2.23165, eid='D_222')
+d_225 = Drift(l=1.44988, eid='D_225')
+d_226 = Drift(l=1.629, eid='D_226')
+d_229 = Drift(l=0.9, eid='D_229')
+d_231 = Drift(l=2.07888, eid='D_231')
+d_233 = Drift(l=1.78153, eid='D_233')
+d_234 = Drift(l=0.35012, eid='D_234')
+d_236 = Drift(l=0.35, eid='D_236')
+d_237 = Drift(l=0.62888, eid='D_237')
+d_240 = Drift(l=1.54988, eid='D_240')
+d_241 = Drift(l=1.35012, eid='D_241')
+d_243 = Drift(l=0.10488, eid='D_243')
+d_244 = Drift(l=0.15285, eid='D_244')
+d_245 = Drift(l=1.75545, eid='D_245')
+d_246 = Drift(l=0.3501, eid='D_246')
+d_247 = Drift(l=1.1789, eid='D_247')
+d_252 = Drift(l=1.24988, eid='D_252')
+d_256 = Drift(l=1.1, eid='D_256')
+d_258 = Drift(l=0.24988, eid='D_258')
+d_259 = Drift(l=1.079, eid='D_259')
+d_260 = Drift(l=0.15275, eid='D_260')
+d_261 = Drift(l=0.37055, eid='D_261')
+d_262 = Drift(l=0.46112, eid='D_262')
+d_263 = Drift(l=0.33165, eid='D_263')
 
 # quadrupoles 
 qd_231_b1 = Quadrupole(l=0.2367, k1=1.655730773, tilt=0.0, eid='QD.231.B1')
@@ -122,11 +122,11 @@ qd_387_b2 = Quadrupole(l=0.2367, k1=0.3351733848, tilt=0.0, eid='QD.387.B2')
 qd_388_b2 = Quadrupole(l=0.2367, k1=0.3559964322, tilt=0.0, eid='QD.388.B2')
 qd_391_b2 = Quadrupole(l=0.2367, k1=-0.7255245526, tilt=0.0, eid='QD.391.B2')
 qd_392_b2 = Quadrupole(l=0.2367, k1=0.1969960906, tilt=0.0, eid='QD.392.B2')
-qd_415_b2 = Quadrupole(l=0.2367, k1=0.169388438, tilt=0.0, eid='QD.415.B2')
-qd_417_b2 = Quadrupole(l=0.2367, k1=-0.765663913, tilt=0.0, eid='QD.417.B2')
-qd_418_b2 = Quadrupole(l=0.2367, k1=0.6775492967, tilt=0.0, eid='QD.418.B2')
-qd_425_b2 = Quadrupole(l=0.2367, k1=-1.303340781, tilt=0.0, eid='QD.425.B2')
-qd_427_b2 = Quadrupole(l=0.2367, k1=0.9388347029, tilt=0.0, eid='QD.427.B2')
+qd_415_b2 = Quadrupole(l=0.2367, k1=0.1717108241, tilt=0.0, eid='QD.415.B2')
+qd_417_b2 = Quadrupole(l=0.2367, k1=-0.7224091405, tilt=0.0, eid='QD.417.B2')
+qd_418_b2 = Quadrupole(l=0.2367, k1=0.6215463712, tilt=0.0, eid='QD.418.B2')
+qd_425_b2 = Quadrupole(l=0.2367, k1=-1.29933836, tilt=0.0, eid='QD.425.B2')
+qd_427_b2 = Quadrupole(l=0.2367, k1=0.9419328867, tilt=0.0, eid='QD.427.B2')
 qd_431_b2 = Quadrupole(l=0.2367, k1=0.4351830275, tilt=0.0, eid='QD.431.B2')
 qd_434_b2 = Quadrupole(l=0.2367, k1=-0.527858191, tilt=0.0, eid='QD.434.B2')
 qd_437_b2 = Quadrupole(l=0.2367, k1=0.4055492835, tilt=0.0, eid='QD.437.B2')
@@ -141,10 +141,10 @@ qd_464_b2 = Quadrupole(l=0.2367, k1=1.29826785, tilt=0.0, eid='QD.464.B2')
 qd_465_b2 = Quadrupole(l=0.2367, k1=-0.2468610055, tilt=0.0, eid='QD.465.B2')
 
 # bending magnets 
-bb_393_b2 = SBend(l = 0.5, angle=0.0455530935, e1=0.0, e2=0.0455530935, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.393.B2')
-bb_402_b2 = SBend(l = 0.5, angle=-0.0455530935, e1=-0.0455530935, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.402.B2')
-bb_404_b2 = SBend(l = 0.5, angle=-0.0455530935, e1=0.0, e2=-0.0455530935, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.404.B2')
-bb_413_b2 = SBend(l = 0.5, angle=0.0455530935, e1=0.0455530935, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.413.B2')
+bb_393_b2 = SBend(l=0.5, angle=0.0336848546, e1=0.0, e2=0.0336848546, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.393.B2')
+bb_402_b2 = SBend(l=0.5, angle=-0.0336848546, e1=-0.0336848546, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.402.B2')
+bb_404_b2 = SBend(l=0.5, angle=-0.0336848546, e1=0.0, e2=-0.0336848546, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.404.B2')
+bb_413_b2 = SBend(l=0.5, angle=0.0336848546, e1=0.0336848546, e2=0.0, gap=0, tilt=1.570796327, fint=0.0, fintx=0.0, eid='BB.413.B2')
 
 # correctors 
 ccx_232_b1 = Hcor(l=0.1, angle=0.0, eid='CCX.232.B1')
@@ -165,11 +165,6 @@ ccy_387_b2 = Vcor(l=0.1, angle=0.0, eid='CCY.387.B2')
 ccx_388_b2 = Hcor(l=0.1, angle=0.0, eid='CCX.388.B2')
 ccy_391_b2 = Vcor(l=0.1, angle=0.0, eid='CCY.391.B2')
 ccx_392_b2 = Hcor(l=0.1, angle=0.0, eid='CCX.392.B2')
-
-cbb_403_b2 = Drift(eid='CBB.403.B2') # Vcor(l=0.0, angle=0.0, eid='CBB.403.B2')
-cbb_405_b2 = Drift(eid='CBB.405.B2') # Vcor(l=0.0, angle=0.0, eid='CBB.405.B2')
-cbb_414_b2 = Drift(eid='CBB.414.B2') # Vcor(l=0.0, angle=0.0, eid='CBB.414.B2')
-
 ccx_415_b2 = Hcor(l=0.1, angle=0.0, eid='CCX.415.B2')
 ccy_416_b2 = Vcor(l=0.1, angle=0.0, eid='CCY.416.B2')
 ccx_418_b2 = Hcor(l=0.1, angle=0.0, eid='CCX.418.B2')
@@ -414,8 +409,10 @@ c_a5_4_5_l2 = Cavity(l=1.0377, v=0.0177083334375, freq=1300000000.0, phi=0.0, ei
 c_a5_4_6_l2 = Cavity(l=1.0377, v=0.0177083334375, freq=1300000000.0, phi=0.0, eid='C.A5.4.6.L2')
 c_a5_4_7_l2 = Cavity(l=1.0377, v=0.0177083334375, freq=1300000000.0, phi=0.0, eid='C.A5.4.7.L2')
 c_a5_4_8_l2 = Cavity(l=1.0377, v=0.0177083334375, freq=1300000000.0, phi=0.0, eid='C.A5.4.8.L2')
-tdsb_428_b2 = TDCavity(l=1.5, v=0.45*0, freq=2997000.0, phi=0.0, eid='TDSB.428.B2')
-tdsb_430_b2 = TDCavity(l=1.5, v=0.45*0, freq=2997000.0, phi=0.0, eid='TDSB.430.B2')
+
+# tdcavity 
+tdsb_428_b2 = Cavity(l=1.5, v=0.0, freq=2997000.0, phi=0.0, eid='TDSB.428.B2')
+tdsb_430_b2 = Cavity(l=1.5, v=0.0, freq=2997000.0, phi=0.0, eid='TDSB.430.B2')
 
 # UnknowElement 
 
@@ -424,7 +421,7 @@ tdsb_430_b2 = TDCavity(l=1.5, v=0.45*0, freq=2997000.0, phi=0.0, eid='TDSB.430.B
 # Solenoids 
 
 # lattice 
-cell = (stsub_229_b1, d_1, stgrd_231_b1, d_2, qd_231_b1, d_3, ccx_232_b1,
+cell = (stsub_229_b1, d_1, stgrd_231_b1, d_2, qd_231_b1, d_3, ccx_232_b1, 
 d_4, tora_232_b1, d_5, qd_232_b1, d_6, ccy_232_b1, d_4, bpma_233_b1, 
 d_8, qd_233_b1, d_9, enblock_233_b1, engrd_233_b1, d_10, ensub_235_b1, ensec_235_b1, 
 stsec_235_l2, d_11, stac_238_l2, d_12, c_a3_1_1_l2, d_13, c_a3_1_2_l2, d_13, 
@@ -471,30 +468,30 @@ qd_388_b2, d_164, ccx_388_b2, d_165, engrd_390_b2, d_166, stgrd_390_b2, d_167,
 eod_390_b2, d_168, bpma_390_b2, d_160, qd_391_b2, d_170, ccy_391_b2, d_171, 
 bcm_391_b2, d_172, qd_392_b2, d_173, ccx_392_b2, d_174, otra_392_b2, d_175, 
 bam_392_b2, d_176, mpbpmf_393_b2, d_177, bpmf_393_b2, d_178, engrd_393_b2, d_179, 
-stlat_393_b2, d_180, bb_393_b2, d_181, bb_402_b2, d_182, cbb_403_b2, d_183, 
-bpms_404_b2, d_184, otrs_404_b2, d_185, bb_404_b2, d_182, cbb_405_b2, d_187, 
-srm_406_b2, d_188, bb_413_b2, d_182, cbb_414_b2, d_166, enlat_414_b2, match_414_b2, 
-stlat_414_b2, d_191, stgrd_414_b2, d_192, bam_414_b2, d_176, mpbpmf_414_b2, d_177, 
-bpmf_414_b2, d_195, tora_415_b2, d_196, qd_415_b2, d_197, ccx_415_b2, d_198, 
-ccy_416_b2, d_199, bcm_416_b2, d_200, qd_417_b2, d_201, ccx_418_b2, d_4, 
-ccy_418_b2, d_203, bpma_418_b2, d_160, qd_418_b2, d_9, engrd_419_b2, d_206, 
-stgrd_423_b2, d_207, ccx_425_b2, d_208, qd_425_b2, d_209, ccy_426_b2, d_210, 
-otra_426_b2, d_211, bpma_426_b2, d_212, qd_427_b2, d_213, engrd_427_b2, d_214, 
-stgrd_427_b2, d_215, match_428_b2, tdsb_428_b2, d_216, tdsb_430_b2, d_217, stblock_431_b2, 
-d_2, qd_431_b2, d_219, ccx_431_b2, d_220, bpma_432_b2, d_221, engrd_432_b2, 
-d_214, stgrd_432_b2, d_223, qd_434_b2, d_9, ccy_434_b2, d_225, qd_437_b2, 
-d_9, engrd_437_b2, d_214, stgrd_437_b2, d_228, otra_438_b2, d_229, bpma_440_b2, 
-d_160, qd_440_b2, d_9, ccx_441_b2, d_232, engrd_442_b2, d_214, stgrd_442_b2, 
-d_234, bpma_444_b2, d_160, qd_444_b2, d_236, match_446_b2, otra_446_b2, d_237, 
-engrd_446_b2, d_214, stgrd_447_b2, d_239, ccx_447_b2, d_240, bpma_448_b2, d_160, 
-qd_448_b2, d_9, ccy_448_b2, d_243, otrb_450_b2, d_244, engrd_451_b2, d_214, 
-stgrd_451_b2, d_246, bpma_452_b2, d_247, qd_452_b2, d_248, otrb_454_b2, d_249, 
-ccx_454_b2, d_250, bpma_455_b2, d_160, qd_456_b2, d_9, ccx_456_b2, d_166, 
-engrd_456_b2, d_214, stgrd_456_b2, d_255, otrb_457_b2, d_229, bpma_459_b2, d_160, 
-qd_459_b2, d_9, ccy_460_b2, d_259, engrd_461_b2, d_214, stgrd_461_b2, d_261, 
-otrb_461_b2, d_262, bpma_462_b2, d_263, qd_463_b2, d_264, crd_463_b2, d_265, 
-ccx_464_b2, d_266, qd_464_b2, d_9, ccy_464_b2, d_239, ccx_465_b2, d_203, 
-bpma_465_b2, d_160, qd_465_b2, d_9, engrd_466_b2, d_216, enlat_466_b2, ensub_466_b2)
+stlat_393_b2, d_180, bb_393_b2, d_181, bb_402_b2, d_182, bpms_404_b2, d_183, 
+otrs_404_b2, d_184, bb_404_b2, d_185, srm_406_b2, d_186, bb_413_b2, d_187, 
+enlat_414_b2, match_414_b2, stlat_414_b2, d_188, stgrd_414_b2, d_189, bam_414_b2, d_176, 
+mpbpmf_414_b2, d_177, bpmf_414_b2, d_192, tora_415_b2, d_193, qd_415_b2, d_194, 
+ccx_415_b2, d_195, ccy_416_b2, d_196, bcm_416_b2, d_197, qd_417_b2, d_198, 
+ccx_418_b2, d_4, ccy_418_b2, d_200, bpma_418_b2, d_160, qd_418_b2, d_9, 
+engrd_419_b2, d_203, stgrd_423_b2, d_204, ccx_425_b2, d_205, qd_425_b2, d_206, 
+ccy_426_b2, d_207, otra_426_b2, d_208, bpma_426_b2, d_209, qd_427_b2, d_210, 
+engrd_427_b2, d_211, stgrd_427_b2, d_212, match_428_b2, tdsb_428_b2, d_213, tdsb_430_b2, 
+d_214, stblock_431_b2, d_2, qd_431_b2, d_216, ccx_431_b2, d_217, bpma_432_b2, 
+d_218, engrd_432_b2, d_211, stgrd_432_b2, d_220, qd_434_b2, d_9, ccy_434_b2, 
+d_222, qd_437_b2, d_9, engrd_437_b2, d_211, stgrd_437_b2, d_225, otra_438_b2, 
+d_226, bpma_440_b2, d_160, qd_440_b2, d_9, ccx_441_b2, d_229, engrd_442_b2, 
+d_211, stgrd_442_b2, d_231, bpma_444_b2, d_160, qd_444_b2, d_233, match_446_b2, 
+otra_446_b2, d_234, engrd_446_b2, d_211, stgrd_447_b2, d_236, ccx_447_b2, d_237, 
+bpma_448_b2, d_160, qd_448_b2, d_9, ccy_448_b2, d_240, otrb_450_b2, d_241, 
+engrd_451_b2, d_211, stgrd_451_b2, d_243, bpma_452_b2, d_244, qd_452_b2, d_245, 
+otrb_454_b2, d_246, ccx_454_b2, d_247, bpma_455_b2, d_160, qd_456_b2, d_9, 
+ccx_456_b2, d_166, engrd_456_b2, d_211, stgrd_456_b2, d_252, otrb_457_b2, d_226, 
+bpma_459_b2, d_160, qd_459_b2, d_9, ccy_460_b2, d_256, engrd_461_b2, d_211, 
+stgrd_461_b2, d_258, otrb_461_b2, d_259, bpma_462_b2, d_260, qd_463_b2, d_261, 
+crd_463_b2, d_262, ccx_464_b2, d_263, qd_464_b2, d_9, ccy_464_b2, d_236, 
+ccx_465_b2, d_200, bpma_465_b2, d_160, qd_465_b2, d_9, engrd_466_b2, d_213, 
+enlat_466_b2, ensub_466_b2)
 # power supplies 
 
 #  
@@ -636,8 +633,6 @@ c_a5_4_5_l2.ps_id = 'C.A5.L2'
 c_a5_4_6_l2.ps_id = 'C.A5.L2'
 c_a5_4_7_l2.ps_id = 'C.A5.L2'
 c_a5_4_8_l2.ps_id = 'C.A5.L2'
-tdsb_428_b2.ps_id = 'TDSB.B2'
-tdsb_430_b2.ps_id = 'TDSB.B2'
 
 #  
 bb_393_b2.ps_id = 'BB.1.B2'

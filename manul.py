@@ -81,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -200,7 +200,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.show_correction_result = table["show_correction_result"]
         self.gc_nlast = table["nlast"]
         self.gc_nreadings = table["nreadings"]
-        self.lattice_settings = table["lattice"]
+        #self.lattice_settings = table["lattice"]
         self.svd_epsilon_x = table["epsilon_x"]
         self.svd_epsilon_y = table["epsilon_y"]
         self.uncheck_corrs = table["uncheck_corrs"]
@@ -216,6 +216,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.co_nlast_bpms = table["co_nlast"]
         self.logbook = table["logbook"]
         self.path2lattice = table["lattice"]
+        self.rm_files_dir = self.rm_files_dir + self.path2lattice + os.sep
 
         if "subtrain_list" in table.keys():
             subtrain_list = table["subtrain_list"]
@@ -285,7 +286,7 @@ class ManulInterfaceWindow(QMainWindow):
                 elem.E = E
                 self.corr_list.append(elem)
             if elem.__class__ == Cavity:
-                E += elem.v*cos(elem.phi*np.pi/180.)
+                E += elem.v*np.cos(elem.phi*np.pi/180.)
         return self.corr_list
 
     def read_quads(self):
@@ -497,7 +498,8 @@ class ManulInterfaceWindow(QMainWindow):
         # start /stop elements should be correctors !!!
         self.return_lat(start=self.corr_list[idx_frm], stop=self.corr_list[idx_to])
 
-        self.orbit.choose_plane()
+        #self.orbit.choose_plane()
+        #self.orbit.uncheck_aircols()
 
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
         self.get_charge_bunch()
@@ -560,6 +562,10 @@ class ManulInterfaceWindow(QMainWindow):
         # self.orbit.load_orbit_devs()
         self.orbit.calc_orbit()
         logger.debug("return_lat: ... OK")
+
+        self.orbit.choose_plane()
+        self.orbit.uncheck_aircols()
+
         return self.lat
 
 

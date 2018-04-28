@@ -1,11 +1,5 @@
-from ocelot import *
+from ocelot import * 
 
-tws = Twiss()
-tws.E = 0.005000000
-tws.beta_x  = 55.7887190242
-tws.beta_y  = 55.7887190242
-tws.alpha_x = 18.185436973
-tws.alpha_y = 18.185436973
 # drifts 
 d_1 = Drift(l=0.276, eid='D_1')
 d_2 = Drift(l=0.316, eid='D_2')
@@ -83,10 +77,10 @@ qi_60_i1 = Quadrupole(l=0.2377, k1=2.145682287, tilt=0.0, eid='QI.60.I1')
 qi_61_i1 = Quadrupole(l=0.2377, k1=0.8685937479, tilt=0.0, eid='QI.61.I1')
 
 # bending magnets 
-bl_48i_i1 = SBend(l = 0.2, angle=-0.099484, e1=0.0, e2=-0.099484, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.48I.I1')
-bl_48ii_i1 = SBend(l = 0.2, angle=0.099484, e1=0.099484, e2=0.0, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.48II.I1')
-bl_50i_i1 = SBend(l = 0.2, angle=0.099484, e1=0.0, e2=0.099484, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.50I.I1')
-bl_50ii_i1 = SBend(l = 0.2, angle=-0.099484, e1=-0.099484, e2=0.0, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.50II.I1')
+bl_48i_i1 = SBend(l=0.2, angle=-0.099484, e1=0.0, e2=-0.099484, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.48I.I1')
+bl_48ii_i1 = SBend(l=0.2, angle=0.099484, e1=0.099484, e2=0.0, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.48II.I1')
+bl_50i_i1 = SBend(l=0.2, angle=0.099484, e1=0.0, e2=0.099484, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.50I.I1')
+bl_50ii_i1 = SBend(l=0.2, angle=-0.099484, e1=-0.099484, e2=0.0, gap=0, tilt=0.0, fint=0.0, fintx=0.0, eid='BL.50II.I1')
 
 # correctors 
 ckx_23_i1 = Hcor(l=0.025, angle=0.0, eid='CKX.23.I1')
@@ -181,7 +175,9 @@ c3_ah1_1_5_i1 = Cavity(l=0.346, v=0.0024999884, freq=3900000000.0, phi=180.0, ei
 c3_ah1_1_6_i1 = Cavity(l=0.346, v=0.0024999884, freq=3900000000.0, phi=180.0, eid='C3.AH1.1.6.I1')
 c3_ah1_1_7_i1 = Cavity(l=0.346, v=0.0024999884, freq=3900000000.0, phi=180.0, eid='C3.AH1.1.7.I1')
 c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0024999884, freq=3900000000.0, phi=180.0, eid='C3.AH1.1.8.I1')
-tdsa_52_i1 = TDCavity(l=0.7, v=0.0, freq=2997000.0, phi=0.0, eid='TDSA.52.I1')
+
+# tdcavity 
+tdsa_52_i1 = Cavity(l=0.7, v=0.0, freq=2997000.0, phi=0.0, eid='TDSA.52.I1')
 
 # UnknowElement 
 
@@ -191,7 +187,7 @@ tdsa_52_i1 = TDCavity(l=0.7, v=0.0, freq=2997000.0, phi=0.0, eid='TDSA.52.I1')
 solb_23_i1 = Solenoid(l=0.0, k=0.0, eid='SOLB.23.I1')
 
 # lattice 
-cell = (stsec_23_i1, stsub_23_i1, gun_23_i1, d_1, solb_23_i1, d_2, ckx_23_i1,
+cell = (stsec_23_i1, stsub_23_i1, gun_23_i1, d_1, solb_23_i1, d_2, ckx_23_i1, 
 cky_23_i1, d_3, ckx_24_i1, cky_24_i1, d_4, bpmg_24_i1, d_5, scrn_24_i1, 
 fcup_24_i1, d_6, ensub_24_i1, stsub_24i_i1, d_7, tora_25_i1, d_8, scrn_25i_i1, 
 fcup_25i_i1, d_9, bpmg_25i_i1, d_10, dcm_25_i1, d_11, ckx_25_i1, cky_25_i1, 
@@ -252,13 +248,9 @@ c3_ah1_1_5_i1.ps_id = 'C3.AH1.I1'
 c3_ah1_1_6_i1.ps_id = 'C3.AH1.I1'
 c3_ah1_1_7_i1.ps_id = 'C3.AH1.I1'
 c3_ah1_1_8_i1.ps_id = 'C3.AH1.I1'
-tdsa_52_i1.ps_id = 'TDSA.I1'
 
 #  
 bl_48i_i1.ps_id = 'BL.1.I1'
 bl_48ii_i1.ps_id = 'BL.1.I1'
 bl_50i_i1.ps_id = 'BL.3.I1'
 bl_50ii_i1.ps_id = 'BL.4.I1'
-
-
-

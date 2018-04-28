@@ -43,6 +43,26 @@ class GoldenOrbit:
         self.ui.actionLoad_Golden_Orbit.triggered.connect(self.load_golden_from)
         self.ui.actionSave_Golden_Orbit.triggered.connect(self.save_golden_as)
         self.ui.actionLoad_GO_from_Orbit_Display.triggered.connect(self.load_golden_from_OD)
+        self.ui.actionTake_Ref_Orbit_from_Server.triggered.connect(self.load_ref_from_doocs)
+        self.ui.actionTake_GO_from_Server.triggered.connect(self.load_gold_from_doocs)
+
+    def load_ref_from_doocs(self):
+        self.golden_orbit = {}
+        ref_orbit = self.parent.mi_orbit.read_doocs_ref_orbit()
+        for valid, x, y, z_pos, bpm_id in ref_orbit:
+            if valid == 0:
+                self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
+
+        self.dict2golden_orbit()
+
+    def load_gold_from_doocs(self):
+        self.golden_orbit = {}
+        gold_orbit = self.parent.mi_orbit.read_doocs_gold_orbit()
+        for valid, x, y, z_pos, bpm_id in gold_orbit:
+            if valid == 0:
+                self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
+
+        self.dict2golden_orbit()
 
     def set_golden_orbit(self):
         """
@@ -70,7 +90,6 @@ class GoldenOrbit:
             elem.x_ref = 0.
             elem.y_ref = 0.
             self.golden_orbit[elem.id] = [0., 0.]
-
 
 
     def dict2golden_orbit(self):

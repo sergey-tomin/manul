@@ -238,7 +238,6 @@ class OrbitInterface:
         """
         upstream = self.ui.cb_caxy.isChecked()
         downstream = self.ui.cb_cbxy.isChecked()
-
         #corrs = self.get_dev_from_cb_state(self.corrs)
 
         for cor in self.corrs:

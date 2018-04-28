@@ -1000,7 +1000,7 @@
                  <string>CA{X,Y}</string>
                 </property>
                 <property name="checked">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -1015,7 +1015,7 @@
                  <string>CB{X,Y}</string>
                 </property>
                 <property name="checked">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -1767,6 +1767,9 @@
     <addaction name="actionSave_Golden_Orbit"/>
     <addaction name="actionLoad_GO_from_Orbit_Display"/>
     <addaction name="separator"/>
+    <addaction name="actionTake_Ref_Orbit_from_Server"/>
+    <addaction name="actionTake_GO_from_Server"/>
+    <addaction name="separator"/>
     <addaction name="actionGO_Adviser"/>
    </widget>
    <widget class="QMenu" name="menuFile">
@@ -1867,6 +1870,16 @@
   <action name="actionSend_all">
    <property name="text">
     <string>Send all</string>
+   </property>
+  </action>
+  <action name="actionTake_Ref_Orbit_from_Server">
+   <property name="text">
+    <string>DOOCS Ref Orbit -&gt; GO</string>
+   </property>
+  </action>
+  <action name="actionTake_GO_from_Server">
+   <property name="text">
+    <string>DOOCS GO -&gt; GO</string>
    </property>
   </action>
  </widget>
