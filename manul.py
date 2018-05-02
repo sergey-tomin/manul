@@ -71,7 +71,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.gui_dir = self.path2manul + "manul" + os.sep + "gui" + os.sep
         self.gold_orbits_dir = "/home/xfeloper/data/golden_orbits/" # self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
         self.gold_orbits_from_OD_dir = "/home/xfeloper/data/orbit_display/"#self.path2manul + "manul" + os.sep + "golden_orbits" + os.sep
-        self.rm_files_dir = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
+        self.rm_files_dir_root = self.path2manul + "manul" + os.sep + "rm_files" + os.sep
         self.set_file = self.config_dir + "default.json" # ./parameters/default.json"
         self.obj_func_path = self.optimizer_path + "mint" + os.sep + "obj_function.py"
         self.obj_save_path = self.config_dir +  "obj_funcs" + os.sep
@@ -81,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -100,10 +100,11 @@ class ManulInterfaceWindow(QMainWindow):
         self.dispersion = DispersionInterface(parent=self)
 
         self.ui.action_Parameters.triggered.connect(self.run_settings_window)
+
         try:
             self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
         except:
-            self.error_box("Could not load lattice files. Check path in settings and try again.")
+            self.error_box("Could not load lattice files. Check the path in settings and try again. Path: " + "lattices." + self.path2lattice)
             return
 
         self.online_calc = True
@@ -216,7 +217,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.co_nlast_bpms = table["co_nlast"]
         self.logbook = table["logbook"]
         self.path2lattice = table["lattice"]
-        self.rm_files_dir = self.rm_files_dir + self.path2lattice + os.sep
+        self.rm_files_dir = self.rm_files_dir_root + self.path2lattice + os.sep
 
         if "subtrain_list" in table.keys():
             subtrain_list = table["subtrain_list"]

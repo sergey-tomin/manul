@@ -100,6 +100,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cb_load_settings.addItem("SASE1 launch")
         self.cb_load_settings.addItem("SASE3 launch")
         self.cb_load_settings.addItem("SASE1 aircoils")
+        self.cb_load_settings.addItem("SASE2 launch")
         
         self.cb_load_settings.addItem("test")
         self.cb_load_settings.setCurrentIndex(0)
@@ -296,7 +297,6 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
-        print(self.mi_standard_fb.__class__, self.mi_standard_fb.is_running())
         if self.mi_standard_fb != None and self.mi_standard_fb.is_running():
             self.error_box("Standard FeedBack is runinning!")
             logger.info("start_stop_feedback: St.FB is running")
@@ -335,7 +335,7 @@ class UIAFeedBack(QWidget, Ui_Form):
                 logger.warning("error during status of st. FB reading: " + str(e))
                 is_st_fb_running = False
             
-        if is_st_fb_running:
+        if self.mi_standard_fb != None and is_st_fb_running:
             #self.error_box("Standard FeedBack is runinning!")
             logger.info("auto_correction: St.FB is running. Stop Ad. FB")
             self.stop_feedback()

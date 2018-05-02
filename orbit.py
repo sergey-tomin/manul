@@ -239,7 +239,7 @@ class OrbitInterface:
         upstream = self.ui.cb_caxy.isChecked()
         downstream = self.ui.cb_cbxy.isChecked()
         #corrs = self.get_dev_from_cb_state(self.corrs)
-
+        logger.debug("uncheck_aircoils: upstream / downstream: " + str(upstream) + "/" + str(downstream))
         for cor in self.corrs:
             #print(cor.id, upstream, downstream)
             if ".SA1" in cor.id or (".SA3" in cor.id) or (".SA2" in cor.id):
@@ -571,6 +571,7 @@ class OrbitInterface:
         :return: True -  if shape of the ORM (!) is correct (shape of the DRM is not checked)
                  False - if the RM does not exist or RM load was failed
         """
+        print(len(self.orbit.response_matrix.matrix))
         if len(self.orbit.response_matrix.matrix) == 0:
             is_ok = self.load_response_matrices()
             logger.debug("is_rm_ok: tring to load response matrix ... Is OK? " + str(is_ok))

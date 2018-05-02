@@ -6,10 +6,10 @@ tws = Twiss()
 #tws.alpha_y = 0.703868806111
 #tws.E       = 17.4999999889
 
-twsbeta_x  = 42.5926362197
-twsbeta_y  = 10.9082466875
-twsalpha_x = -2.15596779978
-twsalpha_y = 0.701693329439
+tws.beta_x  = 42.5926362197
+tws.beta_y  = 10.9082466875
+tws.alpha_x = -2.15596779978
+tws.alpha_y = 0.701693329439
 tws.E = 14
 #tws_sase1.s        = 1957.1856390000232
 # drifts 
