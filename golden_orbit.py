@@ -59,6 +59,7 @@ class GoldenOrbit:
         self.golden_orbit = {}
         gold_orbit = self.parent.mi_orbit.read_doocs_gold_orbit()
         for valid, x, y, z_pos, bpm_id in gold_orbit:
+            print(bpm_id, valid, x, y)
             if valid == 0:
                 self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
 
