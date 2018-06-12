@@ -47,23 +47,24 @@ class GoldenOrbit:
         self.ui.actionTake_GO_from_Server.triggered.connect(self.load_gold_from_doocs)
 
     def load_ref_from_doocs(self):
+        self.parent.read_orbit()
         self.golden_orbit = {}
         ref_orbit = self.parent.mi_orbit.read_doocs_ref_orbit()
         for valid, x, y, z_pos, bpm_id in ref_orbit:
             if valid == 0:
                 self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
 
-        self.dict2golden_orbit()
+        #self.dict2golden_orbit()
 
     def load_gold_from_doocs(self):
+        self.parent.read_orbit()
         self.golden_orbit = {}
         gold_orbit = self.parent.mi_orbit.read_doocs_gold_orbit()
         for valid, x, y, z_pos, bpm_id in gold_orbit:
-            print(bpm_id, valid, x, y)
             if valid == 0:
                 self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
 
-        self.dict2golden_orbit()
+        #self.dict2golden_orbit()
 
     def set_golden_orbit(self):
         """
