@@ -26,6 +26,53 @@ except Exception as e:
 
 
 
+class CorrectionAnalysis(Thread):
+    def __init__(self, mi_orbit, bpms):
+        super(CorrectionAnalysis, self).__init__()
+        self.orbit_1 = {}
+        self.orbit_2 = {}
+        self.kicks = {}
+        self.bpms = bpms
+        self.mi_orbit = mi_orbit
+
+    def save_old_orbit(self, bpms):
+        x = 0.
+        y = 0.
+        for bpm in bpms:
+            x += bpm.x**2
+            y += bpm.y**2
+            self.orbit_1[bpm.id] = [bpm.x, bpm.y]
+        return np.sqrt(x), np.sqrt(y)
+
+    def save_new_orbit(self, bpms):
+        bpm_names, mean_x, mean_y, mean_charge = self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        orbit = {}
+        for bpm_id, x, y in zip(bpm_names, mean_x, mean_y):
+            orbit[bpm_id] = [x, y]
+        #self.mi_orbit.get_bpms(bpms)
+        x = 0
+        y = 0
+        for bpm in bpms:
+            if bpm.id in orbit.keys():
+                bpm_x, bpm_y = orbit[bpm.id]
+                self.orbit_2[bpm.id] = [bpm_x, bpm_y]
+                x += bpm_x ** 2
+                y += bpm_y ** 2
+
+            else:
+                logger.critical(" CorrectionAnalysis: BPM: " + bpm.id + "is not available in the DOOCS")
+        return np.sqrt(x), np.sqrt(y)
+
+    def save_kicks(self, kicks):
+        self.kicks = kicks
+
+    def run(self):
+        xi2_x, xi2_y = self.save_old_orbit(self.bpms)
+        print("before = ", xi2_x, xi2_y)
+        xi2_x, xi2_y = self.save_new_orbit(self.bpms)
+        print("after = ", xi2_x, xi2_y)
+
+
 
 class ResponseMatrixCalculator(Thread):
     """
@@ -379,22 +426,27 @@ class OrbitInterface:
                 logger.error("Apply kick: mi.set_value cause error - corrector.id = "+ str(cor.id) + ", kick_mrad = " + str(kick_mrad))
                 self.parent.error_box("Error during writing in DOOCS. Repeat APPLY KICKS. Corrector: " + str(cor.id) + " kick = " + str(kick_mrad))
 
+        delta_kicks = self.write_old_kicks(corrs)
 
-        self.write_old_kicks(corrs)
+        self.corection_analysis.save_kicks(delta_kicks)
+        self.corection_analysis.start()
 
 
     def write_old_kicks(self, corrs):
         old_corrs_kicks = {}
+        delta_kicks = {}
         save_flag = False
         for cor in corrs:
             # write to dict old kicker strengths
             old_corrs_kicks[cor.id] = cor.ui.get_init_value()
+            delta_kicks[cor.id] = (cor.ui.get_value() - cor.ui.get_init_value())/1000 # mrad -> rad
             if cor.ui.get_init_value() != cor.ui.get_value():
                 save_flag = True
             #print(cor.id, old_corrs_kicks[cor.id])
         if save_flag:
             self.undo_data_base.append(old_corrs_kicks)
             self.ui.pb_reset_all.setText("Undo (" + str(len(self.undo_data_base)) + ")")
+        return delta_kicks
 
 
 
@@ -418,7 +470,7 @@ class OrbitInterface:
         self.online_calc = True
         self.parent.lat.update_transfer_maps()
 
-    def read_orbit(self):
+    def read_orbit_old(self):
         """
         Method to readw from MI: correctors (angles: mrad->rad) and
         BPMs (X and Y: mm -> m) and checks charge on the BPMs
@@ -457,6 +509,53 @@ class OrbitInterface:
         #self.update_cors_plot()
         self.update_plot()
         return beam_on
+
+    def read_orbit(self):
+        """
+        Method to readw from MI: correctors (angles: mrad->rad) and
+        BPMs (X and Y: mm -> m) and checks charge on the BPMs
+        if the charge below charge_thresh return False
+
+        :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
+        """
+        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+
+        self.read_correctors()
+
+        charge_thresh = 0.005
+
+        bpms = self.get_dev_from_cb_state(self.bpms)
+        self.mi_orbit.get_bpms(bpms)
+
+        self.corection_analysis = CorrectionAnalysis(mi_orbit=self.mi_orbit, bpms=bpms)
+
+        beam_on = True
+        for elem in bpms:
+            try:
+                #x_mm, y_mm = elem.mi.get_pos()
+                if np.isnan(elem.x) or np.isnan(elem.y):
+                    logger.warning("read bpm: " + elem.id + "NaN -> was unchecked")
+                    elem.ui.uncheck()
+                charge = elem.charge
+                if charge < charge_thresh:
+                    beam_on = False
+                #print(elem.id, "bunch charge: ", self.parent.bunch_charge, "   charge_tol:", self.parent.charge_tol, "charge: ", charge, np.abs(charge/self.parent.bunch_charge) < self.parent.charge_tol/100)
+                if np.abs(charge/self.parent.bunch_charge) < self.parent.charge_tol/100:
+                    logger.info(" BPM:" + elem.id + " unchecked -> " +str(np.round(charge, 2)) + "/" + str(np.round(self.parent.bunch_charge, 2)) + " < " + str(self.parent.charge_tol/100))
+                    elem.ui.uncheck()
+                #elem.x = x_mm/1000.
+                #elem.y = y_mm/1000.
+                elem.ui.set_value((elem.x*1000, elem.y*1000))
+            except:
+                logger.error("read bpm: " + elem.id + "ERROR during reading -> was unchecked ")
+                elem.ui.uncheck()
+        #beam_on = self.read_bpms(n_readings=1, n_last_readings=1)
+        #self.update_cors_plot()
+        self.update_plot()
+        return beam_on
+
+
+
 
     def calc_orbit(self):
         """
@@ -680,7 +779,6 @@ class OrbitInterface:
 
         self.xfel_mps.beam_off()
         self.calculate_correction()
-
 
     def read_bpms(self):
         if self.parent.single_shot_flag and (self.button_bpm != None and self.cavity_bpm != None):

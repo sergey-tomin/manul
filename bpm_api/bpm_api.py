@@ -9,6 +9,8 @@ import pydoocs as pyd
 import os
 from PyQt5 import QtGui
 
+BPM_LOCATION_FILE = "BPMDAMC02_locations_201802.txt"
+
 class BPMDoocsInterface:
     def __init__(self, ui_textbox=None):
         self.textbox = ui_textbox
@@ -82,7 +84,7 @@ class ButtonBPM:
         # "BPMDAMC02_locations.txt"
         path = os.path.realpath(__name__)
         indx = path.find("bpm_api")
-        self.filename = path[:indx] +"bpm_api" + os.sep + "BPMDAMC02_locations.txt"
+        self.filename = path[:indx] +"bpm_api" + os.sep + BPM_LOCATION_FILE
         self.bpm_addresses = self.get_BPM_addresses_from_file()
 
     def activate(self, max_charge_value, max_pos_value):
@@ -155,7 +157,7 @@ class CavityBPM:
             self.mi = BPMDoocsInterface()
         path = os.path.realpath(__name__)
         indx = path.find("bpm_api")
-        self.filename = path[:indx] +"bpm_api" + os.sep + "BPMDAMC02_locations.txt"
+        self.filename = path[:indx] +"bpm_api" + os.sep + BPM_LOCATION_FILE
         self.bpm_addresses = self.get_BPM_addresses_from_file()
         
     def activate(self, attenuation):

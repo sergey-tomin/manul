@@ -167,7 +167,6 @@ class XFELLattice:
             return tws_i
         seq = [copy(elem) for elem in self.get_slice_sequence(sequence, stop=stop_element)]
         tws = twiss(MagneticLattice(seq[:-1]), tws_i)
-        #print(tws[-1])
         return tws[-1]
 
 
