@@ -48,7 +48,7 @@ class CorrectionAnalysis(Thread):
         bpm_names, mean_x, mean_y, mean_charge = self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         orbit = {}
         for bpm_id, x, y in zip(bpm_names, mean_x, mean_y):
-            orbit[bpm_id] = [x, y]
+            orbit[bpm_id] = [x/1000., y/1000.] # mm -> m
         #self.mi_orbit.get_bpms(bpms)
         x = 0
         y = 0
@@ -248,6 +248,7 @@ class OrbitInterface:
     def update_machine_interface(self):
         self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
         self.mi_orbit.mi = self.parent.mi
+        self.mi_orbit.start()
 
         self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
         self.xfel_mps.mi = self.parent.mi
@@ -427,9 +428,11 @@ class OrbitInterface:
                 self.parent.error_box("Error during writing in DOOCS. Repeat APPLY KICKS. Corrector: " + str(cor.id) + " kick = " + str(kick_mrad))
 
         delta_kicks = self.write_old_kicks(corrs)
-
-        self.corection_analysis.save_kicks(delta_kicks)
-        self.corection_analysis.start()
+        
+        if self.corection_analysis != None:
+            self.corection_analysis.save_kicks(delta_kicks)
+            self.corection_analysis.start()
+        self.corection_analysis = None
 
 
     def write_old_kicks(self, corrs):
@@ -519,16 +522,13 @@ class OrbitInterface:
         :return: bool, True if the charge on all BPMs >= charge_thresh otherwise False
         """
         self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
-
         self.read_correctors()
 
         charge_thresh = 0.005
-
         bpms = self.get_dev_from_cb_state(self.bpms)
         self.mi_orbit.get_bpms(bpms)
-
         self.corection_analysis = CorrectionAnalysis(mi_orbit=self.mi_orbit, bpms=bpms)
-
+        
         beam_on = True
         for elem in bpms:
             try:

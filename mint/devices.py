@@ -5,6 +5,7 @@ from mint.interface import Device
 from PyQt5 import QtGui, QtCore
 import numpy as np
 import time
+from threading import Thread, Event
 import logging
 
 logger = logging.getLogger(__name__)
@@ -272,9 +273,11 @@ class MICavity(Device):
         return val
 
 
-class MIOrbit(Device):
+class MIOrbit(Device, Thread):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
-        super(MIOrbit, self).__init__(eid=eid)
+        Device.__init__(self, eid=eid)
+        Thread.__init__(self)
+        #super(MIOrbit, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
         self.bpm_server = "BPM" # "ORBIT"     # or "BPM"
@@ -288,8 +291,16 @@ class MIOrbit(Device):
         self.mena_y = []
         self.mean_charge = []
         #self.charge = []
+    
+    def run(self):
+        start = time.time()
+        print("RUN")
+        #self.read_positions()
+        self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
+        print("RUN FINISH in ", time.time() - start, "sec")
 
     def read_positions(self, reliable_reading=False):
+
         if reliable_reading:
             nreadings = 30
             time_delay = 0.05
@@ -300,7 +311,6 @@ class MIOrbit(Device):
             for i in range(nreadings):
                 orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
                 orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
-                print("attemt:", i, orbit_x[0]["float1"], orbit_y[0]["float1"] )
                 time.sleep(time_delay)
                 if orbit_x[0]["float1"] != 0 and orbit_y[0]["float1"] != 0:
                 #if not(np.isnan(orbit_x[0]["float1"])) and not(np.isnan(orbit_y[0]["float1"])):
@@ -348,8 +358,7 @@ class MIOrbit(Device):
 
 
     def read_and_average(self, nreadings, take_last_n, reliable_reading=False):
-        start = time.time()
-        print("Read and average")
+        logger.info(" MIorbit: read_and_average")
         orbits_x = []
         orbits_y = []
         orbits_charge = []
@@ -364,7 +373,6 @@ class MIOrbit(Device):
                     logger.warning(" MIOrbit: read_and_average: error: arrays are different ")
             saved_names = names
             time.sleep(self.time_delay)
-        print("Read and average time: ", time.time() - start, "sec")
         self.bpm_names = saved_names
         self.mean_x = np.mean(orbits_x[-take_last_n:], axis=0)
         self.mean_y = np.mean(orbits_y[-take_last_n:], axis=0)
