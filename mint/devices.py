@@ -174,6 +174,14 @@ class BPM(Device):
         y = self.mi.get_value(ch_y)
         return x, y
 
+    def get_mean_pos(self):
+        ch_x = self.server + ".DIAG/BPM/" + self.eid + "/X.TD"
+        ch_y = self.server + ".DIAG/BPM/" + self.eid + "/Y.TD"
+        x = np.mean(np.array(self.mi.get_value(ch_x))[:, 1])
+        y = np.mean(np.array(self.mi.get_value(ch_y))[:, 1])
+
+        return x, y
+
     def get_charge(self):
         x = self.mi.get_value(self.server + ".DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
         return x

@@ -500,6 +500,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         for elem in self.orbit.bpms:
             try:
+
                 x_mm, y_mm = elem.mi.get_pos()
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
