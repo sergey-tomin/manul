@@ -85,6 +85,9 @@ class ManulSettings(QWidget):
         table["server_list"] = self.string2list(self.ui.le_server.text())
         table["server"] = self.ui.combo_server.currentText()
 
+        table["bpm_server_list"] = self.string2list(self.ui.le_bpm_server.text())
+        table["bpm_server"] = self.ui.combo_bpm_server.currentText()
+
         table["subtrain_list"] = self.string2list(self.ui.le_subtrain.text())
         table["subtrain"] = self.ui.combo_subtrain.currentText()
 
@@ -144,6 +147,16 @@ class ManulSettings(QWidget):
             else:
                 indx = 0
             self.ui.combo_server.setCurrentIndex(indx)
+
+        if "bpm_server_list" in table.keys():
+            self.ui.le_bpm_server.setText(self.list2string(table["bpm_server_list"]))
+            for name in table["bpm_server_list"]:
+                self.ui.combo_bpm_server.addItem(name)
+            if "bpm_server" in table.keys() and table["bpm_server"] in table["bpm_server_list"]:
+                indx = table["bpm_server_list"].index(table["bpm_server"])
+            else:
+                indx = 0
+            self.ui.combo_bpm_server.setCurrentIndex(indx)
 
         if "subtrain_list" in table.keys():
             self.ui.le_subtrain.setText(self.list2string(table["subtrain_list"]))

@@ -248,6 +248,7 @@ class OrbitInterface:
     def update_machine_interface(self):
         self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
         self.mi_orbit.mi = self.parent.mi
+        self.mi_orbit.bpm_server = self.parent.bpm_server
         self.mi_orbit.start()
 
         self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
@@ -1014,6 +1015,7 @@ class OrbitInterface:
 
                 mi_dev = BPM(eid=elem.id, server=self.parent.server, subtrain=self.parent.subtrain)
                 mi_dev.mi = self.parent.mi
+                mi_dev.bpm_server = self.parent.bpm_server
                 elem.mi = mi_dev
                 elem.lat_inx = i
                 elem.x = 0

@@ -166,24 +166,25 @@ class BPM(Device):
         super(BPM, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
+        self.bpm_server = "ORBIT"
 
     def get_pos(self):
-        ch_x = self.server + ".DIAG/BPM/" + self.eid + "/X." + self.subtrain
-        ch_y = self.server + ".DIAG/BPM/" + self.eid + "/Y." + self.subtrain
+        ch_x = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/X." + self.subtrain
+        ch_y = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/Y." + self.subtrain
         x = self.mi.get_value(ch_x)
         y = self.mi.get_value(ch_y)
         return x, y
 
     def get_mean_pos(self):
-        ch_x = self.server + ".DIAG/BPM/" + self.eid + "/X.TD"
-        ch_y = self.server + ".DIAG/BPM/" + self.eid + "/Y.TD"
+        ch_x = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/X.TD"
+        ch_y = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/Y.TD"
         x = np.mean(np.array(self.mi.get_value(ch_x))[:, 1])
         y = np.mean(np.array(self.mi.get_value(ch_y))[:, 1])
 
         return x, y
 
     def get_charge(self):
-        x = self.mi.get_value(self.server + ".DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
+        x = self.mi.get_value(self.server + ".DIAG/"+ self.bpm_server + "/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
     def get_ref_pos(self):
@@ -288,7 +289,7 @@ class MIOrbit(Device, Thread):
         #super(MIOrbit, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
-        self.bpm_server = "BPM" # "ORBIT"     # or "BPM"
+        self.bpm_server = "ORBIT"     # or "BPM"
         self.time_delay = 0.1         # sec
         self.charge_threshold = 0.005 # nC
         self.subtrain = subtrain
@@ -346,7 +347,7 @@ class MIOrbit(Device, Thread):
 
     def read_charge(self):
         try:
-            charge = self.mi.get_value(self.server + ".DIAG/BPM/*/CHARGE." + self.subtrain)
+            charge = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/CHARGE." + self.subtrain)
         except Exception as e:
             logger.critical("read_charge: self.mi.get_value: " + str(e))
             raise e
@@ -529,7 +530,7 @@ class MIAdviser(Device):
         indxs = []
         for name in ref_names:
             if name in names:
-            	indxs.append(names.index(name))
+                indxs.append(names.index(name))
         
         z_pos = self.get_bpm_z_from_ref(ref_names)
         return pos[indxs], z_pos

@@ -81,8 +81,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -255,6 +255,11 @@ class ManulInterfaceWindow(QMainWindow):
             self.server = table["server"]
         else:
             self.server = "XFEL"
+
+        if "bpm_server" in table.keys():
+            self.bpm_server = table["bpm_server"]
+        else:
+            self.bpm_server = "ORBIT"
 
         if "beta" in table.keys():
             self.svd_beta = table["beta"]
