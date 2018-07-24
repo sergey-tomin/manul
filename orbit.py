@@ -67,11 +67,12 @@ class CorrectionAnalysis(Thread):
         self.kicks = kicks
 
     def run(self):
-        xi2_x, xi2_y = self.save_old_orbit(self.bpms)
-        print("before = ", xi2_x, xi2_y)
-        xi2_x, xi2_y = self.save_new_orbit(self.bpms)
-        print("after = ", xi2_x, xi2_y)
+        xi2_x1, xi2_y1 = self.save_old_orbit(self.bpms)
 
+        xi2_x2, xi2_y2 = self.save_new_orbit(self.bpms)
+        logger.info(" correction analysis: from " + self.bpms[0].id + " to " + self.bpms[-1].id + 
+        ": X_chi2 = " +str(np.round(xi2_x1*1e6, 1))+"/" +str(np.round(xi2_x2*1e6, 1)) +
+        " um; Y_chi2 = "+str(np.round(xi2_y1*1e6, 1)) +"/" +str(np.round(xi2_y1*1e6, 1)) + " um")
 
 
 class ResponseMatrixCalculator(Thread):
@@ -249,7 +250,7 @@ class OrbitInterface:
         self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
         self.mi_orbit.mi = self.parent.mi
         self.mi_orbit.bpm_server = self.parent.bpm_server
-        self.mi_orbit.start()
+        #self.mi_orbit.start()
 
         self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
         self.xfel_mps.mi = self.parent.mi
@@ -491,7 +492,7 @@ class OrbitInterface:
 
         beam_on = True
         for elem in bpms:
-            try:
+            if 1: #try:
                 x_mm, y_mm = elem.mi.get_pos()
                 if np.isnan(x_mm) or np.isnan(y_mm):
                     logger.warning("read bpm: " + elem.id + "NaN -> was unchecked")
@@ -506,8 +507,8 @@ class OrbitInterface:
                 elem.x = x_mm/1000.
                 elem.y = y_mm/1000.
                 elem.ui.set_value((x_mm, y_mm))
-            except:
-                logger.error("read bpm: " + elem.id + "ERROR during reading -> was unchecked ")
+            else: #except:
+                logger.error("read bpm: " + elem.id + " ERROR during reading -> was unchecked ")
                 elem.ui.uncheck()
         #beam_on = self.read_bpms(n_readings=1, n_last_readings=1)
         #self.update_cors_plot()
@@ -548,7 +549,7 @@ class OrbitInterface:
                 #elem.y = y_mm/1000.
                 elem.ui.set_value((elem.x*1000, elem.y*1000))
             except:
-                logger.error("read bpm: " + elem.id + "ERROR during reading -> was unchecked ")
+                logger.error("read bpm: " + elem.id + " ERROR during reading -> was unchecked ")
                 elem.ui.uncheck()
         #beam_on = self.read_bpms(n_readings=1, n_last_readings=1)
         #self.update_cors_plot()
@@ -988,7 +989,7 @@ class OrbitInterface:
         """
         if not self.RMs.is_alive():
             self.ui.pb_correct_orbit.setStyleSheet("color: rgb(85, 255, 127);")
-            self.ui.pb_correct_orbit.setText("Calculate Correction")
+            self.ui.pb_correct_orbit.setText("Read and Calculate")
             self.rm_calc.stop()
 
 

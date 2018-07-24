@@ -17,7 +17,8 @@ import subprocess
 import base64
 from threading import Lock
 from mint.interface import MachineInterface, Device
-
+import logging
+logger = logging.getLogger(__name__)
 
 class AlarmDevice(Device):
     """
@@ -46,6 +47,7 @@ class XFELMachineInterface(MachineInterface):
         :param channel: (str) String of the devices name used in doocs
         :return: Data from pydoocs.read(), variable data type depending on channel
         """
+        logger.debug(" get_value: channel" + channel)
         val = pydoocs.read(channel)
         return val["data"]
 

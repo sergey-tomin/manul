@@ -166,7 +166,7 @@ class BPM(Device):
         super(BPM, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
-        self.bpm_server = "ORBIT"
+        self.bpm_server = "BPM"
 
     def get_pos(self):
         ch_x = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/X." + self.subtrain
@@ -184,7 +184,7 @@ class BPM(Device):
         return x, y
 
     def get_charge(self):
-        x = self.mi.get_value(self.server + ".DIAG/"+ self.bpm_server + "/" + self.eid + "/CHARGE." + self.subtrain)
+        x = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
     def get_ref_pos(self):
@@ -347,7 +347,7 @@ class MIOrbit(Device, Thread):
 
     def read_charge(self):
         try:
-            charge = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/CHARGE." + self.subtrain)
+            charge = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/*/CHARGE." + self.subtrain)
         except Exception as e:
             logger.critical("read_charge: self.mi.get_value: " + str(e))
             raise e
@@ -358,8 +358,15 @@ class MIOrbit(Device, Thread):
     def read_orbit(self, reliable_reading):
         names_xy, x, y = self.read_positions(reliable_reading)
         names_charge, charge = self.read_charge()
-        #print(names_xy)
-        #print(names_charge)
+        indx = [not ("TORA." in name or "TORC." in name) for name in names_charge]
+        names_charge = np.array(names_charge)[indx]
+        charge = np.array(charge)[indx]
+
+        #print( len(names_charge), len(names_xy))
+        #for n_ch, n_xy in zip(names_charge, names_xy):
+        #    if n_ch != n_xy:
+        #       print(n_ch, n_xy)
+
         if not np.array_equal(names_xy, names_charge):
             logger.warning(" MIOrbit: read_orbit: CHARGE reading and POSITIONS are not equal")
             #return False
