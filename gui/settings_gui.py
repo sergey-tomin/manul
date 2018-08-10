@@ -55,12 +55,13 @@ class ManulSettings(QWidget):
             self.ui.label_8.setEnabled(True)
 
     def apply_settings(self):
-        update = self.question_box("Rewrite Settings?")
+        update = self.question_box("Save Settings and Close?")
         if update:
             if not os.path.exists(self.master.config_dir):
                 os.makedirs(self.master.config_dir)
             self.save_state(self.master.config_file)
-        self.master.load_settings()
+            self.master.load_settings()
+            self.close()
 
     def save_state(self, filename):
         table = {}
@@ -187,13 +188,13 @@ class ManulSettings(QWidget):
 #        print(a)
         print("LOAD State")
 
-    def save_presettings(self):
-        update = self.question_box("Rewrite Settings?")
-        if update:
-            if not os.path.exists(self.master.configs_dir):
-                os.makedirs(self.master.configs_dir)
-            self.save_state(self.master.configs_dir + "settings.json")
-            self.parent.load_settings()
+    #def save_presettings(self):
+    #    update = self.question_box("Rewrite Settings ?")
+    #    if update:
+    #        if not os.path.exists(self.master.configs_dir):
+    #            os.makedirs(self.master.configs_dir)
+    #        self.save_state(self.master.configs_dir + "settings.json")
+    #        self.parent.load_settings()
 
 
     def question_box(self, message):

@@ -72,7 +72,7 @@ class CorrectionAnalysis(Thread):
         xi2_x2, xi2_y2 = self.save_new_orbit(self.bpms)
         logger.info(" correction analysis: from " + self.bpms[0].id + " to " + self.bpms[-1].id + 
         ": X_chi2 = " +str(np.round(xi2_x1*1e6, 1))+"/" +str(np.round(xi2_x2*1e6, 1)) +
-        " um; Y_chi2 = "+str(np.round(xi2_y1*1e6, 1)) +"/" +str(np.round(xi2_y1*1e6, 1)) + " um")
+        " um; Y_chi2 = "+str(np.round(xi2_y1*1e6, 1)) +"/" +str(np.round(xi2_y2*1e6, 1)) + " um")
 
 
 class ResponseMatrixCalculator(Thread):
@@ -112,6 +112,9 @@ class ResponseMatrixCalculator(Thread):
         else:
             logger.info("ResponseMatrixCalculator: inject calculated ORM")
             self.rm.inject(cor_names, bpm_names, inj_matrix)
+            logger.warning("ResponseMatrixCalculator: Dumping RM >" + str(self.rm_filename))
+            self.rm.dump(filename=self.rm_filename)
+            #print(np.shape(self.rm.matrix))
 
         #if self.rm_filename != None:
         #    self.rm.dump(filename=self.rm_filename)
@@ -741,7 +744,7 @@ class OrbitInterface:
         self.cavity_bpm.activate(attenuation=10)
         time.sleep(2)
         # first idle reading before real one.
-        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        # self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         self.xfel_mps.beam_on()
         #
         try:
@@ -768,7 +771,7 @@ class OrbitInterface:
         self.xfel_mps.num_bunches_requested(num_bunches=1)
         
         # first idle reading before real one.  
-        self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
+        #self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         
         self.xfel_mps.beam_on()
 
@@ -860,8 +863,9 @@ class OrbitInterface:
             self.calc_correction[cor.id] = cor.angle
         
         alpha = self.ui.sb_alpha.value()
-        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.svd_epsilon_x,
-                              epsilon_y=self.svd_epsilon_y, beta=self.parent.svd_beta, print_log=False)
+        # print("PARAMS: ", self.parent.svd_epsilon_x, self.parent.svd_epsilon_y, self.parent.svd_beta)
+        self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.parent.svd_epsilon_x,
+                              epsilon_y=self.parent.svd_epsilon_y, beta=self.parent.svd_beta, print_log=False)
 
         for cor in self.corrs:
             self.calc_correction[cor.id] = cor.angle
@@ -1280,6 +1284,11 @@ class OrbitInterface:
         x_bpm = np.array([])
         y_bpm = np.array([])
         bpms = self.get_dev_from_cb_state(self.bpms)
+        #print(self.xfel_mps.is_beam_on())
+        if self.xfel_mps.is_beam_on() != 1:
+            logger.info("live_orbit: beam off. return ")
+            return
+            
         for elem in bpms:
             try:
                 x_mm, y_mm = elem.mi.get_pos()
