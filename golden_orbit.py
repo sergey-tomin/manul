@@ -54,7 +54,15 @@ class GoldenOrbit:
             if valid == 0:
                 self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
 
-        #self.dict2golden_orbit()
+        for elem in self.parent.bpms:
+            if elem.id in self.golden_orbit.keys():
+                x_gold = self.golden_orbit[elem.id][0]
+                y_gold = self.golden_orbit[elem.id][1]
+                elem.x_ref = x_gold
+                elem.y_ref = y_gold
+            else:
+                elem.x_ref = 0.
+                elem.y_ref = 0.
 
     def load_gold_from_doocs(self):
         self.parent.read_orbit()
@@ -63,6 +71,16 @@ class GoldenOrbit:
         for valid, x, y, z_pos, bpm_id in gold_orbit:
             if valid == 0:
                 self.golden_orbit[bpm_id] = [x*1e-3, y*1e-3] # mm -> m
+
+        for elem in self.parent.bpms:
+            if elem.id in self.golden_orbit.keys():
+                x_gold = self.golden_orbit[elem.id][0]
+                y_gold = self.golden_orbit[elem.id][1]
+                elem.x_ref = x_gold
+                elem.y_ref = y_gold
+            else:
+                elem.x_ref = 0.
+                elem.y_ref = 0.
 
         #self.dict2golden_orbit()
 

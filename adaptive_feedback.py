@@ -250,13 +250,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.set_golden_orbit()
 
         self.orbit = self.orbit_class.create_Orbit_obj()
-        
         if self.orbit == None:
             logger.warning("start_stop_statistics: self.orbit is None. Stop Statistics")
             
             self.stop_statistics()
-            self.error_box("Check BPMs or Load/reload settings and try again" )
-            
+            self.error_box("Np Beam or BPMs were not selected! Check BPMs or Load/reload settings and try again." )
+            return
         if self.pb_start_statistics.text() == "Statistics Accum Off":
             self.stop_statistics()
 
