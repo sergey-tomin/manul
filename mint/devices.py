@@ -321,7 +321,7 @@ class MIOrbit(Device, Thread):
                 orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
                 orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
                 time.sleep(time_delay)
-                if orbit_x[0]["float1"] != 0 and orbit_y[0]["float1"] != 0:
+                if orbit_x[0][1] != 0 and orbit_y[0][1] != 0:
                 #if not(np.isnan(orbit_x[0]["float1"])) and not(np.isnan(orbit_y[0]["float1"])):
                     print("OK")
                     break
@@ -333,16 +333,16 @@ class MIOrbit(Device, Thread):
         #    return False
         #print(orbit_x)
         try:
-            names_x = [data["str"] for data in orbit_x]
-            names_y = [data["str"] for data in orbit_y]
+            names_x = [data[4] for data in orbit_x]
+            names_y = [data[4] for data in orbit_y]
         except Exception as e:
             logger.critical("read_positions: names_x = [data['str'] for data in orbit_x]" + str(e))
             raise e
 
         if not np.array_equal(names_x, names_y):
             logger.warning(" MIOrbit: read_positions: X and Y orbits are not equal")
-        self.x = np.array([data["float1"] for data in orbit_x])
-        self.y = np.array([data["float1"] for data in orbit_y])
+        self.x = np.array([data[1] for data in orbit_x])
+        self.y = np.array([data[1] for data in orbit_y])
         return [names_x, self.x, self.y]
 
     def read_charge(self):
@@ -351,8 +351,8 @@ class MIOrbit(Device, Thread):
         except Exception as e:
             logger.critical("read_charge: self.mi.get_value: " + str(e))
             raise e
-        names = [data["str"] for data in charge]
-        values = np.array([data["float1"] for data in charge])
+        names = [data[4] for data in charge]
+        values = np.array([data[1] for data in charge])
         return names, values
 
     def read_orbit(self, reliable_reading):
