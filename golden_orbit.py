@@ -4,10 +4,13 @@ Sergey Tomin, XFEL/DESY, 2017
 
 import numpy as np
 import json
+import pyqtgraph as pg
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QFileDialog
 from scipy import io
-
+from mint.devices import *
+import copy
+from ocelot.cpbd.elements import Marker
 
 def save_json(filename, py_dict):
 
@@ -31,9 +34,10 @@ class GoldenOrbit:
     def __init__(self, parent):
         self.ui = parent.ui
         self.parent = parent
-        self.Form = parent.parent
+        self.master = parent.parent
         self.golden_orbit = {}
-
+        self.bpms = []
+        self.add_orbit_plot()
         self.ui.pb_golden_orbit.clicked.connect(self.start_stop_golden_orbit)
         self.ui.pb_set_golden.clicked.connect(self.set_golden_orbit)
         self.ui.pb_zero_gold.clicked.connect(self.set_zero_golden_orbit)
@@ -45,6 +49,11 @@ class GoldenOrbit:
         self.ui.actionLoad_GO_from_Orbit_Display.triggered.connect(self.load_golden_from_OD)
         self.ui.actionTake_Ref_Orbit_from_Server.triggered.connect(self.load_ref_from_doocs)
         self.ui.actionTake_GO_from_Server.triggered.connect(self.load_gold_from_doocs)
+        self.ui.pb_uncheck_bpms.clicked.connect(lambda: self.parent.getRows(0, self.ui.table_golden_bpm))
+        self.ui.pb_check_bpms.clicked.connect(lambda: self.parent.getRows(2, self.ui.table_golden_bpm))
+        self.ui.pb_use_go.clicked.connect(self.editor2dict)
+        #self.ui.sb_x_group_change.valueChanged.connect(self.group_changes)
+        #self.ui.sb_y_group_change.valueChanged.connect(self.group_changes)
 
     def load_ref_from_doocs(self):
         self.parent.read_orbit()
@@ -63,6 +72,9 @@ class GoldenOrbit:
             else:
                 elem.x_ref = 0.
                 elem.y_ref = 0.
+                
+        self.dict2editor()
+
 
     def load_gold_from_doocs(self):
         self.parent.read_orbit()
@@ -82,7 +94,7 @@ class GoldenOrbit:
                 elem.x_ref = 0.
                 elem.y_ref = 0.
 
-        #self.dict2golden_orbit()
+        self.dict2editor()
 
     def set_golden_orbit(self):
         """
@@ -97,6 +109,7 @@ class GoldenOrbit:
             elem.x_ref = elem.x
             elem.y_ref = elem.y
             self.golden_orbit[elem.id] = [elem.x, elem.y]
+        self.dict2editor()
 
     def set_zero_golden_orbit(self):
         """
@@ -110,6 +123,7 @@ class GoldenOrbit:
             elem.x_ref = 0.
             elem.y_ref = 0.
             self.golden_orbit[elem.id] = [0., 0.]
+        self.dict2editor()
 
 
     def dict2golden_orbit(self):
@@ -118,7 +132,8 @@ class GoldenOrbit:
 
         :return:
         """
-        for elem in self.parent.orbit.bpms:
+        #for elem in self.parent.orbit.bpms:
+        for elem in self.parent.bpms:
             if elem.id in self.golden_orbit.keys():
                 x_gold = self.golden_orbit[elem.id][0]
                 y_gold = self.golden_orbit[elem.id][1]
@@ -182,7 +197,7 @@ class GoldenOrbit:
 
     def save_golden_orbit(self, filename):
         orbit = {}
-        for bpm in self.Form.orbit.bpms:
+        for bpm in self.master.orbit.bpms:
             orbit[bpm.id] = [bpm.x, bpm.y]
         with open(filename, 'w') as f:
             json.dump(orbit, f)
@@ -210,9 +225,9 @@ class GoldenOrbit:
         self.golden_orbit = orbit
 
     def save_golden_as(self):
-        print(self.Form.gold_orbits_dir)
-        filename = QFileDialog.getSaveFileName(self.Form, 'Save Golden Orbit',
-        self.Form.gold_orbits_dir, "txt (*.json)",  None, QFileDialog.DontUseNativeDialog)[0]
+        print(self.master.gold_orbits_dir)
+        filename = QFileDialog.getSaveFileName(self.master, 'Save Golden Orbit',
+                                               self.master.gold_orbits_dir, "txt (*.json)", None, QFileDialog.DontUseNativeDialog)[0]
         
         if filename:
             name = filename.split("/")[-1]
@@ -227,8 +242,8 @@ class GoldenOrbit:
 
 
     def load_golden_from(self):
-        filename = QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.gold_orbits_dir, "txt (*.json *.mat)", None, QFileDialog.DontUseNativeDialog)[0]
+        filename = QFileDialog.getOpenFileName(self.master, 'Load Golden Orbit',
+                                               self.master.gold_orbits_dir, "txt (*.json *.mat)", None, QFileDialog.DontUseNativeDialog)[0]
         print(filename)
         #QtGui.QFileDialog.DontUseNativeDialog
         if filename:
@@ -240,10 +255,206 @@ class GoldenOrbit:
                 self.restore_golden_orbit(filename)
 
     def load_golden_from_OD(self):
-        filename = QFileDialog.getOpenFileName(self.Form, 'Load Golden Orbit',
-        self.Form.gold_orbits_from_OD_dir, "txt (*.mat)", None, QFileDialog.DontUseNativeDialog)[0]
+        filename = QFileDialog.getOpenFileName(self.master, 'Load Golden Orbit',
+                                               self.master.gold_orbits_from_OD_dir, "txt (*.mat)", None, QFileDialog.DontUseNativeDialog)[0]
         print(filename)
         if filename:
             #print(filename)
             self.restore_golden_orbit_from_mat(filename=filename)
- 
+
+    #def group_changes(self):
+    #    bpms = self.parent.get_dev_from_cb_state(self.bpms)
+    #    for bpm in bpms:
+    #        x, y = bpm.ui.get_spin_values()
+    #        dx = self.ui.sb_x_group_change.value()
+    #        dy = self.ui.sb_y_group_change.value()
+    #        bpm.ui.set_spin_values((x + dx, y + dy))
+
+    def dict2editor(self):
+        if len(self.bpms) == 0:
+            return 0
+        for elem in self.bpms:
+            if elem.id in self.golden_orbit.keys():
+                x_gold = self.golden_orbit[elem.id][0]
+                y_gold = self.golden_orbit[elem.id][1]
+                elem.x_ref = x_gold
+                elem.y_ref = y_gold
+                elem.ui.set_spin_values((elem.x_ref*1000, elem.y_ref*1000))
+            else:
+                elem.x_ref = 0.
+                elem.y_ref = 0.
+    
+    def editor2dict(self):
+        if len(self.bpms) == 0:
+            return 0
+        for elem in self.bpms:
+            if elem.id in self.golden_orbit.keys():
+                
+                self.golden_orbit[elem.id] = [elem.x_ref, elem.y_ref]
+                print(elem.id, self.golden_orbit[elem.id])
+        self.dict2golden_orbit()
+        
+    def copy_bpms(self, bpms):
+        self.bpms = []
+        for bpm in bpms:
+            bpm_copy = Marker()
+            for atrb in bpm.__dict__.keys():
+                if atrb not in ["mi", "ui"]:
+                    bpm_copy.__dict__[atrb] = bpm.__dict__[atrb]
+
+            self.bpms.append(bpm_copy)
+
+        self.add_bpms2table(self.bpms, self.ui.table_golden_bpm, calc_obj=self.update_plot, sp_box1=True, sp_box2=True,
+                                spin_params=[-30, 30, 0.1], check_box=True)
+        
+        self.dict2editor()
+        self.update_plot()
+
+    def add_orbit_plot(self):
+        win = pg.GraphicsLayoutWidget()
+        self.plot_x = win.addPlot(row=0, col=0)
+
+        #win.ci.layout.setRowMaximumHeight(0, 200)
+
+        self.plot_x.showGrid(1, 1, 1)
+        self.plot_y = win.addPlot(row=1, col=0)
+        self.plot_x.setXLink(self.plot_y)
+
+        self.plot_y.showGrid(1, 1, 1)
+
+        self.plot_y.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
+        layout = QtGui.QGridLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.ui.widget_6.setLayout(layout)
+        layout.addWidget(win, 0, 0)
+
+        self.plot_y.setAutoVisible(y=True)
+
+        self.plot_y.addLegend()
+        self.plot_x.addLegend()
+
+
+        color = QtGui.QColor(255, 255, 0)
+        pen = pg.mkPen(color, width=3)
+        self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
+
+        self.plot_y.addItem(self.orb_y_golden)
+
+
+        color = QtGui.QColor(255, 255, 0)
+        pen = pg.mkPen(color, width=2)
+        self.orb_x_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
+        self.plot_x.addItem(self.orb_x_golden)
+
+        #self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
+        #self.plot_cor.setYRange(-3, 3)
+        self.plot_x.sigRangeChanged.connect(self.zoom_signal)
+        self.plot_x.setYRange(-2, 2)
+        self.plot_y.setYRange(-2, 2)
+
+    def zoom_signal(self):
+        #self.corrs = self.parent.corrs
+        if len(self.bpms) == 0:
+            return
+        s_up = self.plot_y.viewRange()[0][0]
+        s_down = self.plot_y.viewRange()[0][1]
+
+
+        s_bpm_pos = np.array([q.s for q in self.bpms]) + self.master.lat_zi
+        s_bpm_up = s_up if s_up <= s_bpm_pos[-1] else s_bpm_pos[-1]
+        s_bpm_down = s_down if s_down >= s_bpm_pos[0] else s_bpm_pos[0]
+
+        s_bpm_pos = np.array([q.s for q in self.bpms]) + self.master.lat_zi
+        s_bpm_up = s_bpm_up if s_bpm_up <= s_bpm_pos[-1] else s_bpm_pos[-1]
+        s_bpm_down = s_bpm_down if s_bpm_down >= s_bpm_pos[0] else s_bpm_pos[0]
+
+        indexes_bpm = np.arange(np.argwhere(s_bpm_pos >= s_bpm_up)[0][0], np.argwhere(s_bpm_pos <= s_bpm_down)[-1][0] + 1)
+        mask_bpm = np.ones(len(self.bpms), np.bool)
+        mask_bpm[indexes_bpm] = 0
+        self.bpms = np.array(self.bpms)
+        [q.ui.set_hide(hide=False) for q in self.bpms[indexes_bpm]]
+        [q.ui.set_hide(hide=True) for q in self.bpms[mask_bpm]]
+
+    def update_plot(self):
+
+        bpms = self.bpms
+
+        s_bpm = np.array([bpm.s for bpm in bpms]) + self.master.lat_zi
+        for bpm in bpms:
+            x, y = bpm.ui.get_spin_values()
+            bpm.x_ref = x/1000
+            bpm.y_ref = y/1000
+        x_bpm = np.array([bpm.x_ref*1000 for bpm in bpms])
+        y_bpm = np.array([bpm.y_ref*1000 for bpm in bpms])
+
+
+        self.orb_x_golden.setData(x=s_bpm, y=x_bpm)
+        self.orb_y_golden.setData(x=s_bpm, y=y_bpm)
+
+
+        self.orb_y_golden.update()
+        self.orb_x_golden.update()
+
+
+    def add_bpms2table(self, devs, w_table, calc_obj=None, sp_box1=False, sp_box2=False, spin_params=[-30, 30, 0.1], check_box=False):
+        """ Initialize the UI table object """
+        def create_spin_box(dev, atrb, spin_params, calc_obj):
+            eng = QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates)
+
+            spin_box = QtGui.QDoubleSpinBox()
+            spin_box.setStyleSheet("color: #b1b1b1; font-size: 16px; background-color:#595959; border: 2px solid #b1b1b1")
+            spin_box.setLocale(eng)
+            spin_box.setDecimals(3)
+            spin_box.setMaximum(spin_params[1])
+            spin_box.setMinimum(spin_params[0])
+            spin_box.setSingleStep(spin_params[2])
+            spin_box.setValue(dev.__dict__[atrb])
+            spin_box.setAccelerated(True)
+            spin_box.valueChanged.connect(calc_obj)
+            return spin_box
+
+
+        self.spin_boxes = []
+        w_table.setRowCount(0)
+
+        for row in range(len(devs)):
+            #eng = QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates)
+            w_table.setRowCount(row + 1)
+            pv = devs[row].id
+            # put PV in the table
+            w_table.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
+            # put start val in
+            if sp_box1:
+                spin_box = create_spin_box(devs[row], "x_ref", spin_params, calc_obj)
+                w_table.setCellWidget(row, 1, spin_box)
+            else:
+                w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(devs[row].x)))
+
+            if sp_box2:
+                spin_box = create_spin_box(devs[row], "y_ref", spin_params, calc_obj)
+                w_table.setCellWidget(row, 2, spin_box)
+            else:
+                w_table.setItem(row, 2, QtGui.QTableWidgetItem(str(devs[row].y)))
+
+            w_table.resizeColumnsToContents()
+            #header = w_table.horizontalHeader()
+            #header.setStretchLastSection(True)
+            #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+
+            if check_box:
+                checkBoxItem = QtGui.QTableWidgetItem()
+                # checkBoxItem.setBackgroundColor(QtGui.QColor(100,100,150))
+                checkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+                flags = checkBoxItem.flags()
+                checkBoxItem.setFlags(flags)
+                w_table.setItem(row, 3, checkBoxItem)
+                #checkBoxItem.itemChanged.connect(self.calc_orbit)
+
+            devs[row].row = row
+
+            ui = BPMUI()
+            ui.tableWidget = w_table
+            ui.row = row
+            ui.col = 2
+            ui.set_spin_values((devs[row].x_ref*1000, devs[row].y_ref*1000))
+            devs[row].ui = ui

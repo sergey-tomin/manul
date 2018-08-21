@@ -157,6 +157,8 @@ class MainWindow(Ui_MainWindow):
         self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
         self.table_bpm = self.add_table(widget=self.w_bpm, headers=["BPM", "       X       ", "       Y       ", "Act."])
+        self.table_golden_bpm = self.add_table(widget=self.widget_7,
+                                        headers=["BPM", "       X       ", "       Y       ", "Act."])
         if self.show_cor_panel:
             self.tabWidget_3.show()
             self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")

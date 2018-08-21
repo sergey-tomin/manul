@@ -1086,8 +1086,9 @@ class OrbitInterface:
         self.add_bpms2table(self.bpms, w_table=self.ui.table_bpm, check_box=True)
         self.uncheck_bpms(self.bpms, self.bpms4remove)
         self.load_correctors()
-
         self.uncheck_corrs(self.corrs, self.corrs4remove)
+
+        self.golden_orbit.copy_bpms(self.bpms)
 
     def load_devices(self, types, load_all=False):
         devices = []

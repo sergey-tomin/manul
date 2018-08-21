@@ -120,6 +120,18 @@ class BPMUI:
         self.tableWidget.item(self.row, 2).setText(str(y))
         self.check_values(val)
 
+    def get_spin_values(self):
+        x = self.tableWidget.cellWidget(self.row, 1).value()
+        y = self.tableWidget.cellWidget(self.row, 2).value()
+        return (x, y)
+
+    def set_spin_values(self, val):
+        x = np.round(val[0], 5)
+        y = np.round(val[1], 5)
+        self.tableWidget.cellWidget(self.row, 1).setValue(x)
+        self.tableWidget.cellWidget(self.row, 2).setValue(y)
+
+
     def check_values(self, vals):
         if np.max(np.abs(vals)) > 15.:
             self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 0, 0))  # red
