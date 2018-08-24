@@ -1855,6 +1855,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_30">
              <item>
               <widget class="QLabel" name="label_16">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -1905,7 +1908,7 @@
              <item>
               <widget class="QLabel" name="label_17">
                <property name="enabled">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="minimumSize">
                 <size>
@@ -1925,6 +1928,9 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="sb_y_group_change">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>

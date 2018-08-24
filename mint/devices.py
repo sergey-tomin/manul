@@ -172,6 +172,11 @@ class BPMUI:
         #    self.check()
         self.tableWidget.setRowHidden(self.row, hide)
 
+    def is_touched(self, state):
+        if state:
+            self.tableWidget.item(self.row, 0).setForeground(QtGui.QColor(255, 101, 101))  # red
+        else:
+            self.tableWidget.item(self.row, 0).setForeground(QtGui.QColor(255, 255, 255))  # white
 
 class BPM(Device):
     def __init__(self, eid, server="XFEL", subtrain="SA1"):
@@ -267,7 +272,7 @@ class DeviceUI:
             #print("grey")
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89))  # grey
         self.alarm = False
-        if not(lims[0]<= val <=lims[1]):
+        if not(lims[0] <= val <= lims[1]):
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.alarm = True
 
