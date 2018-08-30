@@ -317,7 +317,6 @@ class OrbitInterface:
         """
         x_plane = self.ui.cb_x_cors.isChecked()
         y_plane = self.ui.cb_y_cors.isChecked()
-
         if y_plane and not x_plane:
             for cor in self.corrs:
                 if cor.__class__ == Hcor:
@@ -340,6 +339,8 @@ class OrbitInterface:
                 cor.ui.check()
                 cor.ui.set_hide(False)
 
+        # uncheck correctors from the ban list
+        self.uncheck_corrs(self.corrs, self.corrs4remove)
 
     def reset_all(self):
         """
@@ -558,9 +559,6 @@ class OrbitInterface:
         #self.update_cors_plot()
         self.update_plot()
         return beam_on
-
-
-
 
     def calc_orbit(self):
         """
