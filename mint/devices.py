@@ -294,7 +294,7 @@ class MICavity(Device):
         #M4.A4.L2
         parts = self.eid.split(".")
         eid = "M"+parts[2]+"."+parts[1]+"."+parts[4]
-        ch = self.server + ".RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN." + self.subtrain
+        ch = self.server + ".RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN.1" #+ self.subtrain
         val = self.mi.get_value(ch)/8.
         return val
 
@@ -325,7 +325,7 @@ class MIOrbit(Device, Thread):
         self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
         print("RUN FINISH in ", time.time() - start, "sec")
 
-    def read_positions(self, reliable_reading=False):
+    def read_positions(self, reliable_reading=False, suffix=""):
 
         if reliable_reading:
             nreadings = 30
@@ -335,8 +335,8 @@ class MIOrbit(Device, Thread):
             time_delay = 0
         try:
             for i in range(nreadings):
-                orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
-                orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain)
+                orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain + suffix)
+                orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain + suffix)
                 time.sleep(time_delay)
                 if orbit_x[0][1] != 0 and orbit_y[0][1] != 0:
                 #if not(np.isnan(orbit_x[0]["float1"])) and not(np.isnan(orbit_y[0]["float1"])):
@@ -362,9 +362,9 @@ class MIOrbit(Device, Thread):
         self.y = np.array([data[1] for data in orbit_y])
         return [names_x, self.x, self.y]
 
-    def read_charge(self):
+    def read_charge(self, suffix=""):
         try:
-            charge = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/*/CHARGE." + self.subtrain)
+            charge = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/*/CHARGE." + self.subtrain + suffix)
         except Exception as e:
             logger.critical("read_charge: self.mi.get_value: " + str(e))
             raise e
@@ -372,9 +372,9 @@ class MIOrbit(Device, Thread):
         values = np.array([data[1] for data in charge])
         return names, values
 
-    def read_orbit(self, reliable_reading):
-        names_xy, x, y = self.read_positions(reliable_reading)
-        names_charge, charge = self.read_charge()
+    def read_orbit(self, reliable_reading, suffix=""):
+        names_xy, x, y = self.read_positions(reliable_reading, suffix=suffix)
+        names_charge, charge = self.read_charge(suffix=suffix)
         indx = [not ("TORA." in name or "TORC." in name) for name in names_charge]
         names_charge = np.array(names_charge)[indx]
         charge = np.array(charge)[indx]
@@ -390,14 +390,14 @@ class MIOrbit(Device, Thread):
         return names_xy, x, y, charge
 
 
-    def read_and_average(self, nreadings, take_last_n, reliable_reading=False):
+    def read_and_average(self, nreadings, take_last_n, reliable_reading=False, suffix=""):
         logger.info(" MIorbit: read_and_average")
         orbits_x = []
         orbits_y = []
         orbits_charge = []
         saved_names = []
         for i in range(nreadings):
-            names, x, y, charge = self.read_orbit(reliable_reading=reliable_reading)
+            names, x, y, charge = self.read_orbit(reliable_reading=reliable_reading, suffix=suffix)
             orbits_x.append(x)
             orbits_y.append(y)
             orbits_charge.append(charge)

@@ -18,8 +18,9 @@ import importlib
 import logging
 
 # filename="logs/afb.log",
-#filename="logs/manul.log"
-logging.basicConfig(filename="logs/manul.log", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+filename = "logs/manul.log"
+filename = "/home/xfeloper/log/ocelot/manul.log"
+logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 #logging.basicConfig(level=logging.INFO)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -81,8 +82,8 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
+        self.mi = XFELMachineInterface()
+        #self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
@@ -320,6 +321,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.online_calc = True
         self.lat.update_transfer_maps()
         self.tws0 = self.back_tracking()
+        self.tws0.s = 0
         logger.debug("back_tracking result: " + str(self.tws0))
         tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
@@ -633,8 +635,8 @@ class ManulInterfaceWindow(QMainWindow):
 
     def plot_design_twiss(self):
         tws = twiss(self.lat, self.tws_des)
-
-        s = np.array([tw.s for tw in tws]) + self.lat_zi
+        dz = self.lat_zi - self.tws_des.s
+        s = np.array([tw.s for tw in tws]) + dz
         bx = np.array([tw.beta_x for tw in tws])
         by = np.array([tw.beta_y for tw in tws])
         #self.s_des + self.lat_zi
@@ -664,6 +666,7 @@ class ManulInterfaceWindow(QMainWindow):
                 sizes[3] = 10*elem.kick_mrad/self.quad_ampl
                 r.setRect(sizes[0], sizes[1], sizes[2], sizes[3])
         self.lat.update_transfer_maps()
+        self.tws0.s = 0
         tws = twiss(self.lat, self.tws0)
 
         beta_x = [tw.beta_x for tw in tws]

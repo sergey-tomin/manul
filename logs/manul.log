@@ -1459,3 +1459,21 @@
 2018-08-22 02:28:42,729 - orbit - INFO - correct: ... OK
 2018-08-22 02:28:42,729 - mint.devices - INFO -  MIorbit: read_and_average
 2018-08-22 02:28:42,729 - mint.devices - CRITICAL - read_positions: self.mi.get_value: invalid index to scalar variable.
+2018-08-30 13:59:57,885 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 13:59:58,884 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 13:59:58,975 - __main__ - ERROR - No style sheet found!
+2018-08-30 14:01:23,554 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 14:01:24,288 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 14:01:24,379 - __main__ - ERROR - No style sheet found!
+2018-08-30 14:01:44,704 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 14:01:45,453 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 14:01:45,550 - __main__ - ERROR - No style sheet found!
+2018-08-30 14:04:54,303 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 14:04:55,038 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 14:04:55,132 - __main__ - ERROR - No style sheet found!
+2018-08-30 14:08:21,079 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 14:08:21,902 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 14:08:21,999 - __main__ - ERROR - No style sheet found!
+2018-08-30 14:08:48,081 - orbit - WARNING - Import bpm_api: No module named 'pydoocs'
+2018-08-30 14:08:48,817 - orbit - WARNING - Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: name 'bpm_api' is not defined
+2018-08-30 14:08:48,912 - __main__ - ERROR - No style sheet found!

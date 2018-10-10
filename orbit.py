@@ -73,6 +73,9 @@ class CorrectionAnalysis(Thread):
         logger.info(" correction analysis: from " + self.bpms[0].id + " to " + self.bpms[-1].id + 
         ": X_chi2 = " +str(np.round(xi2_x1*1e6, 1))+"/" +str(np.round(xi2_x2*1e6, 1)) +
         " um; Y_chi2 = "+str(np.round(xi2_y1*1e6, 1)) +"/" +str(np.round(xi2_y2*1e6, 1)) + " um")
+        print(" correction analysis: from " + self.bpms[0].id + " to " + self.bpms[-1].id + 
+        ": X_chi2 = " +str(np.round(xi2_x1*1e6, 1))+"/" +str(np.round(xi2_x2*1e6, 1)) +
+        " um; Y_chi2 = "+str(np.round(xi2_y1*1e6, 1)) +"/" +str(np.round(xi2_y2*1e6, 1)) + " um")
 
 
 class ResponseMatrixCalculator(Thread):
@@ -248,6 +251,7 @@ class OrbitInterface:
             self.cavity_bpm = bpm_api.CavityBPM()
         except Exception as e:
             logger.warning("Initialization of bpm_api.ButtonBPM and bpm_api.CavityBPM: " + str(e))
+        self.corection_analysis = None
 
     def update_machine_interface(self):
         self.mi_orbit = MIOrbit(server=self.parent.server, subtrain=self.parent.subtrain)
@@ -317,6 +321,7 @@ class OrbitInterface:
         """
         x_plane = self.ui.cb_x_cors.isChecked()
         y_plane = self.ui.cb_y_cors.isChecked()
+
         if y_plane and not x_plane:
             for cor in self.corrs:
                 if cor.__class__ == Hcor:
@@ -338,7 +343,7 @@ class OrbitInterface:
             for cor in self.corrs:
                 cor.ui.check()
                 cor.ui.set_hide(False)
-
+        
         # uncheck correctors from the ban list
         self.uncheck_corrs(self.corrs, self.corrs4remove)
 
@@ -560,6 +565,7 @@ class OrbitInterface:
         self.update_plot()
         return beam_on
 
+
     def calc_orbit(self):
         """
         function calculates the orbit taking into account correctors strength
@@ -744,18 +750,21 @@ class OrbitInterface:
         # first idle reading before real one.
         # self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         self.xfel_mps.beam_on()
-        #
+        #time.sleep(0.2)
         try:
-            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1, reliable_reading=True)
+            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1, reliable_reading=True, suffix="")
         except Exception as e:
             logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
             self.button_bpm.deactivate()
             self.cavity_bpm.deactivate()
             raise
+
         #time.sleep(0.1)
         self.xfel_mps.beam_off()
+        
         self.button_bpm.deactivate()
         self.cavity_bpm.deactivate()
+
         self.calculate_correction()
 
     def multi_shot_read_bpms(self):
@@ -775,7 +784,7 @@ class OrbitInterface:
 
 
         try:
-            self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast)
+            self.mi_orbit.read_and_average(nreadings=self.parent.gc_nreadings, take_last_n=self.parent.gc_nlast, suffix="")
         except Exception as e:
             logger.error("read_bpms: mi_orbit.read_and_average() " + str(e))
             raise
@@ -809,7 +818,8 @@ class OrbitInterface:
         self.update_plot()
         
         self.uncheck_red()
-        
+        self.corection_analysis = CorrectionAnalysis(mi_orbit=self.mi_orbit, bpms=bpms)
+
         self.correct()
 
         for elem in bpms:
