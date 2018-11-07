@@ -69,6 +69,40 @@
            <item row="0" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_19">
              <item>
+              <widget class="QPushButton" name="pb_ref_orb">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 0, 0);</string>
+               </property>
+               <property name="text">
+                <string>Ref Orb Off</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_calc_orb">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 0, 0);</string>
+               </property>
+               <property name="text">
+                <string>Calc Orb Off</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pb_online_orbit">
                <property name="minimumSize">
                 <size>
@@ -87,7 +121,7 @@
                 <string notr="true">color: rgb(85, 255, 255);</string>
                </property>
                <property name="text">
-                <string>Live Orbit On</string>
+                <string>Live Orb On</string>
                </property>
               </widget>
              </item>
@@ -110,7 +144,7 @@
                 <string notr="true">color: rgb(85, 255, 255);</string>
                </property>
                <property name="text">
-                <string>Show Golden Orbit</string>
+                <string>Show GO</string>
                </property>
               </widget>
              </item>

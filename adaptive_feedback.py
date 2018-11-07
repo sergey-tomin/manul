@@ -188,9 +188,14 @@ class UIAFeedBack(QWidget, Ui_Form):
         
             self.mi_standard_fb = MISASE3Feedback()
             self.mi_standard_fb.mi = self.parent.mi
+        
         elif self.cb_load_settings.currentText() == "SASE1 launch":
             self.mi_standard_fb = MIStandardFeedback()
-            self.mi_standard_fb.mi = self.parent.mi   
+            self.mi_standard_fb.mi = self.parent.mi
+        
+        elif self.cb_load_settings.currentText() == "SASE2 launch":
+            self.mi_standard_fb = MISASE2Feedback()
+            self.mi_standard_fb.mi = self.parent.mi
         else:
             self.mi_standard_fb = None
         
@@ -500,7 +505,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         for elem in self.orbit.bpms:
             try:
 
-                x_mm, y_mm = elem.mi.get_pos()
+                x_mm, y_mm = elem.mi.get_pos_frontend()
                 charge = elem.mi.get_charge()
                 if not self.debug_mode and charge < charge_thresh:
                     # TODO: add a checking for beam on/off

@@ -34,7 +34,7 @@ from ocelot import *
 from ocelot.cpbd.track import *
 
 #from ocelot.optimizer.mint.opt_objects import Device
-from ocelot.optimizer.mint.xfel_interface import *
+from mint.xfel_interface import *
 
 
 from orbit import OrbitInterface
@@ -224,7 +224,8 @@ class ManulInterfaceWindow(QMainWindow):
             subtrain_list = table["subtrain_list"]
         else:
             subtrain_list = ["ALL"]
-            
+        
+        self.ui.combo_subtrain.clear()
         for name in subtrain_list:
             self.ui.combo_subtrain.addItem(name)
         

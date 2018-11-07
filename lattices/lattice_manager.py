@@ -76,18 +76,18 @@ class XFELLattice:
             LatSection("L1", str_cells = ["L1"], z0=62.1),
             LatSection("L2", str_cells=["L2"], z0=229.30),
             LatSection("L3", str_cells=["L2", "L3", "CL"], start=self.lats["L2"].engrd_419_b2,
-                               stop=self.lats["CL"].mpbpmi_1693_cl, z0=396.22, tw=tws_L3),
+                               stop=self.lats["CL"].mpbpmi_1693_cl, z0=396.22+23.2, tw=tws_L3),
 
             LatSection("CL", str_cells=["L3", "CL", "TL34", "SASE1"], start=self.lats["L3"].bpmr_1307_l3,
-                               stop=self.lats["SASE1"].qa_2253_sa1, z0=1359.637 + 23.2, tw=tws_cl),
+                               stop=self.lats["SASE1"].qa_2253_sa1, z0=1307, tw=tws_cl),
 #
-            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].ensub_2583_t4, z0=1957.18564),
-            LatSection("T4", str_cells=["T4"], z0=2438.517),
+            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].ensub_2583_t4, z0=1957.18564 + 23.2),
+            LatSection("T4", str_cells=["T4"], z0=2438.517 + 23.2),
 #
             LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].ensub_2583_t4,
-                       z0=2560.45, tw=tws_sase3),
+                       z0=2560.45 + 23.2, tw=tws_sase3),
 
-            LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564),
+            LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564+23.2),
 
             LatSection("up to B1", str_cells=["I1", "L1"]),
             LatSection("up to B2", str_cells=["I1", "L1", "L2"]),

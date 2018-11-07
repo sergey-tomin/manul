@@ -49,6 +49,8 @@ class XFELMachineInterface(MachineInterface):
         """
         logger.debug(" get_value: channel" + channel)
         val = pydoocs.read(channel)
+        #print(channel, "   TIMESTAMP:",  val["timestamp"])
+        
         return val["data"]
 
     def set_value(self, channel, val):
@@ -63,6 +65,16 @@ class XFELMachineInterface(MachineInterface):
         pydoocs.write(channel, val)
         return
 
+    def get_raw_value(self, channel):
+        """
+        Getter function for XFEL.
+
+        :param channel: (str) String of the devices name used in doocs
+        :return: Data from pydoocs.read(), variable data type depending on channel
+        """
+        logger.debug(" get_raw_value: channel" + channel)
+        val = pydoocs.read(channel)
+        return val
 
     def get_charge(self):
         return self.get_value("XFEL.DIAG/CHARGE.ML/TORA.25.I1/CHARGE.SA1")

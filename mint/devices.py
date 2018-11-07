@@ -192,6 +192,16 @@ class BPM(Device):
         y = self.mi.get_value(ch_y)
         return x, y
 
+    def get_pos_frontend(self):
+        bpm_server = "BPM"
+        ch_x = self.server + ".DIAG/" + bpm_server + "/" + self.eid + "/X." + self.subtrain
+        ch_y = self.server + ".DIAG/" + bpm_server + "/" + self.eid + "/Y." + self.subtrain
+        x = self.mi.get_value(ch_x)
+        y = self.mi.get_value(ch_y)
+        return x, y
+
+
+
     def get_mean_pos(self):
         ch_x = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/X.TD"
         ch_y = self.server + ".DIAG/" + self.bpm_server + "/" + self.eid + "/Y.TD"
@@ -598,5 +608,16 @@ class MISASE3Feedback(Device):
 
     def is_running(self):
         status = self.mi.get_value(self.server + ".FEEDBACK/ORBIT.SA3/ORBITFEEDBACK/ACTIVATE_FB")
+        return status
+
+
+class MISASE2Feedback(Device):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+        super(MISASE2Feedback, self).__init__(eid=eid)
+        self.subtrain = subtrain
+        self.server = server
+
+    def is_running(self):
+        status = self.mi.get_value(self.server + ".FEEDBACK/ORBIT.SA2/ORBITFEEDBACK/ACTIVATE_FB")
         return status
         

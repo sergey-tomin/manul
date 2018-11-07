@@ -222,7 +222,8 @@ class OrbitInterface:
         #self.ui.pb_uncheck_red.clicked.connect(self.uncheck_red)
         self.ui.actionUncheck_Red.triggered.connect(self.uncheck_red)
         self.ui.pb_online_orbit.clicked.connect(self.start_stop_live_orbit)
-
+        self.ui.pb_calc_orb.clicked.connect(self.start_stop_calc_orbit)
+        self.ui.pb_ref_orb.clicked.connect(self.start_stop_ref_orbit)
 
         #self.cavity = CavityA1(eid="CTRL.A1.I1")
         #self.cavity.mi = self.parent.mi
@@ -261,6 +262,10 @@ class OrbitInterface:
 
         self.xfel_mps = MPS(server=self.parent.server, subtrain=self.parent.subtrain)
         self.xfel_mps.mi = self.parent.mi
+        
+        self.mi_charge_doocs = ChargeDoocs(server=self.parent.server, subtrain=self.parent.subtrain)
+        self.mi_charge_doocs.mi = self.parent.mi
+
 
     def reset_undo_database(self):
         self.undo_data_base = []
@@ -735,24 +740,37 @@ class OrbitInterface:
         self.online_calc = True
         self.calc_orbit()
 
+
     def single_shot_read_bpms(self):
         logger.info("Single Shot reading")
+        
         try:
             self.read_correctors()
         except Exception as e:
             logger.critical("single_shot_read: read_correctors ERROR: " + str(e))
             self.parent.error_box("Error in DOOCS during correctors reading")
         self.xfel_mps.num_bunches_requested(num_bunches=1)
-
-        self.button_bpm.activate(max_charge_value=500, max_pos_value=5.)
+        
+        try:
+            charge = self.mi_charge_doocs.get_value() # in nC
+        except Exception as e:
+            logger.error("single_shot_read_bpms: mi_charge_doocs.get_value() " + str(e))
+            raise
+        
+        self.button_bpm.activate(max_charge_value=charge*1000, max_pos_value=5.)
         self.cavity_bpm.activate(attenuation=10)
         time.sleep(2)
         # first idle reading before real one.
         # self.mi_orbit.read_and_average(nreadings=1, take_last_n=1)
         self.xfel_mps.beam_on()
-        #time.sleep(0.2)
+        time.sleep(0.2)
+        #a = self.parent.mi.get_raw_value("XFEL.DIAG/CHARGE.ML/TORA.25.I1/CHARGE.ALL")["timestamp"]
+        #print("TOROID timestamp:", a)
+        
+        self.xfel_mps.beam_off()
+        time.sleep(0.5)
         try:
-            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1, reliable_reading=True, suffix="")
+            self.mi_orbit.read_and_average(nreadings=1, take_last_n=1, reliable_reading=False, suffix=".HOLD")
         except Exception as e:
             logger.error("single_shot_orbit_read: mi_orbit.read_and_average()" + str(e))
             self.button_bpm.deactivate()
@@ -760,13 +778,13 @@ class OrbitInterface:
             raise
 
         #time.sleep(0.1)
-        self.xfel_mps.beam_off()
         
         self.button_bpm.deactivate()
         self.cavity_bpm.deactivate()
 
         self.calculate_correction()
-
+        
+        
     def multi_shot_read_bpms(self):
         logger.info("Multi Shot reading")
         try:
@@ -1286,6 +1304,42 @@ class OrbitInterface:
             self.plot_x.addItem(self.orb_x_live)
             self.plot_y.addItem(self.orb_y_live)
 
+
+    def start_stop_calc_orbit(self):
+        if self.ui.pb_calc_orb.text() == "Calc Orb Off":
+            self.plot_x.removeItem(self.orb_x)
+            self.plot_y.removeItem(self.orb_y)
+            self.plot_x.legend.removeItem(self.orb_x.name())
+            self.plot_y.legend.removeItem(self.orb_y.name())
+            self.ui.pb_calc_orb.setStyleSheet("color: rgb(85, 255, 255);")
+            self.ui.pb_calc_orb.setText("Calc Orb On")
+
+        else:
+            self.ui.pb_calc_orb.setText("Calc Orb Off")
+            self.ui.pb_calc_orb.setStyleSheet("color: rgb(255, 0, 0);")
+            
+            self.plot_x.addItem(self.orb_x)
+            self.plot_y.addItem(self.orb_y)
+            self.update_plot()
+            
+    def start_stop_ref_orbit(self):
+        if self.ui.pb_ref_orb.text() == "Ref Orb Off":
+            self.plot_x.removeItem(self.orb_x_ref)
+            self.plot_y.removeItem(self.orb_y_ref)
+            self.plot_x.legend.removeItem(self.orb_x_ref.name())
+            self.plot_y.legend.removeItem(self.orb_y_ref.name())
+            self.ui.pb_ref_orb.setStyleSheet("color: rgb(85, 255, 255);")
+            self.ui.pb_ref_orb.setText("Ref Orb On")
+
+        else:
+            self.ui.pb_ref_orb.setText("Ref Orb Off")
+            self.ui.pb_ref_orb.setStyleSheet("color: rgb(255, 0, 0);")
+            
+            self.plot_x.addItem(self.orb_x_ref)
+            self.plot_y.addItem(self.orb_y_ref)
+            self.update_plot()
+
+ 
 
     def live_orbit(self):
 
