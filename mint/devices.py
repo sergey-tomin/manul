@@ -285,7 +285,16 @@ class DeviceUI:
         if not(lims[0] <= val <= lims[1]):
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.alarm = True
-
+    
+    def check_diff(self, tol=0.01):
+        ival = self.get_init_value()
+        val = self.get_value()
+        diff = np.abs(val - ival)
+        if diff > tol:
+            self.tableWidget.item(self.row, 1).setForeground(QtGui.QColor(255, 101, 101)) # red
+        else:
+            self.tableWidget.item(self.row, 1).setForeground(QtGui.QColor(255, 255, 255)) # white
+    
     def set_hide(self, hide):
         #if hide and uncheck:
         #    self.uncheck()
@@ -307,7 +316,15 @@ class MICavity(Device):
         ch = self.server + ".RF/LLRF.ENERGYGAIN.ML/" + eid + "/ENERGYGAIN.1" #+ self.subtrain
         val = self.mi.get_value(ch)/8.
         return val
-
+    
+    def get_phase(self):
+        # XFEL.RF/LLRF.CONTROLLER/CTRL.A1.I1/SP.PHASE
+        parts = self.eid.split(".")
+        eid = "CTRL."+parts[1]+"."+parts[4]
+        ch = self.server + ".RF/LLRF.CONTROLLER/" + eid + "/SP.PHASE" #+ self.subtrain
+        phi = self.mi.get_value(ch)
+        return phi
+        
 
 class MIOrbit(Device, Thread):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
@@ -348,6 +365,7 @@ class MIOrbit(Device, Thread):
                 orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain + suffix)
                 orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain + suffix)
                 time.sleep(time_delay)
+                #print(orbit_x)
                 if orbit_x[0][1] != 0 and orbit_y[0][1] != 0:
                 #if not(np.isnan(orbit_x[0]["float1"])) and not(np.isnan(orbit_y[0]["float1"])):
                     print("OK")
@@ -388,7 +406,7 @@ class MIOrbit(Device, Thread):
         indx = [not ("TORA." in name or "TORC." in name) for name in names_charge]
         names_charge = np.array(names_charge)[indx]
         charge = np.array(charge)[indx]
-
+        
         #print( len(names_charge), len(names_xy))
         #for n_ch, n_xy in zip(names_charge, names_xy):
         #    if n_ch != n_xy:

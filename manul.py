@@ -18,10 +18,11 @@ import importlib
 import logging
 
 # filename="logs/afb.log",
-filename = "logs/manul.log"
+# filename = "logs/manul.log"
 filename = "/home/xfeloper/log/ocelot/manul.log"
 logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-#logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
+# logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH to main file: " + os.path.realpath(__file__) + " path to folder"+ path[:indx])
@@ -302,13 +303,14 @@ class ManulInterfaceWindow(QMainWindow):
         self.online_calc = False
         for elem in self.quads:
             elem.kick_mrad = elem.mi.get_value()
-            logger.debug("Quad."+elem.id + " updated. k1 = "+str(elem.kick_mrad)+ " mrad")
             k1 = elem.kick_mrad/elem.l*1e-3
+            logger.debug("Quad."+elem.id + " updated. k1 = "+str(k1)+ " /  diff = " + str(k1 - elem.k1))
             elem.k1 = k1
             elem.i_kick = elem.kick_mrad
             #print(elem.i_kick)
-            elem.ui.set_init_value(elem.kick_mrad)
+            #elem.ui.set_init_value(elem.kick_mrad)
             elem.ui.set_value(elem.kick_mrad)
+            elem.ui.check_diff()
 
         for cav in self.cavs:
             try:
@@ -316,9 +318,17 @@ class ManulInterfaceWindow(QMainWindow):
             except:
                 v = 0.
                 logger.warning("Could not read cavity voltage: " +cav.id)
-            #print("Volt = ", v, cav.mi)
-            cav.v = v*0.001
-            logger.debug("Cavity: " + cav.id + ":" + str(cav.v))
+            try:
+                phi = cav.mi.get_phase()
+            except:
+                phi = 0.
+                logger.warning("Could not read cavity phase: " +cav.id)
+            logger.debug("Cavity: " + cav.id + " updated. v [GeV] = " + str(v) + " / diff [MeV] = " + str(v -  cav.v*1000))
+            logger.debug("Cavity: " + cav.id + " updated. phi = " + str(phi))
+            
+            cav.v = v*0.001/np.cos(phi*np.pi/180)
+            cav.phi = phi
+            
         self.online_calc = True
         self.lat.update_transfer_maps()
         self.tws0 = self.back_tracking()
@@ -442,8 +452,7 @@ class ManulInterfaceWindow(QMainWindow):
             quad.kick_mrad = res[i]
             quad.k1 = res[i]/quad.l/1000.
             quad.ui.set_value(quad.kick_mrad)
-
-
+            
 
     def apply_coupler_kick(self):
         logger.debug("apply_coupler_kick: checkbox:" +str(self.ui.cb_coupler_kick.isChecked()))
