@@ -34,6 +34,17 @@ class Corrector(Device):
         ch_max = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
         max_kick = self.mi.get_value(ch_max)
         return [min_kick*1000, max_kick*1000]
+    
+    def is_ok(self):
+        ch = self.server+ ".MAGNETS/MAGNET.ML/" + self.id + "/COMBINED_STATUS"
+        status = self.mi.get_value(ch)
+        power_bit = '{0:08b}'.format(status)[-2]
+        busy_bit = '{0:08b}'.format(status)[-4]
+        
+        if power_bit == "1" and busy_bit == "0":
+            return True
+        else:
+            return False
 
 
 class MITwiss(Device):
@@ -286,6 +297,17 @@ class DeviceUI:
             self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.alarm = True
     
+    def set_fault(self, fault):
+        if fault:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(255, 255, 0)) # yellow
+            self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 255, 0)) # yellow
+            self.tableWidget.item(self.row, 3).setBackground(QtGui.QColor(255, 255, 0)) # yellow
+        else:
+            self.tableWidget.item(self.row, 0).setBackground(QtGui.QColor(89, 89, 89)) # grey
+            self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(89, 89, 89)) # grey
+            self.tableWidget.item(self.row, 3).setBackground(QtGui.QColor(89, 89, 89)) # grey
+            
+            
     def check_diff(self, tol=0.01):
         ival = self.get_init_value()
         val = self.get_value()

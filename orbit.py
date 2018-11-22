@@ -604,6 +604,9 @@ class OrbitInterface:
         #    print("angle = ", elem.angle)
         self.orbit = NewOrbit(self.parent.lat, empty=True, rm_method=LinacRmatrixRM,
                               disp_rm_method=LinacDisperseSimRM)
+        # checking hardware of the correctors
+        self.check_hardware_status(self.corrs)
+        
         corrs = self.get_dev_from_cb_state(self.corrs)
         if len(corrs) == 0:
             self.parent.error_box("No correctors for correction")
@@ -977,6 +980,26 @@ class OrbitInterface:
             if state == 2:
                 checked_devs.append(dev)
         return checked_devs
+
+
+    def check_hardware_status(self, devs):
+
+        """
+        Check harware status of the devices
+
+        Returns:
+                List of PV strings
+        """
+        checked_devs = []
+        for dev in devs:
+            is_ok = dev.mi.is_ok()
+            #print(dev.id, state)
+            if not is_ok:
+                logger.warning(" harware_status fault: " + dev.id )
+                dev.ui.uncheck()
+                dev.ui.set_fault(True)
+            else:
+                dev.ui.set_fault(False)
 
 
     def calc_response_matrix(self, do_DRM_calc=True):
