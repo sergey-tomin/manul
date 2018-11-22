@@ -687,7 +687,7 @@ class OrbitInterface:
         :return: True -  if shape of the ORM (!) is correct (shape of the DRM is not checked)
                  False - if the RM does not exist or RM load was failed
         """
-        print(len(self.orbit.response_matrix.matrix))
+        #print(len(self.orbit.response_matrix.matrix))
         if len(self.orbit.response_matrix.matrix) == 0:
             is_ok = self.load_response_matrices()
             logger.debug("is_rm_ok: tring to load response matrix ... Is OK? " + str(is_ok))

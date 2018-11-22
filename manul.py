@@ -172,6 +172,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.subtrain = self.ui.combo_subtrain.currentText()
 
         self.arbitrary_lattice()
+        self.orbit.update_machine_interface()
 
     def load_lattice_files(self):
         names = [sec.name for sec in self.xfel_lattice.sections]
