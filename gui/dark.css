@@ -164,15 +164,21 @@ border: 1px solid #7c7b7b;
 QGroupBox
 {
 border: 1px solid #7c7b7b;
+padding: 1px;
+padding-top: 16px;
 /*border: 2px solid QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffa02f, stop: 1 #d7801a);*/
-
+/*margin-top: 0.5em;*/
 border-radius: 5px;
+    margin-top: 5px;
 }
-/*QGroupBox::title {
-    background-color: transparent;
-     subcontrol-position: top left;
-     padding:2 13px;
- } */
+
+QGroupBox::title {
+  background-color: transparent;
+  subcontrol-origin: margin;
+  padding: 2 2px;
+
+
+}
 
 QTextEdit:focus
 {

@@ -28,6 +28,7 @@ class ManulSettings(QWidget):
         self.ui.cb_charge_doocs.stateChanged.connect(self.read_charge_from_doocs)
 
         self.ui.pb_cancel.clicked.connect(self.close)
+        self.ui.cb_style_def.addItem("standard.css")
         self.ui.cb_style_def.addItem("colinDark.css")
         self.ui.cb_style_def.addItem("dark.css")
         self.load_state(filename=self.master.config_file)

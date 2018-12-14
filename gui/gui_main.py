@@ -152,7 +152,8 @@ class MainWindow(Ui_MainWindow):
         self.Form = Form
         # load in the dark theme style sheet
         self.restore_state(self.Form.config_file)
-        self.loadStyleSheet(filename=self.style_file)
+        if self.style_file != "standard.css":
+            self.loadStyleSheet(filename=self.style_file)
 
         self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
@@ -429,81 +430,6 @@ class MainWindow(Ui_MainWindow):
         except IOError:
             print ('No style sheet found!')
 
-    def change_state_scipy_setup(self):
-        """
-        Method to enable/disable "Scipy Scanner Setup". If scipy version < "0.18" then QGroup will be disable.
-        :return:
-        """
-        #print("SCIPY", str(self.cb_select_alg.currentText()))
-        if scipy.__version__ < "0.18" and str(self.cb_select_alg.currentText()) == self.Form.name_simplex:
-            #self.cb_use_isim.setCheckState(False)
-            self.g_box_isim.setEnabled(False)
-            self.g_box_isim.setTitle("Initial Simplex does not work: scipy version: " + scipy.__version__)
-            self.g_box_isim.setStyleSheet('QGroupBox  {color: red;}')
-        elif scipy.__version__ >= "0.18" and str(self.cb_select_alg.currentText()) == self.Form.name_simplex:
-            #print(str(self.cb_select_alg.currentText()))
-            self.g_box_isim.setEnabled(True)
-            self.cb_use_isim.setEnabled(True)
-            self.g_box_isim.setTitle("Simplex/Scipy Scanner Setup")
-            self.g_box_isim.setStyleSheet('QGroupBox  {color: white;}')
-
-        if self.cb_use_isim.checkState():
-            self.label_23.setEnabled(True)
-            self.sb_isim_rel_step.setEnabled(True)
-        else:
-            self.label_23.setEnabled(False)
-            self.sb_isim_rel_step.setEnabled(False)
-
-        if str(self.cb_select_alg.currentText()) == self.Form.name_custom:
-            self.g_box_isim.setEnabled(True)
-            self.label_23.setEnabled(True)
-            self.sb_isim_rel_step.setEnabled(True)
-            self.g_box_isim.setTitle("Custom Minimizer Scanner Setup")
-            self.g_box_isim.setStyleSheet('QGroupBox  {color: white;}')
-            #self.cb_use_isim.setCheckState(True)
-            self.cb_use_isim.setEnabled(False)
-            self.sb_isim_rel_step.setValue(5)
-
-        if str(self.cb_select_alg.currentText()) in [self.Form.name_simplex_norm, self.Form.name_gauss_sklearn]:
-            self.g_box_isim.setEnabled(True)
-            self.label_23.setEnabled(True)
-            self.sb_isim_rel_step.setEnabled(True)
-            self.g_box_isim.setTitle("Simplex With Normalization")
-            self.g_box_isim.setStyleSheet('QGroupBox  {color: white;}')
-            #self.cb_use_isim.setCheckState(True)
-            self.cb_use_isim.setEnabled(False)
-            self.sb_isim_rel_step.setValue(5)
-
-
-    def use_predef_fun(self):
-        if self.cb_use_predef.checkState():
-            self.le_a.setEnabled(False)
-            self.le_b.setEnabled(False)
-            self.le_c.setEnabled(False)
-            self.le_d.setEnabled(False)
-            self.le_e.setEnabled(False)
-            self.le_obf.setEnabled(False)
-
-            self.label_16.setEnabled(False)
-            self.label_19.setEnabled(False)
-            self.label_20.setEnabled(False)
-            self.label_21.setEnabled(False)
-            self.label_28.setEnabled(False)
-            self.label_29.setEnabled(False)
-        else:
-            self.le_a.setEnabled(True)
-            self.le_b.setEnabled(True)
-            self.le_c.setEnabled(True)
-            self.le_d.setEnabled(True)
-            self.le_e.setEnabled(True)
-            self.le_obf.setEnabled(True)
-
-            self.label_16.setEnabled(True)
-            self.label_19.setEnabled(True)
-            self.label_20.setEnabled(True)
-            self.label_21.setEnabled(True)
-            self.label_28.setEnabled(True)
-            self.label_29.setEnabled(True)
 
     def open_help(self):
         """
