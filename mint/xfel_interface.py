@@ -19,6 +19,8 @@ from threading import Lock
 from mint.interface import MachineInterface, Device
 import logging
 logger = logging.getLogger(__name__)
+from ocelot.cpbd.response_matrix import *
+
 
 class AlarmDevice(Device):
     """
@@ -37,8 +39,14 @@ class XFELMachineInterface(MachineInterface):
         if 'pydoocs' not in sys.modules:
             print('error importing doocs library')
         self.logbook = "xfellog"
-
-        self.mutex = Lock()
+        self.allow_star_operation = True
+        self.hide_section_selection = False
+        self.hide_close_trajectory = False
+        self.hide_xfel_specific = False
+        self.hide_dispersion_tab = False
+        self.twiss_periodic = False
+        self.orm_method = LinacRmatrixRM
+        self.drm_method = LinacDisperseSimRM
 
     def get_value(self, channel):
         """
@@ -153,7 +161,15 @@ class TestMachineInterface(MachineInterface):
     def __init__(self):
         super(TestMachineInterface, self).__init__()
         self.data = 1.
-        pass
+        self.allow_star_operation = False
+        self.hide_section_selection = True
+        self.hide_close_trajectory = True
+        self.hide_xfel_specific = True
+        self.hide_dispersion_tab = True
+        self.twiss_periodic = True
+        self.orm_method = RingRM
+        self.drm_method = LinacDisperseSimRM
+
     def get_alarms(self):
         return np.random.rand(4)#0.0, 0.0, 0.0, 0.0]
 

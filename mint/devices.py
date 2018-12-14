@@ -37,7 +37,7 @@ class Corrector(Device):
     
     def is_ok(self):
         ch = self.server+ ".MAGNETS/MAGNET.ML/" + self.id + "/COMBINED_STATUS"
-        status = self.mi.get_value(ch)
+        status = int(self.mi.get_value(ch))
         power_bit = '{0:08b}'.format(status)[-2]
         busy_bit = '{0:08b}'.format(status)[-4]
         
