@@ -20,6 +20,7 @@ class LatSection:
 class XFELLattice:
     def __init__(self, path="lattices.phase_advance_5pi_sase2"):
         self.lat_zi = 23.2 # start position of the lattice in [m]
+        self.default_section = "I1"
         self.config = {"I1":       path + ".i1",
                        "L1":       path + ".l1",
                        "L2":       path + ".l2",
@@ -196,32 +197,6 @@ class XFELLattice:
         return section
 
 
-        #print(a.cell_i1)
-        #print(a.qi_63_i1d.ps_id)
-        #for lat_file in self.lat_files:
-#
-        #    a = importlib.__import__(lat_file)
-
-
-        #self.cell_back_track = (cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl + cell_cl)
-#
-        #lat = MagneticLattice(cell_l3_no_cl+cell_cl+cell_sase1, start=bpmr_1307_l3, stop=qa_2253_sa1)
-        #self.cl_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_l2 + cell_l3_no_cl + cell_cl, start=engrd_419_b2, stop=mpbpmi_1693_cl)
-        #self.l3_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_sase1+cell_t4, stop=ensub_2583_t4)
-        #self.sase1_copy = deepcopy(lat.sequence)
-#
-        #lat = MagneticLattice(cell_t4 + cell_sase3, start=ensub_2583_t4)
-        #self.sase3_copy = deepcopy(lat.sequence)
-#
-        #self.copy_cells = deepcopy((cell_i1, cell_l1, cell_l2, cell_l3_no_cl, cell_cl,
-        #                                 cell_i1d, cell_b1d, cell_b2d, cell_tld, cell_sase1, cell_sase3, cell_t4))
-#
-        #self.big_sequence = list(flatten(cell_i1 + cell_l1 + cell_l2 + cell_l3_no_cl +
-        #                           cell_cl + cell_sase1 + cell_t4 + cell_sase3))
 
 
 if __name__ == "__main__":
