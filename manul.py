@@ -19,9 +19,9 @@ import logging
 
 # filename="logs/afb.log",
 # filename = "logs/manul.log"
-filename = "/home/xfeloper/log/ocelot/manul.log"
-logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-# logging.basicConfig(level=logging.INFO)
+#filename = "/home/xfeloper/log/ocelot/manul.log"
+#logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 # logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -44,7 +44,8 @@ from dispersion import *
 from gui.gui_main import *
 from gui.settings_gui import *
 from ml.adviser_gui import *
-from lattices import lattice_manager
+#from lattices import lattice_manager
+from lattices import ring_lattice_manager as lattice_manager
 logger = logging.getLogger(__name__)
 
 
@@ -83,12 +84,28 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        self.mi = XFELMachineInterface()
-        #self.mi = TestMachineInterface()
+        #self.mi = XFELMachineInterface()
+        self.mi = TestMachineInterface()
         self.debug_mode = False
         if self.mi.__class__ == TestMachineInterface:
             self.debug_mode = True
         self.ui = MainWindow(self)
+
+        # hide/show the block of the section selection and arbitrary part of section
+        if self.mi.hide_section_selection is True:
+            self.ui.frame.hide()
+        # hide/show the checkbox "close orbit" (actually close trajectory)
+        if self.mi.hide_close_trajectory is True:
+            self.ui.cb_close_orbit.hide()
+
+        if self.mi.hide_xfel_specific is True:
+            self.ui.cb_caxy.hide()
+            self.ui.cb_cbxy.hide()
+            #self.ui.horizontalLayout.hide()
+
+        if self.mi.hide_dispersion_tab is True:
+            self.ui.tabWidget_2.removeTab(1)
+
 
         self.show_correction_result = True
 
@@ -104,9 +121,12 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.action_Parameters.triggered.connect(self.run_settings_window)
 
         try:
-            self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
-        except:
-            self.error_box("Could not load lattice files. Check the path in settings and try again. Path: " + "lattices." + self.path2lattice)
+            #self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
+            self.xfel_lattice = lattice_manager.RingLattice(path="lattices." + self.path2lattice)
+
+        except Exception as exc:
+            self.error_box("Could not load lattice files. Check the path in settings and try again. Path: "
+                           + "lattices." + self.path2lattice + " Error: " + str(exc))
             return
 
         self.online_calc = True
@@ -117,7 +137,7 @@ class ManulInterfaceWindow(QMainWindow):
 
 
         #load in the dark theme style sheet
-        self.loadStyleSheet()
+        #self.loadStyleSheet()
 
 
         #timer for plots, starts when scan starts
@@ -178,13 +198,14 @@ class ManulInterfaceWindow(QMainWindow):
         names = [sec.name for sec in self.xfel_lattice.sections]
         for name in names:
             self.ui.cb_lattice.addItem(name)
-        self.ui.cb_lattice.setCurrentIndex(1)
+        self.ui.cb_lattice.setCurrentText(self.xfel_lattice.default_section)
+        #self.ui.cb_lattice.setCurrentIndex(1)
 
         self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         current_lat = self.ui.cb_lattice.currentText()
         section = self.xfel_lattice.get_section(current_lat)
         self.big_sequence = self.xfel_lattice.get_sequence(section)
-        self.correctors_list(seq=self.big_sequence, energy=130)
+        self.correctors_list(seq=self.big_sequence, start_pos=self.xfel_lattice.lat_zi,  energy=130)
 
     def run_settings_window(self):
         if self.settings is None:
@@ -226,11 +247,15 @@ class ManulInterfaceWindow(QMainWindow):
             subtrain_list = table["subtrain_list"]
         else:
             subtrain_list = ["ALL"]
-        
+
+        self.ui.combo_subtrain.blockSignals(True)
+
         self.ui.combo_subtrain.clear()
         for name in subtrain_list:
             self.ui.combo_subtrain.addItem(name)
-        
+
+        self.ui.combo_subtrain.blockSignals(False)
+
         if "subtrain" in table.keys() and table["subtrain"] in subtrain_list:
             indx = subtrain_list.index(table["subtrain"])
         else:
@@ -251,8 +276,8 @@ class ManulInterfaceWindow(QMainWindow):
             self.charge_from_doocs = table["charge_doocs"]
         else:
             self.charge_from_doocs = False
-
         self.ui.combo_subtrain.setCurrentIndex(indx)
+
         self.subtrain = self.ui.combo_subtrain.currentText()
         
         if "server" in table.keys():
@@ -659,13 +684,11 @@ class ManulInterfaceWindow(QMainWindow):
         #lat = MagneticLattice(cell)
         if self.online_calc == False:
             return
-
         # L = 0
         for elem in self.lat.sequence:
             if elem.__class__ in [Quadrupole]:
-                #print(elem.id, elem.row)
                 elem.kick_mrad = elem.ui.get_value()
-                elem.k1 = elem.kick_mrad/elem.l/1000.
+                elem.k1 = elem.kick_mrad/elem.l/1000 if elem.l != 0 else 0
                 if np.abs(np.abs(elem.kick_mrad) - np.abs(elem.i_kick))> 1:
                     self.r_items[elem.ui.row].setBrush(pg.mkBrush("r"))
                     self.ui.tableWidget.item(elem.row, 1).setForeground(QtGui.QColor(255, 101, 101))  # red
@@ -678,8 +701,10 @@ class ManulInterfaceWindow(QMainWindow):
                 r.setRect(sizes[0], sizes[1], sizes[2], sizes[3])
         self.lat.update_transfer_maps()
         self.tws0.s = 0
-        tws = twiss(self.lat, self.tws0)
-
+        if self.mi.twiss_periodic is True:
+            tws = twiss(self.lat, None)
+        else:
+            tws = twiss(self.lat, self.tws0)
         beta_x = [tw.beta_x for tw in tws]
         beta_y = [tw.beta_y for tw in tws]
         dx = [tw.Dx for tw in tws]
