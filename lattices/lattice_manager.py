@@ -17,7 +17,7 @@ class LatSection:
         self.tw = tw
 
 
-class XFELLattice:
+class Lattice:
     def __init__(self, path="lattices.phase_advance_5pi_sase2"):
         self.lat_zi = 23.2 # start position of the lattice in [m]
         self.default_section = "I1"

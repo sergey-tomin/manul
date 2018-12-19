@@ -17,19 +17,100 @@ import subprocess
 import base64
 from threading import Lock
 from mint.interface import MachineInterface, Device
+import mint.bessy_devices as devices
 import logging
-
+from lattices import ring_lattice_manager as lattice_manager
 logger = logging.getLogger(__name__)
 from ocelot.cpbd.response_matrix import *
+        
+class CorrectorData():
+
+    def __init__(self):
+        pass
+
+    def connect(self, corr_names):
+        self.ch = []
+
+        corrs = {}
+        for b in corr_names:
+            self.ch.append( epics.ca.create_channel(b+":rdbk", auto_cb=False) )
+            epics.ca.connect_channel(self.ch[-1])
 
 
-class AlarmDevice(Device):
-    """
-    Devices for getting information about Machine status
-    """
+        epics.ca.poll()
+    
+    def get(self):
+        self.corrs = {}
 
-    def __init__(self, eid=None):
-        super(AlarmDevice, self).__init__(eid=eid)
+        for c in self.ch:
+            epics.ca.get(c, wait=False)
+
+        epics.ca.poll()
+        o = {}
+
+        for c in self.ch:
+            name = epics.ca.name(c).replace(":rdbk","")
+            x = epics.ca.get_complete(c)
+            o[name] = x
+            
+        return o
+
+
+
+class OrbitData():
+
+    def __init__(self):
+        pass
+
+    def connect(self, bpms_names):
+        self.ch_x = []
+        self.ch_y = []
+        self.offsets = {}
+
+        orb = {}
+        for b in bpms_names:
+            self.ch_x.append( epics.ca.create_channel(b+":rdX", auto_cb=False) )
+            self.ch_y.append( epics.ca.create_channel(b+":rdY", auto_cb=False) )
+            epics.ca.connect_channel(self.ch_x[-1])
+            epics.ca.connect_channel(self.ch_y[-1])
+            xoff = epics.PV(b+":rdX.EOFF").get()
+            yoff = epics.PV(b+":rdY.EOFF").get()
+            self.offsets[b] = (xoff, yoff)
+
+
+        epics.ca.poll()
+    
+    def get(self):
+        self.orb = {}
+        for c in self.ch_x:
+            epics.ca.get(c, wait=False)
+        for c in self.ch_y:
+            epics.ca.get(c, wait=False)
+
+        epics.ca.poll()
+        o_x = {}
+        o_y = {}
+        o = {}
+        for c in self.ch_x:
+            name = epics.ca.name(c).replace(":rdX","")
+            x = epics.ca.get_complete(c)
+            o_x[name] = x
+        for c in self.ch_y:
+            name = epics.ca.name(c).replace(":rdY","")
+            y = epics.ca.get_complete(c)
+            o_y[name] = y
+        
+        for c in o_x.keys():
+            off = self.offsets[c]
+            o[c] = (o_x[c] - off[0],o_y[c] - off[1])
+            
+        return o
+
+
+#orb = OrbitData(['BPMZ3T3R','BPMZ7D1R'])
+#o = orb.get()
+#print(o)
+
 
 
 class BESSYMachineInterface(MachineInterface):
@@ -37,19 +118,52 @@ class BESSYMachineInterface(MachineInterface):
     Machine Interface for European XFEL
     """
 
-    def __init__(self):
-        super(BESSYMachineInterface, self).__init__()
-        if 'pydoocs' not in sys.modules:
-            print('error importing doocs library')
+    def __init__(self, args=None):
+        super(BESSYMachineInterface, self).__init__(args=args)
+        if 'epics' not in sys.modules:
+            print('error importing EPICS library')
         self.logbook = "xfellog"
-        self.allow_star_operation = False
+        self.allow_star_operation = True
         self.hide_section_selection = True
         self.hide_close_trajectory = True
         self.hide_xfel_specific = True
         self.hide_dispersion_tab = True
         self.twiss_periodic = True
+        self.analyse_correction = False
+        self.uncheck_upstream_bpms = False # uncheck bpms upstream the first corrector
         self.orm_method = RingRM
         self.drm_method = LinacDisperseSimRM
+        self.orbit_data = OrbitData()
+        self.corrector_data = CorrectorData()
+        self.read_offset_orbit()
+        self.conversion()
+        self.lattice_manager = lattice_manager
+        self.devices = devices
+
+    def conversion(self):
+        filename = "mint/conversion_factor_cor.csv"
+        with open(filename, 'r') as f:
+            lines = f.readlines()
+        self.corr_conversion = {}
+        for line in lines:
+            ll = line.split()
+            name = ll[0].replace("M", "P")
+            self.corr_conversion[name] = [float(ll[1]), float(ll[2])]
+        #print(cor)
+
+    def read_offset_orbit(self):
+        filename = "/opt/OPI/MapperApplications/conf/Orbit/SR/RefOrbit.Dat"
+        #filename = "/opt/OPI/MapperApplications/conf/Orbit/SR/BBA-Reference-Data/BBA-11BPMOFF.SET"
+
+        isfile = os.path.isfile(filename)
+        a = {}
+        if isfile:
+            for l in open(filename).read().split('\n'):
+                ll = l.split()
+                if len(ll) <= 2: continue
+                a[ll[0]] = [float(ll[1]), float(ll[2])]
+
+        self.offset_orbit = a
 
     def get_value(self, channel):
         """
@@ -61,7 +175,7 @@ class BESSYMachineInterface(MachineInterface):
         logger.debug(" get_value: channel" + channel)
         val = epics.PV(channel).get()
         # print(channel, "   TIMESTAMP:",  val["timestamp"])
-
+        #print(channel, " val = ", val)
         return val
 
     def set_value(self, channel, val):
@@ -88,7 +202,7 @@ class BESSYMachineInterface(MachineInterface):
         return val
 
     def get_charge(self):
-        return self.get_value("XFEL.DIAG/CHARGE.ML/TORA.25.I1/CHARGE.SA1")
+        return 1
 
     def send_to_logbook(self, *args, **kwargs):
         """
@@ -102,78 +216,34 @@ class BESSYMachineInterface(MachineInterface):
         :return: bool
             True when the entry was successfully generated, False otherwise.
         """
-        author = kwargs.get('author', '')
-        title = kwargs.get('title', '')
-        severity = kwargs.get('severity', '')
-        text = kwargs.get('text', '')
-        image = kwargs.get('image', None)
-        elog = self.logbook
-
-        # The DOOCS elog expects an XML string in a particular format. This string
-        # is beeing generated in the following as an initial list of strings.
-        succeded = True  # indicator for a completely successful job
-        # list beginning
-        elogXMLStringList = ['<?xml version="1.0" encoding="ISO-8859-1"?>', '<entry>']
-
-        # author information
-        elogXMLStringList.append('<author>')
-        elogXMLStringList.append(author)
-        elogXMLStringList.append('</author>')
-        # title information
-        elogXMLStringList.append('<title>')
-        elogXMLStringList.append(title)
-        elogXMLStringList.append('</title>')
-        # severity information
-        elogXMLStringList.append('<severity>')
-        elogXMLStringList.append(severity)
-        elogXMLStringList.append('</severity>')
-        # text information
-        elogXMLStringList.append('<text>')
-        elogXMLStringList.append(text)
-        elogXMLStringList.append('</text>')
-        # image information
-        if image:
-            try:
-                encodedImage = base64.b64encode(image)
-                elogXMLStringList.append('<image>')
-                elogXMLStringList.append(encodedImage.decode())
-                elogXMLStringList.append('</image>')
-            except:  # make elog entry anyway, but return error (succeded = False)
-                succeded = False
-        # list end
-        elogXMLStringList.append('</entry>')
-        # join list to the final string
-        elogXMLString = '\n'.join(elogXMLStringList)
-        # open printer process
-        try:
-            lpr = subprocess.Popen(['/usr/bin/lp', '-o', 'raw', '-d', elog],
-                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-            # send printer job
-            lpr.communicate(elogXMLString.encode('utf-8'))
-        except:
-            succeded = False
-        return succeded
+        pass
 
 
 # test interface
 
 
-class TestMachineInterface(MachineInterface):
+class BESSYTestInterface(BESSYMachineInterface):
     """
     Machine interface for testing
     """
 
-    def __init__(self):
-        super(TestMachineInterface, self).__init__()
+    def __init__(self, args=None):
+        super(BESSYTestInterface, self).__init__(args=args)
         self.data = 1.
+
         self.allow_star_operation = False
         self.hide_section_selection = True
         self.hide_close_trajectory = True
         self.hide_xfel_specific = True
         self.hide_dispersion_tab = True
         self.twiss_periodic = True
+        self.analyse_correction = False
         self.orm_method = RingRM
         self.drm_method = LinacDisperseSimRM
+        self.orbit_data = OrbitData()
+        self.corrector_data = CorrectorData()
+        self.read_offset_orbit()
+        self.conversion()
 
     def get_alarms(self):
         return np.random.rand(4)  # 0.0, 0.0, 0.0, 0.0]

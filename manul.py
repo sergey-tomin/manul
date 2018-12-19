@@ -2,7 +2,7 @@
 """
 Sergey Tomin. XFEL/DESY, 2017.
 """
-#QT imports
+
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QFrame, QMessageBox, QMainWindow, QDialog
@@ -15,39 +15,42 @@ from copy import deepcopy
 from scipy import optimize
 import json
 import importlib
+import argparse
 import logging
 
 # filename="logs/afb.log",
 # filename = "logs/manul.log"
 #filename = "/home/xfeloper/log/ocelot/manul.log"
 #logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 # logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH to main file: " + os.path.realpath(__file__) + " path to folder"+ path[:indx])
 sys.path.append(path[:indx])
-sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
+#sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
 
 
 from ocelot import *
 #from ocelot.gui.accelerator import *
 from ocelot.cpbd.track import *
 
-#from ocelot.optimizer.mint.opt_objects import Device
 from mint.xfel_interface import *
+from mint.bessy_interface import *
 
 
 from orbit import OrbitInterface
-from mint.devices import *
 from dispersion import *
 from gui.gui_main import *
 from gui.settings_gui import *
 from ml.adviser_gui import *
-#from lattices import lattice_manager
-from lattices import ring_lattice_manager as lattice_manager
+
+
 logger = logging.getLogger(__name__)
 
+
+AVAILABLE_MACHINE_INTERFACES = [XFELMachineInterface, TestMachineInterface, BESSYMachineInterface,
+                                BESSYTestInterface]
 
 
 class ManulInterfaceWindow(QMainWindow):
@@ -61,8 +64,25 @@ class ManulInterfaceWindow(QMainWindow):
         Make the timer object that updates GUI on clock cycle during a scan.
         """
         # PATHS
-        #self.load_lattice_files()
 
+        self.tool_args = None
+        self.parse_arguments()
+        self.dev_mode = self.tool_args.devmode
+
+        args = vars(self.tool_args)
+        if self.dev_mode:
+            self.mi = TestMachineInterface(args)
+        else:
+            class_name = self.tool_args.mi
+            print(class_name)
+            if class_name not in globals():
+                print("Could not find Machine Interface with name: {}. Loading XFELMachineInterface instead.".format(class_name))
+                self.mi = XFELMachineInterface(args)
+            else:
+                self.mi = globals()[class_name](args)
+
+
+        print(self.mi.__class__)
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
         self.path2ocelot = path[:indx]
@@ -84,11 +104,11 @@ class ManulInterfaceWindow(QMainWindow):
         #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        #self.mi = XFELMachineInterface()
-        self.mi = TestMachineInterface()
-        self.debug_mode = False
-        if self.mi.__class__ == TestMachineInterface:
-            self.debug_mode = True
+        #self.mi = BESSYMachineInterface()
+        #self.mi = TestMachineInterface()
+        #self.debug_mode = False
+        #if self.mi.__class__ == TestMachineInterface:
+        #    self.debug_mode = True
         self.ui = MainWindow(self)
 
         # hide/show the block of the section selection and arbitrary part of section
@@ -122,7 +142,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         try:
             #self.xfel_lattice = lattice_manager.XFELLattice(path="lattices." + self.path2lattice)
-            self.xfel_lattice = lattice_manager.RingLattice(path="lattices." + self.path2lattice)
+            self.xfel_lattice = self.mi.lattice_manager.Lattice(path="lattices." + self.path2lattice)
 
         except Exception as exc:
             self.error_box("Could not load lattice files. Check the path in settings and try again. Path: "
@@ -130,28 +150,10 @@ class ManulInterfaceWindow(QMainWindow):
             return
 
         self.online_calc = True
-
-        #QFrame.__init__(self)
-        #self.ui = UiS_Form()
-        #self.ui.setupUi(self)
-
-
-        #load in the dark theme style sheet
-        #self.loadStyleSheet()
-
-
-        #timer for plots, starts when scan starts
         self.multiPvTimer = QtCore.QTimer()
-        #self.multiPvTimer.timeout.connect(self.getPlotData)
-        #self.initTable()
-        #print("quads", self.quads)
+
         self.add_plot()
 
-
-        #self.ui.cb_lattice.setCurrentIndex(0)
-
-        #self.correctors_list(seq=self.big_sequence, energy=130)
-        #self.change_subtrain()
         self.timer_live = pg.QtCore.QTimer()
         self.timer_live.timeout.connect(self.orbit.live_orbit)
 
@@ -160,26 +162,40 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.load_lattice_files()
         self.lat = self.return_lat()
-        #self.tws0 = self.return_tws()
-        #self.load_lattice()
 
         self.ui.pb_write.clicked.connect(self.calc_twiss)
         self.ui.pb_read.clicked.connect(self.read_quads)
         self.ui.pb_reset.clicked.connect(self.reset_quads)
 
-        #self.ui.cb_lattice.currentIndexChanged.connect(self.return_lat)
         self.ui.cb_otr55.setChecked(True)
         self.ui.cb_coupler_kick.stateChanged.connect(self.apply_coupler_kick)
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
-        #self.ui.pb_write.clicked.connect(self.match)
-        #self.ui.pb_reload.clicked.connect(self.reload_lat)
 
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
-
 
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
         self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
 
+
+    def parse_arguments(self):
+        parser = argparse.ArgumentParser(description="Ocelot Orbit Correction",
+                                         add_help=False)
+        parser.set_defaults(mi='XFELMachineInterface')
+        parser.add_argument('--devmode', action='store_true',
+                            help='Enable development mode.', default=False)
+
+        parser_mi = argparse.ArgumentParser()
+
+        mis = [mi.__class__.__name__ for mi in AVAILABLE_MACHINE_INTERFACES]
+        subparser = parser_mi.add_subparsers(title='Machine Interface Options', dest="mi")
+        for mi in AVAILABLE_MACHINE_INTERFACES:
+            mi_parser = subparser.add_parser(mi.__name__, help='{} arguments'.format(mi.__name__))
+            mi.add_args(mi_parser)
+
+        self.tool_args, others = parser.parse_known_args()
+
+        if len(others) != 0:
+            self.tool_args = parser_mi.parse_args(others, namespace=self.tool_args)
 
     def get_charge_bunch(self):
         if self.charge_from_doocs:

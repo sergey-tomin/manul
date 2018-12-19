@@ -1,9 +1,12 @@
 """
 S.Tomin, 2018
 """
+import time
+import numpy as np
+
 
 class MachineInterface(object):
-    def __init__(self):
+    def __init__(self, args):
         self.debug = False
 
     def get_value(self, channel):
@@ -14,6 +17,17 @@ class MachineInterface(object):
         :return: Data from the read on the Control System, variable data type depending on channel
         """
         raise NotImplementedError
+
+    @staticmethod
+    def add_args(subparser):
+        """
+        Method that will add the Machine interface specific arguments to the
+        command line argument parser.
+
+        :param subparser: (ArgumentParser)
+        :return:
+        """
+        return
 
     def set_value(self, channel, val):
         """
@@ -48,6 +62,17 @@ class MachineInterface(object):
         """
         return Device(eid=pv)
 
+    def add_conversion(self, element):
+        """
+        Create methods in a device to translate physical units to hardware units
+
+        :param element: in general ocelot element
+        :return:
+        """
+        pass
+
+
+
 
 class Device(object):
     def __init__(self, eid=None):
@@ -62,6 +87,8 @@ class Device(object):
         self.target = None
         self.low_limit = 0
         self.high_limit = 0
+        self.phys2hw_factor = 1.
+        self.hw2phys_factor = 1.
 
     def set_value(self, val):
         self.values.append(val)
@@ -118,3 +145,23 @@ class Device(object):
 
     def get_limits(self):
         return [self.low_limit, self.high_limit]
+
+    def phys2hw(self, phys_val):
+        """
+        Method to translate physical units to hardware units, e.g. angle [rad] to current [A]
+
+        :param phys_val: physical unit
+        :return: hardware unit
+        """
+        hw_val = phys_val*self.phys2hw_factor
+        return hw_val
+
+    def hw2phys(self, hw_val):
+        """
+        Method to translate hardware units to physical units, e.g. current [A] to angle [rad]
+
+        :param hw_val: hardware unit
+        :return: physical unit
+        """
+        phys_val = hw_val*self.hw2phys_factor
+        return phys_val

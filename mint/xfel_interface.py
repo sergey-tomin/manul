@@ -17,6 +17,8 @@ import subprocess
 import base64
 from threading import Lock
 from mint.interface import MachineInterface, Device
+from lattices import lattice_manager
+import mint.devices as devices
 import logging
 logger = logging.getLogger(__name__)
 from ocelot.cpbd.response_matrix import *
@@ -34,19 +36,23 @@ class XFELMachineInterface(MachineInterface):
     """
     Machine Interface for European XFEL
     """
-    def __init__(self):
-        super(XFELMachineInterface, self).__init__()
+    def __init__(self, args=None):
+        super(XFELMachineInterface, self).__init__(args=args)
         if 'pydoocs' not in sys.modules:
             print('error importing doocs library')
         self.logbook = "xfellog"
+        self.uncheck_upstream_bpms = True  # uncheck bpms upstream the first corrector
         self.allow_star_operation = True
         self.hide_section_selection = False
         self.hide_close_trajectory = False
         self.hide_xfel_specific = False
         self.hide_dispersion_tab = False
         self.twiss_periodic = False
+        self.analyse_correction = True
         self.orm_method = LinacRmatrixRM
         self.drm_method = LinacDisperseSimRM
+        self.lattice_manager = lattice_manager
+        self.devices = devices
 
     def get_value(self, channel):
         """
@@ -86,6 +92,17 @@ class XFELMachineInterface(MachineInterface):
 
     def get_charge(self):
         return self.get_value("XFEL.DIAG/CHARGE.ML/TORA.25.I1/CHARGE.SA1")
+
+    def add_conversion(self, element):
+        """
+        Create methods in a device to translate physical units to hardware units
+
+        :param element: in general ocelot element
+        :return:
+        """
+        if element.__class__ in [Hcor, Vcor]:
+            element.mi.phys2hw_factor = 1000    # rad to mrad
+            element.mi.hw2phys_factor = 0.001   # mrad to rad
 
     def send_to_logbook(self, *args, **kwargs):
         """
@@ -154,20 +171,22 @@ class XFELMachineInterface(MachineInterface):
 # test interface
 
 
-class TestMachineInterface(MachineInterface):
+class TestMachineInterface(XFELMachineInterface):
     """
     Machine interface for testing
     """
-    def __init__(self):
-        super(TestMachineInterface, self).__init__()
+    def __init__(self, args=None):
+        super(TestMachineInterface, self).__init__(args=args)
         self.data = 1.
+        self.logbook = "xfellog"
         self.allow_star_operation = False
-        self.hide_section_selection = True
-        self.hide_close_trajectory = True
-        self.hide_xfel_specific = True
-        self.hide_dispersion_tab = True
-        self.twiss_periodic = True
-        self.orm_method = RingRM
+        self.hide_section_selection = False
+        self.hide_close_trajectory = False
+        self.hide_xfel_specific = False
+        self.hide_dispersion_tab = False
+        self.twiss_periodic = False
+        self.analyse_correction = True
+        self.orm_method = LinacRmatrixRM
         self.drm_method = LinacDisperseSimRM
 
     def get_alarms(self):

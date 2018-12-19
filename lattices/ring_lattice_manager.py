@@ -17,7 +17,7 @@ class LatSection:
         self.tw = tw
 
 
-class RingLattice:
+class Lattice:
     def __init__(self, path="lattices.Bessy"):
         self.lat_zi = 0 # start position of the lattice in [m]
         self.default_section = "RING"

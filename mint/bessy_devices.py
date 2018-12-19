@@ -11,8 +11,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+
 class Corrector(Device):
-    def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
+    def __init__(self, eid=None, server="XFEL", subtrain="SA1", phys2hw=1):
         super(Corrector, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
@@ -20,32 +21,37 @@ class Corrector(Device):
     def set_value(self, val):
         # self.values.append(val)
         # self.times.append(time.time())
-        ch = self.server + ".MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = self.eid + ":set"
         self.mi.set_value(ch, val)
 
     def get_value(self):
-        ch = self.server + ".MAGNETS/MAGNET.ML/" + self.eid + "/KICK_MRAD.SP"
+        ch = self.eid + ":set"
         val = self.mi.get_value(ch)
         return val
 
+    def get_value_from_dict(self):
+        ch = self.eid
+        val = self.mi.correctors_kick[ch]
+        return val
+ 
     def get_limits(self):
-        ch_min = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
-        min_kick = self.mi.get_value(ch_min)
-        ch_max = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
-        max_kick = self.mi.get_value(ch_max)
-        return [min_kick * 1000, max_kick * 1000]
+        #ch_min = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MIN_KICK"
+        #min_kick = self.mi.get_value(ch_min)
+        #ch_max = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/MAX_KICK"
+        #max_kick = self.mi.get_value(ch_max)
+        return [-2, 2]
 
     def is_ok(self):
-        ch = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/COMBINED_STATUS"
-        status = int(self.mi.get_value(ch))
-        power_bit = '{0:08b}'.format(status)[-2]
-        busy_bit = '{0:08b}'.format(status)[-4]
+        #ch = self.server + ".MAGNETS/MAGNET.ML/" + self.id + "/COMBINED_STATUS"
+        #status = int(self.mi.get_value(ch))
+        #power_bit = '{0:08b}'.format(status)[-2]
+        #busy_bit = '{0:08b}'.format(status)[-4]
 
-        if power_bit == "1" and busy_bit == "0":
-            return True
-        else:
-            return False
-
+        #if power_bit == "1" and busy_bit == "0":
+        #    return True
+        #else:
+        #    return False
+        return True
 
 class MITwiss(Device):
     def __init__(self, eid=None, server="XFEL", subtrain="SA1"):
@@ -70,6 +76,10 @@ class MITwiss(Device):
 class ChargeDoocs(Device):
     def __init__(self, eid="XFEL.FEEDBACK/LONGITUDINAL/MONITOR1/TARGET", server="XFEL", subtrain="SA1"):
         super(ChargeDoocs, self).__init__(eid=eid)
+    
+    def get_value(self):
+        print("get_value charge ")
+        return 1
 
 
 class MPS(Device):
@@ -88,8 +98,8 @@ class MPS(Device):
         self.mi.set_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/NUM_BUNCHES_REQUESTED_1", num_bunches)
 
     def is_beam_on(self):
-        val = self.mi.get_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/BEAM_ALLOWED")
-        return val
+        #val = self.mi.get_value(self.server + ".UTIL/BUNCH_PATTERN/CONTROL/BEAM_ALLOWED")
+        return 1
 
 
 class CavityA1(Device):
@@ -196,10 +206,10 @@ class BPM(Device):
         self.bpm_server = "BPM"
 
     def get_pos(self):
-        ch_x = self.eid + ":rdX."
-        ch_y = self.eid + ":rdY."
-        x = self.mi.get_value(ch_x)
-        y = self.mi.get_value(ch_y)
+        ch_x = self.eid + ":rdX"
+        ch_y = self.eid + ":rdY"
+        x = self.mi.get_value(ch_x) #- self.mi.offset_orbit[self.eid][0]
+        y = self.mi.get_value(ch_y) #- self.mi.offset_orbit[self.eid][1]
         return x, y
 
     def get_pos_frontend(self):
@@ -219,7 +229,8 @@ class BPM(Device):
         return x, y
 
     def get_charge(self):
-        x = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/" + self.eid + "/CHARGE." + self.subtrain)
+        #x = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/" + self.eid + "/CHARGE." + self.subtrain)
+        x = 1
         return x
 
     def get_ref_pos(self):
@@ -438,6 +449,7 @@ class MIOrbit(Device, Thread):
         return names_xy, x, y, charge
 
     def read_and_average(self, nreadings, take_last_n, reliable_reading=False, suffix=""):
+        """
         logger.info(" MIorbit: read_and_average")
         orbits_x = []
         orbits_y = []
@@ -457,7 +469,8 @@ class MIOrbit(Device, Thread):
         self.mean_x = np.mean(orbits_x[-take_last_n:], axis=0)
         self.mean_y = np.mean(orbits_y[-take_last_n:], axis=0)
         self.mean_charge = np.mean(orbits_charge[-take_last_n:], axis=0)
-        return self.bpm_names, self.mean_x, self.mean_y, self.mean_charge
+        """
+        #return self.bpm_names, self.mean_x, self.mean_y, self.mean_charge
 
     def get_bpms(self, bpms):
         """
@@ -467,24 +480,15 @@ class MIOrbit(Device, Thread):
         :param charge_threshold:
         :return:
         """
-        if len(self.bpm_names) == 0:
-            return False
-        # bpm_names = [bpm.id for bpm in bpms]
-        indxs = []
-        valid_bpm_inx = []
+        bpm_names = [bpm.id for bpm in bpms]
+        self.mi.orbit_data.connect(bpm_names)
+        o = self.mi.orbit_data.get()
+        
+
         for i, bpm in enumerate(bpms):
-            if bpm.id not in self.bpm_names:
-                bpm.ui.uncheck()
-            else:
-                valid_bpm_inx.append(i)
-                indxs.append(self.bpm_names.index(bpm.id))
-                logger.debug(" MIOrbit: get_bpms: len(bpm)=" + str(len(bpms)) + "  len(indxs) = " + str(len(indxs)))
-        bpms = [bpms[indx] for indx in valid_bpm_inx]
-        for i, bpm in enumerate(bpms):
-            inx = indxs[i]
-            bpm.x = self.mean_x[inx] / 1000  # [mm] -> [m]
-            bpm.y = self.mean_y[inx] / 1000  # [mm] -> [m]
-            bpm.charge = self.mean_charge[inx]  # nC
+            bpm.x = (o[bpm.id][0] - self.mi.offset_orbit[bpm.id][0]) / 1000  # [mm] -> [m]
+            bpm.y = (o[bpm.id][1] - self.mi.offset_orbit[bpm.id][1]) / 1000  # [mm] -> [m]
+            bpm.charge = 0.5  # nC
         return True
 
     def read_doocs_ref_orbit(self):
