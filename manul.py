@@ -3,18 +3,9 @@
 Sergey Tomin. XFEL/DESY, 2017.
 """
 
-from PyQt5.QtGui import QPixmap
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QApplication, QFrame, QMessageBox, QMainWindow, QDialog
-import numpy as np
+from PyQt5.QtWidgets import QFrame, QMainWindow
 import sys
 import os
-import time
-import pyqtgraph as pg
-from copy import deepcopy
-from scipy import optimize
-import json
-import importlib
 import argparse
 import logging
 
@@ -22,7 +13,7 @@ import logging
 # filename = "logs/manul.log"
 #filename = "/home/xfeloper/log/ocelot/manul.log"
 #logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 # logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -31,7 +22,6 @@ sys.path.append(path[:indx])
 #sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
 
 
-from ocelot import *
 #from ocelot.gui.accelerator import *
 from ocelot.cpbd.track import *
 
