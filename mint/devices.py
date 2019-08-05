@@ -67,7 +67,7 @@ class MITwiss(Device):
         return tws_dict
 
 class ChargeDoocs(Device):
-    def __init__(self, eid="XFEL.FEEDBACK/LONGITUDINAL/MONITOR1/TARGET", server="XFEL", subtrain="SA1"):
+    def __init__(self, eid="XFEL.FEEDBACK/FT1.LONGITUDINAL/MONITOR1/TARGET", server="XFEL", subtrain="SA1"):
         super(ChargeDoocs, self).__init__(eid=eid)
 
 
@@ -96,7 +96,6 @@ class CavityA1(Device):
         super(CavityA1, self).__init__(eid=eid)
         self.subtrain = subtrain
         self.server = server
-
     def set_value(self, val):
         ch = self.server + ".RF/LLRF.CONTROLLER/" + self.eid + "/SP.AMPL"
         self.mi.set_value(ch, val)

@@ -13,7 +13,7 @@ import logging
 # filename = "logs/manul.log"
 #filename = "/home/xfeloper/log/ocelot/manul.log"
 #logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 # logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -518,7 +518,7 @@ class ManulInterfaceWindow(QMainWindow):
         if self.ui.cb_sec_order.isChecked():
             method.global_method = SecondTM
         else:
-            method.global_method = TransferMap
+            method.global_method = SecondTM# TransferMap
         self.lat = MagneticLattice(self.lat.sequence, method=method)
 
         # calc orbit

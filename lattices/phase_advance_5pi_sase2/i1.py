@@ -259,6 +259,9 @@ bl_48i_i1.ps_id = 'BL.1.I1'
 bl_48ii_i1.ps_id = 'BL.1.I1'
 bl_50i_i1.ps_id = 'BL.3.I1'
 bl_50ii_i1.ps_id = 'BL.4.I1'
-
-
+lat = MagneticLattice(cell)
+tws = twiss(lat, tws0=tws)
+from ocelot.gui import *
+plot_opt_func(lat, tws)
+plt.show()
 

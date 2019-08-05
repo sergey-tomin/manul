@@ -18,7 +18,7 @@ class DispersionInterface:
         self.ui.cb_cav_list.addItem("A2.L1")
         self.ui.cb_cav_list.addItem("A3.L2")
         self.ui.cb_cav_list.addItem("A4.L2")
-        self.ui.cb_cav_list.addItem("A5.L3")
+        self.ui.cb_cav_list.addItem("A5.L2")
 
         self.ui.cb_cav_list.addItem("A6.L3")
         self.ui.cb_cav_list.addItem("A7.L3")

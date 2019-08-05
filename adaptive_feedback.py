@@ -90,9 +90,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.counter = 0
         #self.debug_mode = False
         #if self.parent.mi.__class__ == TestMachineInterface:
-        #    self.debug_mode = True
-        self.debug_mode = self.parent.debug_mode
-        logger.info("debug_mode = " + str(self.debug_mode))
+        #    self.dev_mode = True
+        self.dev_mode = self.parent.dev_mode
+        logger.info("dev_mode = " + str(self.dev_mode))
         self.first_go_x = []
         self.first_go_y = []
         self.cur_go_x = []
@@ -507,7 +507,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
                 x_mm, y_mm = elem.mi.get_pos_frontend()
                 charge = elem.mi.get_charge()
-                if not self.debug_mode and charge < charge_thresh:
+                if not self.dev_mode and charge < charge_thresh:
                     # TODO: add a checking for beam on/off
                     if self.orbit_class.xfel_mps.is_orbit_on():
                         logger.info("charge < charge_thresh: " + str(charge < charge_thresh))
@@ -535,7 +535,7 @@ class UIAFeedBack(QWidget, Ui_Form):
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
 
-        if not beam_on and not self.debug_mode:
+        if not beam_on and not self.dev_mode:
             return beam_on
         target = self.read_objective_function()
         if target == None:
