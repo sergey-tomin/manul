@@ -38,6 +38,46 @@ class Statistics(Thread):
         self._stop_event.set()
 
 
+class ActiveSearch(Thread):
+    """
+    Active search
+    """
+
+    def __init__(self, orbit, search_period, search_delay, noise_amp_mrad):
+        super(ActiveSearch, self).__init__()
+        self.orbit = orbit
+        self.period = search_period
+        self.delay = search_delay
+        self.amp_mrad = noise_amp_mrad
+        self._stop_event = Event()
+        self.stop_event = False
+
+    def run(self):
+        while not self.stop_event:
+            for cor in self.orbit.corrs:
+                if cor.ui.alarm:
+                    self.stop_event = True
+                    logger.info("apply_kicks: kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
+                    #self.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
+                    return 0
+
+            for cor in self.orbit.corrs:
+                i_kick_mrad = cor.mi.get_value()
+                for t in np.arange(0, 2*self.period, self.delay):
+                    if self.stop_event is True:
+                        return 0
+                    kick_mrad = i_kick_mrad + self.amp_mrad * np.sin(2*np.pi/self.period * t)
+
+                    logger.debug(cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
+                    try:
+                        cor.mi.set_value(kick_mrad)
+                    except Exception as e:
+                        logger.error(cor.id + " apply_kicks Error: " + str(e))
+                    time.sleep(self.delay)
+
+    def stop(self):
+        self._stop_event.set()
+
 
 class UIAFeedBack(QWidget, Ui_Form):
     def __init__(self, parent=None, orbit=None):
@@ -64,6 +104,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.pb_start_feedback.clicked.connect(self.start_stop_feedback)
 
         self.pb_start_statistics.clicked.connect(self.start_stop_statistics)
+
+        self.pb_active_search.clicked.connect(self.start_stop_active_search)
+
         self.update_plot_counter = 0
         self.orbits_x = []
         self.orbits_y = []
@@ -106,7 +149,17 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cb_load_settings.setCurrentIndex(0)
         self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
+        #self.show_traj.clicked.connect(self.hide_show_orbit_widget)
 
+    def hide_show_orbit_widget(self):
+        if self.show_traj.text() == "Hide Cor/BPM panel":
+            self.show_traj.setText("Show Cor/BPM panel")
+            self.show_traj.setStyleSheet("color: rgb(255, 0, 255);")
+            self.widget.hide()
+        else:
+            self.widget.show()
+            self.show_traj.setText("Hide Cor/BPM panel")
+            self.show_traj.setStyleSheet("color: rgb(85, 255, 255);")
 
     def save_state(self, filename):
         # pvs = self.ui.widget.pvs
@@ -128,6 +181,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         table["le_b"] = self.le_b.text()
         table["le_c"] = self.le_c.text()
         table["le_of"] = self.le_of.text()
+
+        # active search
+        table["sr_delay"] = self.sb_sr_delay.value()
+        table["sr_noise_amp"] = self.sb_sr_noise_amp.value()
+        table["sr_period"] = self.sb_sr_period.value()
 
         with open(filename, 'w') as f:
             json.dump(table, f)
@@ -152,6 +210,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.sb_go_recalc_delay.setValue(table["go_recalc_delay"] )
         self.sb_ref_orbit_nread.setValue(table["ref_orbit_nread"])
         self.sb_averaging.setValue(table["averaging"])
+
+        # active search
+        if "sr_delay" in table: self.sb_sr_delay.setValue(table["sr_delay"])
+        if "sr_noise_amp" in table: self.sb_sr_noise_amp.setValue(table["sr_noise_amp"])
+        if "sr_period" in table: self.sb_sr_period.setValue(table["sr_period"])
 
         if "le_a" in table.keys(): self.le_a.setText(table["le_a"])
         if "le_b" in table.keys(): self.le_b.setText(table["le_b"])
@@ -231,6 +294,39 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.stop_feedback()
         self.stop_statistics()
 
+    def start_stop_active_search(self):
+        """
+        Method to start/stop active search
+
+        :return:
+        """
+        #print("I am here")
+
+
+        if self.pb_start_feedback.text() == "Start Feedback":
+            return 0
+
+        #self.orbit = self.orbit_class.create_Orbit_obj()
+
+        delay = self.sb_sr_delay.value()
+        if self.pb_active_search.text() == "Stop Search":
+            print("here")
+            self.active_search.stop_event = True
+            self.active_search.stop()
+            self.pb_active_search.setStyleSheet("color: rgb(85, 255, 127);")
+            self.pb_active_search.setText("Start Search")
+        else:
+            noise_amp_mrad = self.sb_sr_noise_amp.value() / 1000.
+            search_period = self.sb_sr_period.value()
+            self.active_search = ActiveSearch(orbit=self.orbit, search_period=search_period,
+                                              search_delay=delay, noise_amp_mrad=noise_amp_mrad)
+
+            self.active_search.start()
+            logger.info("Start Search")
+            self.pb_active_search.setText("Stop Search")
+            self.pb_active_search.setStyleSheet("color: red")
+
+
     def start_stop_statistics(self):
         """
         Method to start/stop feedback timer.
@@ -302,7 +398,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
         if self.mi_standard_fb != None and self.mi_standard_fb.is_running():
-            self.error_box("Standard FeedBack is runinning!")
+            self.error_box("Standard FeedBack is running!")
             logger.info("start_stop_feedback: St.FB is running")
             return 0
         #self.orbit = self.orbit_class.create_Orbit_obj()
@@ -352,11 +448,15 @@ class UIAFeedBack(QWidget, Ui_Form):
             return
             #self.stop_feedback()
             #self.parent.error_box("auto_correction: nan in the ref orbit")
+        start = time.time()
         stop_flag = self.correct()
+        print("correct: ", time.time() - start)
         time.sleep(0.01)
         if not stop_flag:
             #print("apply time = ", time.time())
+            start = time.time()
             self.apply_kicks()
+            print("apply_kicks: ", time.time() - start)
             #time.sleep(0.5)
             self.le_warn.clear()
         else:
@@ -449,7 +549,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
     def apply_kicks(self):
         """
-        Methos sends correctors kicks to DOOCS, if strengths below the limits,
+        Method sends correctors kicks to DOOCS, if strengths below the limits,
         otherwise error box will appear
 
         :return:
@@ -632,8 +732,10 @@ class UIAFeedBack(QWidget, Ui_Form):
         else:
             delta_go_x = aver_x - self.first_go_x
             delta_go_y = aver_y - self.first_go_y
-        self.orb_x_ref.setData(x=self.orbit_s, y=delta_go_x*1000)
-        self.orb_y_ref.setData(x=self.orbit_s, y=delta_go_y*1000)
+        # if tab is active
+        if self.tabWidget.currentIndex() == 1:
+            self.orb_x_ref.setData(x=self.orbit_s, y=delta_go_x*1000)
+            self.orb_y_ref.setData(x=self.orbit_s, y=delta_go_y*1000)
 
         self.cur_go_x = aver_x
         self.cur_go_y = aver_y
@@ -677,9 +779,10 @@ class UIAFeedBack(QWidget, Ui_Form):
         else:
             delta_ro_x = self.ref_aver_x - self.cur_go_x
             delta_ro_y = self.ref_aver_y - self.cur_go_y
-
-        self.orb_y.setData(x=self.orbit_s, y=delta_ro_x*1000)
-        self.orb_x.setData(x=self.orbit_s, y=delta_ro_y*1000)
+        # if tab is active
+        if self.tabWidget.currentIndex() == 1:
+            self.orb_y.setData(x=self.orbit_s, y=delta_ro_x*1000)
+            self.orb_x.setData(x=self.orbit_s, y=delta_ro_y*1000)
         return False
 
 

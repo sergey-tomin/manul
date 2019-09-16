@@ -27,7 +27,7 @@ from ocelot.cpbd.track import *
 
 from mint.xfel_interface import *
 from mint.bessy_interface import *
-
+from mint.flash_interface import *
 
 from orbit import OrbitInterface
 from dispersion import *
@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 
 AVAILABLE_MACHINE_INTERFACES = [XFELMachineInterface, TestMachineInterface, BESSYMachineInterface,
-                                BESSYTestInterface]
+                                BESSYTestInterface, FLASHMachineInterface]
 
 
 class ManulInterfaceWindow(QMainWindow):
@@ -165,6 +165,12 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
         self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
+
+    def closeEvent(self, event):
+        if self.orbit.adaptive_feedback is not None:
+            self.orbit.adaptive_feedback.close()
+        logger.info("close")
+        event.accept() # let the window close
 
 
     def parse_arguments(self):
