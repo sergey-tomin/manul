@@ -146,8 +146,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cb_load_settings.addItem("SASE2 launch")
         
         self.cb_load_settings.addItem("test")
-        self.cb_load_settings.setCurrentIndex(0)
-        self.pb_load_settings.clicked.connect(self.load_presettings)
+        self.cb_load_settings.setCurrentIndex(-1)
+        self.cb_load_settings.currentIndexChanged.connect(self.load_presettings)
+        #self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
         #self.show_traj.clicked.connect(self.hide_show_orbit_widget)
 
@@ -662,8 +663,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.filter_target_func()
 
         self.update_plot_counter += 1
-        if self.update_plot_counter%2 == 0:
-            self.update_obj_plot()
+        #if self.update_plot_counter%2 == 0:
+        self.update_obj_plot()
         return beam_on
 
     def filter_target_func(self):
@@ -904,13 +905,13 @@ class UIAFeedBack(QWidget, Ui_Form):
 
 
         color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen(color, width=3)
-        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Obj Func', antialias=True)
+        pen = pg.mkPen((0, 255, 255), width=3)
+        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Obj Func')
 
         self.plot_obj.addItem(self.obj_curve)
         color = QtGui.QColor(255, 0, 0)
-        pen = pg.mkPen(color, width=4)
-        self.obj_curve_filtered = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Filtered', antialias=True)
+        pen = pg.mkPen((255, 0, 0), width=4)
+        self.obj_curve_filtered = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Filtered')
         self.plot_obj.addItem(self.obj_curve_filtered)
         self.plot_obj.addLegend()
         #color = QtGui.QColor(255, 0, 0)
