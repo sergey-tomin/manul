@@ -18,7 +18,7 @@ import base64
 from threading import Lock
 from mint.interface import MachineInterface, Device
 from lattices import flash_lattice_manager
-import mint.devices as devices
+import mint.flash_devices as devices
 import logging
 logger = logging.getLogger(__name__)
 from ocelot.cpbd.response_matrix import *

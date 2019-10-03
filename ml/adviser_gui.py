@@ -68,7 +68,8 @@ class ManulAdviser(QWidget):
         
         min_sase = np.min(self.adviser.sases)
         max_sase = np.max(self.adviser.sases)
-        print("SASE = ", min_sase, max_sase, self.adviser.sases)
+        if np.isinf(max_sase):
+            max_sase = 10000
         self.ui.horizontalSlider.setMinimum(min_sase)
         self.ui.horizontalSlider.setMaximum(max_sase)
         self.ui.lab_sase_max.setText(str(max_sase))

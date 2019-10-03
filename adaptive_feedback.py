@@ -4,7 +4,6 @@ Sergey Tomin, XFEL/DESY, 2017
 
 import numpy as np
 import json
-from ocelot.optimizer.mint import opt_objects as obj
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from scipy import io
@@ -15,7 +14,6 @@ import time
 import os
 from threading import Thread, Event
 from ocelot.cpbd.magnetic_lattice import *
-from ocelot.optimizer.mint.xfel_interface import *
 import logging
 import numbers
 from mint.devices import *
@@ -82,22 +80,18 @@ class ActiveSearch(Thread):
 class UIAFeedBack(QWidget, Ui_Form):
     def __init__(self, parent=None, orbit=None):
         QWidget.__init__(self, parent)
-        #self.paren = main_parent
-        #self.ui = self.parent.ui
+
         self.setupUi(self)
         self.loadStyleSheet(filename=orbit.parent.ui.style_file)
         self.orbit_class = orbit
         self.parent = self.orbit_class.parent
         self.mi = self.parent.mi
         self.orbit_ui = orbit.ui
-        #self.parent = parent
-        #self.self_ui = parent.window2
-        #self.ui = parent.parent.ui
+
         self.ref_aver_x = []
         self.ref_aver_y = []
         self.nring = 30
-        #self.Form = parent.parent
-        #print("load style")
+
         self.configs_dir = "./configs/"
         self.golden_orbit = {}
         self.mi_standard_fb = None
@@ -122,18 +116,23 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.add_orbit_plot()
         self.add_objective_func_plot()
+        self.add_orbit_hist_plot()
+        self.add_sase_hist_plot()
+
+        self.widget_cor_tab.create_table(h_headers=["corrector", "value"])
+        self.widget_cor_tab.init_table([{"corrector": "SAX", "value": 2}, {"corrector": "SAY", "value": 10}], editable=False)
         self.objective_func = None
-        #self.le_a.setText("XFEL.FEL/XGM.PREPROCESSING/XGM.2643.T9.CH0/RESULT.TD")
-        #self.le_of.setText("np.mean(np.array(A)[:,1])")
+
         self.le_a.textChanged.connect(self.check_address)
         self.le_b.textChanged.connect(self.check_address)
         self.le_c.textChanged.connect(self.check_address)
 
         self.bpms_name = []
         self.counter = 0
-        #self.debug_mode = False
-        #if self.parent.mi.__class__ == TestMachineInterface:
-        #    self.dev_mode = True
+        self.cor_hist = []
+        self.sase_hist = []
+        self.x_hist = []
+        self.y_hist = []
         self.dev_mode = self.parent.dev_mode
         logger.info("dev_mode = " + str(self.dev_mode))
         self.first_go_x = []
@@ -148,9 +147,44 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.cb_load_settings.addItem("test")
         self.cb_load_settings.setCurrentIndex(-1)
         self.cb_load_settings.currentIndexChanged.connect(self.load_presettings)
-        #self.pb_load_settings.clicked.connect(self.load_presettings)
         self.pb_save_settings.clicked.connect(self.save_presettings)
-        #self.show_traj.clicked.connect(self.hide_show_orbit_widget)
+
+        self.slider.valueChanged.connect(self.browser_slider_changed)
+        self.tabWidget.currentChanged.connect(self.tab_changed)
+
+    def tab_changed(self):
+        if self.tabWidget.currentIndex() == 1:
+            if len(self.sase_hist) == 0:
+                self.slider.setEnabled(False)
+                return
+            nsteps = len(self.cor_hist)
+            self.sase_hist = self.sase_hist[:nsteps]
+            self.y_hist = self.y_hist[:nsteps]
+            self.x_hist = self.x_hist[:nsteps]
+
+            if not(len(self.sase_hist) == len(self.y_hist) and len(self.cor_hist) == len(self.y_hist)):
+                print("Wrong history data", len(self.sase_hist), len(self.y_hist), len(self.cor_hist), len(self.x_hist))
+                return
+            self.slider.setEnabled(True)
+            self.slider.setMaximum(nsteps - 1)
+            self.plot_sase_hist.setData(x=np.arange(len(self.sase_hist)), y=self.sase_hist)
+            self.orb_x_ref_hist.setData(self.x_hist[0])
+            self.orb_y_ref_hist.setData(self.y_hist[0])
+            self.orb_x_hist.setData(self.x_hist[0])
+            self.orb_y_hist.setData(self.y_hist[0])
+
+            self.widget_cor_tab.init_table(self.cor_hist[0], editable=False)
+
+
+    def browser_slider_changed(self, index):
+        self.browser_data_changed(index)
+
+    def browser_data_changed(self, index, region=False):
+        print(index)
+        self.widget_cor_tab.init_table(self.cor_hist[index], editable=False)
+        self.orb_x_hist.setData(self.x_hist[index])
+        self.orb_y_hist.setData(self.y_hist[index])
+        self.sase_region.setBounds([index, index])
 
     def hide_show_orbit_widget(self):
         if self.show_traj.text() == "Hide Cor/BPM panel":
@@ -237,6 +271,11 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.save_state(self.configs_dir+ self.cb_load_settings.currentText()+".json")
 
     def load_presettings(self):
+        self.cor_hist = []
+        self.sase_hist = []
+        self.x_hist = []
+        self.y_hist = []
+
         #if self.cb_load_settings.currentText() == "SASE1 launch":
         if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
             logger.error("Config file does not exist.")
@@ -249,16 +288,15 @@ class UIAFeedBack(QWidget, Ui_Form):
             logger.error("load_presettings: " +str(e))
             raise
         if self.cb_load_settings.currentText() == "SASE3 launch":
-        
-            self.mi_standard_fb = MISASE3Feedback()
+            self.mi_standard_fb = MISASE3Feedback(server=self.parent.server, subtrain=self.parent.subtrain)
             self.mi_standard_fb.mi = self.parent.mi
         
         elif self.cb_load_settings.currentText() == "SASE1 launch":
-            self.mi_standard_fb = MIStandardFeedback()
+            self.mi_standard_fb = MIStandardFeedback(server=self.parent.server, subtrain=self.parent.subtrain)
             self.mi_standard_fb.mi = self.parent.mi
         
         elif self.cb_load_settings.currentText() == "SASE2 launch":
-            self.mi_standard_fb = MISASE2Feedback()
+            self.mi_standard_fb = MISASE2Feedback(server=self.parent.server, subtrain=self.parent.subtrain)
             self.mi_standard_fb.mi = self.parent.mi
         else:
             self.mi_standard_fb = None
@@ -311,7 +349,6 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         delay = self.sb_sr_delay.value()
         if self.pb_active_search.text() == "Stop Search":
-            print("here")
             self.active_search.stop_event = True
             self.active_search.stop()
             self.pb_active_search.setStyleSheet("color: rgb(85, 255, 127);")
@@ -458,7 +495,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             start = time.time()
             self.apply_kicks()
             print("apply_kicks: ", time.time() - start)
-            #time.sleep(0.5)
+            self.sase_hist.append(self.target_filtered[-1])
             self.le_warn.clear()
         else:
             logger.warning("auto_correction: stop_flag = True. Pause 1 sec")
@@ -564,15 +601,16 @@ class UIAFeedBack(QWidget, Ui_Form):
                 logger.info("apply_kicks: kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 self.error_box("kick exceeds limits. Try 'Uncheck Red' and recalculate correction")
                 return 0
-
+        kick_table = []
         for cor in self.orbit.corrs:
             kick_mrad = cor.ui.get_value()
             logger.debug(cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
             try:
                 cor.mi.set_value(kick_mrad)
+                kick_table.append({"corrector": cor.id, "value": kick_mrad})
             except Exception as e:
                 logger.error(cor.id + " apply_kicks Error: " + str(e))
-        
+        self.cor_hist.append(kick_table)
 
     def set_values2correctors(self):
 
@@ -635,7 +673,6 @@ class UIAFeedBack(QWidget, Ui_Form):
 
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
-
         if not beam_on and not self.dev_mode:
             return beam_on
         target = self.read_objective_function()
@@ -734,7 +771,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             delta_go_x = aver_x - self.first_go_x
             delta_go_y = aver_y - self.first_go_y
         # if tab is active
-        if self.tabWidget.currentIndex() == 1:
+        if self.tabWidget.currentIndex() == 2:
             self.orb_x_ref.setData(x=self.orbit_s, y=delta_go_x*1000)
             self.orb_y_ref.setData(x=self.orbit_s, y=delta_go_y*1000)
 
@@ -766,8 +803,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.ref_aver_y = np.mean(ref_orbits_y, axis=0)
         x_nan_check = len(np.where(np.isnan(self.ref_aver_x) == True)[0])
         y_nan_check = len(np.where(np.isnan(self.ref_aver_y) == True)[0])
-        #print(np.where(np.isnan(self.ref_aver_x) == True)[0])
-        #print(np.where(np.isnan(self.ref_aver_y) == True)[0])
+
         if x_nan_check > 0 or y_nan_check > 0:
             return True
         self.new_ref_orbit = {}
@@ -780,6 +816,11 @@ class UIAFeedBack(QWidget, Ui_Form):
         else:
             delta_ro_x = self.ref_aver_x - self.cur_go_x
             delta_ro_y = self.ref_aver_y - self.cur_go_y
+
+        # save to history
+        self.x_hist.append(self.ref_aver_x)
+        self.y_hist.append(self.ref_aver_y)
+
         # if tab is active
         if self.tabWidget.currentIndex() == 1:
             self.orb_y.setData(x=self.orbit_s, y=delta_ro_x*1000)
@@ -857,13 +898,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orb_y_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y', antialias=True)
         self.plot_y.addItem(self.orb_y_ref)
 
-        #color = QtGui.QColor(255, 255, 0)
-        #pen = pg.mkPen(color, width=3)
-        #self.orb_y_golden = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y golden', antialias=True)
-        #
-        #color = QtGui.QColor(0, 255, 0)
-        #pen = pg.mkPen(color, width=2)
-        #self.orb_y_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y live', antialias=True)
 
         self.plot_x.addLegend()
         color = QtGui.QColor(0, 255, 255)
@@ -877,16 +911,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orb_x_ref = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X', antialias=True)
         self.plot_x.addItem(self.orb_x_ref)
 
-        #color = QtGui.QColor(0, 255, 0)
-        #pen = pg.mkPen(color, width=2)
-        #self.orb_x_live = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X live', antialias=True)
-        #
-        #color = QtGui.QColor(255, 255, 0)
-        #pen = pg.mkPen(color, width=2)
-        #self.orb_x_golden= pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X golden', antialias=True)
-
-        #self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
-        #self.plot_cor.setYRange(-3, 3)
         self.plot_x.setYRange(-2, 2)
         self.plot_y.setYRange(-2, 2)
 
@@ -905,7 +929,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
 
         color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen((0, 255, 255), width=3)
+        pen = pg.mkPen((0, 255, 255), width=2)
         self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Obj Func')
 
         self.plot_obj.addItem(self.obj_curve)
@@ -914,16 +938,74 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.obj_curve_filtered = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Filtered')
         self.plot_obj.addItem(self.obj_curve_filtered)
         self.plot_obj.addLegend()
-        #color = QtGui.QColor(255, 0, 0)
-        #pen = pg.mkPen(color, width=4, symbolPen='o')
-        #self.obj_plot2 = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X', antialias=True)
-        #self.plot_obj.addItem(self.obj_plot2)
+
+    def add_sase_hist_plot(self):
+        win = pg.GraphicsLayoutWidget()
+        self.plot_sase = win.addPlot()
+
+        # win.ci.layout.setRowMaximumHeight(0, 200)
+
+        self.plot_sase.showGrid(1, 1, 1)
+
+        layout = QtGui.QGridLayout()
+        self.widget_sase.setLayout(layout)
+        layout.addWidget(win, 0, 0)
+
+        pen = pg.mkPen((255, 0, 0), width=4)
+        self.plot_sase_hist = pg.PlotCurveItem(x=[], y=[], pen=pen, name='SASE Hist')
+        self.plot_sase.addItem(self.plot_sase_hist)
+        self.plot_sase.addLegend()
+        self.sase_region = pg.LinearRegionItem([0,0])
+        self.sase_region.setMovable(False)
+
+        self.plot_sase.addItem(self.sase_region)
+
+    def add_orbit_hist_plot(self):
+        win = pg.GraphicsLayoutWidget()
+        self.plot_x_hist = win.addPlot(row=0, col=0)
+
+        self.plot_x_hist.showGrid(1, 1, 1)
+
+        self.plot_y_hist = win.addPlot(row=1, col=0)
+        self.plot_x_hist.setXLink(self.plot_y_hist)
+
+        self.plot_y_hist.showGrid(1, 1, 1)
+
+        self.plot_y_hist.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
+        layout = QtGui.QGridLayout()
+        self.widget_orbit.setLayout(layout)
+        layout.addWidget(win, 0, 0)
+
+        self.plot_y_hist.setAutoVisible(y=True)
+
+        self.plot_y_hist.addLegend()
 
 
-        # self.plot_cor.sigRangeChanged.connect(self.zoom_signal)
-        # self.plot_cor.setYRange(-3, 3)
-        #self.plot_x.setYRange(-2, 2)
-        #self.plot_y.setYRange(-2, 2)
+        color = QtGui.QColor(0, 255, 255)
+        pen = pg.mkPen(color, width=3)
+        self.orb_y_hist = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Y', antialias=True)
+        self.plot_y_hist.addItem(self.orb_y_hist)
+
+        color = QtGui.QColor(255, 0, 0)
+        pen = pg.mkPen(color, width=4)
+        self.orb_y_ref_hist = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='Y init', antialias=True)
+        self.plot_y_hist.addItem(self.orb_y_ref_hist)
+
+
+        self.plot_x_hist.addLegend()
+        color = QtGui.QColor(0, 255, 255)
+        pen = pg.mkPen(color, width=3)
+        self.orb_x_hist = pg.PlotCurveItem(x=[], y=[], pen=pen,  name='X', antialias=True)
+
+        self.plot_x_hist.addItem(self.orb_x_hist)
+
+        color = QtGui.QColor(255, 0, 0)
+        pen = pg.mkPen(color, width=4, symbolPen='o')
+        self.orb_x_ref_hist = pg.PlotDataItem(x=[], y=[], pen=pen, symbol='o', name='X init', antialias=True)
+        self.plot_x_hist.addItem(self.orb_x_ref_hist)
+
+        self.plot_x_hist.setYRange(-2, 2)
+        self.plot_y_hist.setYRange(-2, 2)
 
     def zoom_signal(self):
         if len(self.orbit.corrs) == 0:

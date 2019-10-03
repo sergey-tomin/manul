@@ -125,8 +125,6 @@ class OclTable(QWidget):
         self.ui.tableWidget = CustomTableWidget(self) # make new widget
         self.ui.gridLayout_2.addWidget(self.ui.tableWidget, 0, 0, 1, 3)
         self.ui.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        #self.ui.gridLayout.setContentsMargins(0, 0, 0, 0)
-        #self.ui.gridLayout.addWidget(self.ui.tableWidget, 0, 0, 1, 3)
         self.h_headers = ["id", "timestamp", "sase", "author", "comment"]
         self.create_table(h_headers=self.h_headers )
 
@@ -175,42 +173,32 @@ class OclTable(QWidget):
         pass
 
 
-    def init_table(self, dict_list):
+    def init_table(self, dict_list, editable=True):
         """
-        Creats additional column in UI table for check box.
+        Creates additional column in UI table for check box.
 
         Must be called again if the user adds another PV with middle click function.
         """
         self.ui.tableWidget.setRowCount(len(dict_list))
         for row, mf in enumerate(dict_list):
-            #print("row/mf", row, mf)
             for col, header in enumerate(self.h_headers):
-                #print("col, item", col, header)
                 val = dict_list[row][header]
                 if type(val) is str:
-
                     val = val.replace("#xKOM", "")
                 self.ui.tableWidget.setItem(row, col, QtGui.QTableWidgetItem(str(val)))
         #self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
-                #self.check_header = check_header
-        #self.phys_proc_names = phys_proc_names
-        #self.sections = sections
-#
-        #self.create_table()
-#
-        #self.actualization()
+        if not editable:
+            self.ui.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
 
 
 
     def create_table(self, h_headers):
-        #h_headers = [sec.__class__.__name__ for sec in self.sections]
-        #v_headers = [self.check_header] + self.phys_proc_names
+        self.h_headers = h_headers
         self.ui.tableWidget.setColumnCount(len(h_headers))
-        #self.ui.tableWidget.setRowCount(len(v_headers))
         self.ui.tableWidget.setHorizontalHeaderLabels(h_headers)
-        #self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
 
 
 
