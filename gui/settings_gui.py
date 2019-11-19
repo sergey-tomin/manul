@@ -98,6 +98,7 @@ class ManulSettings(QWidget):
         table["charge_doocs"] = self.ui.cb_charge_doocs.checkState()
 
         table["show_cor_panel"] = self.ui.cb_show_cor_panel.checkState()
+        table["show_extension"] = self.ui.chb_show_extension.checkState()
         table["style"] = self.ui.cb_style_def.currentIndex()
         table["style_file"] = self.ui.cb_style_def.currentText()
 
@@ -177,6 +178,7 @@ class ManulSettings(QWidget):
         if "charge_doocs" in table.keys(): self.ui.cb_charge_doocs.setCheckState(table["charge_doocs"])
 
         if "show_cor_panel" in table.keys(): self.ui.cb_show_cor_panel.setCheckState(table["show_cor_panel"])
+        if "show_extension" in table.keys(): self.ui.chb_show_extension.setCheckState(table["show_extension"])
         if "style" in table.keys(): self.ui.cb_style_def.setCurrentIndex(table["style"])
         self.style_file = self.ui.cb_style_def.currentText()
 

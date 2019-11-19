@@ -114,8 +114,8 @@ class Device(object):
             return
 
         start_time = time.time()
-        while start_time + self.timeout <= time.time():
-            if np.abs(self.get_value()-self.target) < self.tol:
+        while  time.time() <= start_time + self.timeout:
+            if np.abs(self.get_value() - self.target) < self.tol:
                 return
             time.sleep(0.05)
 

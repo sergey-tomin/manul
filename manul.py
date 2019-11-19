@@ -162,9 +162,34 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.cb_sec_order.stateChanged.connect(self.apply_second_order)
 
         self.ui.pb_set_pos.clicked.connect(self.arbitrary_lattice)
+        #self.ui.sb_lat_to.setKeyboardTracking(False)
+        #self.ui.sb_lat_to.valueChanged.connect(self.arbitrary_lattice)
 
+        self.ui.sb_lat_to.installEventFilter(self)
+        self.ui.sb_lat_from.installEventFilter(self)
+        #self.ui.sb_lat_to.(self.arbitrary_lattice)
+        #self.ui.sb_lat_to.connect(self.arbitrary_lattice)
         self.ui.actionGO_Adviser.triggered.connect(self.run_adviser_window)
         self.ui.combo_subtrain.currentIndexChanged.connect(self.change_subtrain)
+
+    def eventFilter(self, object, event):
+        if event.type() == QtCore.QEvent.KeyPress:
+            if event.key() in [16777221, 16777220]:
+                #print("here", object, event.key())
+                self.arbitrary_lattice()
+                return True
+
+        #if event.type() == QtCore.QEvent.HoverMove:
+        #    mousePosition = event.pos()
+        #    cursor = QtGui.QCursor()
+        #
+        #    self.statusBar().showMessage(
+        #        "Mouse: [" + mousePosition.x().__str__() + ", " + mousePosition.y().__str__() + "]"
+        #        + "\tCursor: [" + cursor.pos().x().__str__() + ", " + cursor.pos().y().__str__() + "]"
+        #    )
+        #    return True
+
+        return False
 
     def closeEvent(self, event):
         if self.orbit.adaptive_feedback is not None:
@@ -380,7 +405,7 @@ class ManulInterfaceWindow(QMainWindow):
         s = [tw.s for tw in tws]
 
         self.update_plot(s, beta_x, beta_y, dx, dy)
-        update = self.question_box("Reclculate ORM?")
+        update = self.question_box("Recalculate Orbit Response Matrix?")
         if update:
             self.orbit.calc_response_matrix(do_DRM_calc=False)
 
@@ -874,7 +899,7 @@ class ManulInterfaceWindow(QMainWindow):
     def question_box(self, message):
         #QtGui.QMessageBox.question(self, "Question box", message)
         reply = QtGui.QMessageBox.question(self, "Recalculate ORM?",
-                "Recalculate Orbit Response Matrix?",
+                message,
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             return True

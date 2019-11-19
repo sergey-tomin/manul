@@ -169,12 +169,24 @@ class MainWindow(Ui_MainWindow):
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
             self.tabWidget_3.hide()
         #self.hide_show_divece_panel()
-        self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_divece_panel)
+        self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_device_panel)
         self.actionSend_orbit.triggered.connect(lambda: self.logbook(self.w_orbit))
         self.actionSend_all.triggered.connect(lambda: self.logbook(self.Form))
 
+        if self.show_extension:
+            self.widget_5.show()
+            self.pb_extend.setText("Reduce Panel")
+            self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
+        else:
+            self.pb_extend.setText("Extend Panel")
+            self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
+            self.widget_5.hide()
+        #self.hide_show_divece_panel()
+        self.pb_extend.clicked.connect(self.advance_panel)
 
-    def hide_show_divece_panel(self):
+
+    def hide_show_device_panel(self):
+        print("here")
         if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
             self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
@@ -183,7 +195,17 @@ class MainWindow(Ui_MainWindow):
             self.tabWidget_3.show()
             self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
+        print("end")
 
+    def advance_panel(self):
+        if self.pb_extend.text() == "Reduce Panel":
+            self.pb_extend.setText("Extend Panel")
+            self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
+            self.widget_5.hide()
+        else:
+            self.widget_5.show()
+            self.pb_extend.setText("Reduce Panel")
+            self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
 
     def add_table(self, widget, headers):
 
@@ -340,10 +362,11 @@ class MainWindow(Ui_MainWindow):
             table = json.load(f)
         self.style_file = ""
         self.show_cor_panel = False
+        self.show_extension = False
         try:
             self.style_file = table["style_file"]
             self.show_cor_panel = table["show_cor_panel"]
-
+            if "show_extension" in table: self.show_extension = table["show_extension"]
             print("RESTORE STATE: OK")
         except:
             print("RESTORE STATE: ERROR")
