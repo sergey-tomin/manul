@@ -175,10 +175,10 @@ class MainWindow(Ui_MainWindow):
 
         if self.show_extension:
             self.widget_5.show()
-            self.pb_extend.setText("Reduce Panel")
+            self.pb_extend.setText("Close Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
         else:
-            self.pb_extend.setText("Extend Panel")
+            self.pb_extend.setText("Open Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
             self.widget_5.hide()
         #self.hide_show_divece_panel()
@@ -198,13 +198,13 @@ class MainWindow(Ui_MainWindow):
         print("end")
 
     def advance_panel(self):
-        if self.pb_extend.text() == "Reduce Panel":
-            self.pb_extend.setText("Extend Panel")
+        if self.pb_extend.text() == "Close Gentle Correction Panel":
+            self.pb_extend.setText("Open Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
             self.widget_5.hide()
         else:
             self.widget_5.show()
-            self.pb_extend.setText("Reduce Panel")
+            self.pb_extend.setText("Close Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
 
     def add_table(self, widget, headers):

@@ -8,19 +8,20 @@ from ocelot.cpbd.magnetic_lattice import *
 logger = logging.getLogger(__name__)
 
 class LatSection:
-    def __init__(self, name, str_cells, start=None, stop=None, z0=23.2, tw=None):
+    def __init__(self, name, str_cells, start=None, stop=None, z0=23.2, tw=None, load_all=True):
         self.name = name
         self.str_cells = str_cells
         self.start = start
         self.stop = stop
         self.z0 = z0
         self.tw = tw
+        self.load_all = load_all
 
 
 class Lattice:
     def __init__(self, path="lattices.phase_advance_5pi_sase2"):
         self.lat_zi = 23.2 # start position of the lattice in [m]
-        self.default_section = "I1"
+        self.default_section = "T4D"
         self.config = {"I1":       path + ".i1",
                        "L1":       path + ".l1",
                        "L2":       path + ".l2",
@@ -72,7 +73,15 @@ class Lattice:
         tws_cl.E = 15.2349999889
 
         self.sections = [
-            LatSection("Arbitrary", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"]),
+            LatSection("T4D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"], load_all=False),
+            LatSection("T5D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "T1",
+                                               "SASE2", "T3", "T5", "T5D"], load_all=False),
+            LatSection("TLD", str_cells=["I1", "L1", "L2", "L3", "CL", "TLD"], load_all=False),
+            LatSection("I1D", str_cells=["I1", "I1D"]),
+            LatSection("B1D", str_cells=["I1", "L1", "B1D"]),
+            LatSection("B2D", str_cells=["I1", "L1", "L2", "B2D"]),
+
+
             LatSection("I1", str_cells = ["I1"]),
             LatSection("L1", str_cells = ["L1"], z0=62.1),
             LatSection("L2", str_cells=["L2"], z0=229.30),
@@ -90,20 +99,16 @@ class Lattice:
 
             LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564+23.2),
 
-            LatSection("up to B1", str_cells=["I1", "L1"]),
-            LatSection("up to B2", str_cells=["I1", "L1", "L2"]),
-            LatSection("up to CL", str_cells=["I1", "L1", "L2", "L3"]),
-            LatSection("up to TL", str_cells=["I1", "L1", "L2", "L3", "CL"]),
-            LatSection("up to SASE1", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1"]),
-            LatSection("I1D", str_cells=["I1", "I1D"]),
-            LatSection("B1D", str_cells=["I1", "L1", "B1D"]),
-            LatSection("B2D", str_cells=["I1", "L1", "L2", "B2D"]),
-            LatSection("TLD", str_cells=["I1", "L1", "L2", "L3", "CL", "TLD"]),
-            LatSection("T4D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"]),
+            #LatSection("up to B1", str_cells=["I1", "L1"]),
+            #LatSection("up to B2", str_cells=["I1", "L1", "L2"]),
+            #LatSection("up to CL", str_cells=["I1", "L1", "L2", "L3"]),
+            #LatSection("up to TL", str_cells=["I1", "L1", "L2", "L3", "CL"]),
+            #LatSection("up to SASE1", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1"]),
 
-            LatSection("T5D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "T1",
-                                               "SASE2", "T3", "T5", "T5D"]),
-            LatSection("up to SASE3", str_cells=["I1", "L1", "L2", "L3", "CL", "SASE1", "T4", "SASE3"])
+            #LatSection("T4D", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"]),
+
+
+            #LatSection("up to SASE3", str_cells=["I1", "L1", "L2", "L3", "CL", "SASE1", "T4", "SASE3"])
         ]
 
 

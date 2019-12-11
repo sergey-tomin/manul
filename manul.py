@@ -13,7 +13,7 @@ import logging
 # filename = "logs/manul.log"
 #filename = "/home/xfeloper/log/ocelot/manul.log"
 #logging.basicConfig(filename=filename, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 # logging.getLogger("__main__").setLevel(logging.DEBUG)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
@@ -64,15 +64,12 @@ class ManulInterfaceWindow(QMainWindow):
             self.mi = TestMachineInterface(args)
         else:
             class_name = self.tool_args.mi
-            print(class_name)
             if class_name not in globals():
                 print("Could not find Machine Interface with name: {}. Loading XFELMachineInterface instead.".format(class_name))
                 self.mi = XFELMachineInterface(args)
             else:
                 self.mi = globals()[class_name](args)
 
-
-        print(self.mi.__class__)
         path = os.path.realpath(__file__)
         indx = path.find("ocelot" + os.sep + "optimizer")
         self.path2ocelot = path[:indx]
@@ -122,8 +119,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.subtrain = self.ui.combo_subtrain.currentText()
         self.load_settings()
-        #self.server = "XFEL"
-        #self.subtrain = "SA1"
 
         self.orbit = OrbitInterface(parent=self)
         self.dispersion = DispersionInterface(parent=self)
@@ -178,17 +173,6 @@ class ManulInterfaceWindow(QMainWindow):
                 #print("here", object, event.key())
                 self.arbitrary_lattice()
                 return True
-
-        #if event.type() == QtCore.QEvent.HoverMove:
-        #    mousePosition = event.pos()
-        #    cursor = QtGui.QCursor()
-        #
-        #    self.statusBar().showMessage(
-        #        "Mouse: [" + mousePosition.x().__str__() + ", " + mousePosition.y().__str__() + "]"
-        #        + "\tCursor: [" + cursor.pos().x().__str__() + ", " + cursor.pos().y().__str__() + "]"
-        #    )
-        #    return True
-
         return False
 
     def closeEvent(self, event):
@@ -338,7 +322,6 @@ class ManulInterfaceWindow(QMainWindow):
         for quad in self.quads:
             quad.ui.set_init_value(quad.kick_mrad)
             quad.ui.set_value(quad.kick_mrad)
-
 
     def reset_quads(self):
         for quad in self.quads:
@@ -560,7 +543,7 @@ class ManulInterfaceWindow(QMainWindow):
         #current_lat = self.ui.cb_lattice.currentText()
         #if current_lat != "Arbitrary":
         #    return 0
-
+        print("ARBITRARY lattice")
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
         if lat_to - 30 < lat_from:
@@ -587,18 +570,25 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
         current_lat = self.ui.cb_lattice.currentText()
-        if current_lat == "Arbitrary" and start == None and stop == None:
-            section = self.xfel_lattice.get_section(current_lat)
-            cell = self.xfel_lattice.lats[section.str_cells[0]].cell
-            start = cell[0]
-            stop = cell[-1]
-            
+        if start == None and stop == None:
+            tmp_section = self.xfel_lattice.get_section(current_lat)
+            if not tmp_section.load_all:
+                cell = self.xfel_lattice.lats[tmp_section.str_cells[0]].cell
+                start = cell[0]
+                stop = cell[-1]
+                first_sec_len = np.sum([elem.l for elem in cell])
+                self.ui.sb_lat_from.setMinimum(tmp_section.z0)
+                self.ui.sb_lat_to.setMaximum(tmp_section.z0 + first_sec_len)
+
+                self.ui.sb_lat_to.setValue(tmp_section.z0 + first_sec_len)
+                self.ui.sb_lat_from.setValue(tmp_section.z0)
+
         try:
             section = self.xfel_lattice.return_lat_section(current_lat, start=start, stop=stop)
         except Exception as e:
-            logger.error("return_lat: xfel_lattice.return_lat()" +str(e))
+            logger.error("return_lat: xfel_lattice.return_lat()" + str(e))
             raise
-            
+
         self.seq = section.seq
         total_len = np.sum([elem.l for elem in section.seq])
         self.lat_zi = section.z0
@@ -607,7 +597,6 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.corr_list = self.correctors_list(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
         self.ui.sb_lat_from.setMinimum(self.lat_zi)
-        # self.ui.sb_lat_from.setValue(self.lat_zi)
         self.ui.sb_lat_from.setMaximum(self.lat_zi + total_len - 30)
         self.ui.sb_lat_to.setMaximum(self.lat_zi + total_len)
         self.ui.sb_lat_to.setMinimum(self.lat_zi + 30)
@@ -615,17 +604,12 @@ class ManulInterfaceWindow(QMainWindow):
             self.ui.sb_lat_to.setValue(self.lat_zi + total_len)
             self.ui.sb_lat_from.setValue(self.lat_zi)
 
-
-        self.lat = section.lat #MagneticLattice(self.get_slice_sequence(self.seq, start=start, stop=stop), method=method)
-
+        self.lat = section.lat
 
         self.lat_zi = self.ui.sb_lat_from.value()
         # tws0 is used in match in backtracking
         self.tws0 = deepcopy(self.tws_des)
 
-        # self.lat = shrinker(self.lat, remaining_types=[Quadrupole, Hcor, Vcor,
-        #                                               Monitor, Bend, SBend, RBend, Sextupole, Octupole],
-        #                    init_energy=self.tws0.E)
         try:
             self.plot_design_twiss()
         except Exception as e:
@@ -634,7 +618,6 @@ class ManulInterfaceWindow(QMainWindow):
         self.load_lattice()
 
         try:
-            #self.lat4twiss = MagneticLattice(self.seq)
             self.calc_twiss()
         except Exception as e:
             logger.error("return_lat: calc_twiss: " + str(e))
