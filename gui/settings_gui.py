@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QMessageBox, QApplication,QM
 import os
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
+from PyQt5 import QtCore
 from gui.UISettings import Ui_Form
 import json
 #import logging
@@ -26,14 +27,23 @@ class ManulSettings(QWidget):
         self.ui.cb_single_shot.stateChanged.connect(self.single_shot_set)
 
         self.ui.cb_charge_doocs.stateChanged.connect(self.read_charge_from_doocs)
-
+        #self.ui.rb_micado.toggled.connect(self.activate_micado_settings) #
+        self.ui.combo_solver.currentIndexChanged.connect(self.activate_micado_settings)
         self.ui.pb_cancel.clicked.connect(self.close)
         self.ui.cb_style_def.addItem("standard.css")
         self.ui.cb_style_def.addItem("colinDark.css")
         self.ui.cb_style_def.addItem("dark.css")
         self.load_state(filename=self.master.config_file)
+        self.activate_micado_settings()
         self.loadStyleSheet(filename=self.style_file)
 
+
+    def activate_micado_settings(self):
+        solver_name = self.ui.combo_solver.currentText()
+        if solver_name == "MICADO":
+            self.ui.gbox_micado.setEnabled(True)
+        else:
+            self.ui.gbox_micado.setEnabled(False)
 
     def read_charge_from_doocs(self):
         if self.ui.cb_charge_doocs.isChecked():
@@ -103,7 +113,10 @@ class ManulSettings(QWidget):
         table["style_file"] = self.ui.cb_style_def.currentText()
 
         table["beta"] = self.ui.sb_beta.value()
+        # micado
+        table["epsilon_ksi"] = self.ui.sb_epsilon_ksi.value()
 
+        table["solver_name"] = self.ui.combo_solver.currentText()
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -183,6 +196,14 @@ class ManulSettings(QWidget):
         self.style_file = self.ui.cb_style_def.currentText()
 
         if "beta" in table.keys(): self.ui.sb_beta.setValue(table["beta"])
+
+        # micado
+        if "epsilon_ksi" in table.keys(): self.ui.sb_epsilon_ksi.setValue(table["epsilon_ksi"])
+        if "solver_name" in table.keys(): self.ui.combo_solver.currentText()
+        index = self.ui.combo_solver.findText(table["solver_name"], QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.ui.combo_solver.setCurrentIndex(index)
+
         #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
 #        a = table["uncheck_corrs"].split(",")

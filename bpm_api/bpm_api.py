@@ -9,7 +9,7 @@ import pydoocs as pyd
 import os
 from PyQt5 import QtGui
 
-BPM_LOCATION_FILE = "BPMDAMC02_locations_201802.txt"
+BPM_LOCATION_FILE = "BPMDAMC02_locations_all.txt"
 
 class BPMDoocsInterface:
     def __init__(self, ui_textbox=None):

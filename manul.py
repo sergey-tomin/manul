@@ -316,6 +316,16 @@ class ManulInterfaceWindow(QMainWindow):
         else:
             self.svd_beta = 0
 
+        if "solver_name" in table.keys():
+            self.solver_name = table["solver_name"]
+        else:
+            self.solver_name = "SVD"
+        if "epsilon_ksi" in table.keys():
+            self.epsilon_ksi = float(table["epsilon_ksi"] ) * 1e-6
+        else:
+            self.epsilon_ksi = 1e-5
+
+
         logger.debug("load settings ... OK")
 
     def update_table(self):
