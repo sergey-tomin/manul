@@ -24,7 +24,7 @@ sys.path.append(path[:indx])
 
 #from ocelot.gui.accelerator import *
 from ocelot.cpbd.track import *
-
+import correction_analysis as ca
 from mint.xfel_interface import *
 from mint.bessy_interface import *
 from mint.flash_interface import *
@@ -144,7 +144,7 @@ class ManulInterfaceWindow(QMainWindow):
 
         self.feedback_timer = pg.QtCore.QTimer()
         self.feedback_timer.timeout.connect(self.orbit.auto_correction)
-
+        self.cor_analysis = None
         self.load_lattice_files()
         self.lat = self.return_lat()
 
@@ -170,7 +170,6 @@ class ManulInterfaceWindow(QMainWindow):
     def eventFilter(self, object, event):
         if event.type() == QtCore.QEvent.KeyPress:
             if event.key() in [16777221, 16777220]:
-                #print("here", object, event.key())
                 self.arbitrary_lattice()
                 return True
         return False
@@ -580,7 +579,7 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("return_lat: ... ")
         self.orbit.reset_undo_database()
         current_lat = self.ui.cb_lattice.currentText()
-        if start == None and stop == None:
+        if start is None and stop is None:
             tmp_section = self.xfel_lattice.get_section(current_lat)
             if not tmp_section.load_all:
                 cell = self.xfel_lattice.lats[tmp_section.str_cells[0]].cell
@@ -610,7 +609,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.ui.sb_lat_from.setMaximum(self.lat_zi + total_len - 30)
         self.ui.sb_lat_to.setMaximum(self.lat_zi + total_len)
         self.ui.sb_lat_to.setMinimum(self.lat_zi + 30)
-        if start == None and stop == None:
+        if start is None and stop is None:
             self.ui.sb_lat_to.setValue(self.lat_zi + total_len)
             self.ui.sb_lat_from.setValue(self.lat_zi)
 
@@ -640,8 +639,9 @@ class ManulInterfaceWindow(QMainWindow):
         self.orbit.choose_plane()
         self.orbit.uncheck_aircols()
 
-        return self.lat
+        self.cor_analysis = ca.CorrectionAnalysis()
 
+        return self.lat
 
     def return_tws(self):
         tws0 = Twiss()

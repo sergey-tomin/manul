@@ -184,9 +184,7 @@ class MainWindow(Ui_MainWindow):
         #self.hide_show_divece_panel()
         self.pb_extend.clicked.connect(self.advance_panel)
 
-
     def hide_show_device_panel(self):
-        print("here")
         if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
             self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
@@ -195,7 +193,6 @@ class MainWindow(Ui_MainWindow):
             self.tabWidget_3.show()
             self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
-        print("end")
 
     def advance_panel(self):
         if self.pb_extend.text() == "Close Gentle Correction Panel":
