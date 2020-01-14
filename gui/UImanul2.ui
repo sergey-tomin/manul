@@ -2134,11 +2134,19 @@
     </property>
     <addaction name="actionUpdate_Lattice_from_DOOCS"/>
    </widget>
+   <widget class="QMenu" name="menuAnalysis">
+    <property name="title">
+     <string>Analysis</string>
+    </property>
+    <addaction name="actionShow_ORM"/>
+    <addaction name="actionAnalyse_Corrections"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuGolden_Orbit"/>
    <addaction name="menuFile"/>
    <addaction name="menuLogbook"/>
    <addaction name="menuLattice"/>
+   <addaction name="menuAnalysis"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -2232,6 +2240,16 @@
   <action name="actionUpdate_Lattice_from_DOOCS">
    <property name="text">
     <string>Update Lattice from DOOCS</string>
+   </property>
+  </action>
+  <action name="actionShow_ORM">
+   <property name="text">
+    <string>Show ORM</string>
+   </property>
+  </action>
+  <action name="actionAnalyse_Corrections">
+   <property name="text">
+    <string>Analyse Corrections</string>
    </property>
   </action>
  </widget>

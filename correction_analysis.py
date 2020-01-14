@@ -1,9 +1,12 @@
 from threading import Thread, Event
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import time
 import logging
 logger = logging.getLogger(__name__)
+
 
 class CorrectionAnalysis(Thread):
     def __init__(self):
@@ -11,6 +14,8 @@ class CorrectionAnalysis(Thread):
         self.orbit_1 = {}
         self.orbit_2 = {}
         self.kicks = {}
+        self.bpm_names = None
+        self.cor_names = None
         self.df = None
 
     def initialization(self, mi_orbit, orbit):
@@ -18,10 +23,42 @@ class CorrectionAnalysis(Thread):
         self.rm = self.orbit.response_matrix
         if self.df is None:
             self.mi_orbit = mi_orbit
-            cor_names = np.append([cor.id for cor in self.orbit.hcors], [cor.id for cor in self.orbit.vcors])
-            bpm_names = np.append([self.rm.bpm2x_name(bpm.id) for bpm in self.orbit.bpms], [self.rm.bpm2y_name(bpm.id) for bpm in self.orbit.bpms])
-            columns = np.append(cor_names, bpm_names)
+            self.cor_names = np.append([cor.id for cor in self.orbit.hcors], [cor.id for cor in self.orbit.vcors])
+            self.bpm_names = np.append([self.rm.bpm2x_name(bpm.id) for bpm in self.orbit.bpms], [self.rm.bpm2y_name(bpm.id) for bpm in self.orbit.bpms])
+            columns = np.append(self.cor_names, self.bpm_names)
             self.df = pd.DataFrame(columns=columns)
+
+    def retrieve_from_scan(self, df_scan):
+        from sklearn.linear_model import LinearRegression
+        bpm_names = [bpm.id for bpm in self.orbit.bpms]
+        df_slice = self.rm.extract_df_slice(self.cor_names, bpm_names)
+        ax = sns.heatmap(df_slice, annot=True)
+        ax.set_title("Orbit response matrix")
+        plt.show()
+        print("ref shape = ", self.rm.extract(self.cor_names, bpm_names).shape)
+        print(f"cor num = {len(self.cor_names)}, bpm num = {len(self.bpm_names)}")
+        x = df_scan.loc[:, self.cor_names].values
+        y = df_scan.loc[:, self.bpm_names].values
+        print("x = ",  x.shape)
+        print("y = ", y.shape)
+
+        reg = LinearRegression().fit(x, y)
+        #x_test = np.eye(np.shape(x)[1])
+        rm = reg.coef_
+        print("rm = ", rm.shape)
+        #df_rm = pd.DataFrame(rm.T, columns=self.cor_names, index=bpm_x+bpm_y)
+        self.df = self.rm.data2df(matrix=rm, bpm_names=bpm_names, cor_names=self.cor_names)
+        return self.df
+
+    def calculate_orm(self):
+        self.df.fillna(0)
+        df = self.retrieve_from_scan(self.df)
+        print("RM = ", df)
+
+        ax = sns.heatmap(df, annot=True)
+        ax.set_title("Orbit response matrix")
+        plt.show()
+
 
     def get_snapshot(self):
         shapshot = {}
@@ -47,6 +84,7 @@ class CorrectionAnalysis(Thread):
 
         sr_row = pd.Series(shapshot)
         self.df = self.df.append(sr_row, ignore_index=True)
+        self.df.fillna(0)
         print(self.df)
 
     def read_orbit(self):
