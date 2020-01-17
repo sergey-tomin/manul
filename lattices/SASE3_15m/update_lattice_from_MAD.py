@@ -1,6 +1,7 @@
 from ocelot import *
 from ocelot.gui.accelerator import *
 import i1
+import l2
 import l1_full
 import l2_full
 import l3_full
@@ -14,7 +15,7 @@ import t4d
 import numpy as np
 from copy import deepcopy
 
-c_lat = t4
+c_lat = l2
 
 #undu_49_i1.lperiod = 0.074
 #undu_49_i1.nperiods = 10
@@ -79,7 +80,7 @@ for elem in lat.sequence:
             elem.angle = np.abs(param[0])*np.sign(elem.angle)
             elem.e1 = np.abs(elem.angle) * np.sign(elem.e1)
             elem.e2 = np.abs(elem.angle) * np.sign(elem.e2)
-            elem.l = param[3]
+            #elem.l = param[3]
         elif elem.__class__ == Cavity and not (".AH1." in elem.id) and not (".A1." in elem.id) and not  (".L2" in elem.id) and not  (".L3" in elem.id):
             id_parts = elem.id.split(".")
             ps_id = id_parts[0]+ "." + id_parts[1] + "." + id_parts[-1]
@@ -104,10 +105,10 @@ cell = lconvector(elems)
 #    print(elem.id, elem.l)
 
 lat = MagneticLattice(cell)
-write_lattice(lat, file_name="t4_new.py", power_supply=True)
+write_lattice(lat, file_name="l2_new.py", power_supply=True)
 #
-import t4_new
-lat = MagneticLattice(t4_new.cell)
+import l2_new
+lat = MagneticLattice(l2_new.cell)
 ##undu_49_i1.Kx = 0
 #lat.update_transfer_maps()
 
