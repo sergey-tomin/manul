@@ -507,7 +507,6 @@ class ManulInterfaceWindow(QMainWindow):
             quad.kick_mrad = res[i]
             quad.k1 = res[i]/quad.l/1000.
             quad.ui.set_value(quad.kick_mrad)
-            
 
     def apply_coupler_kick(self):
         logger.debug("apply_coupler_kick: checkbox:" +str(self.ui.cb_coupler_kick.isChecked()))
@@ -533,7 +532,6 @@ class ManulInterfaceWindow(QMainWindow):
         # calc orbit
         self.orbit.calc_orbit()
         logger.debug("apply_coupler_kick: OK")
-
 
     def apply_second_order(self):
         logger.debug("apply_second_order: checkbox:" +str(self.ui.cb_sec_order.isChecked()))

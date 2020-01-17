@@ -86,15 +86,15 @@ class Lattice:
             LatSection("L1", str_cells = ["L1"], z0=62.1),
             LatSection("L2", str_cells=["L2"], z0=229.30),
             LatSection("L3", str_cells=["L2", "L3", "CL"], start=self.lats["L2"].engrd_419_b2,
-                               stop=self.lats["CL"].mpbpmi_1693_cl, z0=396.22+23.2, tw=tws_L3),
+                               stop=self.lats["CL"].bpmi_1693_cl, z0=396.22+23.2, tw=tws_L3),
 
             LatSection("CL", str_cells=["L3", "CL", "TL34", "SASE1"], start=self.lats["L3"].bpmr_1307_l3,
                                stop=self.lats["SASE1"].qa_2253_sa1, z0=1307, tw=tws_cl),
 #
-            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].ensub_2583_t4, z0=1957.18564 + 23.2),
+            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].stsub_2583_t4, z0=1957.18564 + 23.2),
             LatSection("T4", str_cells=["T4"], z0=2438.517 + 23.2),
 #
-            LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].ensub_2583_t4,
+            LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].stsub_2583_t4,
                        z0=2560.45 + 23.2, tw=tws_sase3),
 
             LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564+23.2),
@@ -134,6 +134,15 @@ class Lattice:
         except:
             logger.error('cannot construct sequence, element not found')
             raise
+
+        # switched off zero order coupler kick
+        for elem in new_seq:
+            if elem.__class__ == Cavity:
+                elem.vx_up = 0.
+                elem.vy_up = 0.
+                elem.vx_down = 0.
+                elem.vy_down = 0.
+
         return new_seq
 
     def return_twiss_des(self, section):
