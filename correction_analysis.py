@@ -32,31 +32,37 @@ class CorrectionAnalysis(Thread):
         from sklearn.linear_model import LinearRegression
         bpm_names = [bpm.id for bpm in self.orbit.bpms]
         df_slice = self.rm.extract_df_slice(self.cor_names, bpm_names)
-        ax = sns.heatmap(df_slice, annot=True)
-        ax.set_title("Orbit response matrix")
-        plt.show()
+        #ax = sns.heatmap(df_slice, annot=True)
+        #ax.set_title("Orbit response matrix")
+        #plt.show()
         print("ref shape = ", self.rm.extract(self.cor_names, bpm_names).shape)
         print(f"cor num = {len(self.cor_names)}, bpm num = {len(self.bpm_names)}")
         x = df_scan.loc[:, self.cor_names].values
         y = df_scan.loc[:, self.bpm_names].values
+        print("x = ", x)
+        print("y = ", y)
         print("x = ",  x.shape)
         print("y = ", y.shape)
 
         reg = LinearRegression().fit(x, y)
         #x_test = np.eye(np.shape(x)[1])
         rm = reg.coef_
-        print("rm = ", rm.shape)
+        # print("rm = ", rm)
         #df_rm = pd.DataFrame(rm.T, columns=self.cor_names, index=bpm_x+bpm_y)
-        self.df = self.rm.data2df(matrix=rm, bpm_names=bpm_names, cor_names=self.cor_names)
-        return self.df
+        self.df_rm = self.rm.data2df(matrix=rm, bpm_names=bpm_names, cor_names=self.cor_names)
+        return self.df_rm
 
     def calculate_orm(self):
-        self.df.fillna(0)
+        filename = self.df.columns[0] + "-" + self.df.columns[-1]
+        self.df.to_pickle(filename + ".p")
         df = self.retrieve_from_scan(self.df)
+        
         print("RM = ", df)
 
         ax = sns.heatmap(df, annot=True)
         ax.set_title("Orbit response matrix")
+        plt.yticks(rotation=0)
+        plt.xticks(rotation=90)
         plt.show()
 
 
@@ -84,8 +90,8 @@ class CorrectionAnalysis(Thread):
 
         sr_row = pd.Series(shapshot)
         self.df = self.df.append(sr_row, ignore_index=True)
-        self.df.fillna(0)
-        print(self.df)
+        self.df = self.df.fillna(0)
+        #print(self.df)
 
     def read_orbit(self):
         orbit = {}

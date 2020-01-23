@@ -44,47 +44,11 @@ class DispersionInterface:
         self.multilines_x = {}
         self.multilines_y = {}
 
-    def read_bpms(self, bpms):
-        """
-        Method to read bpms
-
-        :param bpms: list of the bpm objects
-        :return: X, Y, bpm_list - List of the X and Y beam positions in [m] and list of the bpm names
-        """
-        x = []
-        y = []
-        bpm_list = []
-        for bpm in bpms:
-            x_mm, y_mm = bpm.mi.get_pos()
-            charge = bpm.mi.get_charge()
-            bpm_list.append(bpm.id)
-            x.append(x_mm * 0.001)
-            y.append(y_mm * 0.001)
-        return np.array(x), np.array(y), bpm_list
-
-    def get_orbit(self, bpms):
-        n_readings = int(self.ui.sb_n_readings.value())
-        n_bpms = len(bpms)
-        X = np.zeros(n_bpms)
-        Y = np.zeros(n_bpms)
-        for n in range(n_readings):
-            x, y, bpm_list = self.read_bpms(bpms)
-            X = np.vstack((X, x))
-            Y = np.vstack((Y, y))
-            time.sleep(0.11)
-        s_bpm = np.array([bpm.s for bpm in bpms])
-        x_mean = np.mean(X, axis=0)
-        y_mean = np.mean(Y, axis=0)
-        x_std = np.std(x, axis=0)
-        y_std = np.std(y, axis=0)
-        return x_mean, y_mean, x_std, y_std
-
     def get_section_energy(self):
 
         current_lat = self.ui.cb_lattice.currentText()
         if current_lat in ["CL", "SASE1", "T4", "SASE3"]:
             energy = self.parent.mi.get_value(self.parent.le_cl_energy)
-            #energy = self.parent.mi.get_value("XFEL.DIAG/BEAM_ENERGY_MEASUREMENT/CL/ENERGY.SA1")
         elif current_lat in ["B2"]:
             energy = self.parent.mi.get_value(self.parent.le_b2_energy)
         elif current_lat in ["B1"]:
@@ -92,8 +56,6 @@ class DispersionInterface:
         else:
             energy = self.parent.mi.get_value(self.parent.le_i1_energy)
         return energy
-
-
 
     def dispersion_measurement(self):
         beam_on = self.parent.orbit.read_orbit()
@@ -131,15 +93,20 @@ class DispersionInterface:
 
         #self.plot_orbits(multilines_x[0], s_bpm, x_mean_i)
         #self.plot_orbits(multilines_y[0], s_bpm, y_mean_i)
+        n_readings = int(self.ui.sb_n_readings.value())
         X_mean = []
         Y_mean = []
         for i, v in enumerate(volts_list):
             self.cavity.set_value(v)
             print("set Voltage: ",  v)
             time.sleep(time_delay)
-            x_mean, y_mean, x_std, y_std = self.get_orbit(bpms)
+            bpm_names, x_mean, y_mean, mean_charge = self.parent.orbit.mi_orbit.read_and_average(n_readings+1, n_readings)
+            self.parent.orbit.mi_orbit.get_bpms(bpms)
+            x_mean = np.array([bpm.x for bpm in bpms])
+            y_mean = np.array([bpm.y for bpm in bpms])
             X_mean.append(x_mean)
             Y_mean.append(y_mean)
+            
             self.plot_orbits(multilines_x[i], s_bpm + self.parent.lat_zi, x_mean*1000)
             self.plot_orbits(multilines_y[i], s_bpm + self.parent.lat_zi, y_mean*1000)
 
@@ -169,13 +136,11 @@ class DispersionInterface:
 
         self.plot_dispersion(s_bpm + self.parent.lat_zi, Dx, Dy, Dx_des, Dy_des)
 
-
     def calculate_disp(self, energy):
         Dx0, Dy0 = self.parent.orbit.orbit.response_matrix.method.read_virtual_dispersion(E0=energy)
         print("Dx0", Dx0)
         print("Dy0", Dy0)
         return Dx0, Dy0
-
 
     def set_disp2bpms(self, Dx, Dy, bpms, energy):
 
@@ -185,7 +150,6 @@ class DispersionInterface:
             bpm.Dy = Dy[i]
             bpm.Dx_des = Dx0[i]
             bpm.Dy_des = Dy0[i]
-
 
     def add_orbit_plot(self):
         win = pg.GraphicsLayoutWidget()
@@ -255,7 +219,6 @@ class DispersionInterface:
         self.plot_Dy.addItem(self.Dy_des_curve)
         self.plot_Dy.addLegend()
 
-
     def setup_multi_plot(self, volts_list, plot, legend, ):
         """
         Reset plots when a new scan is started.
@@ -263,7 +226,7 @@ class DispersionInterface:
         plot.clear()
         multilines = {}
         #self.plot_x.removeItem(self.orb_x_live)
-    	#self.plot_y.removeItem(self.orb_y_live)
+        #self.plot_y.removeItem(self.orb_y_live)
         #self.plot_x.legend.removeItem(self.orb_x_live.name())
         #self.plot_y.legend.removeItem(self.orb_y_live.name())
 
@@ -302,7 +265,6 @@ class DispersionInterface:
     def plot_orbits(self, line, s, y):
         line.setData(x=s, y = y)
         line.update()
-
 
     def plot_dispersion(self, s, Dx, Dy, Dx_des, Dy_des):
         s = s #+ self.parent.lat_zi

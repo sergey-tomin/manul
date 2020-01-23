@@ -41,7 +41,7 @@ class Corrector(Device):
         power_bit = '{0:08b}'.format(status)[-2]
         busy_bit = '{0:08b}'.format(status)[-4]
         
-        if power_bit == "1" and busy_bit == "0":
+        if power_bit == "1":# and busy_bit == "0":
             return True
         else:
             return False
@@ -115,6 +115,7 @@ class BPMUI:
         self.row = 0
         self.col = 0
         self.alarm = False
+        self.max_beam_amplitude = 30 # in [mm] 
 
     def get_value(self):
         x = float(self.tableWidget.item(self.row, 1).text())
@@ -143,7 +144,7 @@ class BPMUI:
 
 
     def check_values(self, vals):
-        if np.max(np.abs(vals)) > 15.:
+        if np.max(np.abs(vals)) > self.max_beam_amplitude:
             self.tableWidget.item(self.row, 1).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.tableWidget.item(self.row, 2).setBackground(QtGui.QColor(255, 0, 0))  # red
             self.alarm = True

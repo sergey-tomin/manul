@@ -51,13 +51,13 @@ class BPMDoocsInterface:
                 else:
                     print(message)
 
-    def write_doocs_array(self,addresses,doocs_property,value):
+    def write_doocs_array(self, addresses, doocs_property, value):
         i = 0
         for address in addresses:
             address_single = address + doocs_property
             #print(address_single)
             try:
-                pyd.write(address_single,value[i])
+                pyd.write(address_single, int(value[i]))
                 i = i + 1
             except:
                 message = "Following address does not allow to set a doocs value"
@@ -166,7 +166,8 @@ class CavityBPM:
         
         attenuation - in [db]
         """
-        print("Cavity activate")
+        
+        print("Cavity activate", attenuation)
         attenuator_setting_Q = self.mi.read_doocs_values(self.bpm_addresses,'/R_DSA')
 
         attenuator_setting_X = self.mi.read_doocs_values(self.bpm_addresses,'/X_DSA')
@@ -190,9 +191,9 @@ class CavityBPM:
         self.mi.write_doocs_values(self.bpm_addresses,'/X_GAIN_FB_ON',0)
         self.mi.write_doocs_values(self.bpm_addresses,'/Y_GAIN_FB_ON',0)
         
-        self.mi.write_doocs_array(self.bpm_addresses,'/R_DSA',attenuator_setting_Q)
-        self.mi.write_doocs_array(self.bpm_addresses,'/X_DSA',attenuator_setting_X)
-        self.mi.write_doocs_array(self.bpm_addresses,'/Y_DSA',attenuator_setting_Y)
+        self.mi.write_doocs_array(self.bpm_addresses,'/R_DSA', attenuator_setting_Q)
+        self.mi.write_doocs_array(self.bpm_addresses,'/X_DSA', attenuator_setting_X)
+        self.mi.write_doocs_array(self.bpm_addresses,'/Y_DSA', attenuator_setting_Y)
         
     def deactivate(self):
         """

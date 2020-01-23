@@ -150,7 +150,7 @@ bpma_55_i1 = Monitor(eid='BPMA.55.I1')
 bpma_57_i1 = Monitor(eid='BPMA.57.I1')
 bpma_59_i1 = Monitor(eid='BPMA.59.I1')
 bpma_60_i1 = Monitor(eid='BPMA.60.I1')
-bpmatest_61_i1 = Monitor(eid='BPMATEST.61.I1')
+bpmatest_61_i1 = Drift(eid='BPMATEST.61.I1')
 
 # Markers
 stsec_23_i1 = Marker(eid='STSEC.23.I1')

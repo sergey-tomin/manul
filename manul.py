@@ -88,14 +88,8 @@ class ManulInterfaceWindow(QMainWindow):
         # initialize
         QFrame.__init__(self)
 
-        #self.logbook = "xfellog"
         self.settings = None
         self.adviser = None
-        #self.mi = BESSYMachineInterface()
-        #self.mi = TestMachineInterface()
-        #self.debug_mode = False
-        #if self.mi.__class__ == TestMachineInterface:
-        #    self.debug_mode = True
         self.ui = MainWindow(self)
 
         # hide/show the block of the section selection and arbitrary part of section
@@ -225,7 +219,7 @@ class ManulInterfaceWindow(QMainWindow):
         current_lat = self.ui.cb_lattice.currentText()
         section = self.xfel_lattice.get_section(current_lat)
         self.big_sequence = self.xfel_lattice.get_sequence(section)
-        self.correctors_list(seq=self.big_sequence, start_pos=self.xfel_lattice.lat_zi,  energy=130)
+        self.get_cor_bpm_lists(seq=self.big_sequence, start_pos=self.xfel_lattice.lat_zi, energy=130)
 
     def run_settings_window(self):
         if self.settings is None:
@@ -324,7 +318,6 @@ class ManulInterfaceWindow(QMainWindow):
         else:
             self.epsilon_ksi = 1e-5
 
-
         logger.debug("load settings ... OK")
 
     def update_table(self):
@@ -338,9 +331,17 @@ class ManulInterfaceWindow(QMainWindow):
             quad.ui.set_value(quad.i_kick)
         #self.calc()
 
-    def correctors_list(self, seq, start_pos=23.2, energy=130.):
+    def get_cor_bpm_lists(self, seq, start_pos=23.2, energy=130.):
+        """
+        Function to get from sequence correctors and bpms with their posstions and beam energy
 
+        :param seq: MagneticLattice.sequence
+        :param start_pos: starting position
+        :param energy: starting energy
+        :return: list of correctors
+        """
         self.corr_list = []
+        self.bpm_list = []
         L = start_pos
         E = energy
         for elem in seq:
@@ -349,6 +350,10 @@ class ManulInterfaceWindow(QMainWindow):
                 elem.s_pos = L - elem.l/2.
                 elem.E = E
                 self.corr_list.append(elem)
+            if elem.__class__ in [Monitor]:
+                elem.s_pos = L - elem.l/2.
+                elem.E = E
+                self.bpm_list.append(elem)
             if elem.__class__ == Cavity:
                 E += elem.v*np.cos(elem.phi*np.pi/180.)
         return self.corr_list
@@ -450,7 +455,6 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("back_tracking: ... OK")
         return self.tws0
 
-
     def read_twiss(self):
         tws = Twiss()
         if self.ui.cb_otr218.isChecked():
@@ -500,7 +504,6 @@ class ManulInterfaceWindow(QMainWindow):
             logger.debug("match -> error_func -> err = " + str(err))
             return err
 
-
         res = optimize.fmin(error_func, x, xtol=0.1)
         logger.debug(res)
         for i, quad in enumerate(quads):
@@ -547,9 +550,6 @@ class ManulInterfaceWindow(QMainWindow):
         logger.debug("apply_second_order: OK")
 
     def arbitrary_lattice(self):
-        #current_lat = self.ui.cb_lattice.currentText()
-        #if current_lat != "Arbitrary":
-        #    return 0
         print("ARBITRARY lattice")
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
@@ -559,18 +559,16 @@ class ManulInterfaceWindow(QMainWindow):
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
         s_poss = np.array([cor.s_pos for cor in self.corr_list])
+        s_poss_end = np.array([bpm.s_pos for bpm in self.bpm_list])
         idx_frm = (np.abs(s_poss - lat_from)).argmin()
-        idx_to = (np.abs(s_poss - lat_to)).argmin()
+        idx_to = (np.abs(s_poss_end - lat_to)).argmin()
         if idx_frm == idx_to:
             idx_to += 1
-            self.ui.sb_lat_to.setValue(self.corr_list[idx_to].s_pos)
+            self.ui.sb_lat_to.setValue(self.bpm_list[idx_to].s_pos)
         
         # end changing of the code
         # start /stop elements should be correctors !!!
-        self.return_lat(start=self.corr_list[idx_frm], stop=self.corr_list[idx_to])
-
-        #self.orbit.choose_plane()
-        #self.orbit.uncheck_aircols()
+        self.return_lat(start=self.corr_list[idx_frm], stop=self.bpm_list[idx_to])
 
     def return_lat(self, qt_currentIndex=None, start=None, stop=None):
         self.get_charge_bunch()
@@ -601,8 +599,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.lat_zi = section.z0
         self.tws_des = section.tws_des
 
-
-        self.corr_list = self.correctors_list(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
+        self.corr_list = self.get_cor_bpm_lists(seq=self.seq, start_pos=self.lat_zi, energy=self.tws_des.E)
         self.ui.sb_lat_from.setMinimum(self.lat_zi)
         self.ui.sb_lat_from.setMaximum(self.lat_zi + total_len - 30)
         self.ui.sb_lat_to.setMaximum(self.lat_zi + total_len)
@@ -652,8 +649,6 @@ class ManulInterfaceWindow(QMainWindow):
 
     def load_devices(self, types):
         devices = []
-        mi_devs = {}
-
         L = 0
         for elem in self.lat.sequence:
             L += elem.l
@@ -679,14 +674,12 @@ class ManulInterfaceWindow(QMainWindow):
                 devices.append(elem)
         return devices
 
-
     def load_lattice(self):
         self.quads = self.load_devices(types=[Quadrupole])
         self.cavs = self.load_cavs()
 
         self.add_devs2table(self.quads, w_table=self.ui.tableWidget, calc_obj=self.calc_twiss)
 
-        #self.init_kick_mrad = np.array([q.kick_mrad for q in self.quads])
         self.quad_ampl = np.max(np.abs(np.array([q.kick_mrad for q in self.quads])))
         # for orbit
         self.orbit.load_orbit_devs()
@@ -703,7 +696,6 @@ class ManulInterfaceWindow(QMainWindow):
         s = np.array([tw.s for tw in tws]) + dz
         bx = np.array([tw.beta_x for tw in tws])
         by = np.array([tw.beta_y for tw in tws])
-        #self.s_des + self.lat_zi
         self.beta_x_des.setData(x=s, y=bx)
         self.beta_y_des.setData(x=s, y=by)
     #    self.r_items = self.plot_lat(plot_wdg=self.plot2, types=[Quadrupole])
