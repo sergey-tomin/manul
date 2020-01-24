@@ -198,6 +198,9 @@ class MainWindow(Ui_MainWindow):
         if self.pb_extend.text() == "Close Gentle Correction Panel":
             self.pb_extend.setText("Open Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
+            if self.cb_freeze_bpms.isChecked():
+                print("CLOSSING ... unfreeze BPMs")
+                self.cb_freeze_bpms.setChecked(False)
             self.widget_5.hide()
         else:
             self.widget_5.show()

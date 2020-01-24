@@ -375,7 +375,9 @@ class MIOrbit(Device, Thread):
         print("RUN FINISH in ", time.time() - start, "sec")
 
     def read_positions(self, reliable_reading=False, suffix=""):
-
+        if "HOLD" in self.subtrain and suffix == ".HOLD":
+            logger.warning(" MIOrbit: read_positions: remove suffix. HOLD is in subtrain already")
+            suffix = ""
         if reliable_reading:
             nreadings = 30
             time_delay = 0.05
@@ -384,6 +386,7 @@ class MIOrbit(Device, Thread):
             time_delay = 0
         try:
             for i in range(nreadings):
+                print(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain)
                 orbit_x = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/X." + self.subtrain + suffix)
                 orbit_y = self.mi.get_value(self.server + ".DIAG/" + self.bpm_server + "/*/Y." + self.subtrain + suffix)
                 time.sleep(time_delay)
@@ -413,6 +416,9 @@ class MIOrbit(Device, Thread):
         return [names_x, self.x, self.y]
 
     def read_charge(self, suffix=""):
+        if "HOLD" in self.subtrain and suffix == ".HOLD":
+            logger.warning(" MIOrbit: read_charge: remove suffix. HOLD is in subtrain already")
+            suffix = ""
         try:
             charge = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/*/CHARGE." + self.subtrain + suffix)
         except Exception as e:
@@ -442,6 +448,10 @@ class MIOrbit(Device, Thread):
 
     def read_and_average(self, nreadings, take_last_n, reliable_reading=False, suffix=""):
         logger.info(" MIorbit: read_and_average")
+        if "HOLD" in self.subtrain and suffix == ".HOLD":
+            logger.warning(" MIOrbit: read_and_average: remove suffix. HOLD is in subtrain already")
+            suffix = ""
+            
         orbits_x = []
         orbits_y = []
         orbits_charge = []

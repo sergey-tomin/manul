@@ -171,6 +171,9 @@ class ManulInterfaceWindow(QMainWindow):
     def closeEvent(self, event):
         if self.orbit.adaptive_feedback is not None:
             self.orbit.adaptive_feedback.close()
+        if self.ui.cb_freeze_bpms.isChecked():
+            print("CLOSSING ... unfreeze BPMs")
+            self.ui.cb_freeze_bpms.setChecked(False)
         logger.info("close")
         event.accept() # let the window close
 
@@ -317,6 +320,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.epsilon_ksi = float(table["epsilon_ksi"] ) * 1e-6
         else:
             self.epsilon_ksi = 1e-5
+
 
         logger.debug("load settings ... OK")
 
