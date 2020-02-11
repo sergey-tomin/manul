@@ -413,8 +413,8 @@ class ManulInterfaceWindow(QMainWindow):
     def back_tracking(self):
         logger.debug("back_tracking: ... ")
         tws0 = self.read_twiss()
-
-        section = self.xfel_lattice.return_lat_section("up to TL")
+        current_lat = self.ui.cb_lattice.currentText()
+        section = self.xfel_lattice.return_lat_section(current_lat)
         cell_back_track = section.seq
 
         if self.ui.cb_design_tws.isChecked():
