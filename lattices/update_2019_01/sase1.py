@@ -5,6 +5,7 @@ tws.beta_y  = 42.699742177269954
 tws.alpha_x = 0.6830706329680605
 tws.alpha_y = -2.1778566009720715
 tws.E = 14
+tws.s = 2025.3858230000176
 # Drifts
 d_1 = Drift(l=1.472401, eid='D_1')
 d_2 = Drift(l=13.997421, eid='D_2')

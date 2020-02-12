@@ -78,6 +78,7 @@ class Lattice:
         tws_400.alpha_x = 1.3729804871141813
         tws_400.alpha_y = 4.304664424379663
         tws_400.E = 2.4
+        tws_400.s = 392.03
 
         tws_794 = Twiss()
         tws_794.beta_x = 18.956766460347758
@@ -85,6 +86,7 @@ class Lattice:
         tws_794.alpha_x = -0.8177409156797565
         tws_794.alpha_y = 1.3743713817184213
         tws_794.E = 6.588
+        tws_794.s = 794.786
 
         tws_1460 = Twiss()
         tws_1460.beta_x = 26.316332066652432
@@ -92,20 +94,29 @@ class Lattice:
         tws_1460.alpha_x = -1.1095783987321168
         tws_1460.alpha_y = 0.975875866662716
         tws_1460.E = 14
+        tws_1460.s = 1459.58
 
         self.sections = [
-            LatSection("T4D *", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"], load_all=False),
-            LatSection("T5D *", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "T1",
+            LatSection("T4D+", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "SASE1", "T4", "SASE3", "T4D"], load_all=False),
+            LatSection("T5D+", str_cells=["I1", "L1", "L2", "L3", "CL", "TL34", "T1",
                                                "SASE2", "T3", "T5", "T5D"], load_all=False),
-            LatSection("TLD *", str_cells=["I1", "L1", "L2", "L3", "CL", "TLD"], load_all=False),
+            LatSection("TLD+", str_cells=["I1", "L1", "L2", "L3", "CL", "TLD"], load_all=False),
 
-            LatSection("60 - 450", str_cells=["L1", "L2"], stop=self.lats["L2"].otrb_450_b2),
+            LatSection("60 - 450", str_cells=["L1", "L2"], stop=self.lats["L2"].otrb_450_b2, z0=62.089),
             LatSection("400 - 900", str_cells=["L2", "L3"], start=self.lats["L2"].otra_392_b2,
                        stop=self.lats["L3"].bpmc_902_l3, z0=392.03, tw=tws_400),
             LatSection("800 - 1600", str_cells=["L3", "CL"], start=self.lats["L3"].bpmc_794_l3,
                        stop=self.lats["L3"].otrbw_1597_l3, z0=794.786, tw=tws_794),
             LatSection("1460 - 1930", str_cells=["L3", "CL"], start=self.lats["L3"].tora_1459_l3,
                        stop=self.lats["CL"].otrbw_1929_tl, z0=1459.58, tw=tws_1460),
+            LatSection("SASE1", str_cells=["SASE1", "T4"], stop=self.lats["T4"].stsub_2583_t4, z0=2025.38),
+
+            LatSection("T4", str_cells=["T4"], z0=2438.517 + 23.2),
+            #
+            LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].stsub_2583_t4,
+                       z0=2560.45 + 23.2, tw=tws_sase3),
+
+            LatSection("SASE2", str_cells=["T1", "SASE2", "T3", "T5"], z0=2198.008421000016),
 
             LatSection("I1D", str_cells=["I1", "I1D"]),
             LatSection("B1D", str_cells=["I1", "L1", "B1D"]),
@@ -123,13 +134,10 @@ class Lattice:
             # LatSection("CL", str_cells=["L3", "CL", "TL34", "SASE1"], start=self.lats["L3"].bpmr_1307_l3,
             #                    stop=self.lats["SASE1"].qa_2253_sa1, z0=1307, tw=tws_cl),
 #
-            LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].stsub_2583_t4, z0=1957.18564 + 23.2),
-            LatSection("T4", str_cells=["T4"], z0=2438.517 + 23.2),
-#
-            LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].stsub_2583_t4,
-                       z0=2560.45 + 23.2, tw=tws_sase3),
+            # LatSection("SASE1", str_cells=[ "TL34", "SASE1", "T4"], stop=self.lats["T4"].stsub_2583_t4, z0=1957.18564 + 23.2),
 
-            LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564+23.2),
+
+            # LatSection("SASE2", str_cells=["TL34_SA2", "T1", "SASE2", "T3", "T5"], z0=1957.18564+23.2),
 
             #LatSection("up to B1", str_cells=["I1", "L1"]),
             #LatSection("up to B2", str_cells=["I1", "L1", "L2"]),
