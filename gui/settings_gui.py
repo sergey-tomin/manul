@@ -30,9 +30,8 @@ class ManulSettings(QWidget):
         #self.ui.rb_micado.toggled.connect(self.activate_micado_settings) #
         self.ui.combo_solver.currentIndexChanged.connect(self.activate_micado_settings)
         self.ui.pb_cancel.clicked.connect(self.close)
-        self.ui.cb_style_def.addItem("standard.css")
-        self.ui.cb_style_def.addItem("colinDark.css")
-        self.ui.cb_style_def.addItem("dark.css")
+
+        self.ui.cb_style_def.addItems(self.master.gui_styles)
         self.load_state(filename=self.master.config_file)
         self.activate_micado_settings()
         self.loadStyleSheet(filename=self.style_file)

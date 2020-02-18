@@ -85,12 +85,19 @@ class ManulInterfaceWindow(QMainWindow):
         self.set_file = self.config_dir + "default.json" # ./parameters/default.json"
         self.obj_func_path = self.optimizer_path + "mint" + os.sep + "obj_function.py"
         self.obj_save_path = self.config_dir +  "obj_funcs" + os.sep
+        self.gui_styles = ["standard.css", "colinDark.css", "dark.css"]
+
         # initialize
         QFrame.__init__(self)
 
         self.settings = None
         self.adviser = None
         self.ui = MainWindow(self)
+
+        gui_index = self.ui.get_style_name_index()
+        if "standard" in self.gui_styles[gui_index]:
+            pg.setConfigOption('background', 'w')
+            pg.setConfigOption('foreground', 'k')
 
         # hide/show the block of the section selection and arbitrary part of section
         if self.mi.hide_section_selection is True:
@@ -822,6 +829,14 @@ class ManulInterfaceWindow(QMainWindow):
 
     def add_plot(self):
 
+        gui_index = self.ui.get_style_name_index()
+        if "standard" in self.gui_styles[gui_index]:
+            pg.setConfigOption('background', 'w')
+            pg.setConfigOption('foreground', 'k')
+            single_pen = pg.mkPen("k")
+        else:
+            single_pen = pg.mkPen("w")
+
         win = pg.GraphicsLayoutWidget()
 
         self.plot3 = win.addPlot(row=0, col=0)
@@ -880,6 +895,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.plot3.addItem(self.Dy)
         self.plot2.sigRangeChanged.connect(self.zoom_signal)
 
+
     def error_box(self, message):
         QtGui.QMessageBox.about(self, "Error box", message)
 
@@ -906,14 +922,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.plot3.update()
 
 
-    def loadStyleSheet(self):
-        """ Sets the dark GUI theme from a css file."""
-        try:
-            self.cssfile = "gui/style.css"
-            with open(self.cssfile, "r") as f:
-                self.setStyleSheet(f.read())
-        except IOError:
-            logger.error('No style sheet found!')
+
 
 
 

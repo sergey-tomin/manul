@@ -150,10 +150,14 @@ class MainWindow(Ui_MainWindow):
         self.menuBar.setNativeMenuBar(False)
         self.mainToolBar.setVisible(False)
         self.Form = Form
+        self.settings_file = self.Form.config_file
         # load in the dark theme style sheet
         self.restore_state(self.Form.config_file)
-        if self.style_file != "standard.css":
-            self.loadStyleSheet(filename=self.style_file)
+
+        style_index = self.get_style_name_index()
+        style_name = self.Form.gui_styles[style_index]
+        #if self.style_file != "standard.css":
+        self.loadStyleSheet(filename=self.Form.gui_dir + style_name)
 
         self.tableWidget = self.add_table(widget=self.widget, headers=["Quadrupole", "Init. Val.", "Cur. Val."])
         self.table_cor = self.add_table(widget=self.w_cor, headers=["Corrector", "Init. Val.", "Cur. Val.", "Active"])
@@ -440,6 +444,20 @@ class MainWindow(Ui_MainWindow):
         # save again a small image to use for the logbook thumbnail
         p.save(str(s[:-4]) + "_sm.png", 'png')
 
+    def get_style_name_index(self):
+        # pvs = self.ui.widget.pvs
+        # check if file here
+        if not os.path.isfile(self.settings_file):
+            return 0
+
+        with open(self.settings_file, 'r') as f:
+            table = json.load(f)
+        if "style" in table.keys():
+
+            return table["style"]
+        else:
+            return 0
+
     def loadStyleSheet(self, filename="dark.css"):
         """
         Sets the dark GUI theme from a css file.
@@ -447,8 +465,8 @@ class MainWindow(Ui_MainWindow):
         """
         try:
 
-            self.cssfile = self.Form.gui_dir + filename
-            with open(self.cssfile, "r") as f:
+            #self.cssfile = self.Form.gui_dir + filename
+            with open(filename, "r") as f:
                 self.Form.setStyleSheet(f.read())
         except IOError:
             print ('No style sheet found!')

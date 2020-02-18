@@ -915,6 +915,14 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.plot_y.setYRange(-2, 2)
 
     def add_objective_func_plot(self):
+        gui_index = self.ui.get_style_name_index()
+        if "standard" in self.gui_styles[gui_index]:
+            pg.setConfigOption('background', 'w')
+            pg.setConfigOption('foreground', 'k')
+            pen_obj_curve = pg.mkPen("k", width=2)
+        else:
+            pen_obj_curve = pg.mkPen((0, 255, 255), width=2)
+
         win = pg.GraphicsLayoutWidget()
         self.plot_obj = win.addPlot()
 
@@ -926,14 +934,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.widget_2.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
-
-
-        color = QtGui.QColor(0, 255, 255)
-        pen = pg.mkPen((0, 255, 255), width=2)
-        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Obj Func')
+        self.obj_curve = pg.PlotCurveItem(x=[], y=[], pen=pen_obj_curve, name='Obj Func')
 
         self.plot_obj.addItem(self.obj_curve)
-        color = QtGui.QColor(255, 0, 0)
         pen = pg.mkPen((255, 0, 0), width=4)
         self.obj_curve_filtered = pg.PlotCurveItem(x=[], y=[], pen=pen, name='Filtered')
         self.plot_obj.addItem(self.obj_curve_filtered)
