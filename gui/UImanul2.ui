@@ -39,7 +39,16 @@
         <item row="0" column="0">
          <widget class="QWidget" name="widget_3" native="true">
           <layout class="QGridLayout" name="gridLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="0">
@@ -217,7 +226,16 @@
             <string>Correctors</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_22">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item row="2" column="0">
@@ -369,7 +387,16 @@
             <string>BPMs</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_23">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item row="0" column="1">
@@ -413,7 +440,16 @@
         <item row="1" column="0" colspan="2">
          <widget class="QWidget" name="widget_4" native="true">
           <layout class="QGridLayout" name="gridLayout_9">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="0" rowspan="2" colspan="3">
@@ -657,7 +693,16 @@
                 <string>Golden Orbit</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_28">
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
                  <number>0</number>
                 </property>
                 <item row="1" column="0">
@@ -750,7 +795,16 @@
            <item row="3" column="0" colspan="4">
             <widget class="QWidget" name="widget_5" native="true">
              <layout class="QGridLayout" name="gridLayout_13">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item row="0" column="1">
@@ -770,7 +824,16 @@
                  <string>Gentle Correction</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_12">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item row="0" column="1">
@@ -812,6 +875,9 @@
                    </item>
                    <item row="0" column="0" colspan="2">
                     <widget class="QCheckBox" name="cb_freeze_bpms">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="text">
                       <string>Freeze BPMs</string>
                      </property>
@@ -852,6 +918,9 @@
                    </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_3">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="text">
                       <string>Charge, pC</string>
                      </property>
@@ -859,6 +928,9 @@
                    </item>
                    <item row="2" column="1">
                     <widget class="QDoubleSpinBox" name="sb_bpm_charge">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="font">
                       <font>
                        <pointsize>12</pointsize>
@@ -886,6 +958,9 @@
                    </item>
                    <item row="0" column="2">
                     <widget class="QLabel" name="label_6">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="text">
                       <string>Attenuation</string>
                      </property>
@@ -893,6 +968,9 @@
                    </item>
                    <item row="0" column="3">
                     <widget class="QDoubleSpinBox" name="sb_attenuation">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="font">
                       <font>
                        <pointsize>12</pointsize>
@@ -917,6 +995,9 @@
                    </item>
                    <item row="2" column="2">
                     <widget class="QLabel" name="label_4">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="text">
                       <string>Orbit ampl, mm</string>
                      </property>
@@ -924,6 +1005,9 @@
                    </item>
                    <item row="2" column="3">
                     <widget class="QDoubleSpinBox" name="sp_orbit_ampl">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="font">
                       <font>
                        <pointsize>12</pointsize>
@@ -1186,7 +1270,16 @@
            <string>Cavity Controls</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="0">
@@ -1299,7 +1392,16 @@
            <string>Expert Controls</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_31">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="1">
@@ -1464,7 +1566,16 @@
         <string>Twiss Monitor</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item row="0" column="0" colspan="2">
@@ -1626,7 +1737,16 @@
            <string>BackTracking</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_14">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -1712,7 +1832,16 @@
            <string>Calc Options</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_15">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="0">
@@ -1773,7 +1902,16 @@
            <string>Options</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_15">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -1844,7 +1982,16 @@
            <string>Group Controls</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_32">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item row="0" column="1">

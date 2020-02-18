@@ -116,7 +116,8 @@ class Lattice:
             LatSection("SASE3", str_cells=["T4", "SASE3"], start=self.lats["T4"].stsub_2583_t4,
                        z0=2560.45 + 23.2, tw=tws_sase3),
 
-            LatSection("SASE2", str_cells=["T1", "SASE2", "T3", "T5"], z0=2198.008421000016),
+            LatSection("SASE2", str_cells=["T1", "SASE2", "T3"], z0=2025.385823000017),
+            LatSection("T3 + T5", str_cells=["T3", "T5"], z0=2424),
 
             LatSection("I1D", str_cells=["I1", "I1D"]),
             LatSection("B1D", str_cells=["I1", "L1", "B1D"]),

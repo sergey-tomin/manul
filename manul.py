@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 path = os.path.realpath(__file__)
 indx = path.find("manul")
 print("PATH to main file: " + os.path.realpath(__file__) + " path to folder: "+ path[:indx])
-sys.path.append(path[:indx])
+sys.path.append(path[:indx] + "ocelot")
 #sys.path.append("C:/Users/tomins/Documents/Dropbox/DESY/repository/ocelot")
 
 
