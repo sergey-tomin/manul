@@ -24,7 +24,7 @@ else:
 import time
 import pyqtgraph as pg
 from gui.uicorrelation import *
-from ocelot.optimizer.mint.xfel_interface import *
+from mint.xfel_interface import *
 
 
 class ManulInterfaceWindow(QMainWindow, Ui_MainWindow):
