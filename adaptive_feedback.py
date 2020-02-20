@@ -1,11 +1,12 @@
 """
 Sergey Tomin, XFEL/DESY, 2017
 """
-
+#from PyQt5.QtWidgets import QFrame, QMainWindow
+#import sys
 import numpy as np
 import json
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtWidgets import QWidget, QMessageBox#, QApplication
 from scipy import io
 import pyqtgraph as pg
 from gui.UIadaptive_feedback import Ui_Form
@@ -69,6 +70,7 @@ class ActiveSearch(Thread):
                     logger.debug(cor.id + " set: %s --> %s" % (cor.ui.get_init_value(), kick_mrad))
                     try:
                         cor.mi.set_value(kick_mrad)
+                        print(f"active search: {cor.id} <-- {kick_mrad}")
                     except Exception as e:
                         logger.error(cor.id + " apply_kicks Error: " + str(e))
                     time.sleep(self.delay)
@@ -151,6 +153,28 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.slider.valueChanged.connect(self.browser_slider_changed)
         self.tabWidget.currentChanged.connect(self.tab_changed)
+        self.pb_restore.clicked.connect(self.restore_correctors)
+
+    def restore_correctors(self):
+
+        if self.pb_start_feedback.text() == "Stop Feedback":
+            self.parent.error_box("Adaptive FB is still running")
+            return
+
+        index = self.slider.value()
+        cor_dict_list = self.cor_hist[index]
+        cor_names = [cd["corrector"] for cd in cor_dict_list]
+        kicks = [cd["value"] for cd in cor_dict_list]
+        cor_dict = dict(zip(cor_names, kicks))
+        print(cor_dict)
+        for cor in self.orbit.corrs:
+            if cor.id in cor_dict.keys():
+                kick_mrad = cor_dict[cor.id]
+                try:
+                    cor.mi.set_value(kick_mrad)
+                    logger.info(cor.id + " set: %s --> %s" % (cor.ui.get_value(), kick_mrad))
+                except Exception as e:
+                    logger.error(cor.id + " apply_kicks Error: " + str(e))
 
     def tab_changed(self):
         if self.tabWidget.currentIndex() == 1:
@@ -175,12 +199,10 @@ class UIAFeedBack(QWidget, Ui_Form):
 
             self.widget_cor_tab.init_table(self.cor_hist[0], editable=False)
 
-
     def browser_slider_changed(self, index):
         self.browser_data_changed(index)
 
     def browser_data_changed(self, index, region=False):
-        print(index)
         self.widget_cor_tab.init_table(self.cor_hist[index], editable=False)
         self.orb_x_hist.setData(self.x_hist[index])
         self.orb_y_hist.setData(self.y_hist[index])
@@ -300,7 +322,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.mi_standard_fb.mi = self.parent.mi
         else:
             self.mi_standard_fb = None
-        
+
+        if self.parent.dev_mode:
+            self.mi_standard_fb = None
         
         for cor in self.orbit_class.corrs:
             if cor.id not in active_corrs:
@@ -322,7 +346,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
         if self.counter % int(go_delay/bpm_delay) == int(go_delay/bpm_delay)-1:
             go_x, go_y = self.calc_golden_orbit()
-            if self.counter  == int(go_delay/bpm_delay)*3-1:
+            if self.counter == int(go_delay/bpm_delay)*3-1:
                 self.first_go_x = go_x
                 self.first_go_y = go_y
 
@@ -339,13 +363,6 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         :return:
         """
-        #print("I am here")
-
-
-        if self.pb_start_feedback.text() == "Start Feedback":
-            return 0
-
-        #self.orbit = self.orbit_class.create_Orbit_obj()
 
         delay = self.sb_sr_delay.value()
         if self.pb_active_search.text() == "Stop Search":
@@ -354,6 +371,8 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.pb_active_search.setStyleSheet("color: rgb(85, 255, 127);")
             self.pb_active_search.setText("Start Search")
         else:
+            if self.pb_start_feedback.text() == "Start Feedback":
+                return 0
             noise_amp_mrad = self.sb_sr_noise_amp.value() / 1000.
             search_period = self.sb_sr_period.value()
             self.active_search = ActiveSearch(orbit=self.orbit, search_period=search_period,
@@ -435,7 +454,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
-        if self.mi_standard_fb != None and self.mi_standard_fb.is_running():
+        if self.mi_standard_fb is not None and self.mi_standard_fb.is_running():
             self.error_box("Standard FeedBack is running!")
             logger.info("start_stop_feedback: St.FB is running")
             return 0
@@ -466,14 +485,14 @@ class UIAFeedBack(QWidget, Ui_Form):
         #if beam_on:
         #start = time.time()
         #print("ref time", time.time())
-        if self.mi_standard_fb != None:
+        if self.mi_standard_fb is not None:
             try: 
                 is_st_fb_running = self.mi_standard_fb.is_running()
             except Exception as e:
                 logger.warning("error during status of st. FB reading: " + str(e))
                 is_st_fb_running = False
             
-        if self.mi_standard_fb != None and is_st_fb_running:
+        if self.mi_standard_fb is not None and is_st_fb_running:
             #self.error_box("Standard FeedBack is runinning!")
             logger.info("auto_correction: St.FB is running. Stop Ad. FB")
             self.stop_feedback()
@@ -915,8 +934,9 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.plot_y.setYRange(-2, 2)
 
     def add_objective_func_plot(self):
-        gui_index = self.ui.get_style_name_index()
-        if "standard" in self.gui_styles[gui_index]:
+
+        gui_index = self.parent.ui.get_style_name_index()
+        if "standard" in self.parent.gui_styles[gui_index]:
             pg.setConfigOption('background', 'w')
             pg.setConfigOption('foreground', 'k')
             pen_obj_curve = pg.mkPen("k", width=2)
@@ -1064,3 +1084,31 @@ class UIAFeedBack(QWidget, Ui_Form):
             return True
 
         return False
+
+
+def main():
+
+
+    #make pyqt threadsafe
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_X11InitThreads)
+    #create the application
+    app    = QApplication(sys.argv)
+
+
+    window = UIAFeedBack()
+
+
+    #show app
+    #window.setWindowIcon(QtGui.QIcon('gui/angry_manul.png'))
+    # setting the path variable for icon
+    path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'gui/manul.png')
+    app.setWindowIcon(QtGui.QIcon(path))
+    window.show()
+    window.raise_()
+    #Build documentaiton if source files have changed
+    #os.system("cd ./docs && xterm -T 'Ocelot Doc Builder' -e 'bash checkDocBuild.sh' &")
+    #exit script
+    sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
