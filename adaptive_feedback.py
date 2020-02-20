@@ -1,12 +1,11 @@
 """
 Sergey Tomin, XFEL/DESY, 2017
 """
-#from PyQt5.QtWidgets import QFrame, QMainWindow
-#import sys
+import sys
 import numpy as np
 import json
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QWidget, QMessageBox#, QApplication
+from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication
 from scipy import io
 import pyqtgraph as pg
 from gui.UIadaptive_feedback import Ui_Form
