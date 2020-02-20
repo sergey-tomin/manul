@@ -21,17 +21,20 @@ from mint.devices import *
 #logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class Statistics(Thread):
     def __init__(self):
         super(Statistics, self).__init__()
         self._stop_event = Event()
         self.do = None
         self.delay = 0.1
+
     def run(self):
         while 1:
             self.do()
             logger.info("do")
             time.sleep(self.delay)
+
     def stop(self):
         self._stop_event.set()
 
@@ -218,7 +221,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.show_traj.setStyleSheet("color: rgb(85, 255, 255);")
 
     def save_state(self, filename):
-        # pvs = self.ui.widget.pvs
         table = {}
         bpms = [bpm.id for bpm in self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)]
         corrs = [cor.id for cor in self.orbit_class.get_dev_from_cb_state(self.orbit_class.corrs)]
@@ -287,8 +289,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         if update:
             if not os.path.exists(self.configs_dir):
                 os.makedirs(self.configs_dir)
-                #self.error_box("Config file does not exist.")
-                #return
+
             self.save_state(self.configs_dir+ self.cb_load_settings.currentText()+".json")
 
     def load_presettings(self):
@@ -297,7 +298,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.x_hist = []
         self.y_hist = []
 
-        #if self.cb_load_settings.currentText() == "SASE1 launch":
         if not os.path.exists(self.configs_dir+ str(self.cb_load_settings.currentText()) +".json"):
             logger.error("Config file does not exist.")
             self.error_box("Config file does not exist.")
@@ -331,6 +331,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         for bpm in self.orbit_class.bpms:
             if bpm.id not in active_bpms:
                 bpm.ui.uncheck()
+
         self.orbit_class.correct()
         self.orbit_class.golden_orbit.set_golden_orbit()
 
@@ -342,7 +343,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             logger.debug(" loop: beam OFF. counter -= 1")
         bpm_delay = self.sb_time_delay.value()
         go_delay = self.sb_go_recalc_delay.value()
-        #print(self.counter, int(go_delay/bpm_delay), self.counter % int(go_delay/bpm_delay))
         if self.counter % int(go_delay/bpm_delay) == int(go_delay/bpm_delay)-1:
             go_x, go_y = self.calc_golden_orbit()
             if self.counter == int(go_delay/bpm_delay)*3-1:
@@ -391,15 +391,13 @@ class UIAFeedBack(QWidget, Ui_Form):
         feedback_timer - timer
         :return:
         """
-        #print("I am here")
 
         self.pb_start_feedback.setText("Statistics collection")
         self.pb_start_feedback.setStyleSheet("color: yellow")
 
         self.counter = 0
         delay = self.sb_time_delay.value()*1000
-        #self.corrs = self.get_dev_from_cb_state(self.orbit_class.corrs)
-        #self.bpms = self.orbit_class.get_dev_from_cb_state(self.orbit_class.bpms)
+
         self.orbit_class.read_orbit()
 
         self.orbit_class.uncheck_red()
@@ -418,11 +416,11 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         else:
             self.nreadings = self.sb_array_len.value()
-            self.target_values = [] #deque(maxlen=self.nreadings)
+            self.target_values = []
             self.target_filtered = []
             self.orbits_x = []
             self.orbits_y = []
-            self.orbit_s = [] #deque(maxlen=self.nreadings)
+            self.orbit_s = []
             self.objective_func = self.set_obj_fun()
             if self.objective_func == None:
                 self.stop_statistics()
@@ -430,7 +428,6 @@ class UIAFeedBack(QWidget, Ui_Form):
                 return None
 
             self.statistics_timer.start(delay)
-            #self.statistics_timer.start()
             logger.info("Start Statistics")
             self.pb_start_statistics.setText("Statistics Accum Off")
             self.pb_start_statistics.setStyleSheet("color: red")
@@ -449,7 +446,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         feedback_timer - timer
         :return:
         """
-        #print("I am here")
 
         if self.pb_start_statistics.text() == "Statistics Accum On":
             return 0
@@ -457,7 +453,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.error_box("Standard FeedBack is running!")
             logger.info("start_stop_feedback: St.FB is running")
             return 0
-        #self.orbit = self.orbit_class.create_Orbit_obj()
 
         delay = self.sb_feedback_rep.value()*1000
         if self.pb_start_feedback.text() == "Stop Feedback":
@@ -479,11 +474,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         :return:
         """
-        #beam_on = self.read_orbit()
-        #time.sleep(0.01)
-        #if beam_on:
-        #start = time.time()
-        #print("ref time", time.time())
+
         if self.mi_standard_fb is not None:
             try: 
                 is_st_fb_running = self.mi_standard_fb.is_running()
@@ -492,7 +483,6 @@ class UIAFeedBack(QWidget, Ui_Form):
                 is_st_fb_running = False
             
         if self.mi_standard_fb is not None and is_st_fb_running:
-            #self.error_box("Standard FeedBack is runinning!")
             logger.info("auto_correction: St.FB is running. Stop Ad. FB")
             self.stop_feedback()
             return 0
@@ -502,14 +492,12 @@ class UIAFeedBack(QWidget, Ui_Form):
             logger.warning("auto_correction: nan in the ref orbit. Pause 1 sec")
             time.sleep(1)
             return
-            #self.stop_feedback()
-            #self.parent.error_box("auto_correction: nan in the ref orbit")
+
         start = time.time()
         stop_flag = self.correct()
         print("correct: ", time.time() - start)
         time.sleep(0.01)
         if not stop_flag:
-            #print("apply time = ", time.time())
             start = time.time()
             self.apply_kicks()
             print("apply_kicks: ", time.time() - start)
@@ -517,11 +505,9 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.le_warn.clear()
         else:
             logger.warning("auto_correction: stop_flag = True. Pause 1 sec")
-            #self.stop_feedback()
             self.le_warn.clear()
             self.le_warn.setText("Stop flag. Kicks are not applied")
             self.le_warn.setStyleSheet("color: red")
-            #self.parent.error_box("Exceed limits of correctors")
 
             time.sleep(1)
 
@@ -548,7 +534,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             elem.i_kick = elem.kick_mrad
             elem.ui.set_init_value(elem.kick_mrad)
             elem.ui.set_value(elem.kick_mrad)
-            #elem.transfer_map = create_transfer_map(elem)
             elem.transfer_map = self.parent.lat.method.create_tm(elem)
             if elem.ui.alarm:
                 stop_flag = True
@@ -565,16 +550,13 @@ class UIAFeedBack(QWidget, Ui_Form):
             elem.x = self.new_ref_orbit[elem.id][0]
             elem.y = self.new_ref_orbit[elem.id][1]
             elem.ui.set_value((elem.x*1000., elem.y*1000.))
-            #print(elem.id, (elem.x*1000., elem.y*1000.))
             if elem.ui.alarm:
                 logger.warning("correct - STOP: BPM shows alarm: " + elem.id)
                 stop_flag = True
         if stop_flag:
             return stop_flag
         self.orbit_class.online_calc = True
-        #self.uncheck_red()
 
-        #self.orbit = self.create_Orbit_obj()
 
         if not self.orbit_class.is_rm_ok(self.orbit):
             logger.error(" correct: Calculate Response Matrix")
@@ -582,8 +564,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             return 0
 
         self.orbit_class.golden_orbit.dict2golden_orbit()
-        # for bpm in self.bpms:
-        #    print(bpm.id, bpm.x, bpm.y)
 
         if self.orbit_class.ui.cb_close_orbit.isChecked():
             self.orbit_class.close_orbit()
@@ -593,9 +573,8 @@ class UIAFeedBack(QWidget, Ui_Form):
             cor.angle = 0.
             self.calc_correction[cor.id] = cor.angle
 
-        alpha = 0.#self.ui.sb_alpha.value()
-        #self.orbit.correction(alpha=alpha, p_init=None, epsilon_x=self.parent.svd_epsilon_x,
-        #                      epsilon_y=self.parent.svd_epsilon_y, beta=0, print_log=False)
+        alpha = 0.
+
         self.orbit.correction(alpha=alpha, p_init=None, beta=0, print_log=False)
         for cor in self.orbit.corrs:
             self.calc_correction[cor.id] = cor.angle
@@ -611,7 +590,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         :return:
         """
 
-        #corrs = self.get_dev_from_cb_state(self.corrs)
 
         for cor in self.orbit.corrs:
             if cor.ui.alarm:
@@ -640,7 +618,6 @@ class UIAFeedBack(QWidget, Ui_Form):
                 cor.angle = self.calc_correction[cor.id]
 
             delta_kick_mrad = cor.angle*1000*apply_fraction
-            #print(cor.angle*1000, delta_kick_mrad)
             new_kick_mrad = kick_mrad_old + delta_kick_mrad
             cor.kick_mrad = new_kick_mrad
             cor.ui.set_value(cor.kick_mrad)
@@ -679,22 +656,17 @@ class UIAFeedBack(QWidget, Ui_Form):
                 orbit_s.append(elem.s)
                 self.bpms_name.append(elem.id)
             except:
-                #print("BPM: " + elem.id + " was unchecked ")
-                #elem.ui.uncheck()
                 self.le_warn.clear()
                 self.le_warn.setText("beam OFF")
-                #logger.info("read_bpms: beam OFF")
                 beam_on = False
-        #print(beam_on)
         return beam_on, np.array(orbit_x), np.array(orbit_y), np.array(orbit_s)
-
 
     def read_data(self):
         beam_on, orbit_x, orbit_y, orbit_s = self.read_bpms()
         if not beam_on and not self.dev_mode:
             return beam_on
         target = self.read_objective_function()
-        if target == None:
+        if target is None:
             self.stop_statistics()
             return None
 
@@ -704,21 +676,17 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         if len(self.target_values) >= self.nreadings:
             self.target_values = self.target_values[1:]
-            #self.orbits_x = np.roll(self.orbits_x, -1) #self.orbits_x[1:]
-            #self.orbits_y = np.roll(self.orbits_y, -1) #self.orbits_y[1:]
+
             self.orbits_x = self.orbits_x[1:]
             self.orbits_y = self.orbits_y[1:]
         self.target_values = np.append(self.target_values, target)
         self.orbits_x.append(orbit_x)
         self.orbits_y.append(orbit_y)
-        #print(np.shape(self.orbits_x), len(self.target_values)-1)
-        #self.orbits_x[len(self.target_values)-1] = orbit_x
-        #self.orbits_y[len(self.target_values)-1] = orbit_y
+
         self.orbit_s = orbit_s
         self.filter_target_func()
 
         self.update_plot_counter += 1
-        #if self.update_plot_counter%2 == 0:
         self.update_obj_plot()
         return beam_on
 
@@ -759,7 +727,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             return None
         return val
 
-
     def calc_golden_orbit(self):
         targets = np.array(self.target_values)
         indx = np.argsort(targets)
@@ -778,11 +745,12 @@ class UIAFeedBack(QWidget, Ui_Form):
             aver_x = np.mean(best_orbits_x, axis=0)
             aver_y = np.mean(best_orbits_y, axis=0)
         new_golden_orbit = {}
+
         for i, name in enumerate(self.bpms_name):
             new_golden_orbit[name] = [aver_x[i], aver_y[i]]
         self.orbit_class.golden_orbit.update_golden_orbit(new_golden_orbit)
-        #self.update_orb_plot()
-        if len(self.first_go_x) != len(aver_x) or len(self.first_go_y) != len(aver_y) :
+
+        if len(self.first_go_x) != len(aver_x) or len(self.first_go_y) != len(aver_y):
             delta_go_x = aver_x
             delta_go_y = aver_y
         else:
@@ -810,9 +778,6 @@ class UIAFeedBack(QWidget, Ui_Form):
             nlast_readings = n_orbits - 1
 
         num_bad_orbits = int(n_orbits*0.2) # 20% bad orbits
-
-        #ref_orbits_x = orbits_x[indx[num_bad_orbits : n_orbits - num_good_obits]]
-        #ref_orbits_y = orbits_y[indx[num_bad_orbits : n_orbits - num_good_obits]]
 
         ref_orbits_x = orbits_x[-nlast_readings:]
         ref_orbits_y = orbits_y[-nlast_readings:]
@@ -875,19 +840,15 @@ class UIAFeedBack(QWidget, Ui_Form):
             if func == "":
                 return 0
             return eval(func)
-        #if len(func) == 0:
-        #    return None
 
         self.objective_func = get_value_exp
 
         return self.objective_func
 
-
     def add_orbit_plot(self):
         win = pg.GraphicsLayoutWidget()
         self.plot_x = win.addPlot(row=0, col=0)
 
-        #win.ci.layout.setRowMaximumHeight(0, 200)
 
         self.plot_x.showGrid(1, 1, 1)
 
@@ -945,8 +906,6 @@ class UIAFeedBack(QWidget, Ui_Form):
         win = pg.GraphicsLayoutWidget()
         self.plot_obj = win.addPlot()
 
-        # win.ci.layout.setRowMaximumHeight(0, 200)
-
         self.plot_obj.showGrid(1, 1, 1)
 
         layout = QtGui.QGridLayout()
@@ -964,8 +923,6 @@ class UIAFeedBack(QWidget, Ui_Form):
     def add_sase_hist_plot(self):
         win = pg.GraphicsLayoutWidget()
         self.plot_sase = win.addPlot()
-
-        # win.ci.layout.setRowMaximumHeight(0, 200)
 
         self.plot_sase.showGrid(1, 1, 1)
 
@@ -1037,14 +994,10 @@ class UIAFeedBack(QWidget, Ui_Form):
         s_down = self.plot_y.viewRange()[0][1]
 
 
-
     def check_address(self):
         self.is_le_addr_ok(self.le_a)
         self.is_le_addr_ok(self.le_b)
         self.is_le_addr_ok(self.le_c)
-        #self.is_le_addr_ok(self.le_d)
-        #self.is_le_addr_ok(self.le_e)
-        #self.is_le_addr_ok(self.le_alarm)
 
     def is_le_addr_ok(self, line_edit):
         dev = str(line_edit.text())
@@ -1087,15 +1040,12 @@ class UIAFeedBack(QWidget, Ui_Form):
 
 def main():
 
-
     #make pyqt threadsafe
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_X11InitThreads)
     #create the application
-    app    = QApplication(sys.argv)
-
+    app = QApplication(sys.argv)
 
     window = UIAFeedBack()
-
 
     #show app
     #window.setWindowIcon(QtGui.QIcon('gui/angry_manul.png'))
@@ -1108,6 +1058,7 @@ def main():
     #os.system("cd ./docs && xterm -T 'Ocelot Doc Builder' -e 'bash checkDocBuild.sh' &")
     #exit script
     sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     main()
