@@ -15,10 +15,17 @@ from ocelot import *
 from ocelot.gui.accelerator import *
 #from ocelot.test.xfel_lat.lattices.I1B2 import *
 #from ocelot.test.xfel_lat.lattices.I1B2_screen2 import *
-from lattices.xfel_i1_mad import *
-from lattices.xfel_l1_mad import *
-from lattices.xfel_l2_mad import *
-from lattices.xfel_l3_mad import *
+from decimal import Decimal
+import time
+import numpy as np
+from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph as pg
+from mint.xfel_interface import XFELMachineInterface, TestMachineInterface
+
+from lattices.update_2019_01 import i1
+from lattices.update_2019_01 import l1
+from lattices.update_2019_01 import l2
+from lattices.update_2019_01 import l3
 
 #from ocelot.adaptors import *
 #import time
@@ -32,7 +39,7 @@ tws0.beta_y  = 55.7887190242
 tws0.alpha_x = 18.185436973
 tws0.alpha_y = 18.185436973
 
-cell = cell_i1 + cell_l1 + cell_l2 + cell_l3
+cell = i1.cell + l1.cell + l2.cell + l3.cell
 
 lat = MagneticLattice(cell)#,  start=bpmf_393_b2, stop=bpmf_414_b2)
 print(lat.totalLen+3.2)
@@ -46,12 +53,6 @@ print(lat.totalLen+3.2)
 
 
 
-from decimal import Decimal
-import time
-import numpy as np
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph as pg
-from ocelot.optimizer.mint.xfel_interface import XFELMachineInterface, TestMachineInterface
 
 Rab11 = 9.15990180e-01
 Rab12 = 1.36083204e+00

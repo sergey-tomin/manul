@@ -688,22 +688,22 @@
               <number>5</number>
              </property>
              <item>
-              <widget class="QGroupBox" name="groupBox_6">
+              <widget class="QGroupBox" name="groupBox_go">
                <property name="title">
                 <string>Golden Orbit</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_28">
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="topMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="rightMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <item row="1" column="0">
                  <widget class="QPushButton" name="pb_zero_gold">
@@ -739,14 +739,14 @@
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="pb_doocs_ref2go">
                   <property name="text">
-                   <string>DOOCS RF --&gt; GO</string>
+                   <string>DOOCS REF --&gt; GO</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="pb_doocs_go2go">
                   <property name="text">
                    <string>DOOCS GO --&gt; GO</string>
                   </property>
@@ -1764,7 +1764,7 @@
                   <string>OTRC 55</string>
                  </property>
                  <property name="checked">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
@@ -1805,6 +1805,9 @@
                  </property>
                  <property name="text">
                   <string>Design Twiss</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
