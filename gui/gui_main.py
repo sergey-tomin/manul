@@ -38,58 +38,6 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
-def send_to_desy_elog_old(author, title, severity, text, elog, image=None):
-    """
-    Send information to a supplied electronic logbook.
-    Author: Christopher Behrens (DESY)
-    """
-
-    # The DOOCS elog expects an XML string in a particular format. This string
-    # is beeing generated in the following as an initial list of strings.
-    succeded = True  # indicator for a completely successful job
-    # list beginning
-    elogXMLStringList = ['<?xml version="1.0" encoding="ISO-8859-1"?>', '<entry>']
-
-    # author information
-    elogXMLStringList.append('<author>')
-    elogXMLStringList.append(author)
-    elogXMLStringList.append('</author>')
-    # title information
-    elogXMLStringList.append('<title>')
-    elogXMLStringList.append(title)
-    elogXMLStringList.append('</title>')
-    # severity information
-    elogXMLStringList.append('<severity>')
-    elogXMLStringList.append(severity)
-    elogXMLStringList.append('</severity>')
-    # text information
-    elogXMLStringList.append('<text>')
-    elogXMLStringList.append(text)
-    elogXMLStringList.append('</text>')
-    # image information
-    if image:
-        try:
-            #encodedImage = base64.b64encode(image)
-            elogXMLStringList.append('<image>')
-            elogXMLStringList.append(image)
-            elogXMLStringList.append('</image>')
-        except:  # make elog entry anyway, but return error (succeded = False)
-            succeded = False
-    # list end
-    elogXMLStringList.append('</entry>')
-    # join list to the final string
-    elogXMLString = '\n'.join(elogXMLStringList)
-    # open printer process
-    try:
-        lpr = subprocess.Popen(['/usr/bin/lp', '-o', 'raw', '-d', elog],
-                               stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        # send printer job
-        lpr.communicate(elogXMLString.encode('utf-8'))
-    except:
-        succeded = False
-    return succeded
-
-
 def send_to_desy_elog(author, title, severity, text, elog, image=None):
     """
     Send information to a supplied electronic logbook.
@@ -165,51 +113,57 @@ class MainWindow(Ui_MainWindow):
         self.table_golden_bpm = self.add_table(widget=self.widget_7,
                                         headers=["BPM", "       X       ", "       Y       ", "Act."])
         if self.show_cor_panel:
-            self.tabWidget_3.show()
-            self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
-            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
+            self.show_device_panel(True)
         else:
-            self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
-            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
-            self.tabWidget_3.hide()
+            self.show_device_panel(False)
         #self.hide_show_divece_panel()
         self.pb_hide_show_dev_panel.clicked.connect(self.hide_show_device_panel)
         self.actionSend_orbit.triggered.connect(lambda: self.logbook(self.w_orbit))
         self.actionSend_all.triggered.connect(lambda: self.logbook(self.Form))
 
         if self.show_extension:
-            self.widget_5.show()
-            self.pb_extend.setText("Close Gentle Correction Panel")
-            self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
+            self.show_gentle_panel(True)
         else:
-            self.pb_extend.setText("Open Gentle Correction Panel")
-            self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
-            self.widget_5.hide()
+            self.show_gentle_panel(False)
         #self.hide_show_divece_panel()
         self.pb_extend.clicked.connect(self.advance_panel)
 
-    def hide_show_device_panel(self):
-        if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
-            self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
-            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
-            self.tabWidget_3.hide()
-        else:
+
+
+    def show_device_panel(self, show=True):
+        if show:
             self.tabWidget_3.show()
             self.pb_hide_show_dev_panel.setText("Hide Cor/BPM panel")
             self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(85, 255, 255);")
-
-    def advance_panel(self):
-        if self.pb_extend.text() == "Close Gentle Correction Panel":
-            self.pb_extend.setText("Open Gentle Correction Panel")
-            self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
-            if self.cb_freeze_bpms.isChecked():
-                print("CLOSSING ... unfreeze BPMs")
-                self.cb_freeze_bpms.setChecked(False)
-            self.widget_5.hide()
         else:
+            self.pb_hide_show_dev_panel.setText("Show Cor/BPM panel")
+            self.pb_hide_show_dev_panel.setStyleSheet("color: rgb(255, 0, 255);")
+            self.tabWidget_3.hide()
+
+    def hide_show_device_panel(self):
+        if self.pb_hide_show_dev_panel.text() == "Hide Cor/BPM panel":
+            self.show_device_panel(False)
+        else:
+            self.show_device_panel(True)
+
+    def show_gentle_panel(self, show=True):
+        if show:
             self.widget_5.show()
             self.pb_extend.setText("Close Gentle Correction Panel")
             self.pb_extend.setStyleSheet("color: rgb(85, 255, 255);")
+        else:
+            self.pb_extend.setText("Open Gentle Correction Panel")
+            self.pb_extend.setStyleSheet("color: rgb(255, 0, 255);")
+            self.widget_5.hide()
+
+    def advance_panel(self):
+        if self.pb_extend.text() == "Close Gentle Correction Panel":
+            self.show_gentle_panel(False)
+            if self.cb_freeze_bpms.isChecked():
+                print("CLOSING ... unfreeze BPMs")
+                self.cb_freeze_bpms.setChecked(False)
+        else:
+            self.show_gentle_panel(True)
 
     def add_table(self, widget, headers):
 
@@ -222,21 +176,13 @@ class MainWindow(Ui_MainWindow):
         widget.setLayout(layout)
         layout.addWidget(tableWidget, 0, 0)
 
-        #headers = ["Quadrupole", "Init. Val.", "Cur. Val."]
         tableWidget.setColumnCount(len(headers))
         tableWidget.setHorizontalHeaderLabels(headers)
         header = tableWidget.horizontalHeader()
         header.setStretchLastSection(True)
-        #header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        #header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        #header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
-        #if len(headers) == 4:
-        #    header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
+
         tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)  # No user edits on talbe
-        #tableWidget.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        #tableWidget.setColumnWidth(0, 200)
-        #tableWidget.setColumnWidth(1, 100)
-        #header.setStretchLastSection(True)
+
         return tableWidget
 
     def add_cor_table(self):
@@ -376,7 +322,6 @@ class MainWindow(Ui_MainWindow):
             print("RESTORE STATE: ERROR")
 
 
-
     def get_hyper_file(self):
         #filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Hyper Parameters', filter="txt (*.npy *.)")
         filename = QtGui.QFileDialog.getOpenFileName(self.Form, 'Load Hyper Parameters',
@@ -424,7 +369,6 @@ class MainWindow(Ui_MainWindow):
         widget = QtWidgets.QWidget.grab(window_widget)
         widget.save(screeshot_buffer, "png")
         return screenshot_tmp.toBase64().data().decode()
-
 
     def screenShot(self, filename, filetype):
 

@@ -133,10 +133,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.bpms_name = []
         self.counter = 0
-        self.cor_hist = []
-        self.sase_hist = []
-        self.x_hist = []
-        self.y_hist = []
+        self.clear_hist()
         self.dev_mode = self.parent.dev_mode
         logger.info("dev_mode = " + str(self.dev_mode))
         self.first_go_x = []
@@ -156,6 +153,12 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.slider.valueChanged.connect(self.browser_slider_changed)
         self.tabWidget.currentChanged.connect(self.tab_changed)
         self.pb_restore.clicked.connect(self.restore_correctors)
+
+    def clear_hist(self):
+        self.cor_hist = []
+        self.sase_hist = []
+        self.x_hist = []
+        self.y_hist = []
 
     def restore_correctors(self):
 
@@ -405,7 +408,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.set_golden_orbit()
 
         self.orbit = self.orbit_class.create_Orbit_obj()
-        if self.orbit == None:
+        if self.orbit is None:
             logger.warning("start_stop_statistics: self.orbit is None. Stop Statistics")
             
             self.stop_statistics()
@@ -415,6 +418,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.stop_statistics()
 
         else:
+            self.clear_hist()
             self.nreadings = self.sb_array_len.value()
             self.target_values = []
             self.target_filtered = []
@@ -422,7 +426,7 @@ class UIAFeedBack(QWidget, Ui_Form):
             self.orbits_y = []
             self.orbit_s = []
             self.objective_func = self.set_obj_fun()
-            if self.objective_func == None:
+            if self.objective_func is None:
                 self.stop_statistics()
                 logger.debug("objective function = None")
                 return None

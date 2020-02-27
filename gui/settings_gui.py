@@ -35,7 +35,17 @@ class ManulSettings(QWidget):
         self.load_state(filename=self.master.config_file)
         self.activate_micado_settings()
         self.loadStyleSheet(filename=self.style_file)
+        self.ui.cb_activate_freezing.stateChanged.connect(self.show_freeze_panel)
 
+    def show_freeze_panel(self):
+        is_checked = self.ui.cb_activate_freezing.isChecked()
+        self.master.ui.cb_freeze_bpms.setEnabled(is_checked)
+        self.master.ui.label_6.setEnabled(is_checked)
+        self.master.ui.label_3.setEnabled(is_checked)
+        self.master.ui.sb_attenuation.setEnabled(is_checked)
+        self.master.ui.sp_orbit_ampl.setEnabled(is_checked)
+        self.master.ui.label_4.setEnabled(is_checked)
+        self.master.ui.sb_bpm_charge.setEnabled(is_checked)
 
     def activate_micado_settings(self):
         solver_name = self.ui.combo_solver.currentText()
@@ -116,6 +126,10 @@ class ManulSettings(QWidget):
         table["epsilon_ksi"] = self.ui.sb_epsilon_ksi.value()
 
         table["solver_name"] = self.ui.combo_solver.currentText()
+
+        # danger area
+        # table["cb_activate_freezing"] = self.ui.cb_activate_freezing.checkState()
+
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -203,12 +217,9 @@ class ManulSettings(QWidget):
         if index >= 0:
             self.ui.combo_solver.setCurrentIndex(index)
 
-        #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
+        # danger area
+        # if "cb_activate_freezing" in table.keys(): self.ui.cb_activate_freezing.setCheckState(table["cb_activate_freezing"])
 
-#        a = table["uncheck_corrs"].split(",")
-#        a = [text.replace(" ", "") for text in a]
-#        a = [text.replace("\n", "") for text in a]
-#        print(a)
         print("LOAD State")
 
     #def save_presettings(self):
