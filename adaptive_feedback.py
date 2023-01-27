@@ -114,7 +114,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.nreadings = 100
         self.feedback_timer = pg.QtCore.QTimer()
         self.feedback_timer.timeout.connect(self.auto_correction)
-
+        self.voodo_counter = 0
         self.statistics_timer = pg.QtCore.QTimer()
         self.statistics_timer.timeout.connect(self.loop)
 
@@ -339,6 +339,8 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.set_golden_orbit()
 
     def loop(self):
+        if self.cb_update_display.isChecked() and self.voodo_counter > 2:
+            return 
         self.counter += 1
         beam_on = self.read_data()
         if not beam_on:
@@ -348,6 +350,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         go_delay = self.sb_go_recalc_delay.value()
         if self.counter % int(go_delay/bpm_delay) == int(go_delay/bpm_delay)-1:
             go_x, go_y = self.calc_golden_orbit()
+            self.voodo_counter += 1
             if self.counter == int(go_delay/bpm_delay)*3-1:
                 self.first_go_x = go_x
                 self.first_go_y = go_y

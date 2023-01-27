@@ -225,6 +225,10 @@ class BPM(Device):
         x = self.mi.get_value(self.server + ".DIAG/CHARGE.ML/" + self.eid + "/CHARGE." + self.subtrain)
         return x
 
+    def get_charge_frontend(self):
+        x = self.mi.get_value(self.server + ".DIAG/BPM/" + self.eid + "/CHARGE." + self.subtrain)
+        return x
+
     def get_ref_pos(self):
         """
         Ref orbit only exists in ORBIT server not BPM
