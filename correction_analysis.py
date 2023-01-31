@@ -89,7 +89,8 @@ class CorrectionAnalysis(Thread):
            shapshot[cor.id] = angle
 
         sr_row = pd.Series(shapshot)
-        self.df = self.df.append(sr_row, ignore_index=True)
+        pd.concat([self.df, sr_row.to_frame().T], ignore_index=True)
+        #self.df = self.df.append(sr_row, ignore_index=True)
         self.df = self.df.fillna(0)
         #print(self.df)
 

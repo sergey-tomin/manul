@@ -6,6 +6,7 @@ from mint.devices import *
 import time
 import pyqtgraph as pg
 from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets
 
 
 class DispersionInterface:
@@ -169,7 +170,7 @@ class DispersionInterface:
         self.plot_y.showGrid(1, 1, 1)
         self.plot_y.setLabel('left', 'Y Orbit', 'mm')
         self.plot_y.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
 
         self.ui.w_disp.setLayout(layout)
         layout.addWidget(win, 0, 0)
