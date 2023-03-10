@@ -562,10 +562,13 @@ class ManulInterfaceWindow(QMainWindow):
 
     def arbitrary_lattice(self):
         print("ARBITRARY lattice")
+        min_lat_len = 30
         lat_from = self.ui.sb_lat_from.value()
+        if lat_from > 200:
+            min_lat_len = 50
         lat_to = self.ui.sb_lat_to.value()
-        if lat_to - 30 < lat_from:
-            self.ui.sb_lat_to.setValue(lat_from+30)
+        if lat_to - min_lat_len < lat_from:
+            self.ui.sb_lat_to.setValue(lat_from+min_lat_len)
 
         lat_from = self.ui.sb_lat_from.value()
         lat_to = self.ui.sb_lat_to.value()
@@ -700,6 +703,7 @@ class ManulInterfaceWindow(QMainWindow):
         except Exception as e:
             logger.error("load_lattice: error in r_items" + str(e))
 
+
     def plot_design_twiss(self):
         tws = twiss(self.lat, self.tws_des)
         dz = self.lat_zi - self.tws_des.s
@@ -752,11 +756,11 @@ class ManulInterfaceWindow(QMainWindow):
             w_table.setRowCount(row + 1)
             pv = devs[row].id
             # put PV in the table
-            w_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(pv)))
+            w_table.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
             # put start val in
             val = np.round(devs[row].kick_mrad, 4)
-            w_table.setItem(row, 1, QtWidgets.QTableWidgetItem(str(val)))
-            spin_box = QtWidgets.QDoubleSpinBox()
+            w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(val)))
+            spin_box = QtGui.QDoubleSpinBox()
             spin_box.setStyleSheet("color: #b1b1b1; font-size: 16px; background-color:#595959; border: 2px solid #b1b1b1")
             spin_box.setLocale(eng)
             spin_box.setDecimals(4)
@@ -772,7 +776,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.spin_boxes.append(spin_box)
 
             if check_box:
-                checkBoxItem = QtWidgets.QTableWidgetItem()
+                checkBoxItem = QtGui.QTableWidgetItem()
                 # checkBoxItem.setBackgroundColor(QtGui.QColor(100,100,150))
                 checkBoxItem.setCheckState(QtCore.Qt.Checked)
                 flags = checkBoxItem.flags()
@@ -800,7 +804,7 @@ class ManulInterfaceWindow(QMainWindow):
             L += elem.l
             if elem.__class__ in types:
                 s = L - elem.l
-                r1 = pg.QtWidgets.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
+                r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
                 r1.setPen(pg.mkPen(None))
                 r1.setBrush(pg.mkBrush("g"))
                 r1.init_params = [s, 0, elem.l*x_scale, 1] #*elem.k1/self.quad_ampl]
@@ -819,7 +823,7 @@ class ManulInterfaceWindow(QMainWindow):
         s_down = s_down if s_down >= s_pos[0] else s_pos[0]
 
         indexes = np.arange(np.argwhere(s_pos >= s_up)[0][0], np.argwhere(s_pos <= s_down)[-1][0] + 1)
-        mask = np.ones(len(self.quads), bool)
+        mask = np.ones(len(self.quads), np.bool)
         mask[indexes] = 0
         self.quads = np.array(self.quads)
         [q.ui.set_hide(hide=False) for q in self.quads[indexes]]
@@ -850,7 +854,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.plot1.showGrid(1, 1, 1)
 
         self.plot1.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        layout = QtWidgets.QGridLayout()
+        layout = QtGui.QGridLayout()
         self.ui.widget_2.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -896,14 +900,14 @@ class ManulInterfaceWindow(QMainWindow):
 
 
     def error_box(self, message):
-        QtWidgets.QMessageBox.about(self, "Error box", message)
+        QtGui.QMessageBox.about(self, "Error box", message)
 
     def question_box(self, message):
         #QtGui.QMessageBox.question(self, "Question box", message)
-        reply = QtWidgets.QMessageBox.question(self, "Recalculate ORM?",
+        reply = QtGui.QMessageBox.question(self, "Recalculate ORM?",
                 message,
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if reply == QtWidgets.QMessageBox.Yes:
+                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        if reply == QtGui.QMessageBox.Yes:
             return True
 
         return False
