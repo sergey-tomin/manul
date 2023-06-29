@@ -6,6 +6,7 @@ import numpy as np
 import json
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication
+from PyQt5 import QtWidgets
 from scipy import io
 import pyqtgraph as pg
 from gui.UIadaptive_feedback import Ui_Form
@@ -411,7 +412,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.orbit_class.golden_orbit.set_golden_orbit()
 
         self.orbit = self.orbit_class.create_Orbit_obj()
-        if self.orbit is None:
+        if self.orbit == None:
             logger.warning("start_stop_statistics: self.orbit is None. Stop Statistics")
             
             self.stop_statistics()
@@ -865,7 +866,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.plot_y.showGrid(1, 1, 1)
 
         self.plot_y.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         self.widget.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -915,7 +916,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.plot_obj.showGrid(1, 1, 1)
 
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         self.widget_2.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -933,7 +934,7 @@ class UIAFeedBack(QWidget, Ui_Form):
 
         self.plot_sase.showGrid(1, 1, 1)
 
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         self.widget_sase.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -958,7 +959,7 @@ class UIAFeedBack(QWidget, Ui_Form):
         self.plot_y_hist.showGrid(1, 1, 1)
 
         self.plot_y_hist.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         self.widget_orbit.setLayout(layout)
         layout.addWidget(win, 0, 0)
 
@@ -1032,14 +1033,14 @@ class UIAFeedBack(QWidget, Ui_Form):
             logger.error('No style sheet found!')
 
     def error_box(self, message):
-        QtGui.QMessageBox.about(self, "Error box", message)
+        QtWidgets.QMessageBox.about(self, "Error box", message)
 
     def question_box(self, message):
         #QtGui.QMessageBox.question(self, "Question box", message)
-        reply = QtGui.QMessageBox.question(self, "Question Box",
+        reply = QtWidgets.QMessageBox.question(self, "Question Box",
                 message,
-                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-        if reply==QtGui.QMessageBox.Yes:
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
             return True
 
         return False

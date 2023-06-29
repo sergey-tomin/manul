@@ -4,6 +4,7 @@ Sergey Tomin. XFEL/DESY, 2017.
 """
 
 from PyQt5.QtWidgets import QFrame, QMainWindow
+from PyQt5 import QtWidgets
 import sys
 import os
 import argparse
@@ -549,11 +550,11 @@ class ManulInterfaceWindow(QMainWindow):
 
     def apply_second_order(self):
         logger.debug("apply_second_order: checkbox:" +str(self.ui.cb_sec_order.isChecked()))
-        method = MethodTM()
+        method = {"global": SecondTM}
         if self.ui.cb_sec_order.isChecked():
-            method.global_method = SecondTM
+            method["global"] = SecondTM
         else:
-            method.global_method = SecondTM# TransferMap
+            method["global"] = SecondTM# TransferMap
         self.lat = MagneticLattice(self.lat.sequence, method=method)
 
         # calc orbit
@@ -756,11 +757,11 @@ class ManulInterfaceWindow(QMainWindow):
             w_table.setRowCount(row + 1)
             pv = devs[row].id
             # put PV in the table
-            w_table.setItem(row, 0, QtGui.QTableWidgetItem(str(pv)))
+            w_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(pv)))
             # put start val in
             val = np.round(devs[row].kick_mrad, 4)
-            w_table.setItem(row, 1, QtGui.QTableWidgetItem(str(val)))
-            spin_box = QtGui.QDoubleSpinBox()
+            w_table.setItem(row, 1, QtWidgets.QTableWidgetItem(str(val)))
+            spin_box = QtWidgets.QDoubleSpinBox()
             spin_box.setStyleSheet("color: #b1b1b1; font-size: 16px; background-color:#595959; border: 2px solid #b1b1b1")
             spin_box.setLocale(eng)
             spin_box.setDecimals(4)
@@ -776,7 +777,7 @@ class ManulInterfaceWindow(QMainWindow):
             self.spin_boxes.append(spin_box)
 
             if check_box:
-                checkBoxItem = QtGui.QTableWidgetItem()
+                checkBoxItem = QtWidgets.QTableWidgetItem()
                 # checkBoxItem.setBackgroundColor(QtGui.QColor(100,100,150))
                 checkBoxItem.setCheckState(QtCore.Qt.Checked)
                 flags = checkBoxItem.flags()
@@ -804,7 +805,7 @@ class ManulInterfaceWindow(QMainWindow):
             L += elem.l
             if elem.__class__ in types:
                 s = L - elem.l
-                r1 = pg.QtGui.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
+                r1 = pg.QtWidgets.QGraphicsRectItem(s, 0, elem.l*x_scale, 1)#10*elem.k1/self.quad_ampl)
                 r1.setPen(pg.mkPen(None))
                 r1.setBrush(pg.mkBrush("g"))
                 r1.init_params = [s, 0, elem.l*x_scale, 1] #*elem.k1/self.quad_ampl]
@@ -823,7 +824,7 @@ class ManulInterfaceWindow(QMainWindow):
         s_down = s_down if s_down >= s_pos[0] else s_pos[0]
 
         indexes = np.arange(np.argwhere(s_pos >= s_up)[0][0], np.argwhere(s_pos <= s_down)[-1][0] + 1)
-        mask = np.ones(len(self.quads), np.bool)
+        mask = np.ones(len(self.quads), bool)
         mask[indexes] = 0
         self.quads = np.array(self.quads)
         [q.ui.set_hide(hide=False) for q in self.quads[indexes]]
@@ -854,7 +855,7 @@ class ManulInterfaceWindow(QMainWindow):
         self.plot1.showGrid(1, 1, 1)
 
         self.plot1.getAxis('left').enableAutoSIPrefix(enable=False)  # stop the auto unit scaling on y axes
-        layout = QtGui.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         self.ui.widget_2.setLayout(layout)
         layout.addWidget(win, 0, 0)
 

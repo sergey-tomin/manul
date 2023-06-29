@@ -5,6 +5,7 @@ S.Tomin Table for sections
 import sys
 from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QHeaderView, QApplication,QMenu, QWidget, QAction, QTableWidget, QTableWidgetItem, QDoubleSpinBox
 from PyQt5 import QtGui, QtCore
+from PyQt5 import QtWidgets
 #from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
 from gui.tables.ui_ocl_table import *
@@ -185,11 +186,11 @@ class OclTable(QWidget):
                 val = dict_list[row][header]
                 if type(val) is str:
                     val = val.replace("#xKOM", "")
-                self.ui.tableWidget.setItem(row, col, QtGui.QTableWidgetItem(str(val)))
+                self.ui.tableWidget.setItem(row, col, QtWidgets.QTableWidgetItem(str(val)))
         #self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
         if not editable:
-            self.ui.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+            self.ui.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
 
 

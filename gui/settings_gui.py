@@ -126,10 +126,6 @@ class ManulSettings(QWidget):
         table["epsilon_ksi"] = self.ui.sb_epsilon_ksi.value()
 
         table["solver_name"] = self.ui.combo_solver.currentText()
-
-        # danger area
-        # table["cb_activate_freezing"] = self.ui.cb_activate_freezing.checkState()
-
         with open(filename, 'w') as f:
             json.dump(table, f)
         print("SAVE State")
@@ -217,9 +213,12 @@ class ManulSettings(QWidget):
         if index >= 0:
             self.ui.combo_solver.setCurrentIndex(index)
 
-        # danger area
-        # if "cb_activate_freezing" in table.keys(): self.ui.cb_activate_freezing.setCheckState(table["cb_activate_freezing"])
+        #if "cb_lattice" in table.keys(): self.ui.sb_co_nlast.setValue(table["co_nlast"])
 
+#        a = table["uncheck_corrs"].split(",")
+#        a = [text.replace(" ", "") for text in a]
+#        a = [text.replace("\n", "") for text in a]
+#        print(a)
         print("LOAD State")
 
     #def save_presettings(self):
